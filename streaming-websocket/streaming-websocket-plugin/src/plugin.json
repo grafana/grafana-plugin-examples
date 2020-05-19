@@ -1,13 +1,13 @@
 {
   "type": "datasource",
-  "name": "streaming-plugin",
-  "id": "marcusolsson-streaming-plugin",
+  "name": "streaming-websocket",
+  "id": "grafana-streaming-websocket",
   "metrics": true,
   "streaming": true,
   "info": {
     "description": "",
     "author": {
-      "name": "Marcus Olsson",
+      "name": "Grafana Labs",
       "url": ""
     },
     "keywords": [],

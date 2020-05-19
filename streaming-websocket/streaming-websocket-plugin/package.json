@@ -1,5 +1,5 @@
 {
-  "name": "marcusolsson-streaming",
+  "name": "grafana-streaming-websocket",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "author": "Marcus Olsson",
+  "author": "Grafana Labs",
   "license": "Apache-2.0",
   "devDependencies": {
     "@grafana/data": "next",
