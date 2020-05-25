@@ -2,10 +2,10 @@
 
 This repository contains example plugins to showcase different use cases.
 
-## Visualization
+## Panel plugins
 
-- [flot](flot) demonstrates how to use the [Flot](http://www.flotcharts.org) plotting library.
+- [flot](flot) demonstrates how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.
 
-## Streaming
+## Data source plugins
 
-- [streaming-websockets](streaming-websockets) demonstrates how to create event-based data sources using RxJS and web sockets.
+- [streaming-websocket](streaming-websocket) demonstrates how to create event-based data sources using RxJS and web sockets.
