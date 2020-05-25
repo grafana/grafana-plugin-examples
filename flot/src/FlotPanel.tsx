@@ -7,10 +7,10 @@ import $ from 'jquery';
 interface Props extends PanelProps<FlotOptions> {}
 
 export const FlotPanel: React.FC<Props> = ({ options, data, width, height }) => {
-  const canvasRef = useRef(null);
+  const ref = useRef(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = ref.current;
 
     ($ as any).plot(
       canvas,
@@ -24,5 +24,5 @@ export const FlotPanel: React.FC<Props> = ({ options, data, width, height }) => 
     );
   });
 
-  return <div ref={canvasRef} style={{ width: width, height: height }} />;
+  return <div ref={ref} style={{ width: width, height: height }} />;
 };
