@@ -8,4 +8,4 @@ This repository contains example plugins to showcase different use cases.
 
 ## Data source plugins
 
-- [streaming-websocket](streaming-websocket) demonstrates how to create event-based data sources using RxJS and web sockets.
+- [streaming-websocket](streaming-websocket) demonstrates how to create an event-based data source plugin using RxJS and web sockets.
