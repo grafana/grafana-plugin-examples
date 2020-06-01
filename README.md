@@ -5,6 +5,7 @@ This repository contains example plugins to showcase different use cases.
 ## Panel plugins
 
 - [flot](flot) demonstrates how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.
+- [plotly](plotly) demonstrates how to use the [Plotly](https://plotly.com/javascript/) graphing library in a panel plugin.
 
 ## Data source plugins
 
