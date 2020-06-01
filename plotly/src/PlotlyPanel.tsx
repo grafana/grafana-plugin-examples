@@ -18,7 +18,21 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
         },
         { type: 'bar', x: [1, 2, 3], y: [2, 5, 3] },
       ]}
-      layout={{ width: width, height: height, title: 'A Fancy Plot' }}
+      layout={{
+        margin: {
+          r: 40,
+          l: 40,
+          t: 40,
+          b: 40,
+        },
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        font: {
+          color: '#ffffff',
+        },
+        width: width,
+        height: height,
+      }}
     />
   );
 };
