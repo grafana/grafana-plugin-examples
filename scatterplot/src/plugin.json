@@ -1,0 +1,34 @@
+{
+  "type": "panel",
+  "name": "Scatterplot",
+  "id": "marcusolsson-grafana-scatterplot-panel",
+  "info": {
+    "description": "",
+    "author": {
+      "name": "Marcus Olsson",
+      "url": "https://github.com/marcusolsson"
+    },
+    "keywords": [],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/marcusolsson/grafana-scatterplot-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/marcusolsson/grafana-scatterplot/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaVersion": "6.3.x",
+    "plugins": []
+  }
+}
