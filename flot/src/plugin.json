@@ -1,14 +1,14 @@
 {
   "type": "panel",
-  "name": "flot",
-  "id": "grafana-flot",
+  "name": "Example",
+  "id": "grafana-example-panel",
   "info": {
     "description": "",
     "author": {
       "name": "Grafana Labs",
-      "url": ""
+      "url": "https://grafana.com"
     },
-    "keywords": [],
+    "keywords": ["example"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -16,11 +16,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/simple-react-panel"
+        "url": "https://github.com/grafana/grafana-plugin-examples"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+        "url": "https://github.com/grafana/grafana-plugin-examples/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
@@ -28,7 +28,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaVersion": "6.3.x",
+    "grafanaVersion": "7.0.x",
     "plugins": []
   }
 }

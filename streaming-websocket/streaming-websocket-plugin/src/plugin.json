@@ -1,16 +1,14 @@
 {
-  "type": "datasource",
-  "name": "streaming-websocket",
-  "id": "grafana-streaming-websocket",
-  "metrics": true,
-  "streaming": true,
+  "type": "panel",
+  "name": "Example",
+  "id": "grafana-example-panel",
   "info": {
     "description": "",
     "author": {
       "name": "Grafana Labs",
-      "url": ""
+      "url": "https://grafana.com"
     },
-    "keywords": [],
+    "keywords": ["example"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -18,11 +16,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/simple-datasource"
+        "url": "https://github.com/grafana/grafana-plugin-examples"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/simple-datasource/blob/master/LICENSE"
+        "url": "https://github.com/grafana/grafana-plugin-examples/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
@@ -30,7 +28,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaVersion": "6.5.x",
+    "grafanaVersion": "7.0.x",
     "plugins": []
   }
 }

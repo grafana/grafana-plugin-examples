@@ -1,7 +1,7 @@
 {
   "name": "grafana-example-panel",
   "version": "1.0.0",
-  "description": "",
+  "description": "An example plugin for Grafana",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
@@ -9,16 +9,16 @@
     "watch": "grafana-toolkit plugin:dev --watch"
   },
   "repository": "github:grafana/grafana-plugin-examples",
-  "author": "Marcus Olsson",
+  "author": "Grafana Labs",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/grafana/grafana-plugin-examples/issues",
     "email": "plugins@grafana.com"
   },
   "devDependencies": {
-    "@grafana/data": "7.0.1",
-    "@grafana/toolkit": "7.0.1",
-    "@grafana/ui": "7.0.1",
+    "@grafana/data": "7.1.5",
+    "@grafana/toolkit": "7.1.5",
+    "@grafana/ui": "7.1.5",
     "emotion": "10.0.27"
   },
   "engines": {

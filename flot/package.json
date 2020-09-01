@@ -1,18 +1,18 @@
 {
-  "name": "grafana-flot",
+  "name": "grafana-example-panel",
   "version": "1.0.0",
-  "description": "",
+  "description": "An example plugin for Grafana",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch"
   },
-  "repository": "github:grafana/simple-react-panel",
+  "repository": "github:grafana/grafana-plugin-examples",
   "author": "Grafana Labs",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/grafana/simple-react-panel/issues",
+    "url": "https://github.com/grafana/grafana-plugin-examples/issues",
     "email": "plugins@grafana.com"
   },
   "devDependencies": {
