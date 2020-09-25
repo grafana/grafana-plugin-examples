@@ -1,7 +1,7 @@
 {
   "type": "panel",
   "name": "Example",
-  "id": "grafana-example-panel",
+  "id": "example-flot-panel",
   "info": {
     "description": "",
     "author": {

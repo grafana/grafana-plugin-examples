@@ -2,7 +2,7 @@ import { PanelPlugin } from '@grafana/data';
 import { ScatterOptions } from './types';
 import { ScatterPanel } from './ScatterPanel';
 
-export const plugin = new PanelPlugin<ScatterOptions>(ScatterPanel).setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<ScatterOptions>(ScatterPanel).setPanelOptions(builder => {
   return builder
     .addTextInput({
       path: 'text',
@@ -35,6 +35,6 @@ export const plugin = new PanelPlugin<ScatterOptions>(ScatterPanel).setPanelOpti
           },
         ],
       },
-      showIf: (config) => config.showSeriesCount,
+      showIf: config => config.showSeriesCount,
     });
 });
