@@ -11,4 +11,5 @@ This repository contains example plugins to showcase different use cases.
 
 ## Data source plugins
 
+- [http](http-datasource) demonstrates how to query data from HTTP-based APIs.
 - [streaming-websocket](streaming-websocket) demonstrates how to create an event-based data source plugin using RxJS and web sockets.
