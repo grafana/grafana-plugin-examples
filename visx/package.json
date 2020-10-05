@@ -1,0 +1,35 @@
+{
+  "name": "example-scatterplot-panel",
+  "version": "1.0.0",
+  "description": "An example plugin for Grafana",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch"
+  },
+  "repository": "github:grafana/grafana-plugin-examples",
+  "author": "Grafana Labs",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/grafana/grafana-plugin-examples/issues",
+    "email": "plugins@grafana.com"
+  },
+  "devDependencies": {
+    "@grafana/data": "7.2.0",
+    "@grafana/toolkit": "7.2.0",
+    "@grafana/ui": "7.2.0",
+    "@types/d3-array": "^2.0.0",
+    "emotion": "10.0.27"
+  },
+  "engines": {
+    "node": ">=12 <13"
+  },
+  "dependencies": {
+    "@vx/group": "^0.0.199",
+    "@vx/mock-data": "^0.0.199",
+    "@vx/scale": "^0.0.199",
+    "@vx/shape": "^0.0.199",
+    "d3-array": "^2.8.0"
+  }
+}
