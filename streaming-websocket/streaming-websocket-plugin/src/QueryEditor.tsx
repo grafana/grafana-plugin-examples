@@ -1,8 +1,7 @@
-import defaults from 'lodash/defaults';
-
-import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
+import { LegacyForms } from '@grafana/ui';
+import defaults from 'lodash/defaults';
+import React, { ChangeEvent, PureComponent } from 'react';
 import { DataSource } from './DataSource';
 import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 

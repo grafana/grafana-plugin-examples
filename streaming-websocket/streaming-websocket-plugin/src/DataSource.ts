@@ -1,17 +1,14 @@
-import defaults from 'lodash/defaults';
-
 import {
+  CircularDataFrame,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
-  CircularDataFrame,
   FieldType,
 } from '@grafana/data';
-
-import { Observable, merge } from 'rxjs';
-
-import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
+import defaults from 'lodash/defaults';
+import { merge, Observable } from 'rxjs';
+import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   serverURL?: string;
@@ -23,10 +20,10 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   query(options: DataQueryRequest<MyQuery>): Observable<DataQueryResponse> {
-    const observables = options.targets.map(target => {
+    const observables = options.targets.map((target) => {
       const query = defaults(target, defaultQuery);
 
-      return new Observable<DataQueryResponse>(subscriber => {
+      return new Observable<DataQueryResponse>((subscriber) => {
         const frame = new CircularDataFrame({
           append: 'tail',
           capacity: 1000,

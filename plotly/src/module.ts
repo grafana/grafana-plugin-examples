@@ -1,8 +1,8 @@
 import { PanelPlugin } from '@grafana/data';
-import { PlotlyOptions } from './types';
 import { PlotlyPanel } from './PlotlyPanel';
+import { PlotlyOptions } from './types';
 
-export const plugin = new PanelPlugin<PlotlyOptions>(PlotlyPanel).setPanelOptions(builder => {
+export const plugin = new PanelPlugin<PlotlyOptions>(PlotlyPanel).setPanelOptions((builder) => {
   return builder
     .addTextInput({
       path: 'text',
@@ -35,6 +35,6 @@ export const plugin = new PanelPlugin<PlotlyOptions>(PlotlyPanel).setPanelOption
           },
         ],
       },
-      showIf: config => config.showSeriesCount,
+      showIf: (config) => config.showSeriesCount,
     });
 });

@@ -1,17 +1,15 @@
-import _ from 'lodash';
-import defaults from 'lodash/defaults';
-
 import {
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
-  MutableDataFrame,
   FieldType,
+  MutableDataFrame,
 } from '@grafana/data';
-
 import { getBackendSrv } from '@grafana/runtime';
-import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
+import _ from 'lodash';
+import defaults from 'lodash/defaults';
+import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   baseUrl: string;
@@ -23,7 +21,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-    const promises = options.targets.map(async target => {
+    const promises = options.targets.map(async (target) => {
       const query = defaults(target, defaultQuery);
       const response = await this.request('/api/metrics', `query=${query.queryText}`);
 
@@ -60,7 +58,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       });
     });
 
-    return Promise.all(promises).then(data => ({ data }));
+    return Promise.all(promises).then((data) => ({ data }));
   }
 
   async request(url: string, params?: string) {

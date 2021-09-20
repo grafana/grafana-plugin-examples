@@ -1,9 +1,9 @@
-import React from 'react';
-import { PanelProps, GrafanaTheme } from '@grafana/data';
-import { PlotlyOptions } from 'types';
-import Plot from 'react-plotly.js';
-import defaults from 'lodash/defaults';
+import { GrafanaTheme, PanelProps } from '@grafana/data';
 import { useTheme } from '@grafana/ui';
+import defaults from 'lodash/defaults';
+import React from 'react';
+import Plot from 'react-plotly.js';
+import { PlotlyOptions } from 'types';
 
 interface Props extends PanelProps<PlotlyOptions> {}
 

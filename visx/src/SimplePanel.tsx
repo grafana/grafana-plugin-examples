@@ -1,9 +1,8 @@
-import React from 'react';
-import { PanelProps, DataFrameView, FieldType } from '@grafana/data';
-import { SimpleOptions } from 'types';
-
+import { DataFrameView, FieldType, PanelProps } from '@grafana/data';
+import { scaleLinear, scaleTime } from '@vx/scale';
 import { AreaClosed } from '@vx/shape';
-import { scaleTime, scaleLinear } from '@vx/scale';
+import React from 'react';
+import { SimpleOptions } from 'types';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -16,7 +15,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const { from, to } = data.timeRange;
 
   const frame = data.series[0];
-  const valueField = frame.fields.find(f => f.type === FieldType.number);
+  const valueField = frame.fields.find((f) => f.type === FieldType.number);
 
   const view = new DataFrameView<DataPoint>(frame).toArray();
 
@@ -39,8 +38,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       <svg width={width} height={height}>
         <AreaClosed
           data={view}
-          x={d => dateScale(getDate(d)) || 0}
-          y={d => valueScale(getValue(d)) || 0}
+          x={(d) => dateScale(getDate(d)) || 0}
+          y={(d) => valueScale(getValue(d)) || 0}
           yScale={valueScale}
           fill={'red'}
         />

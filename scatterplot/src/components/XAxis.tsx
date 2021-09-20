@@ -1,5 +1,5 @@
-import React from 'react';
 import * as d3 from 'd3';
+import React from 'react';
 
 interface XAxisProps {
   width: number;
@@ -7,16 +7,13 @@ interface XAxisProps {
 }
 
 export const XAxis: React.FC<XAxisProps> = ({ width, extents }) => {
-  const scale = d3
-    .scaleLinear()
-    .domain(extents)
-    .range([0, width]);
+  const scale = d3.scaleLinear().domain(extents).range([0, width]);
 
   const axis = d3.axisBottom(scale) as any;
   return (
     <>
       <g
-        ref={node => {
+        ref={(node) => {
           d3.select(node).call(axis);
         }}
       />
