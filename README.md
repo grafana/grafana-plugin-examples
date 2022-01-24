@@ -15,3 +15,4 @@ This repository contains example plugins to showcase different use cases.
 - [http](examples/http-datasource) demonstrates how to query data from HTTP-based APIs.
 - [alerting](examples/alerting) demonstrates how to add support for alerting to a data source, using a backend.
 - [streaming-websocket](examples/streaming-websocket) demonstrates how to create an event-based data source plugin using RxJS and web sockets.
+- [basic-datasource](examples/basic-datasource) demonstrates how to build a datasource that supports the most basic functionality of Grafana.
