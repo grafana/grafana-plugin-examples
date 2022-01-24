@@ -2,19 +2,32 @@ package plugin
 
 import (
 	"context"
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 func TestQueryData(t *testing.T) {
 	ds := Datasource{}
+	json := []byte(`{
+		"scenario": "TimeSeries"
+	}`)
+	timeRange := backend.TimeRange{
+		From: time.Date(2022, 1, 1, 10, 0, 0, 0, time.UTC),
+		To:   time.Date(2022, 1, 1, 11, 0, 0, 0, time.UTC),
+	}
 
 	resp, err := ds.QueryData(
 		context.Background(),
 		&backend.QueryDataRequest{
 			Queries: []backend.DataQuery{
-				{RefID: "A"},
+				{
+					RefID:     "A",
+					JSON:      json,
+					TimeRange: timeRange,
+				},
 			},
 		},
 	)
@@ -25,4 +38,6 @@ func TestQueryData(t *testing.T) {
 	if len(resp.Responses) != 1 {
 		t.Fatal("QueryData must return a response")
 	}
+
+	fmt.Println(resp.Responses["A"].Frames[0].Name)
 }

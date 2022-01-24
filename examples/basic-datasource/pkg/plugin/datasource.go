@@ -4,12 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"math/rand"
-	"time"
 
+	"github.com/grafana/basic-datasource/pkg/scenario"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -61,7 +60,9 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-type queryModel struct{}
+type queryModel struct {
+	Scenario scenario.ScenarioType `json:"scenario"`
+}
 
 func (d *Datasource) query(_ context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
 	response := backend.DataResponse{}
@@ -74,14 +75,12 @@ func (d *Datasource) query(_ context.Context, pCtx backend.PluginContext, query 
 		return response
 	}
 
-	// create data frame response.
-	frame := data.NewFrame("response")
-
-	// add fields.
-	frame.Fields = append(frame.Fields,
-		data.NewField("time", nil, []time.Time{query.TimeRange.From, query.TimeRange.To}),
-		data.NewField("values", nil, []int64{10, 20}),
-	)
+	// create data frame response from given scenario.
+	frame, err := scenario.NewScenarioFrame(qm.Scenario, query)
+	if err != nil {
+		response.Error = err
+		return response
+	}
 
 	// add the frames to the response.
 	response.Frames = append(response.Frames, frame)
