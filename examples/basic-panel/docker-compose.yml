@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  grafana:
+    container_name: grafana-basic-panel
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000/tcp
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_ENABLE_GZIP=true
+      - GF_DEFAULT_APP_MODE=development
+      - GF_INSTALL_PLUGINS=marcusolsson-static-datasource
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/basic-panel
+      - ./provisioning:/etc/grafana/provisioning
+      # Uncomment to preserve Grafana configuration
+      # - ./data:/var/lib/grafana

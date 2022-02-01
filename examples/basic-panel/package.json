@@ -4,7 +4,7 @@
   "description": "Showcase how to build a basic panel plugin",
   "scripts": {
     "build": "webpack -c ./webpack/webpack.prod.conf.js",
-    "dev": "webpack -w -c ./webpack/webpack.dev.conf.js",
+    "dev": "docker-compose up -d && webpack -w -c ./webpack/webpack.dev.conf.js",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",

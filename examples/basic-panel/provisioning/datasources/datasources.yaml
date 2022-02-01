@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Static
+    type: marcusolsson-static-datasource
+    access: proxy
+    isDefault: true
+    orgId: 1
+    version: 1
+    editable: true
