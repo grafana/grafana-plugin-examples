@@ -1,46 +1,18 @@
-import defaults from 'lodash/defaults';
+import { DataSourceInstanceSettings, SelectableValue } from '@grafana/data';
+import { DataSourceWithBackend } from '@grafana/runtime';
+import { BasicQuery, BasicDataSourceOptions, ScenarioResponse } from './types';
 
-import {
-  DataQueryRequest,
-  DataQueryResponse,
-  DataSourceApi,
-  DataSourceInstanceSettings,
-  MutableDataFrame,
-  FieldType,
-} from '@grafana/data';
-
-import { MyQuery, MyDataSourceOptions, defaultQuery } from './types';
-
-export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
-  constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
+export class BasicDataSource extends DataSourceWithBackend<BasicQuery, BasicDataSourceOptions> {
+  constructor(instanceSettings: DataSourceInstanceSettings<BasicDataSourceOptions>) {
     super(instanceSettings);
   }
 
-  async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-    const { range } = options;
-    const from = range!.from.valueOf();
-    const to = range!.to.valueOf();
-
-    // Return a constant for each query.
-    const data = options.targets.map((target) => {
-      const query = defaults(target, defaultQuery);
-      return new MutableDataFrame({
-        refId: query.refId,
-        fields: [
-          { name: 'Time', values: [from, to], type: FieldType.time },
-          { name: 'Value', values: [query.constant, query.constant], type: FieldType.number },
-        ],
-      });
-    });
-
-    return { data };
-  }
-
-  async testDatasource() {
-    // Implement a health check for your data source.
-    return {
-      status: 'success',
-      message: 'Success',
-    };
+  async getScenarios(): Promise<Array<SelectableValue<string>>> {
+    console.log('response');
+    const response: ScenarioResponse = await this.getResource('/scenarios');
+    return response.scenarios.map((scenario) => ({
+      label: scenario,
+      value: scenario,
+    }));
   }
 }

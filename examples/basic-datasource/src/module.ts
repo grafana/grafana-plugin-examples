@@ -1,9 +1,9 @@
 import { DataSourcePlugin } from '@grafana/data';
-import { DataSource } from './datasource';
-import { ConfigEditor } from './ConfigEditor';
-import { QueryEditor } from './QueryEditor';
-import { MyQuery, MyDataSourceOptions } from './types';
+import { BasicDataSource } from './datasource';
+import { ConfigEditor } from './components/ConfigEditor';
+import { QueryEditor } from './components/QueryEditor';
+import { BasicQuery as BasicQuery, BasicDataSourceOptions as BasicDataSourceOptions } from './types';
 
-export const plugin = new DataSourcePlugin<DataSource, MyQuery, MyDataSourceOptions>(DataSource)
+export const plugin = new DataSourcePlugin<BasicDataSource, BasicQuery, BasicDataSourceOptions>(BasicDataSource)
   .setConfigEditor(ConfigEditor)
   .setQueryEditor(QueryEditor);

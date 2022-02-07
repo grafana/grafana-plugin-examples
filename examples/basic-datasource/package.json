@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Showcase how to build a basic datasource plugin",
   "scripts": {
-    "build": "webpack -c ./webpack/webpack.prod.conf.js",
-    "dev": "webpack -w -c ./webpack/webpack.dev.conf.js",
+    "build": "webpack -c ./.webpack/webpack.prod.conf.js",
+    "dev": "webpack -w -c ./.webpack/webpack.dev.conf.js",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
@@ -41,6 +41,7 @@
     "@grafana/runtime": "latest",
     "@grafana/toolkit": "latest",
     "@grafana/ui": "latest",
-    "@types/lodash": "latest"
+    "@types/lodash": "latest",
+    "react-use": "^17.3.2"
   }
 }

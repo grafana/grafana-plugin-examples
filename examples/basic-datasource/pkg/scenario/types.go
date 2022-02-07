@@ -38,3 +38,7 @@ func (st *ScenarioType) UnmarshalJSON(b []byte) error {
 
 	return nil
 }
+
+func (st *ScenarioType) MarshalJSON() ([]byte, error) {
+	return []byte(fmt.Sprintf(`"%s"`, st.String())), nil
+}
