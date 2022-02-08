@@ -13,8 +13,7 @@ func timeStampsBetween(timeRange backend.TimeRange, numOfPoints int) []time.Time
 
 	for i := range timeStamps {
 		duration := time.Duration(interval * int64(i))
-		pos := numOfPoints - 1 - i
-		timeStamps[pos] = timeRange.From.Add(duration)
+		timeStamps[i] = timeRange.From.Add(duration)
 	}
 
 	return timeStamps
