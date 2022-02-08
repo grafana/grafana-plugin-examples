@@ -1,12 +1,25 @@
 import React, { ReactElement, useCallback } from 'react';
+import { useAsync } from 'react-use';
 import { QueryEditorProps, SelectableValue } from '@grafana/data';
+import { Select } from '@grafana/ui';
 import { BasicDataSource } from '../datasource';
 import { BasicDataSourceOptions, BasicQuery } from '../types';
-import { AsyncSelect } from '@grafana/ui';
 
 type Props = QueryEditorProps<BasicDataSource, BasicQuery, BasicDataSourceOptions>;
 
-export function QueryEditor({ datasource, onChange, query }: Props): ReactElement {
+export function QueryEditor({ datasource, onChange, onRunQuery, query }: Props): ReactElement {
+  const {
+    loading,
+    value: scenarios = [],
+    error,
+  } = useAsync(async () => {
+    const { scenarios } = await datasource.getScenarios();
+    return scenarios.map((scenario) => ({
+      label: scenario,
+      value: scenario,
+    }));
+  }, [datasource]);
+
   const onChangeQuery = useCallback(
     (selectable: SelectableValue<string>) => {
       if (!selectable?.value) {
@@ -17,20 +30,14 @@ export function QueryEditor({ datasource, onChange, query }: Props): ReactElemen
         ...query,
         scenario: selectable.value,
       });
+      onRunQuery();
     },
-    [onChange, query]
+    [onChange, onRunQuery, query]
   );
 
   return (
     <div>
-      <AsyncSelect
-        loadingMessage="Retrieves selectable scenarios..."
-        onChange={onChangeQuery}
-        value={{ value: query.scenario }}
-        loadOptions={() => datasource.getScenarios()}
-        cacheOptions={true}
-        defaultOptions={true}
-      />
+      <Select defaultValue={true} options={scenarios} onChange={onChangeQuery} isLoading={loading} disabled={!!error} />
     </div>
   );
 }

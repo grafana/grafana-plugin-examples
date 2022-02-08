@@ -1,18 +1,17 @@
-package plugin
+package scenario
 
 import (
 	"context"
 	"encoding/json"
 
-	"github.com/grafana/basic-datasource/pkg/scenario"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 type queryModel struct {
-	Scenario scenario.ScenarioType `json:"scenario"`
+	Scenario ScenarioType `json:"scenario"`
 }
 
-func runQuery(_ context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
+func RunQuery(_ context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
 	response := backend.DataResponse{}
 
 	// Unmarshal the JSON into our queryModel.
@@ -24,7 +23,7 @@ func runQuery(_ context.Context, pCtx backend.PluginContext, query backend.DataQ
 	}
 
 	// create data frame response from given scenario.
-	frame, err := scenario.NewScenarioFrame(qm.Scenario, query)
+	frame, err := NewScenarioFrame(qm.Scenario, query)
 	if err != nil {
 		response.Error = err
 		return response

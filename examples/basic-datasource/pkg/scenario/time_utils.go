@@ -1,15 +1,20 @@
 package scenario
 
-import "time"
+import (
+	"time"
 
-func timeStampsBetween(from time.Time, to time.Time, numOfPoints int) []time.Time {
-	diff := from.Sub(to)
-	interval := diff.Milliseconds() / int64(numOfPoints)
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
+)
+
+func timeStampsBetween(timeRange backend.TimeRange, numOfPoints int) []time.Time {
+	diff := timeRange.Duration()
+	interval := diff.Nanoseconds() / int64(numOfPoints)
 	timeStamps := make([]time.Time, numOfPoints)
 
 	for i := range timeStamps {
 		duration := time.Duration(interval * int64(i))
-		timeStamps[i] = from.Add(duration)
+		pos := numOfPoints - 1 - i
+		timeStamps[pos] = timeRange.From.Add(duration)
 	}
 
 	return timeStamps

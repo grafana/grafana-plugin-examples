@@ -4,6 +4,7 @@ import (
 	"context"
 	"math/rand"
 
+	"github.com/grafana/basic-datasource/pkg/scenario"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -53,7 +54,7 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		res := runQuery(ctx, req.PluginContext, q)
+		res := scenario.RunQuery(ctx, req.PluginContext, q)
 
 		// save the response in a hashmap
 		// based on with RefID as identifier

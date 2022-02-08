@@ -8,10 +8,9 @@ import (
 // Example on how you can structure your data frames when returning
 // table based data.
 func newTableFrame(query backend.DataQuery) (*data.Frame, error) {
-	timeRange := query.TimeRange
 	tempInside := []int64{25, 22, 19, 23, 22, 22, 18, 26, 24, 20}
 	tempOutside := []int64{10, 8, 12, 9, 10, 11, 10, 9, 10, 9}
-	timestamps := timeStampsBetween(timeRange.From, query.TimeRange.To, len(tempOutside))
+	timestamps := timeStampsBetween(query.TimeRange, len(tempOutside))
 
 	fields := []*data.Field{
 		data.NewField("time", nil, timestamps),
