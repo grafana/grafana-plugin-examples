@@ -2,6 +2,7 @@ import { DataQuery, DataSourceJsonData } from '@grafana/data';
 
 export interface BasicQuery extends DataQuery {
   scenario: string;
+  query: string;
 }
 
 /**
