@@ -6,23 +6,26 @@ import (
 	"strings"
 	"time"
 
+	"github.com/grafana/basic-datasource/pkg/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 //  Macros:
-//   - $__timeFilter() -> TimeGenerated ≥ datetime(2018-06-05T18:09:58.907Z) and TimeGenerated ≤ datetime(2018-06-05T20:09:58.907Z)
+//   - $__timeFilter() -> defaultTimeColumn ≥ datetime(2018-06-05T18:09:58.907Z) and defaultTimeColumn ≤ datetime(2018-06-05T20:09:58.907Z)
 //   - $__timeFilter(datetimeColumn) ->  datetimeColumn  ≥ datetime(2018-06-05T18:09:58.907Z) and datetimeColumn ≤ datetime(2018-06-05T20:09:58.907Z)
 
-// MacroData contains the information needed for macro expansion.
-type macroContext struct {
+// queryMacro contains the information needed for macro expansion.
+type queryMacro struct {
 	backend.TimeRange
+	defaultTimeColumn string
 }
 
-// NewMacroData creates a MacroData object from the arguments that
+// NewQueryMacro creates a QueryMacro object from the arguments that
 // can be used to interpolate macros with the Interpolate method.
-func newMacroContext(qm queryModel, tr backend.TimeRange) macroContext {
-	return macroContext{
-		TimeRange: tr,
+func newQueryMacro(settings models.PluginSettings, tr backend.TimeRange) queryMacro {
+	return queryMacro{
+		TimeRange:         tr,
+		defaultTimeColumn: settings.DefaultTimeField,
 	}
 }
 
@@ -32,7 +35,7 @@ var macroRE = regexp.MustCompile(`\$__` + // Prefix: $__
 	`(\([a-zA-Z0-9_\s.-]*?\))?`) // optional () or optional (someArg)
 
 // Interpolate replaces macros with their values for the given query.
-func (ctx macroContext) Interpolate(query string) (string, error) {
+func (qm queryMacro) Interpolate(query string) (string, error) {
 	errorStrings := []string{}
 	replaceAll := func(varMatch string) string {
 		varSplit := strings.FieldsFunc(varMatch, func(r rune) bool {
@@ -48,7 +51,7 @@ func (ctx macroContext) Interpolate(query string) (string, error) {
 			return ""
 		}
 		arg := ""
-		return funcToCall(arg, ctx)
+		return funcToCall(arg, qm)
 	}
 	interpolated := macroRE.ReplaceAllStringFunc(query, replaceAll)
 	if len(errorStrings) > 0 {
@@ -57,16 +60,16 @@ func (ctx macroContext) Interpolate(query string) (string, error) {
 	return interpolated, nil
 }
 
-var interpolationFuncs = map[string]func(string, macroContext) string{
+var interpolationFuncs = map[string]func(string, queryMacro) string{
 	"$__timeFilter": timeFilterMacro,
 }
 
-func timeFilterMacro(s string, md macroContext) string {
+func timeFilterMacro(s string, qm queryMacro) string {
 	if s == "" {
-		s = "TimeGenerated"
+		s = qm.defaultTimeColumn
 	}
 	fmtString := "%v >= datetime(%v) and %v <= datetime(%v)"
-	timeString := fmt.Sprintf(fmtString, s, md.From.UTC().Format(time.RFC3339Nano), s, md.To.UTC().Format(time.RFC3339Nano))
+	timeString := fmt.Sprintf(fmtString, s, qm.From.UTC().Format(time.RFC3339Nano), s, qm.To.UTC().Format(time.RFC3339Nano))
 	backend.Logger.Debug("Time String", "value", timeString)
 	return timeString
 }

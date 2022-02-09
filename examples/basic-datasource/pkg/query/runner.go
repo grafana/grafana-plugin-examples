@@ -4,41 +4,33 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/grafana/basic-datasource/pkg/scenario"
+	"github.com/grafana/basic-datasource/pkg/models"
+	"github.com/grafana/basic-datasource/pkg/query/scenario"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
-type queryModel struct {
-	RawQuery      string `json:"rawQuery"`
-	RunnableQuery string `json:"-"`
-}
-
-func RunQuery(_ context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
+func RunQuery(_ context.Context, settings models.PluginSettings, query backend.DataQuery) backend.DataResponse {
 	response := backend.DataResponse{}
 
 	// Unmarshal the JSON into our queryModel.
-	var qm queryModel
+	var qm models.QueryModel
 
 	response.Error = json.Unmarshal(query.JSON, &qm)
 	if response.Error != nil {
 		return response
 	}
 
-	// Interpolate query with context values.
-	mc := newMacroContext(qm, query.TimeRange)
-	runnableQuery, err := mc.Interpolate(qm.RawQuery)
-	if err != nil {
-		response.Error = err
+	// Interpolate query so it can be run against your data source if it
+	// contains any macros.
+	macro := newQueryMacro(settings, query.TimeRange)
+	qm.RunnableQuery, response.Error = macro.Interpolate(qm.RawQuery)
+	if response.Error != nil {
 		return response
 	}
 
-	// Interpolated query that can be executed against your data source.
-	// We are not using it in this example since we only generate static
-	// response based on queryType. But we still want to show case how
-	// to support serverside variables/macros for your data source.
-	qm.RunnableQuery = runnableQuery
-
-	// Create data frame response from given query type.
+	// We are not using the RunnableQuery in this example because we are generating
+	// static data depending on the query type. We still want to show case how to
+	// support macros/server side variables in your queries.
 	frame, err := scenario.NewDataFrame(query)
 	if err != nil {
 		response.Error = err

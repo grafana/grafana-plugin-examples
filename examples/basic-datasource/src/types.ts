@@ -8,7 +8,7 @@ export interface BasicQuery extends DataQuery {
  * These are options configured for each DataSource instance
  */
 export interface BasicDataSourceOptions extends DataSourceJsonData {
-  path?: string;
+  defaultTimeField?: string;
 }
 
 /**

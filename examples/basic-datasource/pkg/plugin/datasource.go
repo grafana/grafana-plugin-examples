@@ -4,6 +4,7 @@ import (
 	"context"
 	"math/rand"
 
+	"github.com/grafana/basic-datasource/pkg/models"
 	"github.com/grafana/basic-datasource/pkg/query"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
@@ -26,12 +27,19 @@ var (
 // its health and has streaming skills.
 type Datasource struct {
 	backend.CallResourceHandler
+	settings *models.PluginSettings
 }
 
 // NewDatasource creates a new datasource instance.
-func NewDatasource(_ backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func NewDatasource(dis backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+	settings, err := models.LoadPluginSettings(dis)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Datasource{
 		CallResourceHandler: newResourceHandler(),
+		settings:            settings,
 	}, nil
 }
 
@@ -54,7 +62,7 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		res := query.RunQuery(ctx, req.PluginContext, q)
+		res := query.RunQuery(ctx, *ds.settings, q)
 
 		// save the response in a hashmap
 		// based on with RefID as identifier
