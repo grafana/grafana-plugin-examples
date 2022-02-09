@@ -15,11 +15,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/grafana-starter-panel"
+        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/grafana-starter-panel/blob/master/LICENSE"
+        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel/blob/master/LICENSE"
       }
     ],
     "screenshots": [],
@@ -27,7 +27,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=8.0.0",
+    "grafanaDependency": "^8.0.0",
     "plugins": []
   }
 }
