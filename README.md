@@ -9,6 +9,7 @@ This repository contains example plugins to showcase different use cases.
 - [plotly](examples/plotly) demonstrates how to use the [Plotly](https://plotly.com/javascript/) graphing library in a panel plugin.
 - [scatterplot](examples/scatterplot) demonstrates how to use D3 and SVG to create a scatter plot panel.
 - [visx](examples/visx) demonstrates how to use [visx](https://github.com/airbnb/visx) to create a time series graph.
+- [basic-panel](examples/basic-panel) demonstrates how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range.
 
 ## Data source plugins
 
