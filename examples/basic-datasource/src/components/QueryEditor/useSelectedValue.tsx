@@ -1,18 +1,15 @@
 import { useMemo } from 'react';
 import type { SelectableValue } from '@grafana/data';
 
-export function useSelectedValue(
-  options: Array<SelectableValue<string>>,
-  value: string | undefined
-): SelectableValue<string> {
+export function useSelectableValue(value: string | undefined, label?: string): SelectableValue<string> | undefined {
   return useMemo(() => {
-    if (!value && options.length > 0) {
-      return options[0];
+    if (!value) {
+      return;
     }
 
     return {
-      label: value,
+      label: label ?? value,
       value: value,
     };
-  }, [options, value]);
+  }, [label, value]);
 }

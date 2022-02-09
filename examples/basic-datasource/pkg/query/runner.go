@@ -31,9 +31,8 @@ func RunQuery(_ context.Context, settings models.PluginSettings, query backend.D
 	// We are not using the RunnableQuery in this example because we are generating
 	// static data depending on the query type. We still want to show case how to
 	// support macros/server side variables in your queries.
-	frame, err := scenario.NewDataFrame(query)
-	if err != nil {
-		response.Error = err
+	frame := scenario.NewDataFrame(query)
+	if frame == nil {
 		return response
 	}
 
