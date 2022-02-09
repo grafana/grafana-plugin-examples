@@ -1,4 +1,4 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import type { DataQuery, DataSourceJsonData } from '@grafana/data';
 
 export interface BasicQuery extends DataQuery {
   rawQuery: string;
