@@ -1,15 +1,11 @@
 import React, { ReactElement } from 'react';
-import { QueryEditorProps } from '@grafana/data';
 import { InlineFieldRow, InlineField, Select } from '@grafana/ui';
-import { BasicDataSource } from '../../datasource';
-import { BasicDataSourceOptions, BasicQuery } from '../../types';
 import { useQueryTypes } from './useQueryTypes';
 import { useSelectedValue } from './useSelectedValue';
 import { useChangeAndRunQuery } from './useChangeAndRunQuery';
+import type { EditorProps } from './types';
 
-type Props = QueryEditorProps<BasicDataSource, BasicQuery, BasicDataSourceOptions>;
-
-export function QueryEditor(props: Props): ReactElement {
+export function QueryEditor(props: EditorProps): ReactElement {
   const { datasource, query } = props;
   const { loading, queryTypes, error } = useQueryTypes(datasource);
   const queryType = useSelectedValue(queryTypes, query.queryType);

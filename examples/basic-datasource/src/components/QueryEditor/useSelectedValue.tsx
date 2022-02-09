@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { SelectableValue } from '@grafana/data';
+import type { SelectableValue } from '@grafana/data';
 
 export function useSelectedValue(
   options: Array<SelectableValue<string>>,

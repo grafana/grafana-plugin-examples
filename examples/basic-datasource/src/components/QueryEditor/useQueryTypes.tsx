@@ -1,6 +1,6 @@
 import { useAsync } from 'react-use';
-import { SelectableValue } from '@grafana/data';
-import { BasicDataSource } from '../../datasource';
+import type { SelectableValue } from '@grafana/data';
+import type { BasicDataSource } from '../../datasource';
 
 type AsyncQueryTypeState = {
   loading: boolean;

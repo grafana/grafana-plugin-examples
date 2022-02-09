@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
-import { QueryEditorProps, SelectableValue } from '@grafana/data';
-import { BasicDataSource } from '../../datasource';
-import { BasicDataSourceOptions, BasicQuery } from '../../types';
+import type { SelectableValue } from '@grafana/data';
+import type { BasicQuery } from '../../types';
+import type { EditorProps } from './types';
 
-type Props = QueryEditorProps<BasicDataSource, BasicQuery, BasicDataSourceOptions>;
 type OnChangeType = (value: SelectableValue<string>) => void;
 
-export function useChangeAndRunQuery(props: Props, propertyName: keyof BasicQuery): OnChangeType {
+export function useChangeAndRunQuery(props: EditorProps, propertyName: keyof BasicQuery): OnChangeType {
   const { onChange, onRunQuery, query } = props;
 
   return useCallback(
