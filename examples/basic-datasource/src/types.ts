@@ -1,8 +1,7 @@
 import { DataQuery, DataSourceJsonData } from '@grafana/data';
 
 export interface BasicQuery extends DataQuery {
-  scenario: string;
-  query: string;
+  rawQuery: string;
 }
 
 /**
@@ -19,6 +18,6 @@ export interface BasicSecureJsonData {
   apiKey?: string;
 }
 
-export type ScenarioResponse = {
-  scenarios: string[];
+export type QueryTypesResponse = {
+  queryTypes: string[];
 };

@@ -11,8 +11,7 @@ func timeStampsBetween(timeRange backend.TimeRange, numOfPoints int) []time.Time
 	interval := diff.Nanoseconds() / int64(numOfPoints)
 	timeStamps := make([]time.Time, numOfPoints)
 
-	// always return the date time values as UTC from the source
-	// where you read your data.
+	// always return the date time values as UTC from the source of your data.
 	for i := range timeStamps {
 		duration := time.Duration(interval * int64(i))
 		timeStamps[i] = timeRange.From.Add(duration).UTC()

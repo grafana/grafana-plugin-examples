@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/grafana/basic-datasource/pkg/scenario"
@@ -12,39 +11,37 @@ import (
 
 func newResourceHandler() backend.CallResourceHandler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/scenarios", handleScenarios)
+	mux.HandleFunc("/query-types", handleQueryTypes)
 
 	return httpadapter.New(mux)
 }
 
-type scenariosResponse struct {
-	Scenarios []scenario.ScenarioType `json:"scenarios"`
+type queryTypesResponse struct {
+	QueryTypes []string `json:"queryTypes"`
 }
 
-func handleScenarios(w http.ResponseWriter, r *http.Request) {
+func handleQueryTypes(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.NotFound(w, r)
 		return
 	}
 
-	scenarios := &scenariosResponse{
-		Scenarios: []scenario.ScenarioType{
+	queryTypes := &queryTypesResponse{
+		QueryTypes: []string{
 			scenario.TimeSeries,
 			scenario.Table,
 		},
 	}
 
-	j, err := json.Marshal(scenarios)
+	j, err := json.Marshal(queryTypes)
 	if err != nil {
-		msg := fmt.Sprintf(`{ error: "%s" }`, err.Error())
-		w.Write([]byte(msg))
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	_, err = w.Write(j)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

@@ -7,13 +7,13 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
-func NewScenarioFrame(scenario ScenarioType, query backend.DataQuery) (*data.Frame, error) {
-	switch scenario {
+func NewDataFrame(query backend.DataQuery) (*data.Frame, error) {
+	switch query.QueryType {
 	case TimeSeries:
 		return newTimeSeriesFrame(query)
 	case Table:
 		return newTableFrame(query)
 	}
 
-	return nil, fmt.Errorf("scenario not supported %s", scenario)
+	return nil, fmt.Errorf("queryType not supported %s", query.QueryType)
 }

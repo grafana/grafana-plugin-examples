@@ -4,7 +4,7 @@ import (
 	"context"
 	"math/rand"
 
-	"github.com/grafana/basic-datasource/pkg/scenario"
+	"github.com/grafana/basic-datasource/pkg/query"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -25,13 +25,13 @@ var (
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
 type Datasource struct {
-	resourceHandler backend.CallResourceHandler
+	backend.CallResourceHandler
 }
 
 // NewDatasource creates a new datasource instance.
 func NewDatasource(_ backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	return &Datasource{
-		resourceHandler: newResourceHandler(),
+		CallResourceHandler: newResourceHandler(),
 	}, nil
 }
 
@@ -54,7 +54,7 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		res := scenario.RunQuery(ctx, req.PluginContext, q)
+		res := query.RunQuery(ctx, req.PluginContext, q)
 
 		// save the response in a hashmap
 		// based on with RefID as identifier
@@ -83,9 +83,4 @@ func (ds *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthReq
 		Status:  status,
 		Message: message,
 	}, nil
-}
-
-func (ds *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
-	log.DefaultLogger.Info("CallResource called", "request", req)
-	return ds.resourceHandler.CallResource(ctx, req, sender)
 }
