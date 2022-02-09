@@ -1,33 +1,28 @@
 import React, { ReactElement } from 'react';
-import { LegacyForms } from '@grafana/ui';
+import { Field, FieldSet, Input, LegacyForms } from '@grafana/ui';
 import type { EditorProps } from './types';
 import { useChangeOptions } from './useChangeOptions';
 import { useChangeSecureOptions } from './useChangeSecureOptions';
 import { useResetSecureOptions } from './useResetSecureOptions';
 
-const { SecretFormField, FormField } = LegacyForms;
+const { SecretFormField } = LegacyForms;
 
 export function ConfigEditor(props: EditorProps): ReactElement {
   const { jsonData, secureJsonData } = props.options;
-  const onTimeColumnChange = useChangeOptions(props, 'defaultTimeField');
+  const onTimeFieldChange = useChangeOptions(props, 'defaultTimeField');
   const onApiKeyChange = useChangeSecureOptions(props, 'apiKey');
   const onResetApiKey = useResetSecureOptions(props, 'apiKey');
 
   return (
-    <div className="gf-form-group">
-      <div className="gf-form">
-        <FormField
-          label="Path"
-          labelWidth={6}
-          inputWidth={20}
-          onChange={onTimeColumnChange}
-          value={jsonData.defaultTimeField || 'time'}
-          placeholder="json field returned to frontend"
-        />
-      </div>
+    <>
+      <FieldSet label="General">
+        <Field label="Time Field" description="Default time field used when interpolate the $__timeFilter()">
+          <Input onChange={onTimeFieldChange} placeholder="time" value={jsonData?.defaultTimeField ?? ''} />
+        </Field>
+      </FieldSet>
 
-      <div className="gf-form-inline">
-        <div className="gf-form">
+      <FieldSet label="Secrets">
+        <Field label="API Key" description="API Key used to make calls to your data source">
           <SecretFormField
             isConfigured={Boolean(secureJsonData?.apiKey)}
             value={secureJsonData?.apiKey || ''}
@@ -38,8 +33,8 @@ export function ConfigEditor(props: EditorProps): ReactElement {
             onReset={onResetApiKey}
             onChange={onApiKeyChange}
           />
-        </div>
-      </div>
-    </div>
+        </Field>
+      </FieldSet>
+    </>
   );
 }
