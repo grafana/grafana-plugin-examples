@@ -1,12 +1,12 @@
-# Grafana Data Source Plugin Template
+# Basic Panel Plugin
 
-[![Build](https://github.com/grafana/grafana-starter-datasource/workflows/CI/badge.svg)](https://github.com/grafana/grafana-starter-datasource/actions?query=workflow%3A%22CI%22)
+This is an example on how to build a basic panel plugin.
 
-This template is a starting point for building Grafana Data Source Plugins
+## What is Grafana Panel Plugin?
 
-## What is Grafana Data Source Plugin?
+Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
 
-Grafana supports a wide range of data sources, including Prometheus, MySQL, and even Datadog. There’s a good chance you can already visualize metrics from the systems you have set up. In some cases, though, you already have an in-house metrics solution that you’d like to add to your Grafana dashboards. Grafana Data Source Plugins enables integrating such solutions with Grafana.
+Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
 
 ## Getting started
 
@@ -36,7 +36,7 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
 
 ## Learn more
 
-- [Build a data source plugin tutorial](https://grafana.com/tutorials/build-a-data-source-plugin)
+- [Build a panel plugin tutorial](https://grafana.com/tutorials/build-a-panel-plugin/)
 - [Grafana documentation](https://grafana.com/docs/)
 - [Grafana Tutorials](https://grafana.com/tutorials/) - Grafana Tutorials are step-by-step guides that help you make the most of Grafana
 - [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana Design System
