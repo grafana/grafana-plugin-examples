@@ -16,13 +16,13 @@ type SecretPluginSettings struct {
 	ApiKey string
 }
 
-const TIME_FIELD = "time"
+const defaultTimeField = "time"
 
 func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSettings, error) {
 	if source.JSONData == nil || len(source.JSONData) < 1 {
 		// If no settings have been saved return default values
 		return &PluginSettings{
-			DefaultTimeField: TIME_FIELD,
+			DefaultTimeField: defaultTimeField,
 			Secrets:          loadSecretPluginSettings(source.DecryptedSecureJSONData),
 		}, nil
 	}
@@ -35,7 +35,7 @@ func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSetti
 	}
 
 	if settings.DefaultTimeField == "" {
-		settings.DefaultTimeField = TIME_FIELD
+		settings.DefaultTimeField = defaultTimeField
 	}
 
 	settings.Secrets = loadSecretPluginSettings(source.DecryptedSecureJSONData)
