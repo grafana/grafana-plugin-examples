@@ -2,6 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const LiveReloadPlugin = require('webpack-livereload-plugin');
 const { getPackageJson, getPluginId, hasReadme } = require('./utils');
 const { SOURCE_DIR, DIST_DIR, ENTRY_FILE } = require('./constants');
 
@@ -123,6 +124,9 @@ module.exports = {
       // Only report problems in detected in plugin's code
       reportFiles: ['**/*.{ts,tsx}'],
     }),
+
+    // Add live reload functionality. Requires <script /> in index.html
+    new LiveReloadPlugin(),
   ],
 
   resolve: {
