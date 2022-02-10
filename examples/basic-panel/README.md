@@ -16,16 +16,14 @@ Use panel plugins when you want to do things like visualize data returned by dat
    yarn install
    ```
 
-2. Build plugin in development mode or run in watch mode
+2. Build plugin in development mode and run inside Grafana using Docker
 
    ```bash
+   # Start watching for changes
    yarn dev
-   ```
 
-   or
-
-   ```bash
-   yarn watch
+   # Run Grafana inside a docker container in a separate session
+   docker-compose up
    ```
 
 3. Build plugin in production mode
