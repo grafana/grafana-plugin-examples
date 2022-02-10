@@ -1,12 +1,13 @@
 import { useCallback } from 'react';
 import type { SelectableValue } from '@grafana/data';
 import type { BasicQuery } from '../../types';
-import type { EditorProps } from './types';
+import type { ChangeOptions, EditorProps } from './types';
 
 type OnChangeType = (value: SelectableValue<string>) => void;
 
-export function useChangeAndRunQuery(props: EditorProps, propertyName: keyof BasicQuery): OnChangeType {
+export function useChangeSelectableValue(props: EditorProps, options: ChangeOptions<BasicQuery>): OnChangeType {
   const { onChange, onRunQuery, query } = props;
+  const { propertyName, runQuery } = options;
 
   return useCallback(
     (selectable: SelectableValue<string>) => {
@@ -18,8 +19,11 @@ export function useChangeAndRunQuery(props: EditorProps, propertyName: keyof Bas
         ...query,
         [propertyName]: selectable.value,
       });
-      onRunQuery();
+
+      if (runQuery) {
+        onRunQuery();
+      }
     },
-    [onChange, onRunQuery, query, propertyName]
+    [onChange, onRunQuery, query, propertyName, runQuery]
   );
 }
