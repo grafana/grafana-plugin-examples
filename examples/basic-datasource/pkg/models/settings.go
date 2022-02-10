@@ -16,11 +16,13 @@ type SecretPluginSettings struct {
 	ApiKey string
 }
 
+const TIME_FIELD = "time"
+
 func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSettings, error) {
 	if source.JSONData == nil || len(source.JSONData) < 1 {
 		// If no settings have been saved return default values
 		return &PluginSettings{
-			DefaultTimeField: "time",
+			DefaultTimeField: TIME_FIELD,
 			Secrets:          loadSecretPluginSettings(source.DecryptedSecureJSONData),
 		}, nil
 	}
@@ -30,6 +32,10 @@ func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSetti
 	err := json.Unmarshal(source.JSONData, &settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal PluginSettings json: %w", err)
+	}
+
+	if settings.DefaultTimeField == "" {
+		settings.DefaultTimeField = TIME_FIELD
 	}
 
 	settings.Secrets = loadSecretPluginSettings(source.DecryptedSecureJSONData)
