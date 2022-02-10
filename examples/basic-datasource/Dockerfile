@@ -1,4 +1,4 @@
-FROM grafana/grafana:8.3.6
+FROM grafana/grafana:8.3
 
 # Make it as simple as possible to access the grafana instance for development purposes
 # Do NOT enable these settings in a public facing / production grafana instance
