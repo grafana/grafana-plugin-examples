@@ -38,6 +38,4 @@ func TestQueryData(t *testing.T) {
 	if len(resp.Responses) != 1 {
 		t.Fatal("QueryData must return a response")
 	}
-
-	fmt.Println(resp.Responses["A"].Frames[0].Name)
 }
