@@ -57,7 +57,7 @@ func (ds *Datasource) Dispose() {
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
 // contains Frames ([]*Frame).
 func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	log.DefaultLogger.Info("QueryData called", "request", req)
+	log.DefaultLogger.Debug("QueryData called", "request", req)
 
 	// create response struct
 	response := backend.NewQueryDataResponse()
