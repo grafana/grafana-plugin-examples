@@ -14,8 +14,8 @@ func main() {
 	// to exit by itself using os.Exit. Manage automatically manages life cycle
 	// of datasource instances. It accepts datasource instance factory as first
 	// argument. This factory will be automatically called on incoming request
-	// from Grafana to create different instances of SampleDatasource (per datasource
-	// ID). When datasource configuration changed Dispose method will be called and
+	// from Grafana to create different instances of SampleDatasource (per condigured datasource in Grafana).
+	// When datasource configuration changed Dispose method will be called and
 	// new datasource instance created using NewSampleDatasource factory.
 	if err := datasource.Manage("grafana-basic-datasource", plugin.NewDatasource, datasource.ManageOpts{}); err != nil {
 		log.DefaultLogger.Error(err.Error())
