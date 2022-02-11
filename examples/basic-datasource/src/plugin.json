@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Basic Datasource",
+  "id": "grafana-basic-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_basic_datasource",
+  "info": {
+    "description": "Showcase how to build a basic datasource plugin",
+    "author": {
+      "name": "Your Name"
+    },
+    "keywords": [
+      "datasource"
+    ],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/grafana-starter-datasource"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/grafana-starter-datasource/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": "^8.0.0",
+    "plugins": []
+  }
+}

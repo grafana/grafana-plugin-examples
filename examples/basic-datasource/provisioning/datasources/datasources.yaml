@@ -1,0 +1,11 @@
+apiVersion: 1
+
+datasources:
+  - name: Basic Example
+    type: grafana-basic-datasource
+    access: proxy
+    isDefault: true
+    orgId: 1
+    version: 1
+    editable: true
+    uid: U9sW5bank
