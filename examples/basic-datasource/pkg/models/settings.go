@@ -27,18 +27,17 @@ func LoadPluginSettings(source backend.DataSourceInstanceSettings) (*PluginSetti
 		}, nil
 	}
 
-	var settings PluginSettings
+	settings := PluginSettings{
+		DefaultTimeField: defaultTimeField,
+	}
 
 	err := json.Unmarshal(source.JSONData, &settings)
 	if err != nil {
 		return nil, fmt.Errorf("could not unmarshal PluginSettings json: %w", err)
 	}
 
-	if settings.DefaultTimeField == "" {
-		settings.DefaultTimeField = defaultTimeField
-	}
-
 	settings.Secrets = loadSecretPluginSettings(source.DecryptedSecureJSONData)
+
 	return &settings, nil
 }
 
