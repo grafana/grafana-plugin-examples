@@ -45,7 +45,9 @@ func NewDatasource(dis backend.DataSourceInstanceSettings) (instancemgmt.Instanc
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created. As soon as datasource settings change detected by SDK old datasource instance will
-// be disposed and a new one will be created using NewSampleDatasource factory function.
+// be disposed and a new one will be created using NewDatasource factory function.
+// If you don't need to clean up any resource you don't need to implement 
+// this interface and can leave it out.
 func (ds *Datasource) Dispose() {
 	// Clean up datasource instance resources.
 }
