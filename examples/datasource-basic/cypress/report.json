@@ -1,0 +1,32 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2022-02-16T13:02:16.267Z",
+    "end": "2022-02-16T13:02:20.288Z",
+    "duration": 4021
+  },
+  "tests": [
+    {
+      "title": "should return data with one value/time field",
+      "fullTitle": "querying datasource with query type: time series should return data with one value/time field",
+      "duration": 2956,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "should return data with one value/time field",
+      "fullTitle": "querying datasource with query type: time series should return data with one value/time field",
+      "duration": 2956,
+      "currentRetry": 0,
+      "err": {}
+    }
+  ]
+}
