@@ -33,6 +33,7 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.5.1",
+    "ts-loader": "6.2.1",
     "webpack": "^5.55.1",
     "webpack-cli": "^4.8.0",
     "webpack-livereload-plugin": "^3.0.2"
