@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: set-matrix
-        run: echo "::set-output name=matrix::$(ls ./examples | jq -R -s -c 'split("\n")')"
+        run: echo "::set-output name=matrix::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")')"
   test-matrix:
     needs: list-examples
     runs-on: ubuntu-latest
@@ -17,5 +17,6 @@ jobs:
         examples: ${{ fromJson(needs.list-examples.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v2
+      
       - run: |
           echo ${{ matrix.examples }}
