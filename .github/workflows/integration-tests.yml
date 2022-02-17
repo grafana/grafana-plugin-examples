@@ -1,5 +1,5 @@
 name: integration tests
-on: [pull_request]
+on: pull_request
 jobs:
   list-examples:
     runs-on: ubuntu-latest
