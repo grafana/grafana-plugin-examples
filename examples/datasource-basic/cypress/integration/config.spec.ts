@@ -1,8 +1,8 @@
 import { e2e } from '@grafana/e2e';
 
 const configEditor = e2e.getSelectors({
-    timeField: 'input[aria-label="Macro default time field"]',
-    apiKey: 'input[aria-label="Secret api key"]',
+    timeField: 'Macro default time field',
+    apiKey: 'Secret api key',
 });
 
 describe('configurating datasource', () => {
