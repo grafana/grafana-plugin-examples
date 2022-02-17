@@ -18,4 +18,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-          echo ${{ martix.examples }}
+          echo ${{ matrix.examples }}
