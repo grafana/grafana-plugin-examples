@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         examples: ${{ fromJson(needs.list-examples.outputs.matrix) }}
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
 
