@@ -1,4 +1,6 @@
-FROM grafana/grafana:8.3
+ARG grafana_version=latest
+
+FROM grafana/grafana:${grafana_version}
 
 # Make it as simple as possible to access the grafana instance for development purposes
 # Do NOT enable these settings in a public facing / production grafana instance

@@ -2,7 +2,11 @@ version: '3.0'
 
 services:
   grafana:
-    build: .
+    container_name: grafana-basic-datasource
+    build:
+      context: .
+      args:
+        grafana_version: ${GRAFANA_VERSION}
     ports:
       - 3000:3000/tcp
     volumes:
