@@ -1,0 +1,21 @@
+name: integration tests
+on: [pull_request]
+jobs:
+  list-examples:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: echo "::set-output name=matrix::$(ls ./examples | jq -R -s -c 'split("\n")')"
+  test-matrix:
+    needs: list-examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        examples: ${{ fromJson(needs.list-manifests.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          echo ${{ martix.examples }}
