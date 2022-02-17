@@ -32,3 +32,15 @@ jobs:
       - name: Build example plugin
         run: yarn build
         working-directory: ${{ matrix.examples }}
+
+      - name: Start Docker container using expected versions
+        run: yarn server:expected
+        working-directory: ${{ matrix.examples }}
+
+      - name: Start Integration tests
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
+
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
