@@ -5,7 +5,7 @@ const configEditor = e2e.getSelectors({
     apiKey: 'input[aria-label="Secret api key"]',
 });
 
-describe.only('configurating datasource', () => {
+describe('configurating datasource', () => {
   it('should be possible to update api key and default time field', () => {
     e2e.flows.addDataSource({
       type: 'Basic Datasource',
