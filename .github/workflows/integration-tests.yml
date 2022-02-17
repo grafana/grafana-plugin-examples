@@ -17,10 +17,12 @@ jobs:
         examples: ${{ fromJson(needs.list-examples.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
           cache: yarn
+          cache-dependency-path: ${{ matrix.examples }}
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
