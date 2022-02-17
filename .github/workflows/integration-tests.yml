@@ -28,3 +28,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
         working-directory: ${{ matrix.examples }}
+
+      - name: Build example plugin
+        run: yarn build
+        working-directory: ${{ matrix.examples }}
