@@ -7,7 +7,8 @@
     "dev": "webpack -w -c ./.webpack/webpack.dev.conf.js",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
-    "test:e2e": "grafana-e2e run",
+    "e2e:run": "TZ=UTC grafana-e2e run",
+    "e2e:open": "TZ=UTC grafana-e2e open",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix"
