@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         examples: ${{ fromJson(needs.list-examples.outputs.examples) }}
-        grafana: ${{ needs.list-examples.outputs.grafana }}
+        grafana: ${{ fromJson(needs.list-examples.outputs.grafana) }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
