@@ -11,7 +11,7 @@ jobs:
       - id: set-examples
         run: echo "::set-output name=examples::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')"
       - id: set-grafana-version
-        run: echo "::set-output name=grafana::$(curl -s "https://raw.githubusercontent.com/grafana/grafana/main/latest.json" | jq '.')
+        run: echo "::set-output name=grafana::$(curl -s 'https://raw.githubusercontent.com/grafana/grafana/main/latest.json' | jq '.')"
   test-matrix:
     needs: list-examples
     runs-on: ubuntu-latest
