@@ -27,7 +27,7 @@ jobs:
         run: echo ${{ matrix.examples }}
 
       - name: test matrix output
-        run: echo ${matrix.grafana}
+        run: echo ${{ matrix.grafana }}
 
       - uses: actions/setup-node@v2
         with:
