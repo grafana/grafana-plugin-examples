@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"context"
-	"math/rand"
 
 	"github.com/grafana/basic-datasource/pkg/models"
 	"github.com/grafana/basic-datasource/pkg/query"
@@ -46,7 +45,7 @@ func NewDatasource(dis backend.DataSourceInstanceSettings) (instancemgmt.Instanc
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created. As soon as datasource settings change detected by SDK old datasource instance will
 // be disposed and a new one will be created using NewDatasource factory function.
-// If you don't need to clean up any resource you don't need to implement 
+// If you don't need to clean up any resource you don't need to implement
 // this interface and can leave it out.
 func (ds *Datasource) Dispose() {
 	// Clean up datasource instance resources.
@@ -84,7 +83,8 @@ func (ds *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthReq
 	var status = backend.HealthStatusOk
 	var message = "Data source is working"
 
-	if rand.Int()%2 == 0 {
+	// just to showcase how to return an error.
+	if false {
 		status = backend.HealthStatusError
 		message = "randomized error just to showcase how to report errors"
 	}

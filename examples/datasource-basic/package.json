@@ -7,6 +7,8 @@
     "dev": "webpack -w -c ./.webpack/webpack.dev.conf.js",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
+    "e2e:run": "TZ=UTC grafana-e2e run",
+    "e2e:open": "TZ=UTC grafana-e2e open",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix"
@@ -14,6 +16,7 @@
   "author": "Grafana",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@grafana/e2e": "^8.1.5",
     "@grafana/eslint-config": "^2.5.0",
     "@grafana/tsconfig": "^1.0.0-rc1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -27,7 +30,8 @@
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "webpack": "^5.55.1",
-    "webpack-cli": "^4.8.0"
+    "webpack-cli": "^4.8.0",
+    "cypress": "9.3.1"
   },
   "resolutions": {
     "rxjs": "7.3.0"

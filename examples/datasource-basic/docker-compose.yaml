@@ -2,7 +2,12 @@ version: '3.0'
 
 services:
   grafana:
-    build: .
+    image: grafana/grafana:8.3.6
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_DEFAULT_APP_MODE=development
     ports:
       - 3000:3000/tcp
     volumes:
