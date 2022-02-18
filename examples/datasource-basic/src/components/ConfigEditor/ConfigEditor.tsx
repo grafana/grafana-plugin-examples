@@ -4,6 +4,7 @@ import type { EditorProps } from './types';
 import { useChangeOptions } from './useChangeOptions';
 import { useChangeSecureOptions } from './useChangeSecureOptions';
 import { useResetSecureOptions } from './useResetSecureOptions';
+import { testIds } from 'components/testIds';
 
 const { SecretFormField } = LegacyForms;
 
@@ -20,7 +21,7 @@ export function ConfigEditor(props: EditorProps): ReactElement {
           <Input
             onChange={onTimeFieldChange}
             placeholder="time"
-            aria-label="Macro default time field"
+            data-testid={testIds.configEditor.timeField}
             value={jsonData?.defaultTimeField ?? ''}
           />
         </InlineField>
@@ -35,7 +36,7 @@ export function ConfigEditor(props: EditorProps): ReactElement {
           placeholder="secure json field (backend only)"
           labelWidth={6}
           inputWidth={20}
-          aria-label="Secret api key"
+          data-testid={testIds.configEditor.apiKey}
           onReset={onResetApiKey}
           onChange={onApiKeyChange}
         />

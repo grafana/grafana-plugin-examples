@@ -1,9 +1,7 @@
 import { e2e } from '@grafana/e2e';
+import { testIds } from '../../src/components/testIds';
 
-const configEditor = e2e.getSelectors({
-    timeField: 'Macro default time field',
-    apiKey: 'Secret api key',
-});
+const { configEditor } = e2e.getSelectors(testIds);
 
 describe('configurating datasource', () => {
   it('should be possible to update api key and default time field', () => {
