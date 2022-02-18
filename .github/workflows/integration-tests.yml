@@ -1,24 +1,24 @@
 name: integration tests
 on: pull_request
 jobs:
-  list-examples:
+  setup-matrix:
     runs-on: ubuntu-latest
     outputs:
       examples: ${{ steps.set-examples.outputs.examples }}
-      grafana: ${{ steps.set-grafana-version.outputs.grafana }}
+      grafana_version: ${{ steps.set-grafana-version.outputs.grafana_version }}
     steps:
       - uses: actions/checkout@v2
       - id: set-examples
         run: echo "::set-output name=examples::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')"
       - id: set-grafana-version
-        run: echo "::set-output name=grafana::$(curl -s 'https://raw.githubusercontent.com/grafana/grafana/main/latest.json' | jq -c '[.stable]')"
-  test-matrix:
-    needs: list-examples
+        run: echo "::set-output name=grafana_version::$(curl -s 'https://raw.githubusercontent.com/grafana/grafana/main/latest.json' | jq -c '[.stable]')"
+  run-integration-tests:
+    needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        examples: ${{ fromJson(needs.list-examples.outputs.examples) }}
-        grafana: ${{ fromJson(needs.list-examples.outputs.grafana) }}
+        examples: ${{ fromJson(needs.setup-matrix.outputs.examples) }}
+        grafana_version: ${{ fromJson(needs.setup-matrix.outputs.grafana_version) }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
         run: echo ${{ matrix.examples }}
 
       - name: test matrix output
-        run: echo ${{ matrix.grafana }}
+        run: echo ${{ matrix.grafana_version }}
 
       - uses: actions/setup-node@v2
         with:
@@ -47,7 +47,39 @@ jobs:
         run: yarn server:expected
         working-directory: ${{ matrix.examples }}
 
-      - name: Start Integration tests
+      - name: Start Integration tests using expected versions
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
+
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
+
+      - name: Start Docker container using latest version of grafana
+        run: GRAFANA_VERSION=${{ matrix.grafana_version }} docker-compose up -d --build
+        working-directory: ${{ matrix.examples }}
+        
+      - name: Start Integration tests using latest version of Grafana
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
+
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
+
+      - name: Upgrade @grafana dependencies to latest version
+        run: yarn upgrade --latest --scope @grafana
+        working-directory: ${{ matrix.examples }}
+
+      - name: Build example plugin with latest @grafana dependencies
+        run: yarn build
+        working-directory: ${{ matrix.examples }}
+
+      - name: Start Docker container using latest version of grafana
+        run: GRAFANA_VERSION=${{ matrix.grafana_version }} docker-compose up -d --build
+        working-directory: ${{ matrix.examples }}
+
+      - name: Start Integration tests using latest version of Grafana
         run: yarn e2e
         working-directory: ${{ matrix.examples }}
 
