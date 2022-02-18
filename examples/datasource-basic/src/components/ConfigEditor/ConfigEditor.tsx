@@ -29,7 +29,7 @@ export function ConfigEditor(props: EditorProps): ReactElement {
       <FieldSet label="API Settings">
         <SecretFormField
           tooltip="API Key used to make calls to your data source"
-          isConfigured={Boolean(secureJsonFields['apiKey'])}
+          isConfigured={Boolean(secureJsonFields.apiKey)}
           value={secureJsonData?.apiKey || ''}
           label="API Key"
           placeholder="secure json field (backend only)"
