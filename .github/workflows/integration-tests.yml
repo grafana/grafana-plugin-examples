@@ -45,13 +45,13 @@ jobs:
       - name: Echo check for backend Mage file
         run: echo ${{ steps.backend-check.outputs.MAGEFILE_EXISTS }}
 
-      # - name: Build plugin backend
-      #   uses: magefile/mage-action@v1
-      #   with:
-      #     version: latest
-      #     args: -v
-      #     workdir: ${{ matrix.examples }}
-      #   if: steps.backend-check.outputs.MAGEFILE_EXISTS
+      - name: Build plugin backend
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: -v
+          workdir: ${{ matrix.examples }}
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       # - name: Start Docker container using expected versions
       #   run: yarn server:expected
