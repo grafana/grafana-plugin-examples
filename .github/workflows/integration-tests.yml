@@ -28,13 +28,26 @@ jobs:
           cache: yarn
           cache-dependency-path: ${{ matrix.examples }}
 
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
         working-directory: ${{ matrix.examples }}
 
-      - name: Build example plugin
+      - name: Build plugin frontend
         run: yarn build
         working-directory: ${{ matrix.examples }}
+
+      - name: Build plugin backend
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: -v
+          workdir: ${{ matrix.examples }}
+        if: hasFiles('Magefile.go') != ''
 
       - name: Start Docker container using expected versions
         run: yarn server:expected
@@ -60,7 +73,7 @@ jobs:
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
 
-      ## TODO: We need to move the docker images to use commit hash so we can 
+      ## TODO: We need to move the docker images to use commit hash so we can
       # "marry" the NPM canary version to a grafana app version
 
       # - name: Upgrade @grafana dependencies to latest version
