@@ -47,7 +47,7 @@ jobs:
           version: latest
           args: -v
           workdir: ${{ matrix.examples }}
-        if: hasFiles('Magefile.go') != ''
+        if: ${{ hashFiles('${{ matrix.examples }}/Magefile.go') != '' }}
 
       - name: Start Docker container using expected versions
         run: yarn server:expected
