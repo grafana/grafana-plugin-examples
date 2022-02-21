@@ -65,6 +65,7 @@ jobs:
         with:
           name: ${{ matrix.examples }}-with-installed-version
           path: ${{ matrix.examples }}/cypress/videos/
+          retention-days: 5
 
       - name: Stop and remove Docker container
         run: docker-compose down
