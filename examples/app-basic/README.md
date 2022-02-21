@@ -53,13 +53,15 @@ export const NAVIGATION: Record<string, NavItem> = {
 };
 ```
 
-...
+---
 
 ### How to add a custom route?
 
 **Example:** [Routes.tsx], [constants.ts#L6]
 
 Grafana (and the app plugins are no exception) is using [React Router](https://reactrouter.com/). In order to register a new route based on our examples just add a new route constant in [constants.ts#L6] and use it in the [Routes.tsx].
+
+---
 
 ### How to add a custom route with URL parameters?
 
@@ -83,6 +85,8 @@ export const MyComponent = () => {
 };
 ```
 
+---
+
 ### How to create a full-width page with no navigation bar?
 
 **Example:** [utils.routing.ts#L25]
@@ -93,6 +97,8 @@ In order to hide the tab navigation bar and have access to the full view right t
 
 **In the current example it is enough to just exclude your route from the `NAVGITAION` object ([constants.ts#L17]), and it will be automatically used as a full-width page.**
 
+---
+
 ### How to add custom styling to your components?
 
 **Example:** [PageFour.tsx]
@@ -101,6 +107,8 @@ We suggest you to use [Emotion](https://emotion.sh) to style your components, ju
 
 [More info on how to use @emotion/css](https://emotion.sh/docs/@emotion/css)
 
+---
+
 ### How to use the Grafana theme in your components?
 
 **Example:** [PageFour.tsx#L25]
@@ -108,6 +116,8 @@ We suggest you to use [Emotion](https://emotion.sh) to style your components, ju
 The easiest way is to use the [`useStyles2()`](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md#usestyles2-hook) hook to access the `GrafanaTheme2` theme object.
 
 [Docs on the Grafana Theme](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md)
+
+---
 
 ### How to add menu items to the left sidebar?
 
@@ -139,12 +149,16 @@ You can define pages that you want to add to the left sidebar menu under the `in
 }
 ```
 
+---
+
 ### How to add a configuration page to your app?
 
 **Example:** [module.ts], [AppConfig.tsx]
 
 A configuration page can be used to set custom configuration options that are going to be persisted for your plugin on the backend.
 It can also be used to save secrets that are no longer sent down to the client but can be appended to your proxied requests by the backend.
+
+---
 
 ### How to add custom configuration values to your app?
 
@@ -154,12 +168,16 @@ Add a new form field under your [AppConfig.tsx] and make sure that you are setti
 
 The `jsonData` object is an arbitrary object of data that can be persisted for your plugin using the `/api/plugins/${pluginId}/settings` API endpoint.
 
+---
+
 ### How to add configuration options for setting secrets?
 
 **Example:** [AppConfig.tsx]
 
 Secrets for plugins are stored in the `secureJsonData` object.
 This is an arbitrary object of data, however its value is never going to be sent back to the frontend for security reasons.
+
+---
 
 ### How to update the plugin settings using the API?
 
