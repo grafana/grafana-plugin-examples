@@ -88,10 +88,9 @@ describe('querying datasource', () => {
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
         e2e.components.Tab.title('Query').should('be.visible').click();
-        e2e.components.PanelInspector.Query.content().should('be.visible');
 
         // First verify that our raw query contains the macro
-        e2e.components.PanelInspector.Query.refreshButton().click();
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
         e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys()
@@ -116,10 +115,9 @@ describe('querying datasource', () => {
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
         e2e.components.Tab.title('Query').should('be.visible').click();
-        e2e.components.PanelInspector.Query.content().should('be.visible');
 
         // First verify that our raw query contains the macro
-        e2e.components.PanelInspector.Query.refreshButton().click();
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
         e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys()
