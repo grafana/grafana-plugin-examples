@@ -2,6 +2,10 @@
 
 This repository contains example plugins to showcase different use cases.
 
+## App plugins
+
+- [app-basic](examples/app-basic) demonstrates how to build a basic app plugin that uses custom routing.
+
 ## Panel plugins
 
 - [panel-flot](examples/panel-flot) demonstrates how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.
