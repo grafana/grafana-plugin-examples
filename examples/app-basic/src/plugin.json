@@ -19,11 +19,35 @@
   "includes": [
     {
       "type": "page",
-      "name": "Default",
+      "name": "Page One",
       "path": "/a/%PLUGIN_ID%",
       "role": "Admin",
       "addToNav": true,
       "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Page Two",
+      "path": "/a/%PLUGIN_ID%?path=page-two",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Page Three",
+      "path": "/a/%PLUGIN_ID%?path=page-three",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "icon": "fa fa-cog",
+      "name": "Configuration",
+      "path": "/plugins/basic-app",
+      "role": "Admin",
+      "addToNav": true
     }
   ],
   "dependencies": {

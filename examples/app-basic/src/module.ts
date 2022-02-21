@@ -1,6 +1,6 @@
 import { AppPlugin } from '@grafana/data';
-import { App } from './App';
-import { AppConfig } from './AppConfig';
+import { App } from 'components/App';
+import { AppConfig } from 'components/AppConfig';
 
 export const plugin = new AppPlugin<{}>().setRootPage(App).addConfigPage({
   title: 'Configuration',

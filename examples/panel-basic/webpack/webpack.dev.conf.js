@@ -102,15 +102,15 @@ module.exports = {
         files: ['plugin.json', 'README.md'],
         rules: [
           {
-            search: '%VERSION%',
+            search: /\%VERSION\%/g,
             replace: getPackageJson().version,
           },
           {
-            search: '%TODAY%',
+            search: /\%TODAY\%/g,
             replace: new Date().toISOString().substring(0, 10),
           },
           {
-            search: '%PLUGIN_ID%',
+            search: /\%PLUGIN_ID\%/g,
             replace: getPluginId(),
           },
         ],
