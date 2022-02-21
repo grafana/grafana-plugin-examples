@@ -16,6 +16,7 @@
   "devDependencies": {
     "@grafana/eslint-config": "^2.5.0",
     "@grafana/tsconfig": "^1.0.0-rc1",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "babel-loader": "^8.2.2",
