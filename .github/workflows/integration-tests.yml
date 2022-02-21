@@ -59,6 +59,13 @@ jobs:
         run: yarn e2e
         working-directory: ${{ matrix.examples }}
 
+      - name: upload video recording
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: ${{ matrix.examples }}-with-installed-version
+          path: ${{ matrix.examples }}/cypress/videos/
+
       - name: Stop and remove Docker container
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
