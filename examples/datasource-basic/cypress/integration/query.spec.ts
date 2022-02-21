@@ -78,7 +78,7 @@ describe('querying datasource', () => {
     });
   });
 
-  describe.only('with macro: $__timeFilter()', () => {
+  describe('with macro: $__timeFilter()', () => {
     it('should use default time column in query', () => {
       const panel = 'Table';
       const executedQuery =
