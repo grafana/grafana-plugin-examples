@@ -31,9 +31,9 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 ### How to enable the tab navigation bar?
 
-![Navigation Bar](screenshots/screenshot-nav-bar.png)
-
 **Example:** [utils.routing.ts], [constants.ts#L17]
+
+![Navigation Bar](screenshots/screenshot-nav-bar.png)
 
 You can enable the tab navigation bar for your app plugin by passing a "nav-model" the `onNavChanged()` function that is passed in as a prop to your root App component. 
 If you don't want to get too much into the details you can just edit `NAVIGATION` object in [constants.ts#L17].
@@ -59,9 +59,9 @@ export const NAVIGATION: Record<string, NavItem> = {
 
 **Example:** [Routes.tsx], [constants.ts#L6]
 
-Grafana (and the app plugins are no exception) is using [React Router](https://reactrouter.com/). In order to register a new route based on our example just add a new route constant in [constants.ts#L6] and use it in the [Routes.tsx].
+Grafana (and the app plugins are no exception) is using [React Router](https://reactrouter.com/). In order to register a new route based on our examples just add a new route constant in [constants.ts#L6] and use it in the [Routes.tsx].
 
-### How to add a custom route with URL parameters??
+### How to add a custom route with URL parameters?
 
 **Example:** [Routes.tsx], [PageThree.tsx]
 
