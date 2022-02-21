@@ -60,6 +60,9 @@ jobs:
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
 
+      ## TODO: We need to move the docker images to use commit hash so we can 
+      # "marry" the NPM canary version to a grafana app version
+
       # - name: Upgrade @grafana dependencies to latest version
       #   run: yarn upgrade --latest --scope @grafana
       #   working-directory: ${{ matrix.examples }}
