@@ -59,11 +59,21 @@ jobs:
         run: yarn e2e
         working-directory: ${{ matrix.examples }}
 
+      - name: generating artifact name
+        uses: actions/github-script@v6
+        if: failure()
+        id: artifact-name
+        with:
+          script: |
+            const path = require('path');
+            return path.basename("${{ matrix.examples }}");
+          result-encoding: string
+
       - name: upload video recording
         uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: ${{ matrix.examples }}-with-installed-version
+          name: ${{ steps.artifact-name.outputs.result }}-with-installed-version
           path: ${{ matrix.examples }}/cypress/videos/
           retention-days: 5
 
