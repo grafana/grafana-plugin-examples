@@ -1,9 +1,6 @@
 name: integration tests
 on: pull_request
 
-env:
-  TZ: Etc/UTC
-
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
@@ -59,7 +56,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using expected versions
-        run: yarn e2e
+        run: yarn e2e:ci
         working-directory: ${{ matrix.examples }}
 
       - name: Stop and remove Docker container
