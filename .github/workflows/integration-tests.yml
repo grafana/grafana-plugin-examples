@@ -47,7 +47,7 @@ jobs:
         uses: magefile/mage-action@v1
         with:
           version: latest
-          args: -v
+          args: -v build:linux
           workdir: ${{ matrix.examples }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
