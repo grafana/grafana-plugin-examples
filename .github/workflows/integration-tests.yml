@@ -43,7 +43,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Echo check for backend Mage file
-        run: echo steps.backend-check.outputs.MAGEFILE_EXISTS
+        run: echo ${{ steps.backend-check.outputs.MAGEFILE_EXISTS }}
 
       # - name: Build plugin backend
       #   uses: magefile/mage-action@v1
