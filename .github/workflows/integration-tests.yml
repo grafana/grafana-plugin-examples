@@ -58,6 +58,8 @@ jobs:
       - name: Start Integration tests using expected versions
         run: yarn e2e:ci
         working-directory: ${{ matrix.examples }}
+        env:
+          TZ: /usr/share/zoneinfo/UTC
 
       - name: Stop and remove Docker container
         run: docker-compose down
