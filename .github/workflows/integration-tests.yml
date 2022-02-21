@@ -42,9 +42,6 @@ jobs:
         run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
         working-directory: ${{ matrix.examples }}
 
-      - name: Echo check for backend Mage file
-        run: echo ${{ steps.backend-check.outputs.MAGEFILE_EXISTS }}
-
       - name: Build plugin backend
         uses: magefile/mage-action@v1
         with:
@@ -53,29 +50,29 @@ jobs:
           workdir: ${{ matrix.examples }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      # - name: Start Docker container using expected versions
-      #   run: yarn server:expected
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Docker container using expected versions
+        run: yarn server:expected
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Start Integration tests using expected versions
-      #   run: yarn e2e
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Integration tests using expected versions
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Stop and remove Docker container
-      #   run: docker-compose down
-      #   working-directory: ${{ matrix.examples }}
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Start Docker container using latest version of grafana
-      #   run: GRAFANA_VERSION=latest docker-compose up -d --build
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Docker container using latest version of grafana
+        run: GRAFANA_VERSION=latest docker-compose up -d --build
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Start Integration tests using latest version of Grafana
-      #   run: yarn e2e
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Integration tests using latest version of Grafana
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Stop and remove Docker container
-      #   run: docker-compose down
-      #   working-directory: ${{ matrix.examples }}
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
 
       ## TODO: We need to move the docker images to use commit hash so we can
       # "marry" the NPM canary version to a grafana app version
