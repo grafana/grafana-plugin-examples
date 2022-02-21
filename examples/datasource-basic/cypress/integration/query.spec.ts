@@ -78,7 +78,7 @@ describe('querying datasource', () => {
     });
   });
 
-  describe('with macro: $__timeFilter()', () => {
+  describe.only('with macro: $__timeFilter()', () => {
     it('should use default time column in query', () => {
       const panel = 'Table';
       const executedQuery =
@@ -92,11 +92,11 @@ describe('querying datasource', () => {
 
         // First verify that our raw query contains the macro
         e2e.components.PanelInspector.Query.refreshButton().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().should('be.visible');
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').parent().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys()
           .contains('rawQuery:')
+          .should('be.visible')
           .parent()
           .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
@@ -106,72 +106,71 @@ describe('querying datasource', () => {
     });
   });
 
-  // describe('with macro: $__timeFilter(column)', () => {
-  //   it('should use specified time column in query', () => {
-  //     const panel = 'Timeseries';
-  //     const executedQuery =
-  //       'SELECT * FROM temperature_metrics WHERE created >= datetime(2022-02-01T10:00:00Z) and created <= datetime(2022-02-01T12:00:00Z)';
-  //     const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter(created)';
+  describe('with macro: $__timeFilter(column)', () => {
+    it('should use specified time column in query', () => {
+      const panel = 'Timeseries';
+      const executedQuery =
+        'SELECT * FROM temperature_metrics WHERE created >= datetime(2022-02-01T10:00:00Z) and created <= datetime(2022-02-01T12:00:00Z)';
+      const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter(created)';
 
-  //     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
-  //     e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-  //       e2e.components.Tab.title('Query').click();
-  //       e2e.components.PanelInspector.Query.content().should('be.visible');
+      e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
+      e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
+        e2e.components.Tab.title('Query').click();
+        e2e.components.PanelInspector.Query.content().should('be.visible');
 
-  //       // First verify that our raw query contains the macro
-  //       e2e.components.PanelInspector.Query.refreshButton().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().should('be.visible');
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys()
-  //         .contains('rawQuery:')
-  //         .parent()
-  //         .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
+        // First verify that our raw query contains the macro
+        e2e.components.PanelInspector.Query.refreshButton().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys()
+          .contains('rawQuery:').should('be.visible')
+          .parent()
+          .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
-  //       // Then verify that the executed query contains the replacement for the macro
-  //       e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
-  //     });
-  //   });
-  // });
+        // Then verify that the executed query contains the replacement for the macro
+        e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
+      });
+    });
+  });
 
-  // describe('with template variable: $table', () => {
-  //   it('should apply variable value in query', () => {
-  //     const panel = 'Table';
+  describe('with template variable: $table', () => {
+    it('should apply variable value in query', () => {
+      const panel = 'Table';
 
-  //     // Verify that we are using the `temperature_metrics` template value.
-  //     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
-  //     e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-  //       e2e.components.Tab.title('Query').click();
-  //       e2e.components.PanelInspector.Query.content()
-  //         .get('pre')
-  //         .contains(
-  //           'SELECT * FROM temperature_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
-  //         )
-  //         .should('be.visible');
-  //     });
+      // Verify that we are using the `temperature_metrics` template value.
+      e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
+      e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
+        e2e.components.Tab.title('Query').click();
+        e2e.components.PanelInspector.Query.content()
+          .get('pre')
+          .contains(
+            'SELECT * FROM temperature_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
+          )
+          .should('be.visible');
+      });
 
 
-  //     // Change value of the template variable to `battery_metrics`.
-  //     e2e.flows.openDashboard({
-  //       uid: 'lYi_st-7z',
-  //       queryParams: {
-  //         from: new Date('2022-02-01 10:00:00Z').getTime(),
-  //         to: new Date('2022-02-01 12:00:00Z').getTime(),
-  //         'var-table': 'battery_metrics',
-  //       },
-  //     });
+      // Change value of the template variable to `battery_metrics`.
+      e2e.flows.openDashboard({
+        uid: 'lYi_st-7z',
+        queryParams: {
+          from: new Date('2022-02-01 10:00:00Z').getTime(),
+          to: new Date('2022-02-01 12:00:00Z').getTime(),
+          'var-table': 'battery_metrics',
+        },
+      });
 
-  //     // Verify that we are using the `battery_metrics` template value.
-  //     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
-  //     e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-  //       e2e.components.Tab.title('Query').click();
-  //       e2e.components.PanelInspector.Query.content()
-  //         .get('pre')
-  //         .contains(
-  //           'SELECT * FROM battery_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
-  //         )
-  //         .should('be.visible');
-  //     });
-  //   });
-  // });
+      // Verify that we are using the `battery_metrics` template value.
+      e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
+      e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
+        e2e.components.Tab.title('Query').click();
+        e2e.components.PanelInspector.Query.content()
+          .get('pre')
+          .contains(
+            'SELECT * FROM battery_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
+          )
+          .should('be.visible');
+      });
+    });
+  });
 });
