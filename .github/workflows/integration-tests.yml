@@ -37,13 +37,18 @@ jobs:
         run: yarn build
         working-directory: ${{ matrix.examples }}
 
+      - name: Check for backend Mage file
+        id: "backend-check"
+        run: ::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)
+        working-directory: ${{ matrix.examples }}
+
       - name: Build plugin backend
         uses: magefile/mage-action@v1
         with:
           version: latest
           args: -v
           workdir: ${{ matrix.examples }}
-        if: hashFiles('Magefile.go') != ''
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == true
 
       - name: Start Docker container using expected versions
         run: yarn server:expected
