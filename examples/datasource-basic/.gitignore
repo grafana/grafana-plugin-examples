@@ -31,3 +31,7 @@ e2e-results/
 .vscode
 
 .eslintcache
+
+# Cypress
+cypress/report.json
+cypress/videos

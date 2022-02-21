@@ -5,15 +5,15 @@
   "scripts": {
     "build": "webpack -c ./.webpack/webpack.prod.conf.js",
     "dev": "webpack -w -c ./.webpack/webpack.dev.conf.js",
-    "e2e": "grafana-e2e run",
-    "e2e:open": "grafana-e2e open",
-    "e2e:update": "grafana-e2e run --update-screenshots",
+    "e2e": "TZ=UTC grafana-e2e run",
+    "e2e:open": "TZ=UTC grafana-e2e open",
+    "e2e:update": "TZ=UTC grafana-e2e run --update-screenshots",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "server:expected": "GRAFANA_VERSION=8.1.5 docker-compose up -d --build"
+    "server:expected": "GRAFANA_VERSION=8.3.6 docker-compose up -d --build"
   },
   "author": "Grafana",
   "license": "Apache-2.0",
@@ -26,6 +26,7 @@
     "@typescript-eslint/parser": "^4.33.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
+    "cypress": "9.3.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsdoc": "^36.1.0",

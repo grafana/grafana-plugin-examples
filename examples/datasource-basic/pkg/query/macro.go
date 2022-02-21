@@ -51,6 +51,9 @@ func (qm queryMacro) Interpolate(query string) (string, error) {
 			return ""
 		}
 		arg := ""
+		if len(varSplit) > 1 {
+			arg = varSplit[1]
+		}
 		return funcToCall(arg, qm)
 	}
 	interpolated := macroRE.ReplaceAllStringFunc(query, replaceAll)
