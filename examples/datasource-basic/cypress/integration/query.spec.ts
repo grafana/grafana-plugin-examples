@@ -12,8 +12,8 @@ describe('querying datasource', () => {
     });
   });
 
-  describe.skip('with query type: time series', () => {
-    it('should return data with one value/time field', () => {
+  describe('with query type: time series', () => {
+    it.skip('should return data with one value/time field', () => {
       const panel = 'Timeseries';
       const data = [
         { time: '2022-02-01 10:00:00', value: 25 },
@@ -44,8 +44,8 @@ describe('querying datasource', () => {
     });
   });
 
-  describe.skip('with query type: table', () => {
-    it('should return data with time and two value fields', () => {
+  describe('with query type: table', () => {
+    it.skip('should return data with time and two value fields', () => {
       const panel = 'Table';
       const data = [
         { time: '2022-02-01 10:00:00', inside: 25, outside: 10 },
