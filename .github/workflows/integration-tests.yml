@@ -1,5 +1,9 @@
 name: integration tests
 on: pull_request
+
+env:
+  TZ=Etc/UTC
+
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
