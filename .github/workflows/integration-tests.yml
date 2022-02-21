@@ -19,17 +19,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: test matrix output
-        run: echo ${{ matrix.examples }}
-
       - uses: actions/setup-node@v2
         with:
           node-version: "14"
           cache: yarn
           cache-dependency-path: ${{ matrix.examples }}
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - uses: actions/setup-go@v2
         with:
           go-version: 1.17
 
@@ -47,7 +43,7 @@ jobs:
           version: latest
           args: -v
           workdir: ${{ matrix.examples }}
-        if: ${{ hashFiles('${{ matrix.examples }}/Magefile.go') != '' }}
+        # if: ${{ hashFiles('${{ matrix.examples }}/Magefile.go') != '' }}
 
       - name: Start Docker container using expected versions
         run: yarn server:expected
@@ -62,7 +58,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using latest version of grafana
-        run: docker-compose up -d --build
+        run: GRAFANA_VERSION=latest docker-compose up -d --build
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using latest version of Grafana
