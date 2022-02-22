@@ -59,26 +59,6 @@ jobs:
         run: yarn e2e
         working-directory: ${{ matrix.examples }}
 
-      - name: generating artifact name
-        uses: actions/github-script@v6
-        if: failure()
-        id: artifact-name
-        with:
-          script: |
-            const path = require('path');
-            return path.basename("${{ matrix.examples }}");
-          result-encoding: string
-
-      - name: upload screenshots on failure
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: ${{ steps.artifact-name.outputs.result }}-with-installed-version
-          path: |
-            ${{ matrix.examples }}/cypress/screenshots/
-            ${{ matrix.examples }}/cypress/report.json
-          retention-days: 5
-
       - name: Stop and remove Docker container
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
