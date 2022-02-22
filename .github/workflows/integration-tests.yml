@@ -69,12 +69,12 @@ jobs:
             return path.basename("${{ matrix.examples }}");
           result-encoding: string
 
-      - name: upload video recording
+      - name: upload screenshots on failure
         uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: ${{ steps.artifact-name.outputs.result }}-with-installed-version
-          path: ${{ matrix.examples }}/cypress/videos/
+          path: ${{ matrix.examples }}/cypress/screenshots/
           retention-days: 5
 
       - name: Stop and remove Docker container

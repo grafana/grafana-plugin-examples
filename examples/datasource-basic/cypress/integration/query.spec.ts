@@ -78,58 +78,58 @@ describe('querying datasource', () => {
     });
   });
 
-  // describe('with macro: $__timeFilter()', () => {
-  //   it('should use default time column in query', () => {
-  //     const panel = 'Table';
-  //     const executedQuery =
-  //       'SELECT * FROM temperature_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)';
-  //     const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter()';
+  describe('with macro: $__timeFilter()', () => {
+    it('should use default time column in query', () => {
+      const panel = 'Table';
+      const executedQuery =
+        'SELECT * FROM temperature_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)';
+      const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter()';
 
-  //     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
-  //     e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-  //       e2e.components.Tab.title('Query').should('be.visible').click();
+      e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
+      e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
+        e2e.components.Tab.title('Query').should('be.visible').click();
 
-  //       // First verify that our raw query contains the macro
-  //       e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys()
-  //         .contains('rawQuery:')
-  //         .should('be.visible')
-  //         .parent()
-  //         .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
+        // First verify that our raw query contains the macro
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys()
+          .contains('rawQuery:')
+          .should('be.visible')
+          .parent()
+          .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
-  //       // Then verify that the executed query contains the replacement for the macro
-  //       e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
-  //     });
-  //   });
-  // });
+        // Then verify that the executed query contains the replacement for the macro
+        e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
+      });
+    });
+  });
 
-  // describe('with macro: $__timeFilter(column)', () => {
-  //   it('should use specified time column in query', () => {
-  //     const panel = 'Timeseries';
-  //     const executedQuery =
-  //       'SELECT * FROM temperature_metrics WHERE created >= datetime(2022-02-01T10:00:00Z) and created <= datetime(2022-02-01T12:00:00Z)';
-  //     const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter(created)';
+  describe('with macro: $__timeFilter(column)', () => {
+    it('should use specified time column in query', () => {
+      const panel = 'Timeseries';
+      const executedQuery =
+        'SELECT * FROM temperature_metrics WHERE created >= datetime(2022-02-01T10:00:00Z) and created <= datetime(2022-02-01T12:00:00Z)';
+      const rawQuery = 'SELECT * FROM temperature_metrics WHERE $__timeFilter(created)';
 
-  //     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
-  //     e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-  //       e2e.components.Tab.title('Query').should('be.visible').click();
+      e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
+      e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
+        e2e.components.Tab.title('Query').should('be.visible').click();
 
-  //       // First verify that our raw query contains the macro
-  //       e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
-  //       e2e.components.PanelInspector.Query.jsonObjectKeys()
-  //         .contains('rawQuery:').should('be.visible')
-  //         .parent()
-  //         .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
+        // First verify that our raw query contains the macro
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys()
+          .contains('rawQuery:').should('be.visible')
+          .parent()
+          .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
-  //       // Then verify that the executed query contains the replacement for the macro
-  //       e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
-  //     });
-  //   });
-  // });
+        // Then verify that the executed query contains the replacement for the macro
+        e2e.components.PanelInspector.Query.content().get('pre').contains(executedQuery).should('be.visible');
+      });
+    });
+  });
 
   describe('with template variable: $table', () => {
     it('should apply variable value in query', () => {
