@@ -74,7 +74,9 @@ jobs:
         if: failure()
         with:
           name: ${{ steps.artifact-name.outputs.result }}-with-installed-version
-          path: ${{ matrix.examples }}/cypress/screenshots/
+          path: |
+            ${{ matrix.examples }}/cypress/screenshots/
+            ${{ matrix.examples }}/cypress/report.json
           retention-days: 5
 
       - name: Stop and remove Docker container
