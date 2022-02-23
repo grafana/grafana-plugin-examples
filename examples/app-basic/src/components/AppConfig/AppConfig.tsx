@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button, Legend, Field, Input, useStyles2 } from '@grafana/ui';
 import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
-import { getBackendSrv } from '@grafana/runtime';
+import { getBackendSrv, locationService } from '@grafana/runtime';
 import { css } from '@emotion/css';
 import { SecretInput } from 'components/SecretInput';
 
@@ -181,7 +181,7 @@ const updatePluginAndReload = async (pluginId: string, data: Partial<PluginMeta<
 
     // Reloading the page as the changes made here wouldn't be propagated to the actual plugin otherwise.
     // This is not ideal, however unfortunately currently there is no supported way for updating the plugin state.
-    window.location.reload();
+    locationService.reload();
   } catch (e) {
     console.error('Error while updating the plugin', e);
   }
