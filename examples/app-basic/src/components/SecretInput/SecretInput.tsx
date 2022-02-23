@@ -1,7 +1,7 @@
-import React, { HTMLProps } from 'react';
+import * as React from 'react';
 import { Input, HorizontalGroup, Button } from '@grafana/ui';
 
-type Props = Omit<HTMLProps<HTMLInputElement>, 'prefix' | 'size' | 'width' | 'ref'> & {
+type Props = React.ComponentProps<typeof Input> & {
   /** Defines if the password is already set or not. (It is needed as in some cases the backend doesn't send back the actual password) */
   isConfigured: boolean;
   /** Called when the user clicks on the "Reset" button */

@@ -106,7 +106,7 @@ export const AppConfig = ({ plugin }: Props) => {
         {/* API Key */}
         <Field label="API Key" description="A secret key for authenticating to our custom API">
           <SecretInput
-            className={s.input}
+            width={60}
             data-testid="api-key"
             id="api-key"
             value={state?.apiKey}
@@ -120,7 +120,7 @@ export const AppConfig = ({ plugin }: Props) => {
         {/* API Url */}
         <Field label="API Url" description="" className={s.marginTop}>
           <Input
-            className={s.input}
+            width={60}
             id="api-url"
             data-testid="api-url"
             label={`API Url`}
@@ -169,9 +169,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
   `,
   marginTopXl: css`
     margin-top: ${theme.spacing(6)};
-  `,
-  input: css`
-    width: 500px;
   `,
 });
 
