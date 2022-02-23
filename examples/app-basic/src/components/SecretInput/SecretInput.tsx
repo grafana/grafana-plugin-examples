@@ -13,7 +13,7 @@ export const SecretInput = ({ isConfigured, onReset, ...props }: Props) => {
   if (isConfigured) {
     return (
       <HorizontalGroup>
-        <Input {...props} css="" type="text" disabled={true} value="configured" />
+        <Input {...props} type="text" disabled={true} value="configured" />
         <Button onClick={onReset} variant="secondary">
           Reset
         </Button>
@@ -21,5 +21,5 @@ export const SecretInput = ({ isConfigured, onReset, ...props }: Props) => {
     );
   }
 
-  return <Input {...props} css="" type="password" />;
+  return <Input {...props} type="password" />;
 };

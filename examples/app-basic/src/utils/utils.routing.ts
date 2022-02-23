@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NavModel } from '@grafana/data';
 import { usePluginProps } from './utils.plugin';
-import { NAVIGATION, NAVIGATION_TITLE, NAVIGATION_SUBTITLE, ROUTES, PLUGIN_BASE_URL } from '../constants';
+import { NAVIGATION, NAVIGATION_TITLE, NAVIGATION_SUBTITLE, PLUGIN_BASE_URL } from '../constants';
 
 // Displays a top navigation tab-bar if needed
 export function useNavigation() {
