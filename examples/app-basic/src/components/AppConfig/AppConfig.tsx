@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Button, Legend, Field, Input, useStyles2 } from '@grafana/ui';
+import { Button, Legend, Fieldset, Field, Input, useStyles2, FieldSet } from '@grafana/ui';
 import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
 import { getBackendSrv, locationService } from '@grafana/runtime';
 import { css } from '@emotion/css';
@@ -56,9 +56,7 @@ export const AppConfig = ({ plugin }: Props) => {
   return (
     <div>
       {/* ENABLE / DISABLE PLUGIN */}
-      <div>
-        {/* Enable the plugin */}
-        <Legend>Enable / Disable</Legend>
+      <FieldSet label="Enable / Disable">
         {!enabled && (
           <>
             <div className={s.colorWeak}>The plugin is currently not enabled.</div>
@@ -97,12 +95,10 @@ export const AppConfig = ({ plugin }: Props) => {
             </Button>
           </>
         )}
-      </div>
+      </FieldSet>
 
       {/* CUSTOM SETTINGS */}
-      <div className={s.marginTopXl}>
-        <Legend>API Settings</Legend>
-
+      <FieldSet label="API Settings" className={s.marginTopXl}>
         {/* API Key */}
         <Field label="API Key" description="A secret key for authenticating to our custom API">
           <SecretInput
@@ -155,7 +151,7 @@ export const AppConfig = ({ plugin }: Props) => {
             Save API settings
           </Button>
         </div>
-      </div>
+      </FieldSet>
     </div>
   );
 };
