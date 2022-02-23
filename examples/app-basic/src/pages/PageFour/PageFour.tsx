@@ -2,7 +2,8 @@ import * as React from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { LinkButton, useStyles2 } from '@grafana/ui';
-import { PLUGIN_BASE_URL, ROUTES } from '../../constants';
+import { ROUTES } from '../../constants';
+import { prefixRoute } from 'utils/utils.routing';
 
 export const PageFour = () => {
   const s = useStyles2(getStyles);
@@ -10,7 +11,7 @@ export const PageFour = () => {
   return (
     <div className={s.page}>
       <div className={s.container}>
-        <LinkButton icon="arrow-left" href={`${PLUGIN_BASE_URL}/${ROUTES.One}`}>
+        <LinkButton icon="arrow-left" href={prefixRoute(ROUTES.One)}>
           Back
         </LinkButton>
         <div className={s.content}>This is a full-width page without a navigation bar.</div>

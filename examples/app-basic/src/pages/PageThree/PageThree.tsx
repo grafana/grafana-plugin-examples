@@ -3,7 +3,8 @@ import { css } from '@emotion/css';
 import { useParams, Link } from 'react-router-dom';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
-import { PLUGIN_BASE_URL, ROUTES } from '../../constants';
+import { prefixRoute } from 'utils/utils.routing';
+import { ROUTES } from '../../constants';
 
 export const PageThree = () => {
   const s = useStyles2(getStyles);
@@ -25,8 +26,8 @@ export const PageThree = () => {
         <>
           <strong>No id parameter is set in the URL.</strong> <br />
           Try the following link: <br />
-          <Link className={s.link} to={`${PLUGIN_BASE_URL}/${ROUTES.Three}/123456789`}>
-            {PLUGIN_BASE_URL}/{ROUTES.Three}/123456789
+          <Link className={s.link} to={prefixRoute(`${ROUTES.Three}/123456789`)}>
+            {prefixRoute(`${ROUTES.Three}/123456789`)}
           </Link>
         </>
       )}
