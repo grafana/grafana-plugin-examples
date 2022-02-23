@@ -120,7 +120,6 @@ export const AppConfig = ({ plugin }: Props) => {
         {/* API Url */}
         <Field label="API Url" description="" className={s.marginTop}>
           <Input
-            css=""
             className={s.input}
             id="api-url"
             data-testid="api-url"
