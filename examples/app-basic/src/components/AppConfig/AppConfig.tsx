@@ -54,7 +54,7 @@ export const AppConfig = ({ plugin }: Props) => {
   };
 
   return (
-    <div className="gf-form-group">
+    <div>
       {/* ENABLE / DISABLE PLUGIN */}
       <div>
         {/* Enable the plugin */}
