@@ -18,8 +18,8 @@
   "author": "Grafana",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@grafana/e2e": "^8.1.5",
-    "@grafana/e2e-selectors": "^8.1.5",
+    "@grafana/e2e": "^8.4.2",
+    "@grafana/e2e-selectors": "^8.4.2",
     "@grafana/eslint-config": "^2.5.0",
     "@grafana/tsconfig": "^1.2.0-rc1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
