@@ -65,7 +65,7 @@ jobs:
 
       - name: Bulding plugin with latest version of e2e libraries
         run: |
-          yarn install @grafana/e2e@latest @grafana/e2e-selectors@latest
+          yarn add @grafana/e2e@latest @grafana/e2e-selectors@latest
           yarn build
 
       - name: Start Docker container using latest version of grafana
