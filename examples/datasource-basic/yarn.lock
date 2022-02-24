@@ -1359,7 +1359,7 @@
     yaml "^1.8.3"
 
 "@grafana/e2e-selectors@^8.1.5":
-  version "8.4.1"
+  version "8.3.6"
   resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-8.4.1.tgz#56b56a198d47755f0c963f10783bd8956e316c57"
   integrity sha512-V5HwNj6hQbx/yD2+8vMTLaIYMtXsoiM79lsxyafwN2KSBJtTPXjwsN8Ei63VAMh3Y00yL9cGZ77DxsXxdQUYrQ==
   dependencies:
