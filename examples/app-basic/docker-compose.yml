@@ -1,0 +1,11 @@
+version: '3.0'
+
+services:
+  grafana:
+    container_name: grafana-basic-app
+    build: .
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/basic-app
+      - ./provisioning:/etc/grafana/provisioning
