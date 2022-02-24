@@ -64,7 +64,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Bulding plugin with latest version of e2e libraries
-        run: yarn update @grafana/e2e-selectors @grafana/e2e --latest
+        run: yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using latest version of grafana
