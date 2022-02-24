@@ -65,7 +65,7 @@ jobs:
 
       - name: Bulding plugin with latest version of e2e libraries
         run: |
-          yarn add @grafana/e2e@latest @grafana/e2e-selectors@latest
+          yarn add -D @grafana/e2e@latest @grafana/e2e-selectors@latest
           yarn build
         working-directory: ${{ matrix.examples }}
 
