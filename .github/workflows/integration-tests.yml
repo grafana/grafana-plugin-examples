@@ -63,6 +63,11 @@ jobs:
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
 
+      - name: Bulding plugin with latest version of e2e libraries
+        run: |
+          yarn install @grafana/e2e@latest @grafana/e2e-selectors@latest
+          yarn build
+
       - name: Start Docker container using latest version of grafana
         run: GRAFANA_VERSION=latest docker-compose up -d --build
         working-directory: ${{ matrix.examples }}
