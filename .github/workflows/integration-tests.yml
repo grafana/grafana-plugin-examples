@@ -30,33 +30,37 @@ jobs:
         with:
           go-version: 1.17
 
-      # - name: Install dependencies
-      #   run: yarn install --frozen-lockfile
-      #   working-directory: ${{ matrix.examples }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Build plugin frontend
-      #   run: yarn build
-      #   working-directory: ${{ matrix.examples }}
+      - name: Build plugin frontend
+        run: yarn build
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Check for backend Mage file
-      #   id: backend-check
-      #   run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
-      #   working-directory: ${{ matrix.examples }}
+      - name: Check for backend Mage file
+        id: backend-check
+        run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Build plugin backend
-      #   uses: magefile/mage-action@v1
-      #   with:
-      #     version: latest
-      #     args: -v build:linux
-      #     workdir: ${{ matrix.examples }}
-      #   if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
+      - name: Build plugin backend
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: -v build:linux
+          workdir: ${{ matrix.examples }}
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      - name: Set expected Grafana version
-        run: echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
+      - name: Set environment vars
+        run: |
+          echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
+          echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
+          echo "NPM_CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using expected version of grafana
-        run: docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/basic-panel -v ${PWD}/provisioning:/etc/grafana/provisioning -e "GF_DEFAULT_APP_MODE=development" -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource" grafana/grafana:$EXPECTED_GRAFANA_VERSION
+        run: | 
+          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e "GF_DEFAULT_APP_MODE=development" -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource" grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.examples }}
 
       # - name: Start Integration tests using expected versions
