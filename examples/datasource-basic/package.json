@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "server:expected": "GRAFANA_VERSION=8.3.6 docker-compose up -d --build"
+    "server:expected": "docker run -d -p 3000:3000 --name grafana grafana/grafana:8.3.6 -v ./dist:/var/lib/grafana/plugins/basic-panel -v ./provisioning:/etc/grafana/provisioning -e \"GF_DEFAULT_APP_MODE=development\" -e \"GF_INSTALL_PLUGINS=marcusolsson-static-datasource\""
   },
   "author": "Grafana",
   "license": "Apache-2.0",
