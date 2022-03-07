@@ -30,26 +30,26 @@ jobs:
         with:
           go-version: 1.17
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        working-directory: ${{ matrix.examples }}
+      # - name: Install dependencies
+      #   run: yarn install --frozen-lockfile
+      #   working-directory: ${{ matrix.examples }}
 
-      - name: Build plugin frontend
-        run: yarn build
-        working-directory: ${{ matrix.examples }}
+      # - name: Build plugin frontend
+      #   run: yarn build
+      #   working-directory: ${{ matrix.examples }}
 
-      - name: Check for backend Mage file
-        id: backend-check
-        run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
-        working-directory: ${{ matrix.examples }}
+      # - name: Check for backend Mage file
+      #   id: backend-check
+      #   run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
+      #   working-directory: ${{ matrix.examples }}
 
-      - name: Build plugin backend
-        uses: magefile/mage-action@v1
-        with:
-          version: latest
-          args: -v build:linux
-          workdir: ${{ matrix.examples }}
-        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
+      # - name: Build plugin backend
+      #   uses: magefile/mage-action@v1
+      #   with:
+      #     version: latest
+      #     args: -v build:linux
+      #     workdir: ${{ matrix.examples }}
+      #   if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Set expected Grafana version
         run: echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
