@@ -60,7 +60,7 @@ jobs:
 
       - name: Start Docker container using expected version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE="development" -e GF_INSTALL_PLUGINS="marcusolsson-static-datasource" grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE="development" -e GF_INSTALL_PLUGINS="marcusolsson-static-datasource" -e GF_AUTH_ANONYMOUS_ORG_ROLE="Admin" -e GF_AUTH_ANONYMOUS_ENABLED="true" -e GF_AUTH_BASIC_ENABLED="false" grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using expected versions
