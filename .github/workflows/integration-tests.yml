@@ -56,9 +56,9 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using expected version of grafana
-        run: docker run -d -p 3000:3000 --name grafana grafana/grafana:$EXPECTED_GRAFANA_VERSION \
-            -v $(pwd)/dist:/var/lib/grafana/plugins/basic-panel -v $(pwd)/provisioning:/etc/grafana/provisioning \
-            -e "GF_DEFAULT_APP_MODE=development" -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource"
+        run: docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/basic-panel \
+            -v ${PWD}/provisioning:/etc/grafana/provisioning -e "GF_DEFAULT_APP_MODE=development" \
+            -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource" grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using expected versions
@@ -66,7 +66,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Stop and remove Docker container
-        run: docker-compose down
+        run: docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.examples }}
 
       - name: Bulding plugin with latest version of e2e libraries
@@ -74,9 +74,9 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using latest version of grafana
-        run: docker run -d -p 3000:3000 --name grafana grafana/grafana:latest \
-            -v $(pwd)/dist:/var/lib/grafana/plugins/basic-panel -v $(pwd)/provisioning:/etc/grafana/provisioning \
-            -e "GF_DEFAULT_APP_MODE=development" -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource"
+        run: docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/basic-panel \
+            -v ${PWD}/provisioning:/etc/grafana/provisioning -e "GF_DEFAULT_APP_MODE=development" \
+            -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource" grafana/grafana:latest
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using latest version of Grafana
@@ -84,7 +84,7 @@ jobs:
         working-directory: ${{ matrix.examples }}
 
       - name: Stop and remove Docker container
-        run: docker-compose down
+        run: docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.examples }}
 
       ## TODO: Note that this is using the `test` dist-tag right now whilst we wait on build-pipeline updates
@@ -106,9 +106,9 @@ jobs:
 
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using latest version of grafana
-        run: docker run -d -p 3000:3000 --name grafana grafana/grafana-dev:$NPM_CANARY_VERSION \
-            -v $(pwd)/dist:/var/lib/grafana/plugins/basic-panel -v $(pwd)/provisioning:/etc/grafana/provisioning \
-            -e "GF_DEFAULT_APP_MODE=development" -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource"
+        run: docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/basic-panel \
+            -v ${PWD}/provisioning:/etc/grafana/provisioning -e "GF_DEFAULT_APP_MODE=development" \
+            -e "GF_INSTALL_PLUGINS=marcusolsson-static-datasource" grafana/grafana:$NPM_CANARY_VERSION
         working-directory: ${{ matrix.examples }}
 
       - name: Start Integration tests using latest version of Grafana
