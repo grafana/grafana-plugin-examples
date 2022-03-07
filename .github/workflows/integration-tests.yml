@@ -84,6 +84,10 @@ jobs:
       - name: Get NPM canary version
         run: echo "NPM_CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
 
+      - name: nuke node_modules folder
+        run: rm -rf node_modules
+        working-directory: ${{ matrix.examples }}
+
       - name: Upgrade @grafana packages using canary_version
         run: yarn upgrade $(echo $(cat package.json | jq -r --arg version $NPM_CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | join("@\($version) ")') )
         working-directory: ${{ matrix.examples }}
