@@ -52,7 +52,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Set expected Grafana version
-        run: echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c) >> $GITHUB_ENV
+        run: echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
         working-directory: ${{ matrix.examples }}
 
       - name: Start Docker container using expected versions
