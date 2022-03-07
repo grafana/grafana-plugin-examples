@@ -79,25 +79,27 @@ jobs:
         run: docker-compose down
         working-directory: ${{ matrix.examples }}
 
-      ## TODO: We need to move the docker images to use commit hash so we can
-      # "marry" the NPM canary version to a grafana app version
+      ## TODO: Note that this is using the `test` dist-tag right now whilst
+      # we wait on build-pipeline updates
+      - name: Get NPM canary version
+        run: echo "NPM_CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
 
-      # - name: Upgrade @grafana dependencies to latest version
-      #   run: yarn upgrade --latest --scope @grafana
-      #   working-directory: ${{ matrix.examples }}
+      - name: Upgrade @grafana packages using canary_version
+        run: yarn upgrade $(echo $(cat package.json | jq -r --arg version $NPM_CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | join("@\($version) ")') )
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Build example plugin with latest @grafana dependencies
-      #   run: yarn build
-      #   working-directory: ${{ matrix.examples }}
+      - name: Build example plugin with latest @grafana dependencies
+        run: yarn build
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Start Docker container using latest version of grafana
-      #   run: docker-compose up -d --build
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Docker container using latest version of grafana
+        run: GRAFANA_VERSION=$NPM_CANARY_VERSION docker-compose up -d --build
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Start Integration tests using latest version of Grafana
-      #   run: yarn e2e
-      #   working-directory: ${{ matrix.examples }}
+      - name: Start Integration tests using latest version of Grafana
+        run: yarn e2e
+        working-directory: ${{ matrix.examples }}
 
-      # - name: Stop and remove Docker container
-      #   run: docker-compose down
-      #   working-directory: ${{ matrix.examples }}
+      - name: Stop and remove Docker container
+        run: docker-compose down
+        working-directory: ${{ matrix.examples }}
