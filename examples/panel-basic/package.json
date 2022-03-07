@@ -12,7 +12,8 @@
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "server:expected": "GRAFANA_VERSION=8.3.4 docker-compose up -d --build"
   },
   "author": "Grafana Labs",
   "license": "Apache-2.0",
