@@ -5,17 +5,17 @@ jobs:
   setup-matrix:
     runs-on: ubuntu-latest
     outputs:
-      examples: ${{ steps.set-examples.outputs.examples }}
+      pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
     steps:
       - uses: actions/checkout@v2
-      - id: set-examples
-        run: echo "::set-output name=examples::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')"
+      - id: set-plugin-dirs
+        run: echo "::set-output name=pluginDirs::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')"
   run-integration-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        examples: ${{ fromJson(needs.setup-matrix.outputs.examples) }}
+        pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     steps:
       - uses: actions/checkout@v2
@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: "14"
           cache: yarn
-          cache-dependency-path: ${{ matrix.examples }}
+          cache-dependency-path: ${{ matrix.pluginDir }}
 
       - uses: actions/setup-go@v2
         with:
@@ -32,23 +32,23 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin frontend
         run: yarn build
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Check for backend Mage file
         id: backend-check
         run: echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
         uses: magefile/mage-action@v1
         with:
           version: latest
           args: -v build:linux
-          workdir: ${{ matrix.examples }}
+          workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       ## TODO: Note NPM_CANARY_VERSION is using the `test` dist-tag right now whilst we wait on build-pipeline updates
@@ -57,66 +57,66 @@ jobs:
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
           echo "NPM_CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using expected version of grafana
         run: |
           docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE="development" -e GF_INSTALL_PLUGINS="marcusolsson-static-datasource" -e GF_AUTH_ANONYMOUS_ORG_ROLE="Admin" -e GF_AUTH_ANONYMOUS_ENABLED="true" -e GF_AUTH_BASIC_ENABLED="false" grafana/grafana:$EXPECTED_GRAFANA_VERSION
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using expected versions
         run: |
           yarn e2e
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Stop and remove Docker container
         run: |
           docker stop grafana && docker rm grafana
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Bulding plugin with latest version of e2e libraries
         run: yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using latest version of grafana
         run: |
           docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE="development" -e GF_INSTALL_PLUGINS="marcusolsson-static-datasource" -e GF_AUTH_ANONYMOUS_ORG_ROLE="Admin" -e GF_AUTH_ANONYMOUS_ENABLED="true" -e GF_AUTH_BASIC_ENABLED="false" grafana/grafana:latest
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
         run: yarn e2e
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Stop and remove Docker container
         run: |
           docker stop grafana && docker rm grafana
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       # Yarn 1 doesn't remove nested deps on `upgrade` so we need to delete node_modules first
       - name: Delete node_modules folder
         run: rm -rf node_modules
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Upgrade @grafana packages using canary_version
         run: |
           yarn upgrade $(echo $(cat package.json | jq -r --arg version $NPM_CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Build example plugin with latest @grafana dependencies
         run: yarn build
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using latest version of grafana
         run: |
           docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE="development" -e GF_INSTALL_PLUGINS="marcusolsson-static-datasource" -e GF_AUTH_ANONYMOUS_ORG_ROLE="Admin" -e GF_AUTH_ANONYMOUS_ENABLED="true" -e GF_AUTH_BASIC_ENABLED="false" grafana/grafana-dev:$NPM_CANARY_VERSION
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
         run: yarn e2e
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Stop and remove Docker container
         run: |
           docker stop grafana && docker rm grafana
-        working-directory: ${{ matrix.examples }}
+        working-directory: ${{ matrix.pluginDir }}
