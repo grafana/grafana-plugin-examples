@@ -18,11 +18,11 @@ jobs:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     env:
-      GF_DEFAULT_APP_MODE: "development" 
-      GF_INSTALL_PLUGINS: "marcusolsson-static-datasource" 
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin" 
       GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_AUTH_BASIC_ENABLED: "false"
+      GF_DEFAULT_APP_MODE: "development"
+      GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
       - uses: actions/checkout@v2
 
@@ -60,17 +60,21 @@ jobs:
           workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      ## TODO: Note NPM_CANARY_VERSION is using the `test` dist-tag right now whilst we wait on build-pipeline updates
+      ## TODO: Currently using the `test` dist-tag whilst we wait on build-pipeline updates
+      ## CANARY_VERSION has to use NPM as we only publish the packages on changes
       - name: Set environment vars for testing
         run: |
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
-          echo "NPM_CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
+          echo "CANARY_VERSION=$(npm view @grafana/ui dist-tags.test)" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using expected version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          docker run -d -p 3000:3000 --name grafana \
+            -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning \
+            -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED \ 
+            -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using expected versions
@@ -90,7 +94,10 @@ jobs:
 
       - name: Start Docker container using latest version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
+          docker run -d -p 3000:3000 --name grafana \ 
+            -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning \
+            -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED \
+            -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
@@ -110,7 +117,7 @@ jobs:
 
       - name: Upgrade @grafana packages using canary_version
         run: |
-          yarn upgrade $(echo $(cat package.json | jq -r --arg version $NPM_CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          yarn upgrade $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build example plugin with latest @grafana dependencies
@@ -121,7 +128,10 @@ jobs:
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using latest version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$NPM_CANARY_VERSION
+          docker run -d -p 3000:3000 --name grafana \
+            -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning \
+            -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED \
+            -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
