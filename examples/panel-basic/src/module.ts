@@ -1,7 +1,7 @@
 import { PanelPlugin, SelectableValue, FieldColorModeId } from '@grafana/data';
 import { LegendDisplayMode, GraphGradientMode } from '@grafana/schema';
 import { SimpleOptions } from './types';
-import { SimplePanel } from './SimplePanel';
+import { SimplePanel } from './components';
 
 const gradientOptions = [
   { label: 'None', value: GraphGradientMode.None },
