@@ -7,6 +7,15 @@ describe('panel with time series data', () => {
 
   it('should display a good looking graph', () => {
     const panel = 'Basic Panel';
-    e2e.components.Panels.Panel.title(panel).should('be.visible');
+    const screenshot = 'time-series-graph';
+
+    e2e.components.Panels.Panel.containerByTitle(panel)
+      .should('be.visible')
+      .find('.panel-content')
+      .scrollIntoView()
+      .screenshot(screenshot);
+
+    //@ts-ignore
+    e2e().compareScreenshots(screenshot);
   });
 });
