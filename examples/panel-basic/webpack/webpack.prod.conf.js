@@ -119,9 +119,10 @@ module.exports = {
 
     // Move type checking and ESLint linting to separate processes
     new ForkTsCheckerWebpackPlugin({
-      tsconfig: path.resolve(process.cwd(), 'tsconfig.json'),
-      // Only report problems in detected in plugin's code
-      reportFiles: ['**/*.{ts,tsx}'],
+      typescript: { configFile: path.join(process.cwd(), 'tsconfig.json') },
+      issue: {
+        include: [{ file: '**/*.{ts,tsx}' }],
+      },
     }),
   ],
 
