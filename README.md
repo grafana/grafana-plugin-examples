@@ -25,9 +25,9 @@ This repository contains example plugins to showcase different use cases.
 
 Some of the examples in this repository contain integration tests that make use of [`@grafana/e2e`](https://npmjs.com/package/@grafana/e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
 
-- `yarn e2e` - run the tests
-- `yarn e2e:open` - open cypress ui and run tests
-- `yarn e2e:update` - update tests
+- `yarn e2e` - run integration tests
+- `yarn e2e:open` - open cypress ui and run integration tests
+- `yarn e2e:update` - run integration tests and update any screenshots
 
 ### Testing against latest versions of Grafana
 
