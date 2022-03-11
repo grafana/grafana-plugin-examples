@@ -5,10 +5,11 @@
   "scripts": {
     "build": "webpack -c ./.webpack/webpack.prod.conf.js",
     "dev": "webpack -w -c ./.webpack/webpack.dev.conf.js",
+    "e2e": "TZ=UTC grafana-e2e run",
+    "e2e:open": "TZ=UTC grafana-e2e open",
+    "e2e:update": "TZ=UTC grafana-e2e run --update-screenshots",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
-    "e2e:run": "TZ=UTC grafana-e2e run",
-    "e2e:open": "TZ=UTC grafana-e2e open",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix"
@@ -16,22 +17,27 @@
   "author": "Grafana",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@grafana/e2e": "^8.1.5",
+    "@grafana/e2e": "8.3.6",
+    "@grafana/e2e-selectors": "8.3.6",
     "@grafana/eslint-config": "^2.5.0",
-    "@grafana/tsconfig": "^1.0.0-rc1",
+    "@grafana/tsconfig": "^1.2.0-rc1",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
+    "cypress": "9.3.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsdoc": "^36.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.26.1",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "fork-ts-checker-webpack-plugin": "6.4.0",
+    "prettier": "^2.5.1",
+    "ts-loader": "6.2.1",
     "webpack": "^5.55.1",
     "webpack-cli": "^4.8.0",
-    "cypress": "9.3.1"
+    "webpack-livereload-plugin": "^3.0.2"
   },
   "resolutions": {
     "rxjs": "7.3.0"
@@ -41,10 +47,10 @@
   },
   "dependencies": {
     "@emotion/css": "^11.1.3",
-    "@grafana/data": "^8.1.5",
-    "@grafana/runtime": "^8.1.5",
-    "@grafana/toolkit": "^8.1.5",
-    "@grafana/ui": "^8.1.5",
+    "@grafana/data": "8.3.6",
+    "@grafana/runtime": "8.3.6",
+    "@grafana/toolkit": "8.3.6",
+    "@grafana/ui": "8.3.6",
     "@types/lodash": "latest",
     "react-use": "^17.3.2"
   }

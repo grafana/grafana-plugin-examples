@@ -87,16 +87,15 @@ describe('querying datasource', () => {
 
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-        e2e.components.Tab.title('Query').click();
-        e2e.components.PanelInspector.Query.content().should('be.visible');
+        e2e.components.Tab.title('Query').should('be.visible').click();
 
         // First verify that our raw query contains the macro
-        e2e.components.PanelInspector.Query.refreshButton().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().should('be.visible');
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').parent().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').parent().click();
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys()
           .contains('rawQuery:')
+          .should('be.visible')
           .parent()
           .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
@@ -115,16 +114,14 @@ describe('querying datasource', () => {
 
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-        e2e.components.Tab.title('Query').click();
-        e2e.components.PanelInspector.Query.content().should('be.visible');
+        e2e.components.Tab.title('Query').should('be.visible').click();
 
         // First verify that our raw query contains the macro
-        e2e.components.PanelInspector.Query.refreshButton().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().should('be.visible');
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').parent().click();
-        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').parent().click();
+        e2e.components.PanelInspector.Query.refreshButton().should('be.visible').click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('queries:').should('be.visible').parent().click();
+        e2e.components.PanelInspector.Query.jsonObjectKeys().contains('0:').should('be.visible').parent().click();
         e2e.components.PanelInspector.Query.jsonObjectKeys()
-          .contains('rawQuery:')
+          .contains('rawQuery:').should('be.visible')
           .parent()
           .within(() => cy.get('span.json-formatter-string').contains(rawQuery).should('be.visible'));
 
@@ -141,8 +138,8 @@ describe('querying datasource', () => {
       // Verify that we are using the `temperature_metrics` template value.
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-        e2e.components.Tab.title('Query').click();
-        e2e.components.PanelInspector.Query.content()
+        e2e.components.Tab.title('Query').should('be.visible').click();
+        e2e.components.PanelInspector.Query.content().should('be.visible')
           .get('pre')
           .contains(
             'SELECT * FROM temperature_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
@@ -164,8 +161,8 @@ describe('querying datasource', () => {
       // Verify that we are using the `battery_metrics` template value.
       e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Inspect, panel);
       e2e.components.Drawer.General.title(`Inspect: ${panel}`).within(() => {
-        e2e.components.Tab.title('Query').click();
-        e2e.components.PanelInspector.Query.content()
+        e2e.components.Tab.title('Query').should('be.visible').click();
+        e2e.components.PanelInspector.Query.content().should('be.visible')
           .get('pre')
           .contains(
             'SELECT * FROM battery_metrics WHERE time >= datetime(2022-02-01T10:00:00Z) and time <= datetime(2022-02-01T12:00:00Z)'
