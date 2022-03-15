@@ -2,7 +2,13 @@ import { e2e } from '@grafana/e2e';
 
 describe('panel with time series data', () => {
   beforeEach(() => {
-    e2e.flows.openDashboard({ uid: 'O4tc_E6Gz' });
+    e2e.flows.openDashboard({
+      uid: 'O4tc_E6Gz',
+      queryParams: {
+        from: 1643313600000,
+        to: 1643670000000,
+      },
+    });
   });
 
   it('should display a good looking graph', () => {
