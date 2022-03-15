@@ -2,15 +2,31 @@ import { PanelPlugin, SelectableValue, FieldColorModeId } from '@grafana/data';
 import { LegendDisplayMode, GraphGradientMode } from '@grafana/schema';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components';
+import { ariaLabels } from 'components/ariaLabels';
 
 const gradientOptions = [
-  { label: 'None', value: GraphGradientMode.None },
-  { label: 'Opacity', value: GraphGradientMode.Opacity, description: 'Enable fill opacity gradient' },
-  { label: 'Hue', value: GraphGradientMode.Hue, description: 'Small color hue gradient' },
+  {
+    label: 'None',
+    value: GraphGradientMode.None,
+    ariaLabel: ariaLabels.panelEditor.gradientNone,
+  },
+  {
+    label: 'Opacity',
+    value: GraphGradientMode.Opacity,
+    description: 'Enable fill opacity gradient',
+    ariaLabel: ariaLabels.panelEditor.gradientOpacity,
+  },
+  {
+    label: 'Hue',
+    value: GraphGradientMode.Hue,
+    description: 'Small color hue gradient',
+    ariaLabel: ariaLabels.panelEditor.gradientHue,
+  },
   {
     label: 'Scheme',
     value: GraphGradientMode.Scheme,
     description: 'Use color scheme to define gradient',
+    ariaLabel: ariaLabels.panelEditor.gradientScheme,
   },
 ] as Array<SelectableValue<GraphGradientMode>>;
 
