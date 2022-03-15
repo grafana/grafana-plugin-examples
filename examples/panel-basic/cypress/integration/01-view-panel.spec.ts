@@ -1,6 +1,6 @@
 import { e2e } from '@grafana/e2e';
 
-describe('panel with time series data', () => {
+describe('viewing a panel with time series data', () => {
   beforeEach(() => {
     e2e.flows.openDashboard({
       uid: 'O4tc_E6Gz',
