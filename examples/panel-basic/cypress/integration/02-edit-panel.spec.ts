@@ -3,6 +3,7 @@ import { ariaLabels } from '../../src/components/ariaLabels';
 
 const selectors = e2e.getSelectors(ariaLabels);
 const panel = 'Basic Panel';
+const screenshotThreshold = 0.01;
 
 describe('editing a panel with time series data', () => {
   beforeEach(() => {
@@ -35,7 +36,7 @@ describe('editing a panel with time series data', () => {
       .screenshot(screenshot);
 
     //@ts-ignore
-    e2e().compareScreenshots(screenshot);
+    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
   });
 
   it('should be able to change graph opacity', () => {
@@ -57,7 +58,7 @@ describe('editing a panel with time series data', () => {
       .screenshot(screenshot);
 
     //@ts-ignore
-    e2e().compareScreenshots(screenshot);
+    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
   });
 
   it('should be able to hide legend', () => {
@@ -79,7 +80,7 @@ describe('editing a panel with time series data', () => {
       .screenshot(screenshot);
 
     //@ts-ignore
-    e2e().compareScreenshots(screenshot);
+    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
   });
 
   it('should be able to place legend to the right', () => {
@@ -101,6 +102,6 @@ describe('editing a panel with time series data', () => {
       .screenshot(screenshot);
 
     //@ts-ignore
-    e2e().compareScreenshots(screenshot);
+    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
   });
 });
