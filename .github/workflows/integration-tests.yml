@@ -41,6 +41,15 @@ jobs:
           yarn install --frozen-lockfile
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Detecting example name
+        uses: actions/github-script@v6
+        id: example-name
+        with:
+          result-encoding: string
+          script: |
+            const path = require('path');
+            return path.basename('${{ matrix.pluginDir }}');
+        
       - name: Build plugin frontend
         run: |
           yarn build
@@ -83,7 +92,7 @@ jobs:
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
         with:
-          name: expected-versions-tests
+          name: ${{steps.example-name.outputs.result}}-expected-versions-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
@@ -119,7 +128,7 @@ jobs:
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
         with:
-          name: latest-version-grafana-tests
+          name: ${{steps.example-name.outputs.result}}-latest-version-grafana-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
@@ -168,7 +177,7 @@ jobs:
       - name: Uploading artifacts for tests with latest versions
         uses: actions/upload-artifact@v3
         with:
-          name: latest-versions-tests
+          name: ${{steps.example-name.outputs.result}}-latest-versions-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
