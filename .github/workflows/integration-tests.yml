@@ -74,9 +74,21 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using expected versions
+        id: expected-versions-tests
         run: |
           yarn e2e
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Uploading artifacts for tests with expected versions
+        uses: actions/upload-artifact@v3
+        with:
+          name: expected-versions-tests
+          path: |
+            ${{ matrix.pluginDir }}/cypress/screenshots
+            ${{ matrix.pluginDir }}/cypress/videos
+            ${{ matrix.pluginDir }}/cypress/report.json
+          retention-days: 3
+        if: steps.expected-versions-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
@@ -94,8 +106,20 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
+        id: latest-version-grafana-tests
         run: yarn e2e
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Uploading artifacts for tests with latest version of Grafana
+        uses: actions/upload-artifact@v3
+        with:
+          name: latest-version-grafana-tests
+          path: |
+            ${{ matrix.pluginDir }}/cypress/screenshots
+            ${{ matrix.pluginDir }}/cypress/videos
+            ${{ matrix.pluginDir }}/cypress/report.json
+          retention-days: 3
+        if: steps.latest-version-grafana-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
@@ -125,9 +149,21 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
+        id: latest-versions-tests
         run: |
           yarn e2e
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Uploading artifacts for tests with latest versions
+        uses: actions/upload-artifact@v3
+        with:
+          name: latest-versions-tests
+          path: |
+            ${{ matrix.pluginDir }}/cypress/screenshots
+            ${{ matrix.pluginDir }}/cypress/videos
+            ${{ matrix.pluginDir }}/cypress/report.json
+          retention-days: 3
+        if: steps.latest-versions-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
