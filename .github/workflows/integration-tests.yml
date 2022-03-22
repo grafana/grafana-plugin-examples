@@ -75,6 +75,7 @@ jobs:
 
       - name: Start Integration tests using expected versions
         id: expected-versions-tests
+        continue-on-error: true
         run: |
           yarn e2e
         working-directory: ${{ matrix.pluginDir }}
@@ -88,6 +89,10 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
+        if: steps.expected-versions-tests.outcome != 'success'
+
+      - name: Failing build due to test failures (expected versions)
+        run: exit 1
         if: steps.expected-versions-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
@@ -107,6 +112,7 @@ jobs:
 
       - name: Start Integration tests using latest version of Grafana
         id: latest-version-grafana-tests
+        continue-on-error: true
         run: yarn e2e
         working-directory: ${{ matrix.pluginDir }}
 
@@ -119,6 +125,10 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
+        if: steps.latest-version-grafana-tests.outcome != 'success'
+
+      - name: Failing build due to test failures (latest version of Grafana)
+        run: exit 1
         if: steps.latest-version-grafana-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
@@ -150,6 +160,7 @@ jobs:
 
       - name: Start Integration tests using latest version of Grafana
         id: latest-versions-tests
+        continue-on-error: true
         run: |
           yarn e2e
         working-directory: ${{ matrix.pluginDir }}
@@ -164,6 +175,10 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
         if: steps.latest-versions-tests.outcome != 'success'
+
+      - name: Failing build due to test failures (latest versions)
+        run: exit 1
+        if: steps.latest-version-grafana-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
