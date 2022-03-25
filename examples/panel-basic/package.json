@@ -5,9 +5,9 @@
   "scripts": {
     "build": "webpack -c ./webpack/webpack.prod.conf.js",
     "dev": "docker-compose up -d && webpack -w -c ./webpack/webpack.dev.conf.js",
-    "e2e": "grafana-e2e run",
+    "e2e": "docker run -it --add-host=host.docker.internal:host-gateway --volume ${PWD}:/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:8.4.1 -c 'yarn grafana-e2e run'",
     "e2e:open": "grafana-e2e open",
-    "e2e:update": "grafana-e2e run --update-screenshots",
+    "e2e:update": "docker run -it --add-host=host.docker.internal:host-gateway --volume ${PWD}:/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:8.4.1 -c 'yarn grafana-e2e run --update-screenshots'",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
