@@ -5,9 +5,9 @@
   "scripts": {
     "build": "webpack -c ./webpack/webpack.prod.conf.js",
     "dev": "docker-compose up -d && webpack -w -c ./webpack/webpack.dev.conf.js",
-    "e2e": "grafana-e2e run",
-    "e2e:open": "grafana-e2e open",
-    "e2e:update": "grafana-e2e run --update-screenshots",
+    "e2e": "ELECTRON_EXTRA_LAUNCH_ARGS=--force-color-profile=srgb grafana-e2e run",
+    "e2e:open": "ELECTRON_EXTRA_LAUNCH_ARGS=--force-color-profile=srgb grafana-e2e open",
+    "e2e:update": "ELECTRON_EXTRA_LAUNCH_ARGS=--force-color-profile=srgb grafana-e2e run --update-screenshots",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
