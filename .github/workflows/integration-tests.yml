@@ -41,15 +41,11 @@ jobs:
           yarn install --frozen-lockfile
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Detecting example name
-        uses: actions/github-script@v6
+      - name: Set example name
         id: example-name
-        with:
-          result-encoding: string
-          script: |
-            const path = require('path');
-            return path.basename('${{ matrix.pluginDir }}');
-        
+        run: |
+          basename ${{ matrix.pluginDir }}
+
       - name: Build plugin frontend
         run: |
           yarn build
@@ -86,7 +82,7 @@ jobs:
         id: expected-versions-tests
         continue-on-error: true
         run: |
-          yarn e2e
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:8.4.1 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
@@ -122,7 +118,8 @@ jobs:
       - name: Start Integration tests using latest version of Grafana
         id: latest-version-grafana-tests
         continue-on-error: true
-        run: yarn e2e
+        run: |
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:8.4.1 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
@@ -171,7 +168,7 @@ jobs:
         id: latest-versions-tests
         continue-on-error: true
         run: |
-          yarn e2e
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:8.4.1 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest versions
