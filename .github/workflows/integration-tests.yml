@@ -26,11 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v2
+      - name: Set example name
+        id: example-name
+        run: |
+          basename ${{ matrix.pluginDir }}
+
+      - name: Restore yarn cache
+        uses: actions/cache@v2
         with:
-          node-version: "14"
-          cache: yarn
-          cache-dependency-path: ${{ matrix.pluginDir }}
+          path: ${{ matrix.pluginDir }}/node_modules
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - uses: actions/setup-go@v2
         with:
@@ -40,11 +45,6 @@ jobs:
         run: |
           yarn install --frozen-lockfile
         working-directory: ${{ matrix.pluginDir }}
-
-      - name: Set example name
-        id: example-name
-        run: |
-          basename ${{ matrix.pluginDir }}
 
       - name: Build plugin frontend
         run: |
