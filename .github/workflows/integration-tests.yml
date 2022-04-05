@@ -43,8 +43,11 @@ jobs:
 
       - name: Set example name
         id: example-name
-        run: |
-          basename ${{ matrix.pluginDir }}
+        with:
+          result-encoding: string
+          script: |
+            const path = require('path');
+            return path.basename('${{ matrix.pluginDir }}');
 
       - name: Build plugin frontend
         run: |
