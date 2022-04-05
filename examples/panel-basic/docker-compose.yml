@@ -2,13 +2,13 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: grafana-basic-panel
+    container_name: 'grafana-basic-panel'
     build: 
-      context: .
+      context: ./.config
       args:
-        grafana_version: ${GRAFANA_VERSION}
+        grafana_version: ${GRAFANA_VERSION:-latest}
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/basic-panel
+      - ./dist:/var/lib/grafana/plugins/grafana-basic-panel,
       - ./provisioning:/etc/grafana/provisioning
