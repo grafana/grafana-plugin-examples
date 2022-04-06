@@ -88,10 +88,6 @@ const config = (env): Configuration => ({
                 decorators: false,
                 dynamicImport: true,
               },
-              minify: {
-                compress: Boolean(env.production),
-                mangle: Boolean(env.production),
-              },
             },
           },
         },
