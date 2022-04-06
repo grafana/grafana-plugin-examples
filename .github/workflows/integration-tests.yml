@@ -82,7 +82,7 @@ jobs:
         id: expected-versions-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.3 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
@@ -119,7 +119,7 @@ jobs:
         id: latest-version-grafana-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.3 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
@@ -168,7 +168,7 @@ jobs:
         id: latest-versions-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.3 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest versions
