@@ -78,12 +78,12 @@ jobs:
           docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
-      ## Expected Version
+      ## Expected Version Tests
       - name: Start Integration tests using expected versions
         id: expected-version-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          yarn e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
@@ -106,8 +106,8 @@ jobs:
           docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.pluginDir }}
 
-      ## Latest Version
-      - name: Bulding plugin with latest version of e2e libraries
+      ## Latest Version Tests
+      - name: Build plugin with latest version of e2e libraries
         run: |
           yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
         working-directory: ${{ matrix.pluginDir }}
@@ -121,7 +121,7 @@ jobs:
         id: latest-version-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          yarn e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
@@ -144,7 +144,7 @@ jobs:
           docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.pluginDir }}
 
-      ## Canary Version
+      ## Canary Version Tests
       # Yarn 1 doesn't remove nested deps on `upgrade` so we need to delete node_modules first
       - name: Delete node_modules folder
         run: |
@@ -156,7 +156,7 @@ jobs:
           yarn upgrade $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build example plugin with latest @grafana dependencies
+      - name: Build plugin with latest @grafana dependencies
         run: |
           yarn build
         working-directory: ${{ matrix.pluginDir }}
@@ -171,7 +171,7 @@ jobs:
         id: canary-version-tests
         continue-on-error: true
         run: |
-          docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
+          yarn e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
