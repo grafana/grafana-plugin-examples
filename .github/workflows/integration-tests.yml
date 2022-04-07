@@ -78,8 +78,9 @@ jobs:
           docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
+      ## Expected Version
       - name: Start Integration tests using expected versions
-        id: expected-versions-tests
+        id: expected-version-tests
         continue-on-error: true
         run: |
           docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
@@ -88,23 +89,24 @@ jobs:
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
         with:
-          name: ${{steps.example-name.outputs.result}}-expected-versions-tests
+          name: ${{steps.example-name.outputs.result}}-expected-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
-        if: steps.expected-versions-tests.outcome != 'success'
+        if: steps.expected-version-tests.outcome != 'success'
 
       - name: Failing build due to test failures (expected versions)
         run: exit 1
-        if: steps.expected-versions-tests.outcome != 'success'
+        if: steps.expected-version-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
           docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.pluginDir }}
 
+      ## Latest Version
       - name: Bulding plugin with latest version of e2e libraries
         run: |
           yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
@@ -116,7 +118,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
-        id: latest-version-grafana-tests
+        id: latest-version-tests
         continue-on-error: true
         run: |
           docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
@@ -125,23 +127,24 @@ jobs:
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
         with:
-          name: ${{steps.example-name.outputs.result}}-latest-version-grafana-tests
+          name: ${{steps.example-name.outputs.result}}-latest-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
-        if: steps.latest-version-grafana-tests.outcome != 'success'
+        if: steps.latest-version-tests.outcome != 'success'
 
       - name: Failing build due to test failures (latest version of Grafana)
         run: exit 1
-        if: steps.latest-version-grafana-tests.outcome != 'success'
+        if: steps.latest-version-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
           docker stop grafana && docker rm grafana
         working-directory: ${{ matrix.pluginDir }}
 
+      ## Canary Version
       # Yarn 1 doesn't remove nested deps on `upgrade` so we need to delete node_modules first
       - name: Delete node_modules folder
         run: |
@@ -165,7 +168,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana
-        id: canary-versions-tests
+        id: canary-version-tests
         continue-on-error: true
         run: |
           docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'
@@ -174,17 +177,17 @@ jobs:
       - name: Uploading artifacts for tests with canary versions
         uses: actions/upload-artifact@v3
         with:
-          name: ${{steps.example-name.outputs.result}}-canary-versions-tests
+          name: ${{steps.example-name.outputs.result}}-canary-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
-        if: steps.canary-versions-tests.outcome != 'success'
+        if: steps.canary-version-tests.outcome != 'success'
 
       - name: Failing build due to test failures (canary versions)
         run: exit 1
-        if: steps.latest-version-grafana-tests.outcome != 'success'
+        if: steps.canary-version-tests.outcome != 'success'
 
       - name: Stop and remove Docker container
         run: |
