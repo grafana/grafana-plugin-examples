@@ -79,6 +79,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       ## Expected Version Tests
+      ## Runs the plugin tests against the minimum compatible version of Grafana defined in its plugin.json.
       - name: Start Integration tests using expected versions
         id: expected-version-tests
         continue-on-error: true
@@ -107,6 +108,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       ## Latest Version Tests
+      ## Runs the plugin tests against the latest stable version of Grafana.
       - name: Build plugin with latest version of e2e libraries
         run: |
           yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
@@ -145,6 +147,8 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       ## Canary Version Tests
+      ## Runs the plugin tests against the latest build of Grafana main branch.
+
       # Yarn 1 doesn't remove nested deps on `upgrade` so we need to delete node_modules first
       - name: Delete node_modules folder
         run: |
