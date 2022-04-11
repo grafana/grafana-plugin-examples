@@ -5,29 +5,46 @@ import { SimpleOptions } from 'types';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export function SimplePanel({ options, data, width, height, timeZone, timeRange, onChangeTimeRange }: Props) {
+export function SimplePanel({
+  options,
+  data,
+  width,
+  height,
+  timeZone,
+  timeRange,
+  onChangeTimeRange,
+  replaceVariables,
+}: Props) {
+  console.log('Panel rendered. ✔️');
+
   return (
-    <TimeSeries
-      width={width}
-      height={height}
-      timeRange={timeRange}
-      timeZone={timeZone}
-      frames={data.series}
-      legend={options.legend}
-    >
-      {(config, alignedDataFrame) => {
-        return (
-          <>
-            <TooltipPlugin
-              config={config}
-              data={alignedDataFrame}
-              mode={TooltipDisplayMode.Multi}
-              timeZone={timeZone}
-            />
-            <ZoomPlugin config={config} onZoom={onChangeTimeRange} />
-          </>
-        );
-      }}
-    </TimeSeries>
+    <>
+      <div>
+        <strong>Variable: </strong>
+        {replaceVariables('"$myVariable"')}
+      </div>
+      <TimeSeries
+        width={width}
+        height={height}
+        timeRange={timeRange}
+        timeZone={timeZone}
+        frames={data.series}
+        legend={options.legend}
+      >
+        {(config, alignedDataFrame) => {
+          return (
+            <>
+              <TooltipPlugin
+                config={config}
+                data={alignedDataFrame}
+                mode={TooltipDisplayMode.Multi}
+                timeZone={timeZone}
+              />
+              <ZoomPlugin config={config} onZoom={onChangeTimeRange} />
+            </>
+          );
+        }}
+      </TimeSeries>
+    </>
   );
 }
