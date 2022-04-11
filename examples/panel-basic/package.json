@@ -4,16 +4,15 @@
   "description": "Showcase how to build a basic panel plugin",
   "scripts": {
     "build": "webpack -c ./webpack/webpack.prod.conf.js",
-    "dev": "docker-compose up -d && webpack -w -c ./webpack/webpack.dev.conf.js",
-    "e2e": "grafana-e2e run",
-    "e2e:open": "grafana-e2e open",
-    "e2e:update": "grafana-e2e run --update-screenshots",
+    "dev": "webpack -w -c ./webpack/webpack.dev.conf.js",
+    "e2e": "docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'",
+    "e2e:update": "docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run --update-screenshots'",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "server:expected": "GRAFANA_VERSION=8.3.4 docker-compose up -d --build"
+    "serve": "GRAFANA_VERSION=8.3.4 docker-compose up -d --build"
   },
   "author": "Grafana Labs",
   "license": "Apache-2.0",

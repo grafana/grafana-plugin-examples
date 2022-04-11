@@ -2,3 +2,4 @@
 node_modules
 **/cypress/videos
 **/cypress/report.json
+**/cypress/screenshots/actual/
