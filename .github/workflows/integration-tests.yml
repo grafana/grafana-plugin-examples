@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set example name
+      - name: Set the name of the plugin-example to be tested
         id: example-name
         run: |
           basename ${{ matrix.pluginDir }}
