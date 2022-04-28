@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { PageOne } from 'pages/PageOne';
 import { PageTwo } from 'pages/PageTwo';
 import { PageThree } from 'pages/PageThree';
@@ -12,7 +12,6 @@ export const Routes = () => {
 
   return (
     <Switch>
-      <Route exact path={prefixRoute(ROUTES.One)} component={PageOne} />
       <Route exact path={prefixRoute(ROUTES.Two)} component={PageTwo} />
       <Route exact path={prefixRoute(`${ROUTES.Three}/:id?`)} component={PageThree} />
 
@@ -20,9 +19,7 @@ export const Routes = () => {
       <Route exact path={prefixRoute(ROUTES.Four)} component={PageFour} />
 
       {/* Default page */}
-      <Route exact path="*">
-        <Redirect to={prefixRoute(ROUTES.One)} />
-      </Route>
+      <Route component={PageOne} />
     </Switch>
   );
 };
