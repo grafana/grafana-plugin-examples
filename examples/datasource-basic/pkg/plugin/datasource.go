@@ -56,7 +56,7 @@ func (ds *Datasource) Dispose() {
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
 // contains Frames ([]*Frame).
 func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	log.DefaultLogger.Debug("QueryData called", "request", req)
+	log.DefaultLogger.Debug("QueryData called", "queries", req.Queries)
 
 	// create response struct
 	response := backend.NewQueryDataResponse()
@@ -78,7 +78,7 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 // datasource configuration page which allows users to verify that
 // a datasource is working as expected.
 func (ds *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	log.DefaultLogger.Debug("CheckHealth called", "request", req)
+	log.DefaultLogger.Debug("CheckHealth called")
 
 	var status = backend.HealthStatusOk
 	var message = "Data source is working"
