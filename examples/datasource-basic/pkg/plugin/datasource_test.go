@@ -2,15 +2,17 @@ package plugin
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
+	"github.com/grafana/basic-datasource/pkg/models"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 func TestQueryData(t *testing.T) {
-	ds := Datasource{}
+	ds := Datasource{
+		settings: &models.PluginSettings{},
+	}
 	json := []byte(`{
 		"scenario": "TimeSeries"
 	}`)
