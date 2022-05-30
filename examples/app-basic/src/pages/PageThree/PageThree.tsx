@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { useParams, Link } from 'react-router-dom';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
-import { prefixRoute } from 'utils/utils.routing';
+import { prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 
 export const PageThree = () => {

@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { PageOne } from 'pages/PageOne';
-import { PageTwo } from 'pages/PageTwo';
-import { PageThree } from 'pages/PageThree';
-import { PageFour } from 'pages/PageFour';
-import { useNavigation, prefixRoute } from 'utils/utils.routing';
+import { PageOne } from '../../pages/PageOne';
+import { PageTwo } from '../../pages/PageTwo';
+import { PageThree } from '../../pages/PageThree';
+import { PageFour } from '../../pages/PageFour';
+import { useNavigation, prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 
 export const Routes = () => {

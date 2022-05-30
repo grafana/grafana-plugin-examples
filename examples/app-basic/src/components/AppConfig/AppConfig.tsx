@@ -3,7 +3,7 @@ import { Button, Field, Input, useStyles2, FieldSet } from '@grafana/ui';
 import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
 import { getBackendSrv, locationService } from '@grafana/runtime';
 import { css } from '@emotion/css';
-import { SecretInput } from 'components/SecretInput';
+import { SecretInput } from '../SecretInput';
 
 export type JsonData = {
   apiUrl?: string;
