@@ -1,7 +1,7 @@
 import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin } from '@grafana/ui';
-import { SimpleOptions } from 'types';
+import { SimpleOptions } from '../../types';
 
 interface Props extends PanelProps<SimpleOptions> {}
 

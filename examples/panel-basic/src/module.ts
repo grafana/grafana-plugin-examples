@@ -2,7 +2,7 @@ import { PanelPlugin, FieldColorModeId } from '@grafana/data';
 import { LegendDisplayMode, GraphGradientMode } from '@grafana/schema';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components';
-import { ariaLabels } from 'components/ariaLabels';
+import { ariaLabels } from './components/ariaLabels';
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
   .useFieldConfig({
