@@ -3,10 +3,12 @@ version: '3.0'
 services:
   grafana:
     container_name: 'basic-panel'
-    build: 
+    build:
       context: ./.config
       args:
         grafana_version: ${GRAFANA_VERSION:-8.3.4}
+    environment:
+      - GF_INSTALL_PLUGINS=marcusolsson-static-datasource
     ports:
       - 3000:3000/tcp
     volumes:
