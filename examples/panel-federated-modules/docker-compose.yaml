@@ -1,0 +1,14 @@
+version: '3.0'
+
+services:
+  grafana:
+    container_name: 'sample-panel'
+    build: 
+      context: ./.config
+      args:
+        grafana_version: ${GRAFANA_VERSION:-8.3.4}
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/sample-panel,
+      - ./provisioning:/etc/grafana/provisioning
