@@ -61,7 +61,7 @@ const config = (env): Configuration => ({
       const stripPrefix = (request) => request.substr(prefix.length);
 
       if (hasPrefix(request)) {
-        return callback(null, stripPrefix(request));
+        return callback(undefined, stripPrefix(request));
       }
 
       callback();

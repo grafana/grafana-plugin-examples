@@ -1,13 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/jackw/webpack-federated-modules/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Sample Panel",
-  "id": "sample-panel",
+  "name": "webpack-federated",
+  "id": "webpack-federated-panel",
+  "moduleLoader": "federated",
   "info": {
-    "description": "This is a sample panel",
+    "description": "A grafana plugin that uses webpack 5 federated modules",
     "author": {
-      "name": "Sample org"
+      "name": "Jack Westbrook"
     },
+    "keywords": ["panel", "federated modules", "experimental"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
