@@ -3,7 +3,7 @@ import { ariaLabels } from '../../src/components/ariaLabels';
 
 const selectors = e2e.getSelectors(ariaLabels);
 const panel = 'Basic Panel';
-const screenshotThreshold = 0.11;
+const screenshotThreshold = 0.15;
 
 describe('editing a panel with time series data', () => {
   beforeEach(() => {
