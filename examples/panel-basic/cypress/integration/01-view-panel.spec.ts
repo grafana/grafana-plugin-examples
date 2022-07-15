@@ -1,5 +1,7 @@
 import { e2e } from '@grafana/e2e';
 
+const screenshotThreshold = 0.01;
+
 describe('viewing a panel with time series data', () => {
   beforeEach(() => {
     e2e.flows.openDashboard({
@@ -22,6 +24,6 @@ describe('viewing a panel with time series data', () => {
       .screenshot(screenshot);
 
     //@ts-ignore
-    e2e().compareScreenshots(screenshot);
+    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
   });
 });
