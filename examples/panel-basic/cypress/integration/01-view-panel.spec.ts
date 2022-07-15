@@ -1,6 +1,6 @@
 import { e2e } from '@grafana/e2e';
 
-const screenshotThreshold = 0.01;
+const screenshotThreshold = 0.03;
 
 describe('viewing a panel with time series data', () => {
   beforeEach(() => {
