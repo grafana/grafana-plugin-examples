@@ -73,79 +73,6 @@ jobs:
           echo "CANARY_VERSION=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Start Docker container using expected version of grafana
-        run: |
-          docker run -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
-        working-directory: ${{ matrix.pluginDir }}
-
-      ## Expected Version Tests
-      ## Runs the plugin tests against the minimum compatible version of Grafana defined in its plugin.json.
-      - name: Start Integration tests using expected versions
-        id: expected-version-tests
-        continue-on-error: true
-        run: |
-          yarn e2e
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Uploading artifacts for tests with expected versions
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{steps.example-name.outputs.result}}-expected-version-tests
-          path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.expected-version-tests.outcome != 'success'
-
-      - name: Failing build due to test failures (expected versions)
-        run: exit 1
-        if: steps.expected-version-tests.outcome != 'success'
-
-      - name: Stop and remove Docker container
-        run: |
-          docker stop grafana && docker rm grafana
-        working-directory: ${{ matrix.pluginDir }}
-
-      ## Latest Version Tests
-      ## Runs the plugin tests against the latest stable version of Grafana.
-      - name: Build plugin with latest version of e2e libraries
-        run: |
-          yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Start Docker container using latest version of grafana
-        run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Start Integration tests using latest version of Grafana
-        id: latest-version-tests
-        continue-on-error: true
-        run: |
-          yarn e2e
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Uploading artifacts for tests with latest version of Grafana
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{steps.example-name.outputs.result}}-latest-version-tests
-          path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.latest-version-tests.outcome != 'success'
-
-      - name: Failing build due to test failures (latest version of Grafana)
-        run: exit 1
-        if: steps.latest-version-tests.outcome != 'success'
-
-      - name: Stop and remove Docker container
-        run: |
-          docker stop grafana && docker rm grafana
-        working-directory: ${{ matrix.pluginDir }}
-
       ## Canary Version Tests
       ## Runs the plugin tests against the latest build of Grafana main branch.
 
@@ -168,7 +95,7 @@ jobs:
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_VERSION
+          docker run -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana
