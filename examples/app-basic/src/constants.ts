@@ -1,5 +1,5 @@
 import pluginJson from './plugin.json';
-import { NavItem } from 'types';
+import { NavItem } from './types';
 
 export const PLUGIN_BASE_URL = `/a/${pluginJson.id}`;
 

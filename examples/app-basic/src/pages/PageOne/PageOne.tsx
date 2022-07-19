@@ -2,7 +2,7 @@ import * as React from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { LinkButton, useStyles2 } from '@grafana/ui';
-import { prefixRoute } from 'utils/utils.routing';
+import { prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 
 export const PageOne = () => {
