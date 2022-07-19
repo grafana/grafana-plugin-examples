@@ -14,6 +14,10 @@ describe('viewing a panel with time series data', () => {
   it('should display a good looking graph', () => {
     const panel = 'Basic Panel';
 
-    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
+    e2e.components.Panels.Panel.containerByTitle(panel)
+      .should('be.visible')
+      .find('.panel-content')
+      .find('[data-testid="basic-panel-example"]')
+      .should('be.visible');
   });
 });

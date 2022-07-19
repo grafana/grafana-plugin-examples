@@ -18,7 +18,7 @@ export function SimplePanel({
   console.log('Panel rendered. ✔️');
 
   return (
-    <>
+    <div data-testid="basic-panel-example">
       <div>
         <strong>Variable: </strong>
         {replaceVariables('"$myVariable"')}
@@ -45,6 +45,6 @@ export function SimplePanel({
           );
         }}
       </TimeSeries>
-    </>
+    </div>
   );
 }

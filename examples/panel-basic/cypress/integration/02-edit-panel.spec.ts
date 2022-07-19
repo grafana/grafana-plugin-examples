@@ -26,7 +26,7 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content');
   });
 
   it('should be able to change graph opacity', () => {
@@ -39,7 +39,7 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content');
   });
 
   it('should be able to hide legend', () => {
@@ -52,7 +52,7 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content');
   });
 
   it('should be able to place legend to the right', () => {
@@ -65,6 +65,6 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content');
   });
 });
