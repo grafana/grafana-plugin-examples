@@ -3,7 +3,6 @@ import { ariaLabels } from '../../src/components/ariaLabels';
 
 const selectors = e2e.getSelectors(ariaLabels);
 const panel = 'Basic Panel';
-const screenshotThreshold = 0.15;
 
 describe('editing a panel with time series data', () => {
   beforeEach(() => {
@@ -17,8 +16,6 @@ describe('editing a panel with time series data', () => {
   });
 
   it('should be able to change graph gradient', () => {
-    const screenshot = 'time-series-graph-hue';
-
     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Edit, panel);
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
@@ -29,19 +26,10 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel)
-      .should('be.visible')
-      .find('.panel-content')
-      .scrollIntoView()
-      .screenshot(screenshot);
-
-    //@ts-ignore
-    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
   });
 
   it('should be able to change graph opacity', () => {
-    const screenshot = 'time-series-graph-opacity';
-
     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Edit, panel);
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
@@ -51,19 +39,10 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel)
-      .should('be.visible')
-      .find('.panel-content')
-      .scrollIntoView()
-      .screenshot(screenshot);
-
-    //@ts-ignore
-    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
   });
 
   it('should be able to hide legend', () => {
-    const screenshot = 'time-series-graph-hidden-legend';
-
     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Edit, panel);
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
@@ -73,19 +52,10 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel)
-      .should('be.visible')
-      .find('.panel-content')
-      .scrollIntoView()
-      .screenshot(screenshot);
-
-    //@ts-ignore
-    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
   });
 
   it('should be able to place legend to the right', () => {
-    const screenshot = 'time-series-graph-legend-right';
-
     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Edit, panel);
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
@@ -95,13 +65,6 @@ describe('editing a panel with time series data', () => {
 
     e2e.components.PanelEditor.applyButton().click();
 
-    e2e.components.Panels.Panel.containerByTitle(panel)
-      .should('be.visible')
-      .find('.panel-content')
-      .scrollIntoView()
-      .screenshot(screenshot);
-
-    //@ts-ignore
-    e2e().compareScreenshots({ name: screenshot, threshold: screenshotThreshold });
+    e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content').scrollIntoView();
   });
 });
