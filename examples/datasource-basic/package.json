@@ -5,8 +5,7 @@
   "scripts": {
     "build": "TS_NODE_PROJECT=\"./.config/webpack/tsconfig.webpack.json\" webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "TS_NODE_PROJECT=\"./.config/webpack/tsconfig.webpack.json\" webpack -w -c ./.config/webpack/webpack.config.ts --env development",
-    "e2e": "docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run'",
-    "e2e:update": "docker run --rm --add-host=host.docker.internal:host-gateway --volume $(pwd):/e2e --workdir /e2e --env='CYPRESS_HOST=host.docker.internal' --env='CYPRESS_BASE_URL=http://host.docker.internal:3000' --entrypoint '/bin/bash' cypress/included:9.5.1-node16.14.0-slim-chrome99-ff97 -c './node_modules/.bin/cypress install && yarn grafana-e2e run --update-screenshots'",
+    "e2e": "yarn cypress install && TZ=UTC yarn grafana-e2e run",
     "test": "jest --watch --onlyChanged",
     "test:ci": "jest --maxWorkers 4",
     "typecheck": "tsc --noEmit",
