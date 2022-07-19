@@ -4,7 +4,7 @@ import type { EditorProps } from './types';
 import { useChangeOptions } from './useChangeOptions';
 import { useChangeSecureOptions } from './useChangeSecureOptions';
 import { useResetSecureOptions } from './useResetSecureOptions';
-import { testIds } from 'components/testIds';
+import { testIds } from '../testIds';
 
 const { SecretFormField } = LegacyForms;
 

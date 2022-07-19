@@ -7,7 +7,7 @@ FROM grafana/grafana:${grafana_version}
 ENV GF_AUTH_ANONYMOUS_ORG_ROLE "Admin"
 ENV GF_AUTH_ANONYMOUS_ENABLED "true"
 ENV GF_AUTH_BASIC_ENABLED "false"
-# Set development mode so plugins can be loaded without need to sign
+# Set development mode so plugins can be loaded without the need to sign
 ENV GF_DEFAULT_APP_MODE "development"
 
 # Inject livereload script into grafana index.html
