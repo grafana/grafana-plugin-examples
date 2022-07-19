@@ -92,6 +92,14 @@ jobs:
           yarn build
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Build plugin backend
+        uses: magefile/mage-action@v1
+        with:
+          version: latest
+          args: -v build:linux
+          workdir: ${{ matrix.pluginDir }}
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
+
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
         run: |
