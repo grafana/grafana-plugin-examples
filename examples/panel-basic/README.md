@@ -32,6 +32,12 @@ Use panel plugins when you want to do things like visualize data returned by dat
    yarn build
    ```
 
+4. Run e2e tests
+
+   ```bash
+   yarn e2e
+   ```
+
 ## Learn more
 
 - [Build a panel plugin tutorial](https://grafana.com/tutorials/build-a-panel-plugin/)
