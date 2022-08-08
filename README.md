@@ -4,9 +4,9 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                                           | Description                                                                                                                              |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [app-basic](examples/app-basic)                   | demonstrates how to build a basic app plugin that uses custom routing.              |
+| Example                         | Description                                                            |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| [app-basic](examples/app-basic) | demonstrates how to build a basic app plugin that uses custom routing. |
 
 ## Panel plugins
 
@@ -50,4 +50,22 @@ Executing the script relies on [`zx`](https://github.com/google/zx). To execute 
 
 ```shell
 npx zx scripts/test-runner.mjs
+```
+
+## API Compatibility
+
+If your plugin uses typescript you can use grafana [levitate](https://github.com/grafana/levitate/) to test the compatibility of the APIs your plugin is using and the grafana API.
+
+e.g. to see a compatibility report of your plugin code and the latest release of the grafana APIs
+
+```
+npx @grafana/levitate is-compatible --path src/module.ts --target @grafana/data,@grafana/ui,@grafana/runtime
+
+```
+
+you may also specify a target version
+
+```
+npx @grafana/levitate is-compatible --path src/module.ts --target @grafana/data@9.0.5,@grafana/ui@9.0.5,@grafana/runtime@9.0.5
+
 ```
