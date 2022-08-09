@@ -54,7 +54,7 @@ npx zx scripts/test-runner.mjs
 
 ## API Compatibility
 
-If your plugin uses typescript you can use grafana [levitate](https://github.com/grafana/levitate/) to test the compatibility of the APIs your plugin is using and the grafana API.
+If your plugin uses typescript you can use [`@grafana/levitate`](https://github.com/grafana/levitate/) to test if the Grafana APIs your plugin is using are compatible with a certain version of Grafana.
 
 e.g. to see a compatibility report of your plugin code and the latest release of the grafana APIs
 
