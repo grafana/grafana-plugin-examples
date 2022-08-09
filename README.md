@@ -96,4 +96,4 @@ jobs:
 
 This will run a compatibility check in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
 
-Sometimes incompatibilities are minor. e.g. a type changed but this doesn't affect your plugin. We advice you to upgrade your grafana dependencies if this is the case so you are always uses the latest API.
+Sometimes incompatibilities are minor. e.g. a type changed but this doesn't affect your plugin. We advice you to upgrade your grafana dependencies if this is the case so you always use the latest API.
