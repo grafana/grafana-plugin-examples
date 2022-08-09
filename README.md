@@ -70,7 +70,7 @@ npx @grafana/levitate@latest is-compatible --path src/module.ts --target @grafan
 
 ```
 
-The following github workflow example can be used in your project to keep an eye in the compatibility of your plugin and the grafana API.
+The following github workflow example can be used in your project to keep an eye on the compatibility of your plugin and the grafana API.
 
 If you host your project in Github. You could create a new file in your project in `.github/workflows/levitate.yml` and put the following content:
 
