@@ -4,9 +4,9 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                                           | Description                                                                                                                              |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [app-basic](examples/app-basic)                   | demonstrates how to build a basic app plugin that uses custom routing.              |
+| Example                         | Description                                                            |
+| ------------------------------- | ---------------------------------------------------------------------- |
+| [app-basic](examples/app-basic) | demonstrates how to build a basic app plugin that uses custom routing. |
 
 ## Panel plugins
 
@@ -51,3 +51,49 @@ Executing the script relies on [`zx`](https://github.com/google/zx). To execute 
 ```shell
 npx zx scripts/test-runner.mjs
 ```
+
+## API Compatibility
+
+If your plugin uses typescript you can use [`@grafana/levitate`](https://github.com/grafana/levitate/) to test if the Grafana APIs your plugin is using are compatible with a certain version of Grafana.
+
+e.g. to see a compatibility report of your plugin code and the latest release of the grafana APIs
+
+```
+npx @grafana/levitate@latest is-compatible --path src/module.ts --target @grafana/data,@grafana/ui,@grafana/runtime
+
+```
+
+you may also specify a target version
+
+```
+npx @grafana/levitate@latest is-compatible --path src/module.ts --target @grafana/data@9.0.5,@grafana/ui@9.0.5,@grafana/runtime@9.0.5
+
+```
+
+The following github workflow example can be used in your project to keep an eye on the compatibility of your plugin and the grafana API.
+
+If you host your project in GitHub and want to use [GitHub Actions](https://docs.github.com/en/actions). You could create a new file in your project in `.github/workflows/levitate.yml` and put the following content:
+
+```yaml
+name: Compatibility check
+on: [push, pull_request]
+
+jobs:
+  compatibilitycheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Install dependencies
+        run: yarn install
+      - name: Build plugin
+        run: yarn build
+      - name: Compatibility check
+        run: npx @grafana/levitate@latest is-compatible --path src/module.ts --target @grafana/data,@grafana/ui,@grafana/runtime
+```
+
+This will run a compatibility check in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
+
+Sometimes incompatibilities are minor. e.g. a type changed but this doesn't affect your plugin. We advice you to upgrade your grafana dependencies if this is the case so you always use the latest API.
