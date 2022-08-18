@@ -6,7 +6,7 @@ services:
     build:
       context: ./.config
       args:
-        grafana_version: ${GRAFANA_VERSION:-8.3.4}
+        grafana_version: ${GRAFANA_VERSION:-9.0.7}
     environment:
       - GF_INSTALL_PLUGINS=marcusolsson-static-datasource
     ports:

@@ -108,6 +108,6 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
             },
           ],
         },
-        showIf: (config) => !config.legend.displayMode,
+        showIf: (config) => !!config.legend.displayMode,
       });
   });
