@@ -1,7 +1,5 @@
-type SeriesSize = 'sm' | 'md' | 'lg';
+import { ReduceDataOptions } from '@grafana/schema';
 
 export interface SimpleOptions {
-  text: string;
-  showSeriesCount: boolean;
-  seriesCountSize: SeriesSize;
+  reduceOptions: ReduceDataOptions;
 }

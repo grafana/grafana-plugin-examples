@@ -1,13 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Datalinks",
-  "id": "my-org-datalinks-panel",
+  "name": "Data links panel",
+  "id": "myorg-datalinks-panel",
   "info": {
     "description": "A simple panel that showcases how to use datalinks in a panel",
     "author": {
       "name": "My org"
     },
+    "keywords": ["panel", "datalinks"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
