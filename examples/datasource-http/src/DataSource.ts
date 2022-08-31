@@ -94,8 +94,8 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         message = err;
       } else if (isFetchError(err)) {
         message += err.statusText ? err.statusText : defaultErrorMessage;
-        if (err.data && err.data.error && err.data.err.code) {
-          message += ': ' + err.data.err.code + '. ' + err.data.err.message;
+        if (err.data && err.data.error && err.data.error.code) {
+          message += ': ' + err.data.error.code + '. ' + err.data.error.message;
         }
       }
       return {
