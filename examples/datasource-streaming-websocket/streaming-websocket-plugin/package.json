@@ -16,9 +16,9 @@
     "email": "plugins@grafana.com"
   },
   "devDependencies": {
-    "@grafana/data": "8.1.4",
-    "@grafana/toolkit": "8.1.4",
-    "@grafana/ui": "8.1.4",
+    "@grafana/data": "9.1.2",
+    "@grafana/toolkit": "9.1.2",
+    "@grafana/ui": "9.1.2",
     "@testing-library/jest-dom": "5.4.0",
     "@testing-library/react": "^10.0.2",
     "@types/lodash": "latest",
