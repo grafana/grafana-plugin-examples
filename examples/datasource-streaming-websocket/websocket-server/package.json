@@ -4,7 +4,8 @@
   "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "dev": "node src/server.js"
+    "dev": "node src/server.js",
+    "build": "echo No build defined"
   },
   "dependencies": {
     "express": "^4.17.1",
