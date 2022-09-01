@@ -6,10 +6,11 @@ import {
   FieldType,
   MutableDataFrame,
 } from '@grafana/data';
-import { getBackendSrv } from '@grafana/runtime';
+import { getBackendSrv, isFetchError } from '@grafana/runtime';
 import _ from 'lodash';
 import defaults from 'lodash/defaults';
-import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
+import { DataSourceResponse, defaultQuery, MyDataSourceOptions, MyQuery } from './types';
+import { lastValueFrom } from 'rxjs';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   baseUrl: string;
@@ -62,9 +63,10 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   async request(url: string, params?: string) {
-    return getBackendSrv().datasourceRequest({
+    const response = getBackendSrv().fetch<DataSourceResponse>({
       url: `${this.baseUrl}${url}${params?.length ? `?${params}` : ''}`,
     });
+    return lastValueFrom(response);
   }
 
   /**
@@ -87,23 +89,19 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         };
       }
     } catch (err) {
+      let message = '';
       if (_.isString(err)) {
-        return {
-          status: 'error',
-          message: err,
-        };
-      } else {
-        let message = '';
+        message = err;
+      } else if (isFetchError(err)) {
         message += err.statusText ? err.statusText : defaultErrorMessage;
         if (err.data && err.data.error && err.data.error.code) {
           message += ': ' + err.data.error.code + '. ' + err.data.error.message;
         }
-
-        return {
-          status: 'error',
-          message,
-        };
       }
+      return {
+        status: 'error',
+        message,
+      };
     }
   }
 }
