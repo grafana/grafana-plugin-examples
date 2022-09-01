@@ -81,7 +81,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
               ariaLabel: ariaLabels.legendDisplayTable,
             },
             {
-              value: LegendDisplayMode.Hidden,
+              value: undefined,
               label: 'Hidden',
               ariaLabel: ariaLabels.legendDisplayHidden,
             },
@@ -108,6 +108,6 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
             },
           ],
         },
-        showIf: (config) => config.legend.displayMode !== LegendDisplayMode.Hidden,
+        showIf: (config) => !!config.legend.displayMode,
       });
   });
