@@ -68,10 +68,10 @@ jobs:
       ## CANARY_VERSION has to use NPM as we only publish the packages on changes
       - name: Set environment vars for testing
         run: |
-          DIR=${{ matrix.pluginDir }} echo "PLUGIN_ID=$(cat ${DIR}/src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
-          DIR=${{ matrix.pluginDir }} echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat ${DIR}src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
+          echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
+          echo "EXPECTED_GRAFANA_VERSION=$(npx ynpx -q semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
           echo "CANARY_VERSION=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_ENV
-        # working-directory: ${{ matrix.pluginDir }}
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using expected version of grafana
         run: |
