@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "An example plugin for Grafana",
   "scripts": {
-    "build": "grafana-toolkit plugin:build",
-    "test": "grafana-toolkit plugin:test",
-    "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch"
+    "build": "TS_NODE_PROJECT=\"./.config/webpack/tsconfig.webpack.json\" webpack -c ./.config/webpack/webpack.config.ts --env production",
+    "test": "jest --watch --onlyChanged",
+    "dev": "TS_NODE_PROJECT=\"./.config/webpack/tsconfig.webpack.json\" webpack -w -c ./.config/webpack/webpack.config.ts --env development",
+    "test:ci": "jest --maxWorkers 4",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "yarn lint --fix",
+    "server": "docker-compose up --build"
   },
   "repository": "github:grafana/grafana-plugin-examples",
   "author": "Grafana Labs",
@@ -16,11 +20,41 @@
     "email": "plugins@grafana.com"
   },
   "devDependencies": {
-    "@grafana/data": "9.1.2",
-    "@grafana/toolkit": "9.1.2",
-    "@grafana/ui": "9.1.2",
     "@types/lodash": "^4.14.154",
-    "emotion": "10.0.27"
+    "emotion": "10.0.27",
+    "@babel/core": "^7.16.7",
+    "@grafana/e2e": "9.1.2",
+    "@grafana/e2e-selectors": "9.1.2",
+    "@grafana/eslint-config": "^2.5.0",
+    "@grafana/tsconfig": "^1.2.0-rc1",
+    "@swc/core": "^1.2.144",
+    "@swc/helpers": "^0.3.6",
+    "@swc/jest": "^0.2.20",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.3",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.19",
+    "@typescript-eslint/eslint-plugin": "^4.33.0",
+    "@typescript-eslint/parser": "^4.33.0",
+    "copy-webpack-plugin": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsdoc": "^36.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.26.1",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-webpack-plugin": "^3.1.1",
+    "jest": "27.5.0",
+    "fork-ts-checker-webpack-plugin": "^7.2.0",
+    "prettier": "^2.5.0",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "swc-loader": "^0.1.15",
+    "tsconfig-paths": "^3.12.0",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.4.0",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-livereload-plugin": "^3.0.2"
   },
   "engines": {
     "node": ">=14"
@@ -28,6 +62,11 @@
   "dependencies": {
     "@types/react-plotly.js": "^2.2.4",
     "plotly.js": "^1.54.1",
-    "react-plotly.js": "^2.4.0"
+    "react-plotly.js": "^2.4.0",
+    "@emotion/css": "^11.1.3",
+    "@grafana/data": "9.1.2",
+    "@grafana/runtime": "9.1.2",
+    "@grafana/ui": "9.1.2",
+    "@types/lodash": "latest"
   }
 }

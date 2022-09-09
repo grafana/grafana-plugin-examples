@@ -69,7 +69,7 @@ jobs:
       - name: Set environment vars for testing
         run: |
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
-          echo "EXPECTED_GRAFANA_VERSION=$(npx semver $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
+          echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
           echo "CANARY_VERSION=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
