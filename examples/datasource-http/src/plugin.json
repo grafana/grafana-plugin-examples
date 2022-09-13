@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "HTTP",
   "id": "example-http-datasource",
@@ -29,7 +30,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaVersion": ">=9.1.2",
+    "grafanaDependency": ">=9.1.2",
     "plugins": []
   }
 }

@@ -4,6 +4,7 @@
   "name": "Basic Panel",
   "id": "basic-panel",
   "info": {
+    "keywords": ["panel", "example"],
     "description": "Showcase how to build a basic panel plugin",
     "author": {
       "name": "Your Name"

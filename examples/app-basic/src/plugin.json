@@ -4,6 +4,7 @@
   "name": "Basic App",
   "id": "basic-app",
   "info": {
+    "keywords": ["basic", "app", "example"],
     "description": "A basic grafana app plugin",
     "author": {
       "name": "Your name"
