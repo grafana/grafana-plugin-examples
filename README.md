@@ -91,7 +91,7 @@ jobs:
       - name: Build plugin
         run: yarn build
       - name: Compatibility check
-        uses: grafana/levitate/actions/is-compatible@levitate-action-comment
+        uses: grafana/levitate/actions/is-compatible
         with:
           module: "./src/module.ts" 
           comment-pr: 'yes' 
