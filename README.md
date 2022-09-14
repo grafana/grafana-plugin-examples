@@ -76,7 +76,7 @@ If you host your project in GitHub and want to use [GitHub Actions](https://docs
 
 ```yaml
 name: Compatibility check
-on: [push, pull_request]
+on: [push]
 
 jobs:
   compatibilitycheck:
@@ -91,7 +91,11 @@ jobs:
       - name: Build plugin
         run: yarn build
       - name: Compatibility check
-        run: npx @grafana/levitate@latest is-compatible --path src/module.ts --target @grafana/data,@grafana/ui,@grafana/runtime
+        uses: grafana/levitate/actions/is-compatible@latest
+        with:
+          module: "./src/module.ts" 
+          comment-pr: 'yes' 
+          fail-if-incompatible: 'no' 
 ```
 
 This will run a compatibility check in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
