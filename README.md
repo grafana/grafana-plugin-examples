@@ -91,13 +91,13 @@ jobs:
       - name: Build plugin
         run: yarn build
       - name: Compatibility check
-        uses: grafana/levitate/actions/is-compatible@latest
+        uses: grafana/plugin-actions/is-compatible@v1
         with:
           module: "./src/module.ts" 
           comment-pr: 'yes' 
           fail-if-incompatible: 'no' 
 ```
 
-This will run a compatibility check in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
+This will run a compatibility check for the latest release of grafana plugins API in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
 
 Sometimes incompatibilities are minor. e.g. a type changed but this doesn't affect your plugin. We advice you to upgrade your grafana dependencies if this is the case so you always use the latest API.
