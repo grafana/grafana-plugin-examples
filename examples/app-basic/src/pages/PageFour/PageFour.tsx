@@ -4,14 +4,15 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { LinkButton, useStyles2 } from '@grafana/ui';
 import { ROUTES } from '../../constants';
 import { prefixRoute } from '../../utils/utils.routing';
+import { testIds } from '../../components/testIds';
 
 export const PageFour = () => {
   const s = useStyles2(getStyles);
 
   return (
-    <div className={s.page}>
+    <div className={s.page} data-testid={testIds.pageFour.container}>
       <div className={s.container}>
-        <LinkButton icon="arrow-left" href={prefixRoute(ROUTES.One)}>
+        <LinkButton data-testid={testIds.pageFour.navigateBack} icon="arrow-left" href={prefixRoute(ROUTES.One)}>
           Back
         </LinkButton>
         <div className={s.content}>This is a full-width page without a navigation bar.</div>

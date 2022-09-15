@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App",
-  "id": "basic-app",
+  "id": "grafana-basic-app",
   "info": {
     "description": "A basic grafana app plugin",
     "author": {
