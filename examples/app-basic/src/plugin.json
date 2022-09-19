@@ -51,7 +51,7 @@
     },
     {
       "type": "page",
-      "icon": "fa fa-cog",
+      "icon": "cog",
       "name": "Configuration",
       "path": "/plugins/basic-app",
       "role": "Admin",
