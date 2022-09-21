@@ -177,7 +177,7 @@ jobs:
         id: npm-to-docker-image
         uses: ./.github/actions/npm-to-docker-image
         with:
-          npm-tag: '$CANARY_VERSION'
+          npm-tag: $CANARY_VERSION
 
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
