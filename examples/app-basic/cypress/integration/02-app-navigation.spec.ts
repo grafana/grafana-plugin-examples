@@ -23,7 +23,7 @@ describe('navigating app', () => {
     
     // navigating to page four with full width layout
     pageOne.navigateToFour().click();
-    cy.get('body').find('h1', ).should('not.exist');
+    cy.get('body').find('h1').should('not.exist');
 
     // navigate back to page one
     pageFour.navigateBack().click();
