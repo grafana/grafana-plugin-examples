@@ -11,6 +11,7 @@ const npmTag = "npm-tag";
   const exists = await checkIfTagExists(tag);
 
   if (exists) {
+    core.info(`Found grafana/grafana-dev:${tag}`);
     core.setOutput(dockerTag, tag);
     return;
   }
@@ -18,6 +19,8 @@ const npmTag = "npm-tag";
   const nextTag = await findNextTag(tag);
 
   if (nextTag) {
+    core.info(`Missing grafana/grafana-dev:${tag}`);
+    core.info(`Using grafana/grafana-dev:${nextTag} instead`);
     core.setOutput(dockerTag, nextTag);
     return;
   }

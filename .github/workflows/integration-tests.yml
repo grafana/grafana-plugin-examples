@@ -160,7 +160,7 @@ jobs:
           yarn upgrade $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build plugin with latest @grafana dependencies
+      - name: Build plugin with canary_version @grafana dependencies
         run: |
           yarn build
         working-directory: ${{ matrix.pluginDir }}
