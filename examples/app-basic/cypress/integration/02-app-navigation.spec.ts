@@ -1,12 +1,13 @@
 import { e2e } from '@grafana/e2e';
 import { testIds } from '../../src/components/testIds';
+import pluginJson from '../../src/plugin.json';
 
 const { pageOne, pageFour, pageTwo, pageThree } = e2e.getSelectors(testIds);
 const headerTitle = 'Basic App Plugin';
 
 describe('navigating app', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/a/grafana-basic-app/one');    
+    cy.visit(`http://localhost:3000/a/${pluginJson.id}/one`);    
   });
 
   it('should render page one successfully', () => {

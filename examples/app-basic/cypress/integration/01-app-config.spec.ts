@@ -1,11 +1,12 @@
 import { e2e } from '@grafana/e2e';
 import { testIds } from '../../src/components/testIds';
+import pluginJson from '../../src/plugin.json';
 
 const { appConfig } = e2e.getSelectors(testIds);
 
 describe('configurating app', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:3000/plugins/grafana-basic-app');    
+    cy.visit(`http://localhost:3000/a/${pluginJson.id}`);    
   });
 
   it('should be successfully configured', () => {
