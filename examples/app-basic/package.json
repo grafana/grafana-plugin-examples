@@ -1,5 +1,5 @@
 {
-  "name": "grafana-app-basic",
+  "name": "myorg-app-basic",
   "version": "1.0.0",
   "description": "A basic grafana app plugin",
   "scripts": {

@@ -1,7 +1,7 @@
 apiVersion: 1
 
 apps:
-  - type: grafana-app-basic
+  - type: myorg-app-basic
     org_id: 1
     org_name: Main Org.
     disabled: false
