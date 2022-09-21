@@ -37,7 +37,7 @@ Some of the examples in this repository contain integration tests that make use 
 
 ### Testing against latest versions of Grafana
 
-There is a script `scripts/test-runner.mjs` which navigates all plugin examples looking for integration tests to run. For any example plugin that has a `e2e` npm script defined it will run the following:
+There is a github workflow `.github/workflows/integration-tests.yml` which navigates all plugin examples looking for integration tests to run. For any example plugin that has a `e2e` npm script defined it will run the following:
 
 1. Build the plugin with the provided version of Grafana packages and test against the provided version of Grafana
    - _asserting the plugin works with its expected versions_
@@ -46,11 +46,11 @@ There is a script `scripts/test-runner.mjs` which navigates all plugin examples 
 1. Upgrade all Grafana NPM packages to the latest version and test against latest version of Grafana
    - _asserting the plugin can still build with the latest Grafana NPM packages_
 
-Executing the script relies on [`zx`](https://github.com/google/zx). To execute it run:
+## Using the examples as the base for your plugins
 
-```shell
-npx zx scripts/test-runner.mjs
-```
+All of the examples use [grafana/create-plugin](https://github.com/grafana/create-plugin/) instead of `@grafana/toolkit`.
+
+You can read more about customizing and extending the base configuration [here](https://github.com/grafana/create-plugin/#customizing-or-extending-the-basic-configs)
 
 ## API Compatibility
 
