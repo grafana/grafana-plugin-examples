@@ -43,7 +43,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
 
             if (data.hasLinks && data.getLinks) {
               return (
-                <DataLinksContextMenu key={idx} links={data.getLinks} config={data.field}>
+                <DataLinksContextMenu key={idx} links={data.getLinks}>
                   {(api) => (
                     <circle
                       r={data.display.numeric}
