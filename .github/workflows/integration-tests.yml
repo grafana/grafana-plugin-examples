@@ -75,7 +75,7 @@ jobs:
 
       - name: Start Docker container using expected version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       ## Expected Version Tests
@@ -104,7 +104,7 @@ jobs:
 
       - name: Stop and remove Docker container
         run: |
-          docker stop grafana && docker rm grafana
+          docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
       ## Latest Version Tests
@@ -116,7 +116,7 @@ jobs:
 
       - name: Start Docker container using latest version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
+          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
@@ -143,7 +143,7 @@ jobs:
 
       - name: Stop and remove Docker container
         run: |
-          docker stop grafana && docker rm grafana
+          docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
       ## Canary Version Tests
@@ -176,7 +176,7 @@ jobs:
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_VERSION
+          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana
@@ -203,5 +203,5 @@ jobs:
 
       - name: Stop and remove Docker container
         run: |
-          docker stop grafana && docker rm grafana
+          docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
