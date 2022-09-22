@@ -175,14 +175,19 @@ jobs:
 
       - name: Find docker image to use for grafana canary version
         id: npm-to-docker-image
-        uses: ./.github/actions/npm-to-docker-image
+        uses: actions/github-script@v5
+        env:
+          INPUT_NPM-TAG: ${{ env.CANARY_VERSION }}
         with:
-          npm-tag: ${{ env.CANARY_VERSION }}
+          result-encoding: string
+          script: |
+            const script = require('./.github/workflows/scripts/npm-to-docker-image.js');
+            return await script({ core });
 
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
         run: |
-          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:${{ steps.npm-to-docker-image.outputs.docker-tag }}
+          docker run -d -p 3000:3000 --name grafana -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:${{ steps.npm-to-docker-image.outputs.result }}
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana

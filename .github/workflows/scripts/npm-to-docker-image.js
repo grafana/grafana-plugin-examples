@@ -1,19 +1,16 @@
 const https = require("https");
-const core = require("@actions/core");
+
+const npmTag = "npm-tag";
 const baseUrl =
   "https://registry.hub.docker.com/v2/repositories/grafana/grafana-dev/tags";
 
-const dockerTag = "docker-tag";
-const npmTag = "npm-tag";
-
-(async function () {
+module.exports = async ({ core }) => {
   const tag = core.getInput(npmTag);
   const exists = await checkIfTagExists(tag);
 
   if (exists) {
     core.info(`Found grafana/grafana-dev:${tag}`);
-    core.setOutput(dockerTag, tag);
-    return;
+    return tag;
   }
 
   const nextTag = await findNextTag(tag);
@@ -21,12 +18,11 @@ const npmTag = "npm-tag";
   if (nextTag) {
     core.info(`Missing grafana/grafana-dev:${tag}`);
     core.info(`Using grafana/grafana-dev:${nextTag} instead`);
-    core.setOutput(dockerTag, nextTag);
-    return;
+    return nextTag;
   }
 
   core.setFailed(`Could not find any docker image matching ${tag}`);
-})();
+};
 
 async function checkIfTagExists(tag) {
   try {
