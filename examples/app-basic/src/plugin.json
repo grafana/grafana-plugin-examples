@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App",
-  "id": "basic-app",
+  "id": "myorg-app-basic",
   "info": {
     "keywords": ["basic", "app", "example"],
     "description": "A basic grafana app plugin",
@@ -52,9 +52,9 @@
     },
     {
       "type": "page",
-      "icon": "fa fa-cog",
+      "icon": "cog",
       "name": "Configuration",
-      "path": "/plugins/basic-app",
+      "path": "/plugins/%PLUGIN_ID%",
       "role": "Admin",
       "addToNav": true
     }

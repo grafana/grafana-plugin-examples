@@ -5,13 +5,14 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import { prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
+import { testIds } from '../../components/testIds';
 
 export const PageThree = () => {
   const s = useStyles2(getStyles);
   const { id } = useParams<{ id: string }>();
 
   return (
-    <>
+    <div data-testid={testIds.pageThree.container}>
       This is page three.
       <br />
       <br />
@@ -31,7 +32,7 @@ export const PageThree = () => {
           </Link>
         </>
       )}
-    </>
+    </div>
   );
 };
 
