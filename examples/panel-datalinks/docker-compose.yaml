@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'datalinks'
+    container_name: 'datalinks-panel'
     build:
       context: ./.config
       args:
@@ -10,5 +10,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/datalinks,
+      - ./dist:/var/lib/grafana/plugins/datalinks-panel,
       - ./provisioning:/etc/grafana/provisioning

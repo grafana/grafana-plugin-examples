@@ -1,5 +1,5 @@
 {
-  "name": "panel-datalinks",
+  "name": "datalinks-panel",
   "version": "1.0.0",
   "description": "A simple panel that showcases how to use datalinks in a panel",
   "scripts": {
