@@ -92,7 +92,7 @@
         }
       ],
       "title": "Datalinks",
-      "type": "myorg-datalinks-panel"
+      "type": "datalinks-panel"
     }
   ],
   "schemaVersion": 36,
