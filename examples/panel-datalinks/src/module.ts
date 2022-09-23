@@ -1,10 +1,10 @@
 import { PanelPlugin, ReducerID, standardEditorsRegistry } from '@grafana/data';
-import { SimpleOptions } from './types';
+import { PanelOptions } from './types';
 import { DataLinksPanel } from './components/DataLinksPanel';
 
 const reduceOptionsCategory = ['Value options'];
 
-export const plugin = new PanelPlugin<SimpleOptions>(DataLinksPanel).useFieldConfig().setPanelOptions((builder) => {
+export const plugin = new PanelPlugin<PanelOptions>(DataLinksPanel).useFieldConfig().setPanelOptions((builder) => {
   builder.addRadio({
     path: 'reduceOptions.values',
     name: 'Show',

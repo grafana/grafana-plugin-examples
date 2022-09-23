@@ -9,19 +9,17 @@ describe('viewing a panel with datalinks', () => {
     });
   });
 
-  it('should display an svg', () => {
+  it('should display the datalinks visualization', () => {
     e2e.components.Panels.Panel.containerByTitle(panel)
       .should('be.visible')
-      .find('.panel-content')
-      .get('svg')
+      .find('[data-testid="datalinks-panel-example"]')
       .should('be.visible');
   });
 
   it('should render a datalinks dropdown menu when clicking circles', () => {
     e2e.components.Panels.Panel.containerByTitle(panel)
+      .find('[data-testid="datalinks-panel-example"]')
       .should('be.visible')
-      .find('.panel-content')
-      .get('svg')
       .find('circle')
       .first()
       .click({ force: true });

@@ -1,5 +1,5 @@
 import { ReduceDataOptions } from '@grafana/schema';
 
-export interface SimpleOptions {
+export interface PanelOptions {
   reduceOptions: ReduceDataOptions;
 }
