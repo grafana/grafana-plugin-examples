@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PluginPage } from '../../components/PluginPage';
+import { PluginPage } from '@grafana/migration/9.2';
 import { testIds } from '../../components/testIds';
 
 export const PageTwo = () => (

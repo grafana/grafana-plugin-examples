@@ -2,7 +2,7 @@ import * as React from 'react';
 import { css } from '@emotion/css';
 import { GrafanaTheme2 } from '@grafana/data';
 import { LinkButton, useStyles2 } from '@grafana/ui';
-import { PluginPage } from '../../components/PluginPage';
+import { PluginPage } from '@grafana/migration/9.2';
 import { prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 import { testIds } from '../../components/testIds';

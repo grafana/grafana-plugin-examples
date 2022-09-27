@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import { useFallbackPluginNavigation } from '@grafana/migration/9.2';
 import { PageOne } from '../../pages/PageOne';
 import { PageTwo } from '../../pages/PageTwo';
 import { PageThree } from '../../pages/PageThree';
 import { PageFour } from '../../pages/PageFour';
-import { useNavigation, prefixRoute } from '../../utils/utils.routing';
+import { prefixRoute } from '../../utils/utils.routing';
+import { usePluginProps } from '../../utils/utils.plugin';
 import { ROUTES } from '../../constants';
 
 export const Routes = () => {
-  useNavigation();
+  const pluginProps = usePluginProps();
+  useFallbackPluginNavigation(pluginProps!.onNavChanged, pluginProps!.meta, {
+    excludeFromTabNav: ['Configuration', 'Page Four'],
+  });
 
   return (
     <Switch>
