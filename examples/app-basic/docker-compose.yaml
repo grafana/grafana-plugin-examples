@@ -9,6 +9,8 @@ services:
         grafana_version: ${GRAFANA_VERSION:-9.1.2}
     ports:
       - 3000:3000/tcp
+    environment:
+      - GF_FEATURE_TOGGLES_TOPNAV=true
     volumes:
       - ./dist:/var/lib/grafana/plugins/app-basic,
       - ./provisioning:/etc/grafana/provisioning
