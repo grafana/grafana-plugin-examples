@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NavModel } from '@grafana/data';
+import { config } from '@grafana/runtime';
 import { usePluginProps } from './utils.plugin';
 import { NAVIGATION, NAVIGATION_TITLE, NAVIGATION_SUBTITLE, PLUGIN_BASE_URL } from '../constants';
 
@@ -10,6 +11,11 @@ export function useNavigation() {
   const location = useLocation();
 
   useEffect(() => {
+    // The new top navigation handles this out of the box, in case all pages are wrapped with the `<PluginPage>` component
+    if (config.featureToggles.topnav) {
+      return;
+    }
+
     if (!pluginProps) {
       console.error('Root plugin props are not available in the context.');
       return;
