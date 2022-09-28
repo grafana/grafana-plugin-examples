@@ -76,7 +76,9 @@
       "id": 2,
       "options": {
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "values": false
         }
       },
@@ -92,7 +94,7 @@
         }
       ],
       "title": "Datalinks",
-      "type": "datalinks-panel"
+      "type": "myorg-datalinks-panel"
     }
   ],
   "schemaVersion": 36,
