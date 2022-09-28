@@ -3,6 +3,7 @@ import { PanelProps, getFieldDisplayValues, LinkModel, FieldConfig } from '@graf
 import { PanelOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { DataLinksContextMenu, useStyles2, useTheme2 } from '@grafana/ui';
+import { testIds } from './testIds';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -37,7 +38,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox={`0 -${height / 2} ${width} ${height}`}
-        data-testid="datalinks-panel-example"
+        data-testid={testIds.panel.svg}
       >
         <g fill={theme.colors.success.main}>
           {fieldDisplayValues.map((data, idx) => {
