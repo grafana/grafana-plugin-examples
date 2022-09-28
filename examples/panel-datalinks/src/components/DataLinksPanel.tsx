@@ -3,7 +3,6 @@ import { PanelProps, getFieldDisplayValues, LinkModel, FieldConfig } from '@graf
 import { PanelOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { DataLinksContextMenu, useStyles2, useTheme2 } from '@grafana/ui';
-import { DataLinksContextMenuApi } from '@grafana/ui/components/DataLinks/DataLinksContextMenu';
 
 interface Props extends PanelProps<PanelOptions> {}
 
@@ -81,7 +80,11 @@ const getStyles = () => {
 
 // This one is created to support versions prior to 9.1.0
 type PreviousContextMenuProps = {
-  children: (props: DataLinksContextMenuApi) => JSX.Element;
+  children: (props: ContextMenuApi) => JSX.Element;
   links: () => LinkModel[];
   config: FieldConfig;
+};
+
+type ContextMenuApi = {
+  openMenu: React.MouseEventHandler<HTMLOrSVGElement>;
 };
