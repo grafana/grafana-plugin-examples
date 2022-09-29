@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { css } from '@emotion/css';
 import { useParams, Link } from 'react-router-dom';
-import { PluginPage } from '@grafana/migration/9.2';
+import { PluginPage } from '@grafana/migrations/9.2';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import { prefixRoute } from '../../utils/utils.routing';
