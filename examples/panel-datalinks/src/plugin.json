@@ -8,10 +8,7 @@
     "author": {
       "name": "My org"
     },
-    "keywords": [
-      "panel",
-      "datalinks"
-    ],
+    "keywords": ["panel", "datalinks"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
