@@ -79,7 +79,7 @@ const getStyles = () => {
   };
 };
 
-// This one is created to support versions prior to 9.1.0
+// The `config` prop was required in <9.1.0 versions but got dropped in 9.1.0. This type is here to support both Grafana version ranges.
 type PreviousContextMenuProps = {
   children: (props: ContextMenuApi) => JSX.Element;
   links: () => LinkModel[];
