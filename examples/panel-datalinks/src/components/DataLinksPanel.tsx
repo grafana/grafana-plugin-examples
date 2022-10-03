@@ -1,14 +1,16 @@
 import React from 'react';
-import { PanelProps, getFieldDisplayValues } from '@grafana/data';
+import { PanelProps, getFieldDisplayValues, LinkModel, FieldConfig } from '@grafana/data';
 import { PanelOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { DataLinksContextMenu, useStyles2, useTheme2 } from '@grafana/ui';
+import { testIds } from './testIds';
 
 interface Props extends PanelProps<PanelOptions> {}
 
 export const DataLinksPanel = ({ data, width, height, options, replaceVariables, fieldConfig, timeZone }: Props) => {
   const styles = useStyles2(getStyles);
   const theme = useTheme2();
+  const ContextMenu = DataLinksContextMenu as React.FC<PreviousContextMenuProps>;
 
   const fieldDisplayValues = getFieldDisplayValues({
     fieldConfig,
@@ -36,7 +38,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
         viewBox={`0 -${height / 2} ${width} ${height}`}
-        data-testid="datalinks-panel-example"
+        data-testid={testIds.panel.svg}
       >
         <g fill={theme.colors.success.main}>
           {fieldDisplayValues.map((data, idx) => {
@@ -44,7 +46,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
 
             if (data.hasLinks && data.getLinks) {
               return (
-                <DataLinksContextMenu key={idx} links={data.getLinks}>
+                <ContextMenu key={idx} links={data.getLinks} config={data.field}>
                   {(api) => (
                     <circle
                       r={data.display.numeric}
@@ -52,7 +54,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
                       transform={`translate(${idx * step + step / 2}, 0)`}
                     />
                   )}
-                </DataLinksContextMenu>
+                </ContextMenu>
               );
             }
             return <circle r={data.display.numeric} key={idx} transform={`translate(${idx * step + step / 2}, 0)`} />;
@@ -75,4 +77,15 @@ const getStyles = () => {
       left: 0;
     `,
   };
+};
+
+// The `config` prop was required in <9.1.0 versions but got dropped in 9.1.0. This type is here to support both Grafana version ranges.
+type PreviousContextMenuProps = {
+  children: (props: ContextMenuApi) => JSX.Element;
+  links: () => LinkModel[];
+  config: FieldConfig;
+};
+
+type ContextMenuApi = {
+  openMenu: React.MouseEventHandler<HTMLOrSVGElement>;
 };

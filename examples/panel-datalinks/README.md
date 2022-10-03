@@ -39,7 +39,7 @@ Use panel plugins when you want to do things like visualize data returned by dat
    ```bash
    # Runs the tests and watches for changes
    yarn test
-   
+
    # Exists after running all the tests
    yarn lint:ci
    ```
@@ -53,9 +53,9 @@ Use panel plugins when you want to do things like visualize data returned by dat
 6. Run the E2E tests (using Cypress)
 
    ```bash
-   # Spin up a Grafana instance first that we tests against 
+   # Spin up a Grafana instance first that we tests against
    yarn server
-   
+
    # Start the tests
    yarn e2e
    ```
@@ -64,13 +64,11 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
    ```bash
    yarn lint
-   
+
    # or
 
    yarn lint:fix
    ```
-
-
 
 ## Learn more
 

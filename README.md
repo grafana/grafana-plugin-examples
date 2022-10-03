@@ -18,6 +18,7 @@ This repository contains example plugins to showcase different use cases.
 | [panel-scatterplot](examples/panel-scatterplot)   | demonstrates how to use D3 and SVG to create a scatter plot panel.                                                                       |
 | [panel-visx](examples/panel-visx)                 | demonstrates how to use [visx](https://github.com/airbnb/visx) to create a time series graph.                                            |
 | [panel-basic](examples/panel-basic)               | demonstrates how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
+| [panel-datalinks](examples/panel-datalinks)       | demonstrates how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
 
 ## Data source plugins
 
@@ -93,9 +94,9 @@ jobs:
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@v1
         with:
-          module: "./src/module.ts" 
-          comment-pr: 'yes' 
-          fail-if-incompatible: 'no' 
+          module: "./src/module.ts"
+          comment-pr: "yes"
+          fail-if-incompatible: "no"
 ```
 
 This will run a compatibility check for the latest release of grafana plugins API in your project everytime a new push or pull request is open. If it reports an error you will see a message indicating you have an incompatibility.
