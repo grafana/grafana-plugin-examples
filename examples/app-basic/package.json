@@ -1,5 +1,5 @@
 {
-  "name": "myorg-app-basic",
+  "name": "myorg-basic-app",
   "version": "1.0.0",
   "description": "A basic grafana app plugin",
   "scripts": {
@@ -55,7 +55,7 @@
     "rxjs": "7.3.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "dependencies": {
     "@emotion/css": "^11.1.3",

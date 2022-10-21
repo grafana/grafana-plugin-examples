@@ -24,7 +24,6 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -257,7 +256,7 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "example-dashboard",
+    "title": "example-dashboard-1",
     "uid": "Av57mRHVz",
     "version": 1,
     "weekStart": ""

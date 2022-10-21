@@ -1,7 +1,7 @@
 {
-  "name": "my-plugin",
+  "name": "myorg-dashboard-app",
   "version": "1.0.0",
-  "description": "Auto generated app",
+  "description": "A basic grafana app plugin with dashboards",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
@@ -56,7 +56,7 @@
     "webpack-livereload-plugin": "^3.0.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "dependencies": {
     "@emotion/css": "^11.1.3",
