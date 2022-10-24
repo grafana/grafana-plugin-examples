@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - id: set-plugin-dirs
-        run: echo "{pluginDirs}={$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')}" >> $GITHUB_OUTPUT
+        run: echo "::set-output name=pluginDirs::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')" 
   run-integration-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
       - name: Set the name of the plugin-example to be tested
         id: example-name
         run: |
-          echo "{PLUGIN_NAME}={$(basename ${{ matrix.pluginDir }})}" >> $GITHUB_OUTPUT
+          echo "::set-output name=PLUGIN_NAME::$(basename ${{ matrix.pluginDir }})"
 
       - name: Restore yarn cache
         uses: actions/cache@v3
