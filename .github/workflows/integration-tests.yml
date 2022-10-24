@@ -7,7 +7,7 @@ jobs:
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - id: set-plugin-dirs
         run: echo "::set-output name=pluginDirs::$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')"
   run-integration-tests:
@@ -24,7 +24,7 @@ jobs:
       GF_DEFAULT_APP_MODE: "development"
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Set the name of the plugin-example to be tested
         id: example-name
@@ -32,14 +32,14 @@ jobs:
           echo "::set-output name=PLUGIN_NAME::$(basename ${{ matrix.pluginDir }})"
 
       - name: Restore yarn cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ matrix.pluginDir }}/node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
 
       - name: Install dependencies
         run: |
