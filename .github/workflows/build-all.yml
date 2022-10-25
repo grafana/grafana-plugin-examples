@@ -1,6 +1,8 @@
 name: Build all plugins
 on: pull_request
-
+concurrency:
+  group: build-all-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   directories:
     runs-on: ubuntu-latest
