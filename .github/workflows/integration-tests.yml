@@ -2,6 +2,7 @@ name: integration tests
 on: pull_request
 concurrency:
   group: integration-tests-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
