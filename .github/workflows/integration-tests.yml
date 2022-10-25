@@ -1,6 +1,7 @@
 name: integration tests
 on: pull_request
-
+concurrency:
+  group: integration-tests-${{ github.ref }}
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
