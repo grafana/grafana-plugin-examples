@@ -1,7 +1,7 @@
 apiVersion: 1
 
 apps:
-  - type: myorg-app-basic
+  - type: myorg-basic-app
     org_id: 1
     org_name: Main Org.
     disabled: false

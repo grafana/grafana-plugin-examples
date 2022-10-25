@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "yarn lint --fix",
-    "server": "docker-compose up -d --build"
+    "server": "docker-compose up --build"
   },
   "author": "Your name",
   "license": "Apache-2.0",

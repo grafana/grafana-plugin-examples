@@ -13,8 +13,7 @@ jobs:
   run-integration-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 1
+    strategy:      
       matrix:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
