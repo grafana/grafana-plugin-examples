@@ -12,10 +12,14 @@ export class App extends React.PureComponent<AppRootProps> {
           <br />
           <ul>
             <li>
-              <a href="/d/Av57mRHVz" data-testid={testIds.homePage.dashboard1}>Example dashboard 1</a>
+              <a href="/d/Av57mRHVz" data-testid={testIds.homePage.dashboard1}>
+                Example dashboard 1
+              </a>
             </li>
             <li>
-              <a href="/d/ND1Bfw3VcNGg" data-testid={testIds.homePage.dashboard2}>Example dashboard 2</a>
+              <a href="/d/ND1Bfw3VcNGg" data-testid={testIds.homePage.dashboard2}>
+                Example dashboard 2
+              </a>
             </li>
           </ul>
         </div>
