@@ -3,12 +3,13 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-	"math/rand"
+	"fmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
+	"net/http"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 )
 
@@ -24,19 +25,36 @@ var (
 )
 
 // NewDatasource creates a new datasource instance.
-func NewDatasource(_ backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
-	return &Datasource{}, nil
+func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+	// log.DefaultLogger.Debug("instantiating a new data source")
+	opts, err := settings.HTTPClientOptions()
+	if err != nil {
+		return nil, fmt.Errorf("http client options: %w", err)
+	}
+	cl, err := httpclient.New(opts)
+	if err != nil {
+		return nil, fmt.Errorf("httpclient new: %w", err)
+	}
+	return &Datasource{
+		settings:   settings,
+		httpClient: cl,
+	}, nil
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
-type Datasource struct{}
+type Datasource struct {
+	settings backend.DataSourceInstanceSettings
+
+	httpClient *http.Client
+}
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created. As soon as datasource settings change detected by SDK old datasource instance will
 // be disposed and a new one will be created using NewSampleDatasource factory function.
 func (d *Datasource) Dispose() {
 	// Clean up datasource instance resources.
+	d.httpClient.CloseIdleConnections()
 }
 
 // QueryData handles multiple queries and returns multiple responses.
@@ -44,15 +62,17 @@ func (d *Datasource) Dispose() {
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
 // contains Frames ([]*Frame).
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	log.DefaultLogger.Info("QueryData called", "request", req)
+	// log.DefaultLogger.Info("QueryData called", "request", req)
 
 	// create response struct
 	response := backend.NewQueryDataResponse()
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		res := d.query(ctx, req.PluginContext, q)
-
+		res, err := d.query(ctx, req.PluginContext, q)
+		if err != nil {
+			return nil, fmt.Errorf("query: %w", err)
+		}
 		// save the response in a hashmap
 		// based on with RefID as identifier
 		response.Responses[q.RefID] = res
@@ -61,51 +81,73 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-type queryModel struct{}
+func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
+	// Response to be returned.
+	var response backend.DataResponse
 
-func (d *Datasource) query(_ context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
-	response := backend.DataResponse{}
-
-	// Unmarshal the JSON into our queryModel.
-	var qm queryModel
-
-	response.Error = json.Unmarshal(query.JSON, &qm)
-	if response.Error != nil {
-		return response
+	// Do HTTP request
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
+	if err != nil {
+		return response, fmt.Errorf("new request with context: %w", err)
+	}
+	resp, err := d.httpClient.Do(req)
+	if err != nil {
+		return response, fmt.Errorf("http client do: %w", err)
 	}
 
-	// create data frame response.
-	frame := data.NewFrame("response")
+	// Make sure the response was successful
+	if resp.StatusCode != http.StatusOK {
+		return response, fmt.Errorf("expected 200 response, got %d", resp.StatusCode)
+	}
 
-	// add fields.
-	frame.Fields = append(frame.Fields,
-		data.NewField("time", nil, []time.Time{query.TimeRange.From, query.TimeRange.To}),
-		data.NewField("values", nil, []int64{10, 20}),
+	// Decode response
+	var body apiMetrics
+	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+		return response, fmt.Errorf("decode: %w", err)
+	}
+
+	// Create slice of values for time and values.
+	times := make([]time.Time, len(body.DataPoints))
+	values := make([]float64, len(body.DataPoints))
+	for i, p := range body.DataPoints {
+		times[i] = p.Time
+		values[i] = p.Value
+	}
+
+	// Create frame and add it to the response
+	response.Frames = append(
+		response.Frames,
+		data.NewFrame(
+			"response",
+			data.NewField("time", nil, times),
+			data.NewField("values", nil, values),
+		),
 	)
-
-	// add the frames to the response.
-	response.Frames = append(response.Frames, frame)
-
-	return response
+	return response, nil
 }
 
-// CheckHealth handles health checks sent from Grafana to the plugin.
-// The main use case for these health checks is the test button on the
-// datasource configuration page which allows users to verify that
-// a datasource is working as expected.
-func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	log.DefaultLogger.Info("CheckHealth called", "request", req)
-
-	var status = backend.HealthStatusOk
-	var message = "Data source is working"
-
-	if rand.Int()%2 == 0 {
-		status = backend.HealthStatusError
-		message = "randomized error"
+// CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return
+// a 200 OK response.
+func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+	r, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
+	if err != nil {
+		return newHealthCheckErrorf("could not create request"), nil
 	}
-
+	resp, err := d.httpClient.Do(r)
+	if err != nil {
+		return newHealthCheckErrorf("request error"), nil
+	}
+	if resp.StatusCode != http.StatusOK {
+		return newHealthCheckErrorf("got response code %d", resp.StatusCode), nil
+	}
 	return &backend.CheckHealthResult{
-		Status:  status,
-		Message: message,
+		Status:  backend.HealthStatusOk,
+		Message: "Data source is working",
 	}, nil
+}
+
+// newHealthCheckErrorf returns a new *backend.CheckHealthResult with its status set to backend.HealthStatusError
+// and the specified message, which is formatted with Sprintf.
+func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHealthResult {
+	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
 }
