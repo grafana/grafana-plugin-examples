@@ -31,3 +31,9 @@ func CleanAll() error {
 	mg.Deps(build.Clean)
 	return os.Remove(path.Join("cmd", "server", "server"))
 }
+
+// TestAll runs all test for the backend (go test ./...), it's different than 'test', which runs tests only
+// in the pkg package.
+func TestAll() error {
+	return sh.RunV("go", "test", "./...")
+}
