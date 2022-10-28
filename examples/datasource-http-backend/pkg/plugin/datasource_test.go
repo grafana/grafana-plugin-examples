@@ -3,7 +3,6 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-	"github.com/grafana/datasource-http-backend/pkg/service"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"github.com/stretchr/testify/assert"
@@ -40,7 +39,7 @@ func TestHealthCheck(t *testing.T) {
 	})
 
 	for _, c := range []tc{
-		// Error 500 from the remote service should return a healthcheck error
+		// Error 500 from the remote server should return a healthcheck error
 		{
 			name: "500",
 			h:    h500,
@@ -61,7 +60,7 @@ func TestHealthCheck(t *testing.T) {
 			},
 		},
 
-		// 200 OK from the remote service should return an OK healthcheck
+		// 200 OK from the remote server should return an OK healthcheck
 		{
 			name: "success",
 			h:    h200,
@@ -101,7 +100,7 @@ func TestQueryData(t *testing.T) {
 	ds, srv := newDefaultMockDataSource()
 	defer srv.Close()
 
-	// Execute http request against remote service to compare result with dataframe
+	// Execute http request against remote server to compare result with dataframe
 	req, err := http.NewRequest(http.MethodGet, srv.URL+"/metrics", nil)
 	require.NoError(t, err)
 	mockResp, err := ds.httpClient.Do(req)
@@ -152,7 +151,7 @@ func TestQueryData(t *testing.T) {
 		_, ok = fields[k]
 		assert.Truef(t, ok, "shold have field %q", k)
 	}
-	// Make sure the number of data points matches the one from the remote service's http response
+	// Make sure the number of data points matches the one from the remote server's http response
 	assert.Equal(t, len(respData.DataPoints), vecLen, "returned vector should have correct length")
 	for i := 0; i < len(respData.DataPoints); i++ {
 		// Make sure the returned data points (value, times) are the same as the api
@@ -176,11 +175,26 @@ func newMockDataSourceFromHttpTestServer(testServer *httptest.Server, urlSuffix 
 	}
 }
 
-// newDefaultMockDataSource creates a new httptest.Server which uses service.NewService() as its
+// newDefaultMockDataSource creates a new httptest.Server which implements a handler
+// that returns a valid JSON apiMetrics as its
 // handler, and returns a Datasource that is linked to the /metrics handler of the httptest.Server.
 // The function returns both the Datasource and the httptest.Server.
 // The caller should `defer Close()` the returned httptest.Server.
 func newDefaultMockDataSource() (Datasource, *httptest.Server) {
-	srv := httptest.NewServer(service.NewService())
+	mux := http.NewServeMux()
+	mux.HandleFunc("/metrics", func(w http.ResponseWriter, req *http.Request) {
+		const pointsN = 1024
+		points := make([]apiDataPoint, pointsN)
+		for i := 0; i < pointsN; i++ {
+			ts := time.Now().Add(time.Second * time.Duration(-i)).UTC()
+			points[i].Time = ts
+			points[i].Value = float64(i)
+		}
+		w.Header().Add("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(apiMetrics{
+			DataPoints: points,
+		})
+	})
+	srv := httptest.NewServer(mux)
 	return newMockDataSourceFromHttpTestServer(srv, "/metrics"), srv
 }
