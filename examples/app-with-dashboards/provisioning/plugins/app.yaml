@@ -1,0 +1,5 @@
+apiVersion: 1
+
+apps:
+  - type: myorg-dashboard-app    
+    disabled: false

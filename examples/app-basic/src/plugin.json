@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App",
-  "id": "myorg-app-basic",
+  "id": "myorg-basic-app",
   "info": {
     "keywords": ["basic", "app", "example"],
     "description": "A basic grafana app plugin",
@@ -60,7 +60,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.1.2",
+    "grafanaDependency": ">=9.2.1",
     "plugins": []
   }
 }

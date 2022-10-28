@@ -1,0 +1,50 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "Basic App With Dashboards",
+  "id": "myorg-dashboard-app",
+  "info": {
+    "keywords": ["app"],
+    "description": "A basic grafana app plugin with dashboards",
+    "author": {
+      "name": "Your name"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Home",
+      "path": "/a/%PLUGIN_ID%",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "dashboard",
+      "name": "Example dashboard 1",
+      "path": "dashboards/example-dashboard1.json",
+      "role": "Admin",
+      "addToNav": true,
+      "uid": "Av57mRHVz"
+    },
+    {
+      "type": "dashboard",
+      "name": "Example dashboard 2",
+      "path": "dashboards/example-dashboard2.json",
+      "role": "Admin",
+      "addToNav": true,
+      "uid": "ND1Bfw3VcNGg"
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=9.2.1",
+    "plugins": []
+  }
+}
