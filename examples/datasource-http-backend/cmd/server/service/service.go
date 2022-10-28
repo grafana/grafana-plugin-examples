@@ -2,7 +2,7 @@ package service
 
 import (
 	"encoding/json"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"log"
 	"math"
 	"net/http"
 	"time"
@@ -10,8 +10,6 @@ import (
 
 type Service struct {
 	http.Handler
-
-	Logger log.Logger
 }
 
 // metrics is a struct containing a slice of dataPoint
@@ -45,10 +43,7 @@ func getMetrics(w http.ResponseWriter, _ *http.Request) error {
 // some dummy metrics in JSON format
 func NewService() Service {
 	mux := http.NewServeMux()
-	svc := Service{
-		mux,
-		log.New(),
-	}
+	svc := Service{mux}
 	mux.HandleFunc("/metrics", svc.handleError(getMetrics))
 	return svc
 }
@@ -60,7 +55,7 @@ type handlerFunc func(w http.ResponseWriter, req *http.Request) error
 // to the client with a generic "error" response body if h returns a non-nil error
 func (s *Service) handleError(h handlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, req *http.Request) {
-		s.Logger.Info("service http request", "method", req.Method, "url", req.URL.String())
+		log.Println(req.Method, req.URL.String())
 		if err := h(w, req); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("error"))
