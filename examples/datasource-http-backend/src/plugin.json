@@ -5,6 +5,7 @@
   "id": "grafana-datasourcehttpbackend-datasource",
   "metrics": true,
   "backend": true,
+  "alerting": true,
   "executable": "gpx_datasource_http_backend",
   "info": {
     "description": "",
