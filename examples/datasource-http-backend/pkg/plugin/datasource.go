@@ -91,6 +91,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	if err != nil {
 		return response, fmt.Errorf("http client do: %w", err)
 	}
+	defer resp.Body.Close()
 
 	// Make sure the response was successful
 	if resp.StatusCode != http.StatusOK {
@@ -134,6 +135,7 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 	if err != nil {
 		return newHealthCheckErrorf("request error"), nil
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return newHealthCheckErrorf("got response code %d", resp.StatusCode), nil
 	}
