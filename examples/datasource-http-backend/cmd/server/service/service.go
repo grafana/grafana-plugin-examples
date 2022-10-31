@@ -58,7 +58,9 @@ func (s *Service) handleError(h handlerFunc) http.HandlerFunc {
 		log.Println(req.Method, req.URL.String())
 		if err := h(w, req); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("error"))
+			if _, err := w.Write([]byte("error")); err != nil {
+				log.Printf("error writing error: %s", err)
+			}
 		}
 	}
 }

@@ -191,9 +191,11 @@ func newDefaultMockDataSource() (Datasource, *httptest.Server) {
 			points[i].Value = float64(i)
 		}
 		w.Header().Add("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(apiMetrics{
+		if err := json.NewEncoder(w).Encode(apiMetrics{
 			DataPoints: points,
-		})
+		}); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		}
 	})
 	srv := httptest.NewServer(mux)
 	return newMockDataSourceFromHttpTestServer(srv, "/metrics"), srv
