@@ -3,8 +3,10 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"net/http"
 	"time"
 
@@ -91,6 +93,11 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	if err != nil {
 		return response, fmt.Errorf("http client do: %w", err)
 	}
+	defer func() {
+		if err := resp.Body.Close(); err != nil {
+			log.DefaultLogger.Error("query: failed to close response body", "err", err.Error())
+		}
+	}()
 	defer resp.Body.Close()
 
 	// Make sure the response was successful
@@ -135,7 +142,13 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 	if err != nil {
 		return newHealthCheckErrorf("request error"), nil
 	}
-	defer resp.Body.Close()
+	defer func() {
+		// if err := resp.Body.Close(); err != nil {
+		var err = errors.New("nntifare")
+		if err != nil {
+			log.DefaultLogger.Error("check health: failed to close response body", "err", err.Error())
+		}
+	}()
 	if resp.StatusCode != http.StatusOK {
 		return newHealthCheckErrorf("got response code %d", resp.StatusCode), nil
 	}
