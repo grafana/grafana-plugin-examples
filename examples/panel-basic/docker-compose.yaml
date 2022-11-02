@@ -12,5 +12,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/basic-panel,
+      - ./dist:/var/lib/grafana/plugins/basic-panel
       - ./provisioning:/etc/grafana/provisioning
