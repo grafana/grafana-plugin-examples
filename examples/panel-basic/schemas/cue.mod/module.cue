@@ -1,0 +1,1 @@
+module: "github.com/grafana/grafana-plugin-examples/examples/panel-basic/schemas/grafanaplugin"

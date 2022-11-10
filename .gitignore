@@ -4,3 +4,4 @@ node_modules
 **/cypress/report.json
 **/cypress/screenshots/actual/
 .DS_Store
+bin
