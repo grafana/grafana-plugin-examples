@@ -65,7 +65,10 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 	for i, q := range req.Queries {
 		if i%2 != 0 {
 			// Just to demonstrate how to return an error with a custom status code.
-			response.Responses[q.RefID] = backend.ErrDataResponse(backend.StatusBadRequest, "user friendly error, excluding any sensitive information")
+			response.Responses[q.RefID] = backend.ErrDataResponse(
+				backend.StatusBadRequest,
+				"user friendly error, excluding any sensitive information",
+			)
 			continue
 		}
 		res := query.RunQuery(ctx, *ds.settings, q)
