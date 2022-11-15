@@ -1,5 +1,8 @@
 name: integration tests
-on: pull_request
+on: 
+  pull_request:
+  schedule:
+    - cron: '*/15 * * * *'
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
