@@ -97,7 +97,6 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 			log.DefaultLogger.Error("query: failed to close response body", "err", err.Error())
 		}
 	}()
-	defer resp.Body.Close()
 
 	// Make sure the response was successful
 	if resp.StatusCode != http.StatusOK {
