@@ -2,7 +2,7 @@ name: integration tests
 on: 
   pull_request:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 11 * * *' #once a day at 11 UTC
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -221,3 +221,9 @@ jobs:
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
+      - name: Send GitHub Action trigger data to Slack workflow
+        if: success() || failure() # change this later to failure() only
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}        
