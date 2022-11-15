@@ -66,7 +66,16 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	response := backend.NewQueryDataResponse()
 
 	// loop over queries and execute them individually.
-	for _, q := range req.Queries {
+	for i, q := range req.Queries {
+		if i%2 != 0 {
+			// Just to demonstrate how to return an error with a custom status code.
+			response.Responses[q.RefID] = backend.ErrDataResponse(
+				backend.StatusBadRequest,
+				"user friendly error, excluding any sensitive information",
+			)
+			continue
+		}
+
 		res, err := d.query(ctx, req.PluginContext, q)
 		if err != nil {
 			return nil, fmt.Errorf("query: %w", err)
