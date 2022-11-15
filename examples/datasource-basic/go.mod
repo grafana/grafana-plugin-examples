@@ -2,7 +2,7 @@ module github.com/grafana/basic-datasource
 
 go 1.17
 
-require github.com/grafana/grafana-plugin-sdk-go v0.134.0
+require github.com/grafana/grafana-plugin-sdk-go v0.142.0
 
 require (
 	github.com/apache/arrow/go/arrow v0.0.0-20211112161151-bc219186db40 // indirect
@@ -30,7 +30,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.1 // indirect
-	github.com/magefile/mage v1.13.0 // indirect
+	github.com/magefile/mage v1.14.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattetti/filebuffer v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
