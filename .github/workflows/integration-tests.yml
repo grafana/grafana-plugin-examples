@@ -225,5 +225,7 @@ jobs:
         if: success() || failure() # change this later to failure() only
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload-file-path: "./github/workflows/slack-notification-payload.json"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}        
