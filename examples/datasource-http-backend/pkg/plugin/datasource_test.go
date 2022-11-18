@@ -165,15 +165,57 @@ func TestQueryData(t *testing.T) {
 	}
 }
 
+// TestQueryDataErrorHandling tests the error handling capabilities of QueryData.
 func TestQueryDataErrorHandling(t *testing.T) {
-	ds, srv := newDefaultMockDataSource(withDelay(time.Second*1), withSuccessResponse)
-	defer srv.Close()
-
-	ctx, canc := context.WithTimeout(context.Background(), time.Millisecond*500)
-	defer canc()
-	resp, err := ds.QueryData(ctx, dsReq)
-	require.NoError(t, err, "QueryData must not return an error")
-	require.NotNil(t, resp, "QueryData must return a response")
+	type testCase struct {
+		name               string
+		mockDataSourceOpts []mockServerOption
+		context            func(ctx context.Context) (context.Context, func())
+		exp                func(t *testing.T, r backend.DataResponse)
+	}
+	for _, tc := range []testCase{
+		{
+			name: "with remote server timeout",
+			mockDataSourceOpts: []mockServerOption{
+				withDelay(time.Second * 1),
+				withSuccessResponse,
+			},
+			context: func(ctx context.Context) (context.Context, func()) {
+				return context.WithTimeout(ctx, time.Second*1)
+			},
+			exp: func(t *testing.T, r backend.DataResponse) {
+				assert.Equal(t, backend.StatusTimeout, r.Status)
+				assert.Equal(t, "gateway timeout", r.Error.Error())
+			},
+		},
+		{
+			name:               "with non 200 response",
+			mockDataSourceOpts: []mockServerOption{withStatusAndBody(http.StatusBadRequest, []byte("bad request"))},
+			exp: func(t *testing.T, r backend.DataResponse) {
+				assert.Equal(t, backend.StatusValidationFailed, r.Status)
+				assert.Equal(t, "bad gateway response", r.Error.Error())
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ds, srv := newDefaultMockDataSource(tc.mockDataSourceOpts...)
+			defer srv.Close()
+			ctx := context.Background()
+			if tc.context != nil {
+				var canc func()
+				ctx, canc = tc.context(ctx)
+				defer canc()
+			}
+			resp, err := ds.QueryData(ctx, dsReq)
+			require.NoError(t, err, "QueryData must not return an error")
+			require.NotNil(t, resp, "QueryData must return a response")
+			require.Len(t, resp.Responses, 1, "responses must have 1 response")
+			r, ok := resp.Responses[refID]
+			require.Truef(t, ok, "response with ref %q must be present", refID)
+			assert.Empty(t, r.Frames, "should not contain frames")
+			tc.exp(t, r)
+		})
+	}
 }
 
 // newMockDataSourceFromHttpTestServer returns a new Datasource that connects to the
@@ -187,7 +229,7 @@ func newMockDataSourceFromHttpTestServer(testServer *httptest.Server, urlSuffix 
 	}
 }
 
-type mockDataSourceResponseOption func(w http.ResponseWriter, req *http.Request)
+type mockServerOption func(w http.ResponseWriter, req *http.Request)
 
 func withSuccessResponse(w http.ResponseWriter, _ *http.Request) {
 	const pointsN = 1024
@@ -205,9 +247,16 @@ func withSuccessResponse(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func withDelay(duration time.Duration) mockDataSourceResponseOption {
+func withDelay(duration time.Duration) mockServerOption {
 	return func(w http.ResponseWriter, req *http.Request) {
 		time.Sleep(duration)
+	}
+}
+
+func withStatusAndBody(statusCode int, body []byte) mockServerOption {
+	return func(w http.ResponseWriter, req *http.Request) {
+		w.WriteHeader(statusCode)
+		_, _ = w.Write(body)
 	}
 }
 
@@ -216,7 +265,7 @@ func withDelay(duration time.Duration) mockDataSourceResponseOption {
 // handler, and returns a Datasource that is linked to the /metrics handler of the httptest.Server.
 // The function returns both the Datasource and the httptest.Server.
 // The caller should `defer Close()` the returned httptest.Server.
-func newDefaultMockDataSource(opts ...mockDataSourceResponseOption) (Datasource, *httptest.Server) {
+func newDefaultMockDataSource(opts ...mockServerOption) (Datasource, *httptest.Server) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/metrics", func(w http.ResponseWriter, req *http.Request) {
 		for _, opt := range opts {
