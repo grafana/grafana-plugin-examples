@@ -231,14 +231,39 @@ jobs:
             {
               "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
-                  }
-                }
-              ]
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": ":blob-sad: Plugin Examples Integration test failed on ${{ env.DEFAULT_BRANCH }}"
+                      }
+                    },
+                    {
+                      "type": "actions",
+                      "elements": [
+                        {
+                          "type": "button",
+                          "text": {
+                            "type": "plain_text",
+                            "text": "Open Job",
+                            "emoji": true
+                          },
+                          "url": ":octocat: ${{ env.REPO_URL }}/actions/runs/${{ github.run_id }}",
+                          "action_id": "actionId-0"
+                        },
+                        {
+                          "type": "button",
+                          "text": {
+                            "type": "plain_text",
+                            "text": "Commit",
+                            "emoji": true
+                          },
+                          "url": ":interesting: ${{ env.REPO_URL }}/commit/${{ github.sha }}",
+                          "action_id": "actionId-1"
+                        }
+                      ]
+                    }
+                  ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}        
