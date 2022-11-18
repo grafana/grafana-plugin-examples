@@ -222,6 +222,7 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
   notify:
+    runs-on: ubuntu-latest
     needs: [run-integration-tests]
     steps:
       - name: Send GitHub Action trigger data to Slack workflow          
