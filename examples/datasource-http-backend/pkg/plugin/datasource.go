@@ -104,7 +104,12 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return response, fmt.Errorf("new request with context: %w", err)
 	}
 	resp, err := d.httpClient.Do(req)
-	if err != nil {
+	switch {
+	case errors.Is(err, context.DeadlineExceeded):
+		return response, err
+	case err == nil:
+		break
+	default:
 		return response, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
 	defer func() {
