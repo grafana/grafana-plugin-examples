@@ -26,6 +26,11 @@ var (
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 )
 
+var (
+	errRemoteRequest  = errors.New("remote request error")
+	errRemoteResponse = errors.New("remote response error")
+)
+
 // NewDatasource creates a new datasource instance.
 func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	opts, err := settings.HTTPClientOptions()
@@ -88,11 +93,6 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 	return response, nil
 }
-
-var (
-	errRemoteRequest  = errors.New("remote request error")
-	errRemoteResponse = errors.New("remote response error")
-)
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
 	// Response to be returned.
