@@ -3,7 +3,6 @@ package query
 import (
 	"context"
 	"encoding/json"
-
 	"github.com/grafana/basic-datasource/pkg/models"
 	"github.com/grafana/basic-datasource/pkg/query/scenario"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -16,17 +15,17 @@ func RunQuery(_ context.Context, settings models.PluginSettings, query backend.D
 	// Unmarshal the JSON into our queryModel.
 	var qm models.QueryModel
 
-	response.Error = json.Unmarshal(query.JSON, &qm)
-	if response.Error != nil {
-		return response
+	err := json.Unmarshal(query.JSON, &qm)
+	if err != nil {
+		return backend.ErrDataResponse(backend.StatusBadRequest, "json unmarshal: "+err.Error())
 	}
 
 	// Interpolate query so it can be run against your data source if it
 	// contains any macros.
 	macro := newQueryMacro(settings, query.TimeRange)
-	qm.RunnableQuery, response.Error = macro.Interpolate(qm.RawQuery)
-	if response.Error != nil {
-		return response
+	qm.RunnableQuery, err = macro.Interpolate(qm.RawQuery)
+	if err != nil {
+		return backend.ErrDataResponse(backend.StatusBadRequest, "macro interpolate: "+err.Error())
 	}
 
 	// We are not using the RunnableQuery in this example because we are generating
