@@ -224,8 +224,7 @@ jobs:
   notify:
     needs: [run-integration-tests]
     steps:
-      - name: Send GitHub Action trigger data to Slack workflow
-          if: success() || failure() # change this later to failure() only
+      - name: Send GitHub Action trigger data to Slack workflow          
           id: slack
           uses: slackapi/slack-github-action@v1.23.0
           with:
