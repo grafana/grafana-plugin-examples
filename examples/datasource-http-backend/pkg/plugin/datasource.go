@@ -3,6 +3,7 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -66,19 +67,19 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	response := backend.NewQueryDataResponse()
 
 	// loop over queries and execute them individually.
-	for i, q := range req.Queries {
-		if i%2 != 0 {
-			// Just to demonstrate how to return an error with a custom status code.
-			response.Responses[q.RefID] = backend.ErrDataResponse(
-				backend.StatusBadRequest,
-				"user friendly error, excluding any sensitive information",
-			)
-			continue
-		}
-
+	for _, q := range req.Queries {
 		res, err := d.query(ctx, req.PluginContext, q)
-		if err != nil {
-			return nil, fmt.Errorf("query: %w", err)
+		switch {
+		case errors.Is(err, context.DeadlineExceeded):
+			res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
+		case errors.Is(err, errRemoteRequest):
+			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway")
+		case errors.Is(err, errRemoteResponse):
+			res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
+		case err == nil:
+			break
+		default:
+			res = backend.ErrDataResponse(backend.StatusInternal, err.Error())
 		}
 		// save the response in a hashmap
 		// based on with RefID as identifier
@@ -87,6 +88,11 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 	return response, nil
 }
+
+var (
+	errRemoteRequest  = errors.New("remote request error")
+	errRemoteResponse = errors.New("remote response error")
+)
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
 	// Response to be returned.
@@ -99,23 +105,23 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	}
 	resp, err := d.httpClient.Do(req)
 	if err != nil {
-		return response, fmt.Errorf("http client do: %w", err)
+		return response, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.DefaultLogger.Error("query: failed to close response body", "err", err.Error())
+			log.DefaultLogger.Error("query: failed to close response body", "err", err)
 		}
 	}()
 
 	// Make sure the response was successful
 	if resp.StatusCode != http.StatusOK {
-		return response, fmt.Errorf("expected 200 response, got %d", resp.StatusCode)
+		return response, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, resp.StatusCode)
 	}
 
 	// Decode response
 	var body apiMetrics
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		return response, fmt.Errorf("decode: %w", err)
+		return response, fmt.Errorf("%w: decode: %s", errRemoteRequest, err)
 	}
 
 	// Create slice of values for time and values.
