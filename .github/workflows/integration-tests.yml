@@ -95,18 +95,18 @@ jobs:
 
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
+        if: steps.expected-version-tests.outcome != 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-expected-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.expected-version-tests.outcome != 'success'
+          retention-days: 3        
 
       - name: Failing build due to test failures (expected versions)
-        run: exit 1
         if: steps.expected-version-tests.outcome != 'success'
+        run: exit 1
 
       - name: Stop and remove Docker container
         run: |
@@ -134,17 +134,20 @@ jobs:
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
-        if: failure()
+        if: steps.latest-version-tests.outcome != 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
           path: |
-            ./cypress/screenshots
-            ./cypress/videos
-            ./cypress/report.json
+            ${{ matrix.pluginDir }}/cypress/screenshots
+            ${{ matrix.pluginDir }}/cypress/videos
+            ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3        
-      
+    
+      - name: Failing build due to test failures (latest version of Grafana)
+        if: steps.latest-version-tests.outcome != 'success'
+        run: exit 1
+    
       - name: Stop and remove Docker container
-        if: always()
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
@@ -201,18 +204,21 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
-        if: failure()
+        if: steps.canary-version-tests.outcome != 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
           path: |
-            ./${{ matrix.pluginDir }}/cypress/screenshots
-            ./${{ matrix.pluginDir }}/cypress/videos
-            ./${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3        
-      
+            ${{ matrix.pluginDir }}/cypress/screenshots
+            ${{ matrix.pluginDir }}/cypress/videos
+            ${{ matrix.pluginDir }}/cypress/report.json
+          retention-days: 3
+
+      - name: Failing build due to test failures (canary versions)
+        if: steps.canary-version-tests.outcome != 'success'                
+        run: exit 1
+        
       - name: Stop and remove Docker container
-        if: always()
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}

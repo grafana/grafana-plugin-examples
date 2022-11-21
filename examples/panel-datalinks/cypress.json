@@ -1,5 +1,5 @@
 {
-  "video": false,
+  "video": true,
   "reporter": "spec",
   "retries": {
     "runMode": 2

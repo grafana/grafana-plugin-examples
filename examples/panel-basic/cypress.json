@@ -1,4 +1,5 @@
 {
-    "video": false,
-    "reporter": "spec"
+    "video": true,
+    "reporter": "spec",
+    "browser": "chrome"
 }
