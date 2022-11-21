@@ -1,5 +1,7 @@
 {
     "video": true,
     "reporter": "spec",
-    "browser": "chrome"
+    "retries": {
+        "runMode": 3
+    }
 }

@@ -1,4 +1,7 @@
 {
     "video": true,
-    "reporter": "spec"
+    "reporter": "spec",
+    "retries": {
+        "runMode": 3
+    }
 }
