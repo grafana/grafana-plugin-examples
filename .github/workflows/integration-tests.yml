@@ -182,7 +182,7 @@ jobs:
 
       - name: Find docker image to use for grafana canary version
         id: npm-to-docker-image
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         env:
           INPUT_NPM-TAG: ${{ env.CANARY_VERSION }}
         with:
