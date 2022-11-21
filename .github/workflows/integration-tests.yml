@@ -9,7 +9,7 @@ concurrency:
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
-     timeout-minutes: 30
+    timeout-minutes: 30
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
     steps:
