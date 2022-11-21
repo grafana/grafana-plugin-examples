@@ -253,7 +253,7 @@ jobs:
                               "text": ":octocat: Open Job",
                               "emoji": true
                             },
-                            "url": "${{ process.env.GITHUB_SERVER_URL}}/${{ process.env.GITHUB_REPOSITORY }}/actions/runs/${{ github.run_id }}",
+                            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
                             "action_id": "actionId-0"
                           },
                           {
@@ -263,7 +263,7 @@ jobs:
                               "text": ":interesting: Commit",
                               "emoji": true
                             },
-                            "url": "${{ process.env.GITHUB_SERVER_URL }}/${{ process.env.GITHUB_REPOSITORY }}/commit/${{ github.sha }}",
+                            "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}",
                             "action_id": "actionId-1"
                           }
                         ]
