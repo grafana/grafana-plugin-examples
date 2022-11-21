@@ -87,7 +87,7 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 		case errors.Is(err, context.DeadlineExceeded):
 			res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
 		case errors.Is(err, errRemoteRequest):
-			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway")
+			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway request")
 		case errors.Is(err, errRemoteResponse):
 			res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
 		case err == nil:
