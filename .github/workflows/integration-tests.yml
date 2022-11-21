@@ -134,8 +134,7 @@ jobs:
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
-        if: failure()
-        working-directory: ${{ matrix.pluginDir }}
+        if: failure()        
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
           path: |
