@@ -60,11 +60,11 @@ jobs:
       - name: Check for backend Mage file
         id: backend-check
         run: |
-          echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
+          echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: -v build:linux
@@ -172,7 +172,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: -v build:linux
