@@ -205,9 +205,9 @@ jobs:
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
           path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
+            ./cypress/screenshots
+            ./cypress/videos
+            ./cypress/report.json
           retention-days: 3
         if: steps.canary-version-tests.outcome != 'success'
 
