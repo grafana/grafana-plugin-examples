@@ -62,15 +62,7 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 	response := backend.NewQueryDataResponse()
 
 	// loop over queries and execute them individually.
-	for i, q := range req.Queries {
-		if i%2 != 0 {
-			// Just to demonstrate how to return an error with a custom status code.
-			response.Responses[q.RefID] = backend.ErrDataResponse(
-				backend.StatusBadRequest,
-				"user friendly error, excluding any sensitive information",
-			)
-			continue
-		}
+	for _, q := range req.Queries {
 		res := query.RunQuery(ctx, *ds.settings, q)
 
 		// save the response in a hashmap
