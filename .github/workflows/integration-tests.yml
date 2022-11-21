@@ -233,14 +233,13 @@ jobs:
         with:
             channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
             payload: |
-              {
-                "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+              {                
                 "blocks": [
                       {
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
-                          "text": ":blob-sad: Plugin Examples Integration test failed on ${{ env.DEFAULT_BRANCH }}"
+                          "text": ":blob-sad: Plugin Examples Integration Test ${{ needs.run-integration-tests.result }} on `${{ github.ref }}`"
                         }
                       },
                       {
@@ -250,20 +249,20 @@ jobs:
                             "type": "button",
                             "text": {
                               "type": "plain_text",
-                              "text": "Open Job",
+                              "text": ":octocat: Open Job",
                               "emoji": true
                             },
-                            "url": ":octocat: ${{ env.REPO_URL }}/actions/runs/${{ github.run_id }}",
+                            "url": "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/actions/runs/${{ github.run_id }}",
                             "action_id": "actionId-0"
                           },
                           {
                             "type": "button",
                             "text": {
                               "type": "plain_text",
-                              "text": "Commit",
+                              "text": ":interesting: Commit",
                               "emoji": true
                             },
-                            "url": ":interesting: ${{ env.REPO_URL }}/commit/${{ github.sha }}",
+                            "url": "${{ env.GITHUB_SERVER_URL }}/${{ env.GITHUB_REPOSITORY }}/commit/${{ github.sha }}",
                             "action_id": "actionId-1"
                           }
                         ]
