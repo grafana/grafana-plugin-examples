@@ -230,7 +230,7 @@ jobs:
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
-        if: contains(fromJson('["success", "skipped", "failure"]'), needs.run-integration-tests.result)
+        if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
             channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
             payload: |
@@ -240,7 +240,7 @@ jobs:
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
-                          "text": ":blob-sad: Plugin Examples Integration Test ${{ needs.run-integration-tests.result }} on `${{ github.ref }}`"
+                          "text": ":blob-sad: Plugin Examples Integration Test ${{ needs.run-integration-tests.result }} on `${{ github.head_ref || github.ref_name }}`"
                         }
                       },
                       {
