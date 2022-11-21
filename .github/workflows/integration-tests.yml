@@ -134,20 +134,18 @@ jobs:
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
+        if: failure()
+        working-directory: ${{ matrix.pluginDir }}
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
           path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.latest-version-tests.outcome != 'success'
-
-      - name: Failing build due to test failures (latest version of Grafana)
-        run: exit 1
-        if: steps.latest-version-tests.outcome != 'success'
-
+            ./cypress/screenshots
+            ./cypress/videos
+            ./cypress/report.json
+          retention-days: 3        
+      
       - name: Stop and remove Docker container
+        if: always()
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
