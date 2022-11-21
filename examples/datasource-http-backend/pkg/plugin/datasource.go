@@ -84,14 +84,14 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 		res, err := d.query(ctx, req.PluginContext, q)
 		switch {
+		case err == nil:
+			break
 		case errors.Is(err, context.DeadlineExceeded):
 			res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
 		case errors.Is(err, errRemoteRequest):
 			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway request")
 		case errors.Is(err, errRemoteResponse):
 			res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
-		case err == nil:
-			break
 		default:
 			res = backend.ErrDataResponse(backend.StatusInternal, err.Error())
 		}
@@ -111,10 +111,10 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	}
 	resp, err := d.httpClient.Do(req)
 	switch {
-	case errors.Is(err, context.DeadlineExceeded):
-		return backend.DataResponse{}, err
 	case err == nil:
 		break
+	case errors.Is(err, context.DeadlineExceeded):
+		return backend.DataResponse{}, err
 	default:
 		return backend.DataResponse{}, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
