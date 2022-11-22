@@ -10,7 +10,7 @@ jobs:
       dir: ${{ steps.set-dirs.outputs.dir }}
     steps:
       - name: Checkout repository
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
       - id: set-dirs
         # get all dirs inside the examples with a plugin json that is not inside node_modules
         run: echo "dir=$(echo $(find examples "$@" -iname 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;) | jq -R -s -c 'split(" ")[:-1]')" >> $GITHUB_OUTPUT
