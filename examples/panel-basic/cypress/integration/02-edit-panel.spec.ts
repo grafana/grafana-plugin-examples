@@ -29,7 +29,10 @@ describe('editing a panel with time series data', () => {
     e2e.components.Panels.Panel.containerByTitle(panel).should('be.visible').find('.panel-content');
   });
 
-  it('should be able to change graph opacity', () => {
+  /** 
+   * skip until https://github.com/grafana/grafana/issues/59073 is resolved
+   */
+  it.skip('should be able to change graph opacity', () => {
     e2e.flows.openPanelMenuItem(e2e.flows.PanelMenuItems.Edit, panel);
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')

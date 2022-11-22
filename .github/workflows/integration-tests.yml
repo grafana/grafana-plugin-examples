@@ -1,17 +1,29 @@
 name: integration tests
-on: pull_request
+on: 
+  pull_request:
+  schedule:
+    - cron: '0 11 * * *' #once a day at 11 UTC
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
     steps:
-      - uses: actions/checkout@v3
-      - id: set-plugin-dirs
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup plugin dir variable
+        id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+      - name: Setup node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'  
   run-integration-tests:
     needs: setup-matrix
     runs-on: ubuntu-latest
@@ -33,19 +45,13 @@ jobs:
         run: |
           echo "PLUGIN_NAME=$(basename ${{ matrix.pluginDir }})" >> $GITHUB_OUTPUT
 
-      - name: Restore yarn cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ matrix.pluginDir }}/node_modules
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
 
       - name: Install dependencies
         run: |
-          yarn install --frozen-lockfile
+          yarn install --frozen-lockfile --prefer-offline
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin frontend
@@ -56,11 +62,11 @@ jobs:
       - name: Check for backend Mage file
         id: backend-check
         run: |
-          echo "::set-output name=MAGEFILE_EXISTS::$(test -f ./Magefile.go && echo true || echo false)"
+          echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: -v build:linux
@@ -91,18 +97,18 @@ jobs:
 
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
+        if: steps.expected-version-tests.outcome != 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-expected-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.expected-version-tests.outcome != 'success'
+          retention-days: 3        
 
       - name: Failing build due to test failures (expected versions)
-        run: exit 1
         if: steps.expected-version-tests.outcome != 'success'
+        run: exit 1
 
       - name: Stop and remove Docker container
         run: |
@@ -111,6 +117,7 @@ jobs:
 
       ## Latest Version Tests
       ## Runs the plugin tests against the latest stable version of Grafana.
+      
       - name: Build plugin with latest version of e2e libraries
         run: |
           yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
@@ -130,19 +137,19 @@ jobs:
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
+        if: steps.latest-version-tests.outcome != 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
           path: |
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
-        if: steps.latest-version-tests.outcome != 'success'
-
+          retention-days: 3        
+    
       - name: Failing build due to test failures (latest version of Grafana)
-        run: exit 1
         if: steps.latest-version-tests.outcome != 'success'
-
+        run: exit 1
+    
       - name: Stop and remove Docker container
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
@@ -168,7 +175,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v1
+        uses: magefile/mage-action@v2
         with:
           version: latest
           args: -v build:linux
@@ -177,7 +184,7 @@ jobs:
 
       - name: Find docker image to use for grafana canary version
         id: npm-to-docker-image
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         env:
           INPUT_NPM-TAG: ${{ env.CANARY_VERSION }}
         with:
@@ -200,6 +207,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
+        if: steps.canary-version-tests.outcome != 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
@@ -208,13 +216,63 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
           retention-days: 3
-        if: steps.canary-version-tests.outcome != 'success'
 
       - name: Failing build due to test failures (canary versions)
+        if: steps.canary-version-tests.outcome != 'success'                
         run: exit 1
-        if: steps.canary-version-tests.outcome != 'success'
-
+        
       - name: Stop and remove Docker container
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
+  notify:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs: [run-integration-tests]
+    steps:
+      - name: Send GitHub Action trigger data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
+        with:
+            channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+            payload: |
+              {                
+                "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": ":blob-sad: Plugin Examples Integration Test ${{ needs.run-integration-tests.result }} on `${{ github.head_ref || github.ref_name }}`"
+                        }
+                      },
+                      {
+                        "type": "actions",
+                        "elements": [
+                          {
+                            "type": "button",
+                            "text": {
+                              "type": "plain_text",
+                              "text": ":octocat: Open Job",
+                              "emoji": true
+                            },
+                            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                            "action_id": "actionId-0"
+                          },
+                          {
+                            "type": "button",
+                            "text": {
+                              "type": "plain_text",
+                              "text": ":interesting: Commit",
+                              "emoji": true
+                            },
+                            "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}",
+                            "action_id": "actionId-1"
+                          }
+                        ]
+                      }
+                  ]
+              }
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}        
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
