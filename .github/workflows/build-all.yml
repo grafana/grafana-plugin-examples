@@ -31,7 +31,8 @@ jobs:
       run:
         working-directory: ${{matrix.dir}}
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Install dependencies for ${{matrix.dir}}
         run: yarn install --immutable --prefer-offline
       - name: Build example ${{matrix.dir}}

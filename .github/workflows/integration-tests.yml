@@ -14,8 +14,9 @@ jobs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
     steps:
       - name: Checkout
-      - uses: actions/checkout@v3
-      - id: set-plugin-dirs
+        uses: actions/checkout@v3
+      - name: Setup plugin dir variable
+        id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
       - name: Setup node version
         uses: actions/setup-node@v3
