@@ -1,5 +1,8 @@
 name: Build all plugins
-on: pull_request
+on: 
+  pull_request:
+  schedule:
+    - cron: '0 11 * * *' #once a day at 11 UTC
 concurrency:
   group: build-all-${{ github.ref }}
   cancel-in-progress: true
@@ -55,7 +58,7 @@ jobs:
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
-                          "text": ":blob-sad: Plugin Examples build step ${{ needs.build_all.result }} on `${{ github.head_ref || github.ref_name }}`"
+                          "text": ":blob-sad: <${{ github.server_url }}/${{ github.repository }}|Plugin Examples> build step ${{ needs.build_all.result }} on `${{ github.head_ref || github.ref_name }}`"
                         }
                       },
                       {
@@ -68,18 +71,32 @@ jobs:
                               "text": ":octocat: Open Job",
                               "emoji": true
                             },
-                            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}",
                             "action_id": "actionId-0"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "divider"
+                      },
+                      {
+                        "type": "context",
+                        "elements": [
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Commit*: <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
                           },
                           {
-                            "type": "button",
-                            "text": {
-                              "type": "plain_text",
-                              "text": ":interesting: Commit",
-                              "emoji": true
-                            },
-                            "url": "${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}",
-                            "action_id": "actionId-1"
+                            "type": "mrkdwn",
+                            "text": "*Event*: ${{ github.event_name }}"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*Branch*: `${{ github.head_ref || github.ref_name }}`"
+                          },
+                          {
+                            "type": "mrkdwn",
+                            "text": "*PR Number*: `${{ github.event.pull_request.number || 'Not triggered by a PR' }}`"
                           }
                         ]
                       }
