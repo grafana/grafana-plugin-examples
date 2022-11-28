@@ -3,6 +3,7 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -23,6 +24,11 @@ var (
 	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
+)
+
+var (
+	errRemoteRequest  = errors.New("remote request error")
+	errRemoteResponse = errors.New("remote response error")
 )
 
 // NewDatasource creates a new datasource instance.
@@ -77,8 +83,17 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 		}
 
 		res, err := d.query(ctx, req.PluginContext, q)
-		if err != nil {
-			return nil, fmt.Errorf("query: %w", err)
+		switch {
+		case err == nil:
+			break
+		case errors.Is(err, context.DeadlineExceeded):
+			res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
+		case errors.Is(err, errRemoteRequest):
+			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway request")
+		case errors.Is(err, errRemoteResponse):
+			res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
+		default:
+			res = backend.ErrDataResponse(backend.StatusInternal, err.Error())
 		}
 		// save the response in a hashmap
 		// based on with RefID as identifier
@@ -89,33 +104,35 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
-	// Response to be returned.
-	var response backend.DataResponse
-
 	// Do HTTP request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
-		return response, fmt.Errorf("new request with context: %w", err)
+		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	resp, err := d.httpClient.Do(req)
-	if err != nil {
-		return response, fmt.Errorf("http client do: %w", err)
+	switch {
+	case err == nil:
+		break
+	case errors.Is(err, context.DeadlineExceeded):
+		return backend.DataResponse{}, err
+	default:
+		return backend.DataResponse{}, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.DefaultLogger.Error("query: failed to close response body", "err", err.Error())
+			log.DefaultLogger.Error("query: failed to close response body", "err", err)
 		}
 	}()
 
 	// Make sure the response was successful
 	if resp.StatusCode != http.StatusOK {
-		return response, fmt.Errorf("expected 200 response, got %d", resp.StatusCode)
+		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, resp.StatusCode)
 	}
 
 	// Decode response
 	var body apiMetrics
 	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
-		return response, fmt.Errorf("decode: %w", err)
+		return backend.DataResponse{}, fmt.Errorf("%w: decode: %s", errRemoteRequest, err)
 	}
 
 	// Create slice of values for time and values.
@@ -127,15 +144,15 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	}
 
 	// Create frame and add it to the response
-	response.Frames = append(
-		response.Frames,
-		data.NewFrame(
-			"response",
-			data.NewField("time", nil, times),
-			data.NewField("values", nil, values),
-		),
-	)
-	return response, nil
+	return backend.DataResponse{
+		Frames: []*data.Frame{
+			data.NewFrame(
+				"response",
+				data.NewField("time", nil, times),
+				data.NewField("values", nil, values),
+			),
+		},
+	}, nil
 }
 
 // CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return
