@@ -1,0 +1,12 @@
+apiVersion: 1
+
+apps:
+  - type: app-with-backend
+    org_id: 1
+    org_name: Main Org.
+    disabled: false
+    jsonData:
+      apiUrl: http://default-url.com
+      isApiKeySet: true
+    secureJsonData:
+      apiKey: secret-key
