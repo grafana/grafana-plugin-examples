@@ -33,7 +33,7 @@
       "name": "Page Two",
       "path": "/a/%PLUGIN_ID%/two",
       "role": "Admin",
-      "addToNav": true,
+      "addToNav": false,
       "defaultNav": false
     },
     {
@@ -41,7 +41,7 @@
       "name": "Page Three",
       "path": "/a/%PLUGIN_ID%/three",
       "role": "Admin",
-      "addToNav": true,
+      "addToNav": false,
       "defaultNav": false
     },
     {
@@ -50,7 +50,7 @@
       "name": "Configuration",
       "path": "/plugins/%PLUGIN_ID%",
       "role": "Admin",
-      "addToNav": true
+      "addToNav": false
     }
   ],
   "dependencies": {
