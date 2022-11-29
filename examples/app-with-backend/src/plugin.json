@@ -1,15 +1,15 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
-  "name": "Sidskegg",
+  "name": "App With Backend",
   "id": "app-with-backend",
   "backend": true,
   "executable": "gpx_app-with-backend",
   "info": {
     "keywords": ["bi", "app", "query jobs"],
-    "description": "Run grafana query jobs and stream them into a datasource",
+    "description": "Example Grafana app with backend service handling HTTP requests",
     "author": {
-      "name": "Tabor"
+      "name": "Grafana Labs"
     },
     "logos": {
       "small": "img/logo.svg",
@@ -40,14 +40,6 @@
       "type": "page",
       "name": "Page Three",
       "path": "/a/%PLUGIN_ID%/three",
-      "role": "Admin",
-      "addToNav": true,
-      "defaultNav": false
-    },
-    {
-      "type": "page",
-      "name": "Page Four",
-      "path": "/a/%PLUGIN_ID%/four",
       "role": "Admin",
       "addToNav": true,
       "defaultNav": false

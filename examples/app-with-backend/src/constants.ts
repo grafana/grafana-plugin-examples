@@ -1,18 +1,18 @@
 import { NavModelItem } from '@grafana/data';
 import pluginJson from './plugin.json';
 
-
-export const PLUGIN_BASE_URL = `/a/${pluginJson.id}`;
+export const PLUGIN_ID = `${pluginJson.id}`
+export const PLUGIN_BASE_URL = `/a/${PLUGIN_ID}`;
 
 export enum ROUTES {
   One = 'one',
   Two = 'two',
   Three = 'three',
-  Four = 'four',
+  Config = 'config'
 }
 
-export const NAVIGATION_TITLE = 'Grafana Sage';
-export const NAVIGATION_SUBTITLE = 'For running query jobs and archiving data views';
+export const NAVIGATION_TITLE = 'Grafana App with Backend';
+export const NAVIGATION_SUBTITLE = 'So you can have a pretty widget in the front, with fancy stuff in the back';
 
 // Add a navigation item for each route you would like to display in the navigation bar
 export const NAVIGATION: Record<string, NavModelItem> = {
@@ -34,4 +34,10 @@ export const NAVIGATION: Record<string, NavModelItem> = {
     icon: 'chart-line',
     url: `${PLUGIN_BASE_URL}/three`,
   },
+  [ROUTES.Config]: {
+    id: ROUTES.Config,
+    text: 'Configuration',
+    icon: 'cog',
+    url: `plugins/${PLUGIN_ID}`
+  }
 };

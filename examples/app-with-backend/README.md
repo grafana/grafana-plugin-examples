@@ -1,10 +1,10 @@
-# Grafana app plugin template
+# Grafana App with Backend Plugin Template
 
-This template is a starting point for building an app plugin for Grafana.
+This template is a starting point for building an app plugin for Grafana. It includes a backend component.
 
 ## What are Grafana app plugins?
 
-App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins.
+App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins. A backend allows it to perform a variety of additional tasks, like handling incoming HTTP requests.
 
 ## Getting started
 
@@ -93,6 +93,6 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 Below you can find source code for existing app plugins and other related documentation.
 
-- [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
+- [All plugin examples](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/)
 - [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
 - [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
