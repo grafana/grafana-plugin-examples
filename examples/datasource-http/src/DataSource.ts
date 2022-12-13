@@ -41,11 +41,20 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
        * }
        */
       const datapoints = response.data.datapoints;
+      if (typeof datapoints === 'undefined') {
+        throw new Error('Remote endpoint reponse does not contain "datapoints" property.');
+      }
 
       const timestamps: number[] = [];
       const values: number[] = [];
 
       for (let i = 0; i < datapoints.length; i++) {
+        if (typeof datapoints[i].Time === 'undefined') {
+          throw new Error(`Data point ${i} does not contain "Time" property`);
+        }
+        if (typeof datapoints[i].Value === 'undefined') {
+          throw new Error(`Data point ${i} does not contain "Value" property`);
+        }
         timestamps.push(datapoints[i].Time);
         values.push(datapoints[i].Value);
       }
@@ -93,7 +102,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       if (_.isString(err)) {
         message = err;
       } else if (isFetchError(err)) {
-        message += err.statusText ? err.statusText : defaultErrorMessage;
+        message = `Fetch error: ${err.statusText ? err.statusText : defaultErrorMessage}`;
         if (err.data && err.data.error && err.data.error.code) {
           message += ': ' + err.data.error.code + '. ' + err.data.error.message;
         }
