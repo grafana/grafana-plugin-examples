@@ -1,4 +1,4 @@
-# visx
+# Grafana Panel Plugin Template
 
 This example uses visx to render an SVG graph.
 

@@ -1,4 +1,4 @@
-# Basic App Plugin
+# Grafana App Plugin Template
 
 This example demonstrates how to build a basic app plugin for Grafana that uses custom routing.
 
@@ -13,21 +13,21 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 ---
 
 ## Guides in this example
- 
-|                                                  **Example**                                                        |          **Source**         |
-|---------------------------------------------------------------------------------------------------------------------|--------------------------------------|
-| [How to enable the tab navigation bar?](#how-to-enable-the-tab-navigation-bar)                                      |   [utils.routing.ts], [constants.ts#L17] |
-| [How to add a custom route?](#how-to-add-a-custom-route)                                                            |   [Routes.tsx], [constants.ts#L6]       |
-| [How to add a custom route with URL parameters?](#how-to-add-a-custom-route-with-url-parameters)                    |   [Routes.tsx], [PageThree.tsx] |
-| [How to create a full-width page with no navigation bar?](#how-to-create-a-full-width-page-with-no-navigation-bar)  |   [utils.routing.ts#L25] |
-| [How to add custom styling to your components?](#how-to-add-custom-styling-to-your-components)                      |   [PageFour.tsx] |
-| [How to use the Grafana theme in your components?](#how-to-use-the-grafana-theme-in-your-components)                |   [PageFour.tsx#L25] |
-| [How to add menu items to the left sidebar?](#how-to-add-menu-items-to-the-left-sidebar)                            |   [plugin.json] |
-| [How to add a configuration page to your app?](#how-to-add-a-configuration-page-to-your-app)                        |   [module.ts], [AppConfig.tsx]|
-| [How to add custom configuration values to your app?](#how-to-add-custom-configuration-values-to-your-app)          |   [AppConfig.tsx] |
-| [How to add configuration options for setting secrets?](#how-to-add-configuration-options-for-setting-secrets)      |   [AppConfig.tsx] |
-| [How to update the plugin settings using the API?](#how-to-update-the-plugin-settings-using-the-api)                |   [AppConfig.tsx] |
-| [How to access the saved secrets (proxying requests)?](#how-to-access-the-saved-secrets-proxying-requests)          |   [plugin.json] |
+
+| **Example**                                                                                                        | **Source**                             |
+| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
+| [How to enable the tab navigation bar?](#how-to-enable-the-tab-navigation-bar)                                     | [utils.routing.ts], [constants.ts#L17] |
+| [How to add a custom route?](#how-to-add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6]        |
+| [How to add a custom route with URL parameters?](#how-to-add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]          |
+| [How to create a full-width page with no navigation bar?](#how-to-create-a-full-width-page-with-no-navigation-bar) | [utils.routing.ts#L25]                 |
+| [How to add custom styling to your components?](#how-to-add-custom-styling-to-your-components)                     | [PageFour.tsx]                         |
+| [How to use the Grafana theme in your components?](#how-to-use-the-grafana-theme-in-your-components)               | [PageFour.tsx#L25]                     |
+| [How to add menu items to the left sidebar?](#how-to-add-menu-items-to-the-left-sidebar)                           | [plugin.json]                          |
+| [How to add a configuration page to your app?](#how-to-add-a-configuration-page-to-your-app)                       | [module.ts], [AppConfig.tsx]           |
+| [How to add custom configuration values to your app?](#how-to-add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                        |
+| [How to add configuration options for setting secrets?](#how-to-add-configuration-options-for-setting-secrets)     | [AppConfig.tsx]                        |
+| [How to update the plugin settings using the API?](#how-to-update-the-plugin-settings-using-the-api)               | [AppConfig.tsx]                        |
+| [How to access the saved secrets (proxying requests)?](#how-to-access-the-saved-secrets-proxying-requests)         | [plugin.json]                          |
 
 ### How to enable the tab navigation bar?
 
@@ -35,7 +35,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 ![Navigation Bar](screenshots/screenshot-nav-bar.png)
 
-You can enable the tab navigation bar for your app plugin by passing a "nav-model" the `onNavChanged()` function that is passed in as a prop to your root App component. 
+You can enable the tab navigation bar for your app plugin by passing a "nav-model" the `onNavChanged()` function that is passed in as a prop to your root App component.
 If you don't want to get too much into the details you can just edit `NAVIGATION` object in [constants.ts#L17].
 
 **Setting the tabs in [constants.ts#L17]**
@@ -215,13 +215,13 @@ Below you can find source code for existing app plugins and other related docume
 - [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
 
 [utils.routing.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L29
-[Routes.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L17
-[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageThree/PageThree.tsx#L10
-[PageFour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L22
-[PageFour.tsx#L25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L25
-[utils.routing.ts#L25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L25
+[routes.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L17
+[pagethree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageThree/PageThree.tsx#L10
+[pagefour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L22
+[pagefour.tsx#l25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L25
+[utils.routing.ts#l25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L25
 [plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/plugin.json#L19
 [module.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/module.ts#L5
-[AppConfig.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/AppConfig/AppConfig.tsx#L26
-[constants.ts#L6]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L6
-[constants.ts#L17]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L17
+[appconfig.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/AppConfig/AppConfig.tsx#L26
+[constants.ts#l6]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L6
+[constants.ts#l17]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L17

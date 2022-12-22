@@ -1,4 +1,4 @@
-# Basic Panel Plugin
+# Grafana Panel Plugin Template
 
 This is an example on how to build a basic panel plugin.
 
