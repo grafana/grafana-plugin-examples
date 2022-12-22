@@ -1,4 +1,4 @@
-# Plotly panel
+# Grafana Panel Plugin Template
 
 This example uses the [Plotly](https://plotly.com/) library to plot graphs.
 

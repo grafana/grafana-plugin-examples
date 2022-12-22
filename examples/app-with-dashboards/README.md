@@ -1,4 +1,4 @@
-# Grafana app plugin template
+# Grafana App Plugin Template
 
 This template is a starting point for building an app plugin for Grafana.
 
@@ -37,7 +37,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
    ```bash
    # Runs the tests and watches for changes
    yarn test
-   
+
    # Exists after running all the tests
    yarn lint:ci
    ```
@@ -51,9 +51,9 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 6. Run the E2E tests (using Cypress)
 
    ```bash
-   # Spin up a Grafana instance first that we tests against 
+   # Spin up a Grafana instance first that we tests against
    yarn server
-   
+
    # Start the tests
    yarn e2e
    ```
@@ -62,13 +62,11 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
    ```bash
    yarn lint
-   
+
    # or
 
    yarn lint:fix
    ```
-
-
 
 ## Learn more
 
