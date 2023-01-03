@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/trace"
 	"net/http"
 	"time"
 
@@ -63,6 +65,8 @@ func (d *Datasource) Dispose() {
 	d.httpClient.CloseIdleConnections()
 }
 
+const name = "innerPlugin"
+
 // QueryData handles multiple queries and returns multiple responses.
 // req contains the queries []DataQuery (where each query contains RefID as a unique identifier).
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
@@ -70,6 +74,22 @@ func (d *Datasource) Dispose() {
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	// create response struct
 	response := backend.NewQueryDataResponse()
+
+	ctx, span := otel.Tracer(name).Start(ctx, "loSpan")
+	defer span.End()
+
+	if traceIDHex := req.Headers["X-Trace-Id"]; traceIDHex != "" {
+		traceID, err := trace.TraceIDFromHex(traceIDHex)
+		if err != nil {
+			return nil, err
+		}
+		ctx = trace.ContextWithSpanContext(ctx, trace.SpanContextFromContext(ctx).WithTraceID(traceID))
+	} else {
+		log.DefaultLogger.Info("X-Trace-Id is empty")
+	}
+
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Info("plugin QueryData", "ctx", ctx, "ctxStr", fmt.Sprintf("%+v", ctx), "headers", req.Headers, "traceID", sctx.TraceID(), "spanID", sctx.SpanID())
 
 	// loop over queries and execute them individually.
 	for i, q := range req.Queries {
