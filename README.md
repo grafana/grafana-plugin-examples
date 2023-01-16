@@ -4,9 +4,10 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                         | Description                                                            |
-| ------------------------------- | ---------------------------------------------------------------------- |
-| [app-basic](examples/app-basic) | demonstrates how to build a basic app plugin that uses custom routing. |
+| Example                                             | Description                                                            |
+| --------------------------------------------------- | ---------------------------------------------------------------------- |
+| [app-basic](examples/app-basic)                     | demonstrates how to build a basic app plugin that uses custom routing. |
+| [app-with-dashboards](examples/app-with-dashboards) | demonstrates how to include pre-built dashboards in an app plugin      |
 
 ## Panel plugins
 
