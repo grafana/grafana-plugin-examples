@@ -65,7 +65,7 @@
       "placement": "grafana/dashboard/panel/menu",
       "title": "My Panel Menu Item",
       "description": "My Panel Menu Item Description",
-      "path": "/one",
+      "path": "/three",
       "type": "link",
       "id": "declare-incident"
     }

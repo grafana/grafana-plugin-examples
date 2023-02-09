@@ -18,9 +18,9 @@ export const PageThree = () => {
       <br />
       {/* The ID parameter is set */}
       {id && (
-        <>
-          <strong>ID:</strong> {id}
-        </>
+        <p>
+          <strong>Hello there!</strong> You arrived from a {id} panel, amirite????
+        </p>
       )}
       {/* No ID parameter */}
       {!id && (

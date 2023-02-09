@@ -11,13 +11,15 @@ export const plugin = new AppPlugin<{}>()
     id: 'configuration',
   })
   //@ts-ignore
-  .configureExtensionLink('declare-incident', (context: any, link: any) => {
-    if (context.panel.type === 'timeseries') {
+  .configureExtensionLink('declare-incident', (link: any, panel: any) => {
+    console.log(link, panel);
+    if (panel.type === 'timeseries') {
       return null;
     }
 
     return {
       ...link,
-      title: 'dynamic title',
+      title: `Let's go ${panel.type} 🚀`,
+      path: `${link.path}/${panel.type}`,
     };
   });
