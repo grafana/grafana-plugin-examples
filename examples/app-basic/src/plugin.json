@@ -1,8 +1,9 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/23ee26ec5f4443b5548f1c024b06b6e44da112f4/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App",
   "id": "myorg-basic-app",
+  "preload": true,
   "info": {
     "keywords": ["basic", "app", "example"],
     "description": "A basic grafana app plugin",
@@ -57,6 +58,16 @@
       "path": "/plugins/%PLUGIN_ID%",
       "role": "Admin",
       "addToNav": true
+    }
+  ],
+  "extensions": [
+    {
+      "placement": "grafana/dashboard/panel/menu",
+      "title": "My Panel Menu Item",
+      "description": "My Panel Menu Item Description",
+      "path": "/one",
+      "type": "link",
+      "id": "declare-incident"
     }
   ],
   "dependencies": {
