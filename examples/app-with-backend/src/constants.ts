@@ -6,8 +6,6 @@ export const PLUGIN_BASE_URL = `/a/${PLUGIN_ID}`;
 
 export enum ROUTES {
   One = 'one',
-  Two = 'two',
-  Three = 'three',
   Config = 'config'
 }
 
@@ -21,18 +19,6 @@ export const NAVIGATION: Record<string, NavModelItem> = {
     text: 'Page One',
     icon: 'database',
     url: `${PLUGIN_BASE_URL}/one`,
-  },
-  [ROUTES.Two]: {
-    id: ROUTES.Two,
-    text: 'Page Two',
-    icon: 'key-skeleton-alt',
-    url: `${PLUGIN_BASE_URL}/two`,
-  },
-  [ROUTES.Three]: {
-    id: ROUTES.Three,
-    text: 'Page Three',
-    icon: 'chart-line',
-    url: `${PLUGIN_BASE_URL}/three`,
   },
   [ROUTES.Config]: {
     id: ROUTES.Config,
