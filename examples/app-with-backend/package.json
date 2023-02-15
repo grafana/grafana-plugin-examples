@@ -1,5 +1,5 @@
 {
-  "name": "app-with-backend",
+  "name": "myorg-withbackend-app",
   "version": "1.0.0",
   "description": "Demo of an app using a backend plugin",
   "scripts": {

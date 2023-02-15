@@ -2,9 +2,9 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "App With Backend",
-  "id": "app-with-backend",
+  "id": "myorg-withbackend-app",
   "backend": true,
-  "executable": "gpx_app-with-backend",
+  "executable": "gpx_app-myorg-withbackend-app",
   "info": {
     "keywords": ["bi", "app", "query jobs"],
     "description": "Example Grafana app with backend service handling HTTP requests",
