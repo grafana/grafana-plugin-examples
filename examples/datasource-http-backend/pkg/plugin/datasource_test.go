@@ -13,6 +13,14 @@ import (
 	"time"
 )
 
+const refID = "A"
+
+var dsReq = &backend.QueryDataRequest{
+	Queries: []backend.DataQuery{
+		{RefID: refID},
+	},
+}
+
 func TestHealthCheck(t *testing.T) {
 	// tc is a test case for the health check test
 	type tc struct {
@@ -97,7 +105,7 @@ func TestHealthCheck(t *testing.T) {
 }
 
 func TestQueryData(t *testing.T) {
-	ds, srv := newDefaultMockDataSource()
+	ds, srv := newDefaultMockDataSource(withSuccessResponse)
 	defer srv.Close()
 
 	// Execute http request against remote server to compare result with dataframe
@@ -116,14 +124,7 @@ func TestQueryData(t *testing.T) {
 
 	// Execute request via QueryData method
 	const refID = "A"
-	resp, err := ds.QueryData(
-		context.Background(),
-		&backend.QueryDataRequest{
-			Queries: []backend.DataQuery{
-				{RefID: refID},
-			},
-		},
-	)
+	resp, err := ds.QueryData(context.Background(), dsReq)
 	require.NoError(t, err, "QueryData must not return an error")
 	require.NotNil(t, resp, "QueryData must return a response")
 	require.Len(t, resp.Responses, 1, "QueryData must return one response")
@@ -164,6 +165,59 @@ func TestQueryData(t *testing.T) {
 	}
 }
 
+// TestQueryDataErrorHandling tests the error handling capabilities of QueryData.
+func TestQueryDataErrorHandling(t *testing.T) {
+	type testCase struct {
+		name               string
+		mockDataSourceOpts []mockServerOption
+		context            func(ctx context.Context) (context.Context, func())
+		exp                func(t *testing.T, r backend.DataResponse)
+	}
+	for _, tc := range []testCase{
+		{
+			name: "with remote server timeout",
+			mockDataSourceOpts: []mockServerOption{
+				withDelay(time.Second * 1),
+				withSuccessResponse,
+			},
+			context: func(ctx context.Context) (context.Context, func()) {
+				return context.WithTimeout(ctx, time.Second*1)
+			},
+			exp: func(t *testing.T, r backend.DataResponse) {
+				assert.Equal(t, backend.StatusTimeout, r.Status)
+				assert.Equal(t, "gateway timeout", r.Error.Error())
+			},
+		},
+		{
+			name:               "with non 200 response",
+			mockDataSourceOpts: []mockServerOption{withStatusAndBody(http.StatusBadRequest, []byte("bad request"))},
+			exp: func(t *testing.T, r backend.DataResponse) {
+				assert.Equal(t, backend.StatusValidationFailed, r.Status)
+				assert.Equal(t, "bad gateway response", r.Error.Error())
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			ds, srv := newDefaultMockDataSource(tc.mockDataSourceOpts...)
+			defer srv.Close()
+			ctx := context.Background()
+			if tc.context != nil {
+				var canc func()
+				ctx, canc = tc.context(ctx)
+				defer canc()
+			}
+			resp, err := ds.QueryData(ctx, dsReq)
+			require.NoError(t, err, "QueryData must not return an error")
+			require.NotNil(t, resp, "QueryData must return a response")
+			require.Len(t, resp.Responses, 1, "responses must have 1 response")
+			r, ok := resp.Responses[refID]
+			require.Truef(t, ok, "response with ref %q must be present", refID)
+			assert.Empty(t, r.Frames, "should not contain frames")
+			tc.exp(t, r)
+		})
+	}
+}
+
 // newMockDataSourceFromHttpTestServer returns a new Datasource that connects to the
 // specified testServer.
 func newMockDataSourceFromHttpTestServer(testServer *httptest.Server, urlSuffix string) Datasource {
@@ -175,26 +229,47 @@ func newMockDataSourceFromHttpTestServer(testServer *httptest.Server, urlSuffix 
 	}
 }
 
+type mockServerOption func(w http.ResponseWriter, req *http.Request)
+
+func withSuccessResponse(w http.ResponseWriter, _ *http.Request) {
+	const pointsN = 1024
+	points := make([]apiDataPoint, pointsN)
+	for i := 0; i < pointsN; i++ {
+		ts := time.Now().Add(time.Second * time.Duration(-i)).UTC()
+		points[i].Time = ts
+		points[i].Value = float64(i)
+	}
+	w.Header().Add("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(apiMetrics{
+		DataPoints: points,
+	}); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
+}
+
+func withDelay(duration time.Duration) mockServerOption {
+	return func(w http.ResponseWriter, req *http.Request) {
+		time.Sleep(duration)
+	}
+}
+
+func withStatusAndBody(statusCode int, body []byte) mockServerOption {
+	return func(w http.ResponseWriter, req *http.Request) {
+		w.WriteHeader(statusCode)
+		_, _ = w.Write(body)
+	}
+}
+
 // newDefaultMockDataSource creates a new httptest.Server which implements a handler
 // that returns a valid JSON apiMetrics as its
 // handler, and returns a Datasource that is linked to the /metrics handler of the httptest.Server.
 // The function returns both the Datasource and the httptest.Server.
 // The caller should `defer Close()` the returned httptest.Server.
-func newDefaultMockDataSource() (Datasource, *httptest.Server) {
+func newDefaultMockDataSource(opts ...mockServerOption) (Datasource, *httptest.Server) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/metrics", func(w http.ResponseWriter, req *http.Request) {
-		const pointsN = 1024
-		points := make([]apiDataPoint, pointsN)
-		for i := 0; i < pointsN; i++ {
-			ts := time.Now().Add(time.Second * time.Duration(-i)).UTC()
-			points[i].Time = ts
-			points[i].Value = float64(i)
-		}
-		w.Header().Add("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(apiMetrics{
-			DataPoints: points,
-		}); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+		for _, opt := range opts {
+			opt(w, req)
 		}
 	})
 	srv := httptest.NewServer(mux)

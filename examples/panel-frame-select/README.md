@@ -1,4 +1,4 @@
-# Frame select
+# Grafana Panel Plugin Template
 
 This example shows how you can set panel options based on the response from a data query.
 

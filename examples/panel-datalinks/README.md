@@ -1,4 +1,4 @@
-# Grafana panel plugin template
+# Grafana Panel Plugin Template
 
 This template is a starting point for building a panel plugin for Grafana.
 
