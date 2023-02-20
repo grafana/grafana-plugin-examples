@@ -1,8 +1,8 @@
 name: Build all plugins
-on: 
+on:
   pull_request:
   schedule:
-    - cron: '0 11 * * *' #once a day at 11 UTC
+    - cron: "0 11 * * *" #once a day at 11 UTC
 concurrency:
   group: build-all-${{ github.ref }}
   cancel-in-progress: true
@@ -17,13 +17,7 @@ jobs:
       - id: set-dirs
         # get all dirs inside the examples with a plugin json that is not inside node_modules
         run: echo "dir=$(echo $(find examples "$@" -iname 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;) | jq -R -s -c 'split(" ")[:-1]')" >> $GITHUB_OUTPUT
-      - name: Setup node version
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'yarn'
-    
+
   build_all:
     runs-on: ubuntu-latest
     needs: [directories]
@@ -36,6 +30,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup node version
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          registry-url: "https://registry.npmjs.org"
+          cache: "yarn"
       - name: Install dependencies for ${{matrix.dir}}
         run: yarn install --immutable --prefer-offline
       - name: Build example ${{matrix.dir}}
@@ -50,58 +50,58 @@ jobs:
         uses: slackapi/slack-github-action@v1.23.0
         if: contains(fromJson('["failure"]'), needs.build_all.result)
         with:
-            channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
-            payload: |
-              {                
-                "blocks": [
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": ":blob-sad: <${{ github.server_url }}/${{ github.repository }}|Plugin Examples> build step ${{ needs.build_all.result }} on `${{ github.head_ref || github.ref_name }}`"
-                        }
-                      },
-                      {
-                        "type": "actions",
-                        "elements": [
-                          {
-                            "type": "button",
-                            "text": {
-                              "type": "plain_text",
-                              "text": ":octocat: Open Job",
-                              "emoji": true
-                            },
-                            "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}",
-                            "action_id": "actionId-0"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "divider"
-                      },
-                      {
-                        "type": "context",
-                        "elements": [
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Commit*: <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Event*: ${{ github.event_name }}"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Branch*: `${{ github.head_ref || github.ref_name }}`"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*PR Number*: `${{ github.event.pull_request.number || 'Not triggered by a PR' }}`"
-                          }
-                        ]
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload: |
+            {
+              "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": ":blob-sad: <${{ github.server_url }}/${{ github.repository }}|Plugin Examples> build step ${{ needs.build_all.result }} on `${{ github.head_ref || github.ref_name }}`"
                       }
-                  ]
-              }
+                    },
+                    {
+                      "type": "actions",
+                      "elements": [
+                        {
+                          "type": "button",
+                          "text": {
+                            "type": "plain_text",
+                            "text": ":octocat: Open Job",
+                            "emoji": true
+                          },
+                          "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}",
+                          "action_id": "actionId-0"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "divider"
+                    },
+                    {
+                      "type": "context",
+                      "elements": [
+                        {
+                          "type": "mrkdwn",
+                          "text": "*Commit*: <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|${{ github.sha }}>"
+                        },
+                        {
+                          "type": "mrkdwn",
+                          "text": "*Event*: ${{ github.event_name }}"
+                        },
+                        {
+                          "type": "mrkdwn",
+                          "text": "*Branch*: `${{ github.head_ref || github.ref_name }}`"
+                        },
+                        {
+                          "type": "mrkdwn",
+                          "text": "*PR Number*: `${{ github.event.pull_request.number || 'Not triggered by a PR' }}`"
+                        }
+                      ]
+                    }
+                ]
+            }
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}        
-            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
