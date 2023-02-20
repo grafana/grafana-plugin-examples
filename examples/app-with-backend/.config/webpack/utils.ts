@@ -20,22 +20,24 @@ export function hasReadme() {
   return fs.existsSync(path.resolve(process.cwd(), SOURCE_DIR, 'README.md'));
 }
 
+// Support bundling nested plugins by finding all plugin.json files in src directory
+// then checking for a sibling module.[jt]sx? file.
 export async function getEntries(): Promise<Record<string, string>> {
-  const parent = '..';
-  const pluginsJson = await globAsync('**/src/**/plugin.json');
-  
-  const plugins = await Promise.all(pluginsJson.map(pluginJson => {
-    const folder = path.dirname(pluginJson);
-    return globAsync(`${folder}/module.{ts,tsx,js}`);
-  }));
+  const pluginsJson = await globAsync('**/src/**/plugin.json', { absolute: true });
+
+  const plugins = await Promise.all(pluginsJson.map((pluginJson) => {
+      const folder = path.dirname(pluginJson);
+      return globAsync(`${folder}/module.{ts,tsx,js,jsx}`, { absolute: true });
+    })
+  );
 
   return plugins.reduce((result, modules) => {
     return modules.reduce((result, module) => {
-      const pluginPath = path.resolve(path.dirname(module), parent);
-      const pluginName = path.basename(pluginPath);
-      const entryName = plugins.length > 1 ? `${pluginName}/module` : 'module';
-  
-      result[entryName] = path.join(parent, module);
+      const pluginPath = path.dirname(module);
+      const pluginName = path.relative(process.cwd(), pluginPath).replace(/src\/?/i, '');
+      const entryName = pluginName === '' ? 'module' : `${pluginName}/module`;
+
+      result[entryName] = module;
       return result;
     }, result);
   }, {});
