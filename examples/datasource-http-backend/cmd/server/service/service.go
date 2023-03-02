@@ -5,6 +5,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -25,13 +26,22 @@ type dataPoint struct {
 
 // getMetrics is an handlerFunc that writes dummy metrics in JSON format
 // back to the client
-func getMetrics(w http.ResponseWriter, _ *http.Request) error {
+func getMetrics(w http.ResponseWriter, req *http.Request) error {
 	const pointsN = 1024
 	points := make([]dataPoint, pointsN)
+	multiplier := req.URL.Query().Get("multiplier")
+	multiplierInt := 1
+	if multiplier != "" {
+		var err error
+		multiplierInt, err = strconv.Atoi(multiplier)
+		if err != nil {
+			return err
+		}
+	}
 	for i := 0; i < pointsN; i++ {
 		ts := time.Now().Add(time.Second * time.Duration(-i)).UTC()
 		points[i].Time = ts
-		points[i].Value = math.Sin(float64(ts.Unix()) / 10)
+		points[i].Value = math.Sin(float64(ts.Unix())/10) * float64(multiplierInt)
 	}
 	w.Header().Add("Content-Type", "application/json")
 	return json.NewEncoder(w).Encode(metrics{

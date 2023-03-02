@@ -12,3 +12,7 @@ type apiDataPoint struct {
 	Time  time.Time `json:"time"`
 	Value float64   `json:"value"`
 }
+
+type apiQuery struct {
+	Multiplier int `json:"multiplier"`
+}
