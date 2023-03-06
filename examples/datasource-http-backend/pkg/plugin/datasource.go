@@ -5,10 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"net/http"
-	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
@@ -77,7 +79,7 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 			// Just to demonstrate how to return an error with a custom status code.
 			response.Responses[q.RefID] = backend.ErrDataResponse(
 				backend.StatusBadRequest,
-				"user friendly error, excluding any sensitive information",
+				fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", i+1),
 			)
 			continue
 		}
@@ -108,6 +110,16 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
+	}
+	if len(query.JSON) > 0 {
+		input := &apiQuery{}
+		err = json.Unmarshal(query.JSON, input)
+		if err != nil {
+			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+		}
+		q := req.URL.Query()
+		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		req.URL.RawQuery = q.Encode()
 	}
 	resp, err := d.httpClient.Do(req)
 	switch {
