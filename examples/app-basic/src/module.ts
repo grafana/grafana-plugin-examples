@@ -45,4 +45,14 @@ export const plugin = new AppPlugin<{}>()
           return undefined;
       }
     }
+  })
+  //@ts-ignore
+  .configureExtensionCommand({
+    title: 'Ping the \'basic app\'',
+    description: 'Will trigger a command handler in the basic app',
+    placement: 'grafana/dashboard/panel/menu',
+    handler: (context: PanelContext) => {
+      console.log({context});
+      alert(`Pong to '${context?.title}' from 'basic app'`);
+    }
   });
