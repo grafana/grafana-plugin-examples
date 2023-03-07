@@ -1,4 +1,5 @@
 import { AppPlugin } from '@grafana/data';
+import { SampleModal } from './components/SampleModal';
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 
@@ -11,7 +12,7 @@ type AppPluginLinkExtension = {
   title: string;
   description: string;
   path: string;
-}
+};
 
 export const plugin = new AppPlugin<{}>()
   .setRootPage(App)
@@ -40,19 +41,19 @@ export const plugin = new AppPlugin<{}>()
             title: 'Go to page two',
             path: '/a/myorg-basic-app/two',
           };
-      
+
         default:
           return undefined;
       }
-    }
+    },
   })
   //@ts-ignore
   .configureExtensionCommand({
-    title: 'Ping the \'basic app\'',
+    title: 'Ping the "Basic App"',
     description: 'Will trigger a command handler in the basic app',
     placement: 'grafana/dashboard/panel/menu',
-    handler: (context: PanelContext) => {
-      console.log({context});
-      alert(`Pong to '${context?.title}' from 'basic app'`);
-    }
+    handler: (context: PanelContext, helpers: any): void => {
+      console.log('COMMAND HANDLER', { helpers, context });
+      helpers.openModal({ title: 'My super cool modal', body: SampleModal });
+    },
   });
