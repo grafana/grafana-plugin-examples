@@ -15,7 +15,7 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.DefaultLogger.Info("ping recieved")
+	log.DefaultLogger.Info("ping received")
 	w.WriteHeader(http.StatusOK)
 }
 
