@@ -16,5 +16,4 @@ export const plugin = new AppPlugin<{}>()
     description: 'testing',
     placement: PluginExtensionPlacements.DashboardPanelMenu,
     path: `/a/${pluginJson.id}/`,
-    configure: (link, context) => link,
   });
