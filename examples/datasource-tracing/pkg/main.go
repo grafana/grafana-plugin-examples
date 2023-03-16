@@ -5,6 +5,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+
 	"github.com/grafana/tracing/pkg/plugin"
 )
 
