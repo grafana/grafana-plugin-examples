@@ -1,0 +1,1 @@
+export { buildModal } from './Modal';
