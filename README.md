@@ -4,11 +4,12 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                                             | Description                                                            |
-| --------------------------------------------------- | ---------------------------------------------------------------------- |
-| [app-basic](examples/app-basic)                     | demonstrates how to build a basic app plugin that uses custom routing. |
-| [app-with-dashboards](examples/app-with-dashboards) | demonstrates how to include pre-built dashboards in an app plugin.     |
-| [app-with-backend](examples/app-with-backend)       | demonstrates how to build an app plugin with its own backend.          |
+| Example                                             | Description                                                               |
+| --------------------------------------------------- | ------------------------------------------------------------------------- |
+| [app-basic](examples/app-basic)                     | demonstrates how to build a basic app plugin that uses custom routing.    |
+| [app-with-dashboards](examples/app-with-dashboards) | demonstrates how to include pre-built dashboards in an app plugin.        |
+| [app-with-backend](examples/app-with-backend)       | demonstrates how to build an app plugin with its own backend.             |
+| [app-with-extensions](examples/app-with-extensions) | demonstrates how to build an app plugin that extends the garfana core ui. |
 
 ## Panel plugins
 
