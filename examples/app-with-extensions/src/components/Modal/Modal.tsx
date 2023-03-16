@@ -16,5 +16,5 @@ type Props = {
 
 export function ModalBody(props: Props): ReactElement {
   const { panelTitle } = props;
-  return <div data-testid={testIds.modal}>Modal opened from panel: {panelTitle}</div>;
+  return <div data-testid={testIds.modal.container}>Modal opened from panel: {panelTitle}</div>;
 }
