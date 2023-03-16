@@ -14,6 +14,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"go.opentelemetry.io/otel"
@@ -75,6 +76,9 @@ func (d *Datasource) Dispose() {
 
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	// Spans are created automatically for QueryData
+
+	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx):
+	log.DefaultLogger.Info("querydata", "traceID", trace.SpanContextFromContext(ctx).TraceID())
 
 	response := backend.NewQueryDataResponse()
 	for _, q := range req.Queries {
