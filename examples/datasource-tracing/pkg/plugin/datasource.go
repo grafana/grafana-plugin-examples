@@ -160,5 +160,5 @@ func (d *Datasource) contactExternalService(ctx context.Context) error {
 }
 
 func randomDuration(minSeconds, maxSeconds int) time.Duration {
-	return time.Duration(rand.Intn(int(math.Abs(float64(maxSeconds-minSeconds)))) + minSeconds)
+	return time.Millisecond * time.Duration((rand.Int()%int(math.Abs(float64(maxSeconds*1000-minSeconds*1000))))+minSeconds)
 }
