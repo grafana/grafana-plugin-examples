@@ -101,7 +101,7 @@ jobs:
 
       ## Expected Version Tests
       ## Runs the plugin tests against the minimum compatible version of Grafana defined in its plugin.json.
-      # Skipped if should-only-run-canary-tests so we can build examples of new features without failing tests.
+      # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
       - name: Start Integration tests using expected versions
         id: expected-version-tests
         if: steps.should-run-expected-latest-tests.outcome == 'success'
@@ -133,7 +133,7 @@ jobs:
 
       # Latest Version Tests
       # Runs the plugin tests against the latest stable version of Grafana.
-      # Skipped if should-only-run-canary-tests so we can build examples of new features without failing tests.
+      # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
       - name: Build plugin with latest version of e2e libraries
         if: steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
