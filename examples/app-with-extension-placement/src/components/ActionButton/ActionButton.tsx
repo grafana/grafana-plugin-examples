@@ -6,7 +6,7 @@ type Props = {
   extensions: PluginExtension[];
 };
 
-export function ExtensionsButton(props: Props): ReactElement {
+export function ActionButton(props: Props): ReactElement {
   const { extensions } = props;
   const [isOpen, setOpen] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });

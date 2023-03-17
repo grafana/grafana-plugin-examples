@@ -2,7 +2,7 @@ import React from 'react';
 import pluginJson from 'plugin.json';
 import { AppRootProps } from '@grafana/data';
 import { HorizontalGroup } from '@grafana/ui';
-import { ExtensionsButton } from 'components/ExtensionsButton';
+import { ActionButton } from 'components/ActionButton';
 import { getPluginExtensions } from '@grafana/runtime';
 
 type AppExtensionContext = {};
@@ -23,7 +23,7 @@ export class App extends React.PureComponent<AppRootProps> {
           <span>Hello Grafana! This is the actions you can trigger from this plugin</span>
         </HorizontalGroup>
         <HorizontalGroup>
-          <ExtensionsButton extensions={extensions} />
+          <ActionButton extensions={extensions} />
         </HorizontalGroup>
       </div>
     );
