@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'myorg-extensionpoint-app'
+    container_name: 'myorg-extensionplacement-app'
     build:
       context: ./.config
       args:
@@ -10,5 +10,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/myorg-extensionpoint-app
+      - ./dist:/var/lib/grafana/plugins/myorg-extensionplacement-app
       - ./provisioning:/etc/grafana/provisioning

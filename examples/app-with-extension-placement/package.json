@@ -1,7 +1,7 @@
 {
-  "name": "extension-point-app",
+  "name": "extension-placement-app",
   "version": "1.0.0",
-  "description": "Show case how to add an extension point to your plugin",
+  "description": "Show case how to add an extension placement to your plugin",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
