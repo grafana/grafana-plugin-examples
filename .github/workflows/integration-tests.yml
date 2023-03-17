@@ -127,7 +127,7 @@ jobs:
         id: should-run-latest-version-tests
         continue-on-error: true
         run: |
-          npm exec --package semver-compare-cli --call 'semver-compare $EXPECTED_GRAFANA_VERSION ge $LATEST_STABLE_VERSION'
+          npm exec --package semver-compare-cli --call 'semver-compare $LATEST_STABLE_VERSION ge $EXPECTED_GRAFANA_VERSION'
         working-directory: ${{ matrix.pluginDir }}
 
       - name: debug should run latest version tests
