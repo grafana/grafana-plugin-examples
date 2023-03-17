@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "App With Backend",
+  "id": "myorg-withbackend-app",
+  "backend": true,
+  "executable": "gpx_app-myorg-withbackend-app",
+  "info": {
+    "keywords": ["bi", "app", "query jobs"],
+    "description": "Example Grafana app with backend service handling HTTP requests",
+    "author": {
+      "name": "Grafana Labs"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Page One",
+      "path": "/a/%PLUGIN_ID%/one",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "icon": "cog",
+      "name": "Configuration",
+      "path": "/plugins/%PLUGIN_ID%",
+      "role": "Admin",
+      "addToNav": false
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=9.2.1",
+    "plugins": []
+  },
+  "oauthServiceRegistration": {
+    "name": "Test App %s",
+    "redirect_uri": "https://localhost:3000/a/test-app/",
+    "permissions": [
+      { "action": "users:read", "scope": "global.users:*" },
+      { "action": "users.permissions:read", "scope": "users:*" },
+      { "action": "teams:read", "scope": "teams:*" },
+
+      { "action": "dashboards:read", "scope": "dashboards:uid:JyhVSXA4k" },
+      { "action": "dashboards:write", "scope": "dashboards:uid:JyhVSXA4k" },
+      { "action": "dashboards:delete", "scope": "dashboards:uid:JyhVSXA4k" },
+      {
+        "action": "dashboards.permissions:read",
+        "scope": "dashboards:uid:JyhVSXA4k"
+      },
+      {
+        "action": "dashboards.permissions:write",
+        "scope": "dashboards:uid:JyhVSXA4k"
+      }
+    ],
+    "impersonatePermissions": [
+      { "action": "dashboards:create", "scope": "folders:*" },
+      { "action": "dashboards:read", "scope": "dashboards:*" },
+      { "action": "dashboards:read", "scope": "folders:*" },
+      { "action": "folders:read", "scope": "folders:*" }
+    ],
+    "key": { "generate": true }
+  }
+}
