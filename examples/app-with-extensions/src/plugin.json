@@ -29,7 +29,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.5.0",
+    "grafanaDependency": ">=9.5.0-106268pre",
     "plugins": []
   }
 }
