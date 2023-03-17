@@ -51,29 +51,29 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Install dependencies
-        run: |
-          yarn install --frozen-lockfile --prefer-offline
-        working-directory: ${{ matrix.pluginDir }}
+      # - name: Install dependencies
+      #   run: |
+      #     yarn install --frozen-lockfile --prefer-offline
+      #   working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build plugin frontend
-        run: |
-          yarn build
-        working-directory: ${{ matrix.pluginDir }}
+      # - name: Build plugin frontend
+      #   run: |
+      #     yarn build
+      #   working-directory: ${{ matrix.pluginDir }}
 
-      - name: Check for backend Mage file
-        id: backend-check
-        run: |
-          echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
-        working-directory: ${{ matrix.pluginDir }}
+      # - name: Check for backend Mage file
+      #   id: backend-check
+      #   run: |
+      #     echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
+      #   working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build plugin backend
-        uses: magefile/mage-action@v2
-        with:
-          version: latest
-          args: -v build:linux
-          workdir: ${{ matrix.pluginDir }}
-        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
+      # - name: Build plugin backend
+      #   uses: magefile/mage-action@v2
+      #   with:
+      #     version: latest
+      #     args: -v build:linux
+      #     workdir: ${{ matrix.pluginDir }}
+      #   if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       ## CANARY_VERSION has to use NPM as we only publish the packages on changes
       - name: Set environment vars for testing
