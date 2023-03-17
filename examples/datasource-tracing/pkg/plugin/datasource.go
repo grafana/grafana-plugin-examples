@@ -76,6 +76,8 @@ func (d *Datasource) Dispose() {
 
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	// Spans are created automatically for QueryData
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Info("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
 
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx):
 	log.DefaultLogger.Info("querydata", "traceID", trace.SpanContextFromContext(ctx).TraceID())
@@ -100,6 +102,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	)
 	defer span.End()
 
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Info("query", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
+
 	// Simulate random slow processing
 	if rand.Int()%2 == 0 {
 		time.Sleep(randomDuration(5, 10))
@@ -123,6 +128,8 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 
 func (d *Datasource) CheckHealth(ctx context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	// Spans are created automatically for CheckHealth
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Info("CheckHealth", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
 
 	if err := d.contactExternalService(ctx); err != nil {
 		return &backend.CheckHealthResult{
