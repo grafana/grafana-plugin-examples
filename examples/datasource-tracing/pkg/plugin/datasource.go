@@ -76,11 +76,10 @@ func (d *Datasource) Dispose() {
 
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	// Spans are created automatically for QueryData
-	sctx := trace.SpanContextFromContext(ctx)
-	log.DefaultLogger.Info("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
 
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx):
-	log.DefaultLogger.Info("querydata", "traceID", trace.SpanContextFromContext(ctx).TraceID())
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Info("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
 
 	response := backend.NewQueryDataResponse()
 	for _, q := range req.Queries {
