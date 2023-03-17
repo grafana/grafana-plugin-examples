@@ -1,9 +1,10 @@
+import React from 'react';
 import { AppPlugin, PluginExtensionPlacements } from '@grafana/data';
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 import pluginJson from 'plugin.json';
 import { PluginExtensionPanelContext } from '@grafana/runtime';
-import { buildModal } from 'components/Modal';
+import { Modal } from 'components/Modal';
 
 export const plugin = new AppPlugin<{}>()
   .setRootPage(App)
@@ -45,7 +46,7 @@ export const plugin = new AppPlugin<{}>()
     handler: (context, helper) => {
       helper?.openModal({
         title: 'Modal opened from command',
-        body: buildModal(context),
+        body: () => <Modal panelTitle={context?.title} />,
       });
     },
     configure: (command, context) => {

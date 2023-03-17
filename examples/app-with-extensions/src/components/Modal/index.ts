@@ -1,1 +1,1 @@
-export { buildModal } from './Modal';
+export { Modal } from './Modal';
