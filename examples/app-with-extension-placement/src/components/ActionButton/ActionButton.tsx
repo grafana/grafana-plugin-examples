@@ -51,7 +51,7 @@ export function ActionButton(props: Props): ReactElement {
 function renderExtensionMenu(extensions: PluginExtension[]): () => ReactNode {
   return function renderMenuItems() {
     return (
-      <>
+      <div>
         {extensions.map((extension) => {
           if (isPluginExtensionCommand(extension)) {
             return <Menu.Item key={extension.key} label={extension.title} onClick={extension.callHandlerWithContext} />;
@@ -63,7 +63,7 @@ function renderExtensionMenu(extensions: PluginExtension[]): () => ReactNode {
 
           return null;
         })}
-      </>
+      </div>
     );
   };
 }
