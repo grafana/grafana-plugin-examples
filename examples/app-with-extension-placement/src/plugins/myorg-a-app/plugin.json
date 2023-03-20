@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
-  "name": "Extension Point App",
-  "id": "myorg-extensionplacement-app",
+  "name": "A App",
+  "id": "myorg-a-app",
   "preload": true,
   "info": {
     "keywords": ["app"],
-    "description": "Show case how to add an extension point to your plugin",
+    "description": "Will extend root app with ui extensions",
     "author": {
       "name": "Myorg"
     },
@@ -22,10 +22,10 @@
     {
       "type": "page",
       "name": "Default",
-      "path": "/a/%PLUGIN_ID%",
+      "path": "/a/myorg-a-app",
       "role": "Admin",
-      "addToNav": true,
-      "defaultNav": true
+      "addToNav": false,
+      "defaultNav": false
     }
   ],
   "dependencies": {

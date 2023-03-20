@@ -1,5 +1,6 @@
 import { isPluginExtensionCommand, isPluginExtensionLink, PluginExtension } from '@grafana/data';
 import { Button, ButtonGroup, ContextMenu, Menu } from '@grafana/ui';
+import { testIds } from 'components/testIds';
 import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 
 type Props = {
@@ -33,7 +34,7 @@ export function ActionButton(props: Props): ReactElement {
     <>
       <ButtonGroup>
         <Button>Run default action</Button>
-        <Button ref={buttonRef} icon="angle-down" onClick={() => setOpen(true)} />
+        <Button data-testid={testIds.actions.button} ref={buttonRef} icon="angle-down" onClick={() => setOpen(true)} />
       </ButtonGroup>
       {isOpen && (
         <ContextMenu
@@ -51,7 +52,7 @@ export function ActionButton(props: Props): ReactElement {
 function renderExtensionMenu(extensions: PluginExtension[]): () => ReactNode {
   return function renderMenuItems() {
     return (
-      <div>
+      <div data-testid={testIds.actions.menu}>
         {extensions.map((extension) => {
           if (isPluginExtensionCommand(extension)) {
             return <Menu.Item key={extension.key} label={extension.title} onClick={extension.callHandlerWithContext} />;
