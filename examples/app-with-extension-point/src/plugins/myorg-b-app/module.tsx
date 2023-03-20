@@ -5,7 +5,7 @@ import { App } from './components/App';
 export const plugin = new AppPlugin<{}>().setRootPage(App).configureExtensionCommand({
   title: 'Open from B',
   description: 'Open a modal from plugin B',
-  placement: 'plugins/myorg-extensionplacement-app/actions',
+  placement: 'plugins/myorg-extensionpoint-app/actions',
   handler: (context, helper) => {
     helper?.openModal({
       title: 'Modal from app B',

@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Extension Point App",
-  "id": "myorg-extensionplacement-app",
+  "id": "myorg-extensionpoint-app",
   "preload": true,
   "info": {
     "keywords": ["app"],

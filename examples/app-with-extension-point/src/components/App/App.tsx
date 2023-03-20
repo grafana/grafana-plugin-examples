@@ -1,5 +1,4 @@
 import React from 'react';
-import pluginJson from 'plugin.json';
 import { AppRootProps } from '@grafana/data';
 import { HorizontalGroup } from '@grafana/ui';
 import { ActionButton } from 'components/ActionButton';
@@ -9,7 +8,7 @@ type AppExtensionContext = {};
 
 export class App extends React.PureComponent<AppRootProps> {
   render() {
-    const placement = `plugins/${pluginJson.id}/actions`;
+    const placement = 'plugins/myorg-extensionpoint-app/actions';
     const context: AppExtensionContext = {};
 
     const { extensions } = getPluginExtensions({
