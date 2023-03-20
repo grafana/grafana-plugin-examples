@@ -19,7 +19,7 @@ export const plugin = new AppPlugin<{}>()
     description: 'This link will only be visible on time series and pie charts',
     placement: PluginExtensionPlacements.DashboardPanelMenu,
     path: `/a/${pluginJson.id}/`,
-    configure: (link, context) => {
+    configure: (context) => {
       // Will only be visible for the Link Extensions dashboard
       if (context?.dashboard?.title !== 'Link Extensions') {
         return undefined;
@@ -49,7 +49,7 @@ export const plugin = new AppPlugin<{}>()
         body: () => <Modal panelTitle={context?.title} />,
       });
     },
-    configure: (command, context) => {
+    configure: (context) => {
       // Will only be visible for the Command Extensions dashboard
       if (context?.dashboard?.title !== 'Command Extensions') {
         return undefined;
