@@ -1,4 +1,4 @@
-# Grafana app plugin template
+# Grafana App extending Grafana core ui template
 
 This template is a starting point for building an app plugin for Grafana.
 
