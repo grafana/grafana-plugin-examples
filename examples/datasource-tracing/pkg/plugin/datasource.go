@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"math"
 	"math/rand"
 	"net/http"
@@ -12,12 +13,10 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
-	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -40,32 +39,24 @@ var DatasourceOpts = datasource.ManageOpts{
 }
 
 type Datasource struct {
-	// tracer is a trace.Tracer instance that can be used to create traces.
-	tracer trace.Tracer
-
 	// httpClient is a dummy *http.Client with a tracing middleware attached to it.
 	// The client is unused, and it's present for demonstration purposes only.
 	httpClient *http.Client
 }
 
 func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
-	// Initialize the tracer
-	tracer := otel.Tracer("plugin")
-
 	// Create an example HTTP client that will create spans for each outgoing request.
 	// This is unused in this plugin and is present only to demonstrate how to attach the tracing middleware.
 	opts, err := settings.HTTPClientOptions()
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
-	// opts.WithTracingMiddleware adds a middleware that will create spans for every outgoing request.
-	httpCl, err := httpclient.New(opts.WithTracingMiddleware(tracer))
+	httpCl, err := httpclient.New(opts)
 	if err != nil {
-		return nil, fmt.Errorf("httpclient new: %w", err)
+		return nil, fmt.Errorf("http client new: %w", err)
 	}
 
 	return &Datasource{
-		tracer:     tracer,
 		httpClient: httpCl,
 	}, nil
 }
@@ -93,8 +84,10 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 type queryModel struct{}
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
-	// Create spans for this function. Refer to OpenTelemetry's Go SDK to know how to use it.
-	ctx, span := d.tracer.Start(
+	// Create spans for this function.
+	// tracing.DefaultTracer() returns the tracer initialized when calling Manage()
+	// Refer to OpenTelemetry's Go SDK to know how to use it.
+	ctx, span := tracing.DefaultTracer().Start(
 		ctx,
 		"query processing",
 		trace.WithAttributes(attribute.String("my_plugin.query.ref_id", query.RefID)),
@@ -143,10 +136,9 @@ func (d *Datasource) CheckHealth(ctx context.Context, req *backend.CheckHealthRe
 }
 
 func (d *Datasource) contactExternalService(ctx context.Context) error {
-	ctx, span := d.tracer.Start(ctx, "External Service Call")
+	ctx, span := tracing.DefaultTracer().Start(ctx, "External Service Call")
 	defer span.End()
 
-	// Simulate some slow external service
 	time.Sleep(randomDuration(1, 2))
 	span.AddEvent("connect")
 
