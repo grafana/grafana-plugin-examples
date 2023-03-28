@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"math"
 	"math/rand"
 	"net/http"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
@@ -81,7 +81,10 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-type queryModel struct{}
+type queryModel struct {
+	Constant float64 `json:"constant"`
+	Slow     bool    `json:"slow"`
+}
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) backend.DataResponse {
 	// Create spans for this function.
@@ -90,17 +93,12 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	ctx, span := tracing.DefaultTracer().Start(
 		ctx,
 		"query processing",
-		trace.WithAttributes(attribute.String("my_plugin.query.ref_id", query.RefID)),
+		trace.WithAttributes(attribute.String("query.ref_id", query.RefID)),
 	)
 	defer span.End()
 
 	sctx := trace.SpanContextFromContext(ctx)
 	log.DefaultLogger.Info("query", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
-
-	// Simulate random slow processing
-	if rand.Int()%2 == 0 {
-		time.Sleep(randomDuration(5, 10))
-	}
 
 	// Return a dummy response
 	var response backend.DataResponse
@@ -109,12 +107,20 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	if err != nil {
 		return backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("json unmarshal: %v", err.Error()))
 	}
+
+	// Simulate slow query processing
+	if qm.Slow {
+		time.Sleep(randomDuration(5, 10))
+	}
+	span.AddEvent("Query processed")
+
 	frame := data.NewFrame("response")
 	frame.Fields = append(frame.Fields,
 		data.NewField("time", nil, []time.Time{query.TimeRange.From, query.TimeRange.To}),
-		data.NewField("values", nil, []int64{10, 20}),
+		data.NewField("values", nil, []float64{qm.Constant, qm.Constant}),
 	)
 	response.Frames = append(response.Frames, frame)
+	span.AddEvent("Frames created")
 	return response
 }
 

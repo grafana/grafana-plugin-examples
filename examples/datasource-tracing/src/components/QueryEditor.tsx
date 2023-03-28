@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { InlineField, Input } from '@grafana/ui';
+import { InlineField, Input, Checkbox } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery } from '../types';
@@ -17,7 +17,12 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
     onRunQuery();
   };
 
-  const { queryText, constant } = query;
+  const onSlowChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...query, slow: event.currentTarget.checked });
+    onRunQuery();
+  };
+
+  const { queryText, constant, slow } = query;
 
   return (
     <div className="gf-form">
@@ -26,6 +31,9 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
       </InlineField>
       <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
         <Input onChange={onQueryTextChange} value={queryText || ''} />
+      </InlineField>
+      <InlineField label="Slow">
+        <Checkbox onChange={onSlowChange} value={slow} type="checkbox" />
       </InlineField>
     </div>
   );
