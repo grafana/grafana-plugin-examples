@@ -9,12 +9,14 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -106,6 +108,21 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
+	ctx, span := tracing.DefaultTracer().Start(
+		ctx,
+		"query",
+		trace.WithAttributes(
+			attribute.String("query.ref_id", query.RefID),
+			attribute.String("query.type", query.QueryType),
+			attribute.Int64("query.max_data_points", query.MaxDataPoints),
+			attribute.Int64("query.interval_ms", query.Interval.Milliseconds()),
+			attribute.Int64("query.time_range.from", query.TimeRange.From.Unix()),
+			attribute.Int64("query.time_range.to", query.TimeRange.To.Unix()),
+		),
+	)
+	defer span.End()
+	log.DefaultLogger.Info("query", "traceID", trace.SpanContextFromContext(ctx).TraceID())
+
 	// Do HTTP request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
@@ -121,7 +138,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		q.Add("multiplier", strconv.Itoa(input.Multiplier))
 		req.URL.RawQuery = q.Encode()
 	}
-	resp, err := d.httpClient.Do(req)
+	httpResp, err := d.httpClient.Do(req)
 	switch {
 	case err == nil:
 		break
@@ -131,21 +148,23 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
 	defer func() {
-		if err := resp.Body.Close(); err != nil {
+		if err := httpResp.Body.Close(); err != nil {
 			log.DefaultLogger.Error("query: failed to close response body", "err", err)
 		}
 	}()
+	span.AddEvent("HTTP request done")
 
 	// Make sure the response was successful
-	if resp.StatusCode != http.StatusOK {
-		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, resp.StatusCode)
+	if httpResp.StatusCode != http.StatusOK {
+		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, httpResp.StatusCode)
 	}
 
 	// Decode response
 	var body apiMetrics
-	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+	if err := json.NewDecoder(httpResp.Body).Decode(&body); err != nil {
 		return backend.DataResponse{}, fmt.Errorf("%w: decode: %s", errRemoteRequest, err)
 	}
+	span.AddEvent("JSON response decoded")
 
 	// Create slice of values for time and values.
 	times := make([]time.Time, len(body.DataPoints))
@@ -154,9 +173,10 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		times[i] = p.Time
 		values[i] = p.Value
 	}
+	span.AddEvent("Datapoints created")
 
 	// Create frame and add it to the response
-	return backend.DataResponse{
+	dataResp := backend.DataResponse{
 		Frames: []*data.Frame{
 			data.NewFrame(
 				"response",
@@ -164,7 +184,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 				data.NewField("values", nil, values),
 			),
 		},
-	}, nil
+	}
+	span.AddEvent("Frames created")
+	return dataResp, err
 }
 
 // CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return
