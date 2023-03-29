@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"net/http"
 	"strconv"
 	"time"
@@ -49,6 +50,17 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 		settings:   settings,
 		httpClient: cl,
 	}, nil
+}
+
+// DatasourceOpts contains the default ManageOpts for the datasource.
+var DatasourceOpts = datasource.ManageOpts{
+	TracingOpts: tracing.Opts{
+		// Optional custom attributes attached to the tracer's resource.
+		// The tracer will already have some SDK and runtime ones pre-populated.
+		CustomAttributes: []attribute.KeyValue{
+			attribute.String("my_plugin.my_attribute", "custom value"),
+		},
+	},
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
