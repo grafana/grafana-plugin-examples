@@ -6,6 +6,7 @@ import { useAsync } from "react-use";
 import {
   Badge,
   Button,
+  Checkbox,
   HorizontalGroup,
   Input,
   JSONFormatter,
@@ -22,6 +23,8 @@ export const PageOne = () => {
   const [userID, setUserID] = useState(1);
   const [apiPath, setApiPath] = useState("/search");
   const [apiResponse, setApiResponse] = useState({});
+  const [apiToken, setApiToken] = useState({});
+  const [onBehalfRequest, setOnBehalfRequest] = useState(false);
 
   if (loading) {
     return (
@@ -43,17 +46,21 @@ export const PageOne = () => {
 
   const apiRequest = () => {
     setApiResponse("Loading...");
+    let params = {};
+    if (onBehalfRequest) {
+      params = { onBehalfRequest: true, userID: userID };
+    }
     backendSrv
-      .get(
-        `api/plugins/myorg-withbackend-app/resources/api${apiPath}?userID=${userID}`
-      )
+      .get(`api/plugins/myorg-withbackend-app/resources/api${apiPath}`, params)
       .then((response) => {
         setApiResponse(response.results);
+        setApiToken(response.token);
       })
       .catch((error) => {
         setApiResponse({ error: error });
       });
   };
+
   return (
     <div data-testid={testIds.pageOne.container}>
       <HorizontalGroup>
@@ -62,21 +69,33 @@ export const PageOne = () => {
           {renderHealth(health?.message)}
         </span>
       </HorizontalGroup>
-      <h3>API request on behalf of:</h3>
+      <h3>API request:</h3>
       <HorizontalGroup>
         <Label>Endpoint</Label>
         <Input
           value={apiPath}
           onChange={(e) => setApiPath(e.currentTarget.value)}
         />
-        <Label>User ID</Label>
-        <Input
-          value={userID}
-          onChange={(e) => setUserID(e.currentTarget.valueAsNumber)}
-          type="number"
-        />
+        <Label>On Behalf</Label>
+        <Checkbox
+          value={onBehalfRequest}
+          onChange={(e) => setOnBehalfRequest(e.currentTarget.checked)}
+        ></Checkbox>
+        {onBehalfRequest && (
+          <>
+            <Label>User ID</Label>
+            <Input
+              value={userID}
+              onChange={(e) => setUserID(e.currentTarget.valueAsNumber)}
+              type="number"
+            />
+          </>
+        )}
         <Button onClick={apiRequest}>Request</Button>
       </HorizontalGroup>
+      <h3>Token used</h3>
+      <JSONFormatter json={apiToken} />
+      <h3>API Response</h3>
       <JSONFormatter json={apiResponse} />
     </div>
   );

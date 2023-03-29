@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 var (
@@ -43,7 +44,7 @@ type JWTbearer struct {
 	TokenType   string `json:"token_type"`
 }
 
-func (a *App) retrieveToken(userID string) string {
+func (a *App) retrieveJWTBearerToken(userID string) string {
 	headerB, err := json.Marshal(header)
 	if err != nil {
 		panic(err)
@@ -79,6 +80,22 @@ func (a *App) retrieveToken(userID string) string {
 	requestParams.Add("scope", "openid profile email teams permissions org.1")
 	buff := bytes.NewBufferString(requestParams.Encode())
 
+	return a.getToken(buff)
+}
+
+func (a *App) retrieveSelfToken() string {
+	requestParams := url.Values{}
+	requestParams.Add("grant_type", "client_credentials")
+	requestParams.Add("client_id", a.authApp.ClientID)
+	// Question: is this secure?
+	requestParams.Add("client_secret", a.authApp.ClientSecret)
+	requestParams.Add("scope", "openid profile email teams permissions org.1")
+	buff := bytes.NewBufferString(requestParams.Encode())
+
+	return a.getToken(buff)
+}
+
+func (a *App) getToken(buff *bytes.Buffer) string {
 	req, err := http.NewRequest("POST", a.grafanaAppURL+"/oauth2/token", buff)
 	if err != nil {
 		panic(err)
@@ -105,13 +122,37 @@ func (a *App) retrieveToken(userID string) string {
 	return bearer.AccessToken
 }
 
+func (a *App) parseToken(token string) (map[string]interface{}, error) {
+	res := map[string]interface{}{}
+	parsedJWT, err := jwt.ParseSigned(token)
+	if err != nil {
+		return nil, err
+	}
+	claims := map[string]interface{}{}
+	err = parsedJWT.UnsafeClaimsWithoutVerification(&claims)
+	if err != nil {
+		return nil, err
+	}
+	res["headers"] = parsedJWT.Headers
+	res["claims"] = claims
+	return res, nil
+}
+
 func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	proxy, err := http.NewRequest("GET", a.grafanaAppURL+req.URL.Path, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	proxy.Header.Set("Authorization", a.retrieveToken(req.FormValue("userID")))
+
+	var token string
+	if req.FormValue("onBehalfRequest") == "true" {
+		token = a.retrieveJWTBearerToken(req.FormValue("userID"))
+		proxy.Header.Set("Authorization", token)
+	} else {
+		token = a.retrieveSelfToken()
+		proxy.Header.Set("Authorization", token)
+	}
 
 	res, err := a.httpClient.Do(proxy)
 	if err != nil {
@@ -138,7 +179,13 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	parsed, err := a.parseToken(token)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	response := map[string]interface{}{
+		"token":   parsed,
 		"results": bodyRes,
 	}
 	if err := json.NewEncoder(w).Encode(response); err != nil {

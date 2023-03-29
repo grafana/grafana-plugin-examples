@@ -118,6 +118,7 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 		Name:        "Test App - " + authAppUID,
 		RedirectURI: app.grafanaAppURL + "/a/test-app/",
 		Permissions: []permission{
+			{Action: "users:impersonate", Scope: "users:*"},
 			{Action: "users:read", Scope: "global.users:*"},
 			{Action: "users.permissions:read", Scope: "users:*"},
 			{Action: "teams:read", Scope: "teams:*"},
