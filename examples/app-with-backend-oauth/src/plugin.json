@@ -50,17 +50,7 @@
       { "action": "users.permissions:read", "scope": "users:*" },
       { "action": "teams:read", "scope": "teams:*" },
 
-      { "action": "dashboards:read", "scope": "dashboards:uid:JyhVSXA4k" },
-      { "action": "dashboards:write", "scope": "dashboards:uid:JyhVSXA4k" },
-      { "action": "dashboards:delete", "scope": "dashboards:uid:JyhVSXA4k" },
-      {
-        "action": "dashboards.permissions:read",
-        "scope": "dashboards:uid:JyhVSXA4k"
-      },
-      {
-        "action": "dashboards.permissions:write",
-        "scope": "dashboards:uid:JyhVSXA4k"
-      }
+      { "action": "dashboards:create", "scope": "folders:uid:general" }
     ],
     "impersonatePermissions": [
       { "action": "dashboards:create", "scope": "folders:*" },

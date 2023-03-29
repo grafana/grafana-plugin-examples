@@ -122,11 +122,7 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 			{Action: "users:read", Scope: "global.users:*"},
 			{Action: "users.permissions:read", Scope: "users:*"},
 			{Action: "teams:read", Scope: "teams:*"},
-			{Action: "dashboards:read", Scope: "dashboards:uid:JyhVSXA4k"},
-			{Action: "dashboards:write", Scope: "dashboards:uid:JyhVSXA4k"},
-			{Action: "dashboards:delete", Scope: "dashboards:uid:JyhVSXA4k"},
-			{Action: "dashboards.permissions:read", Scope: "dashboards:uid:JyhVSXA4k"},
-			{Action: "dashboards.permissions:write", Scope: "dashboards:uid:JyhVSXA4k"},
+			{Action: "dashboards:create", Scope: "folders:uid:general"},
 		},
 		ImpersonatePermissions: []permission{
 			{Action: "dashboards:create", Scope: "folders:*"},

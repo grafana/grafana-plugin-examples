@@ -139,7 +139,17 @@ func (a *App) parseToken(token string) (map[string]interface{}, error) {
 }
 
 func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
-	proxy, err := http.NewRequest("GET", a.grafanaAppURL+req.URL.Path, nil)
+	proxyMethod := req.FormValue("method")
+	if proxyMethod == "" {
+		proxyMethod = "GET"
+	}
+	proxyBody := req.FormValue("body")
+	var bodyReader io.Reader
+	if proxyBody != "" {
+		bodyReader = bytes.NewReader([]byte(proxyBody))
+	}
+
+	proxy, err := http.NewRequest(proxyMethod, a.grafanaAppURL+req.URL.Path, bodyReader)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -152,6 +162,10 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	} else {
 		token = a.retrieveSelfToken()
 		proxy.Header.Set("Authorization", token)
+	}
+
+	if proxyMethod == "POST" {
+		proxy.Header.Set("Content-Type", "application/json")
 	}
 
 	res, err := a.httpClient.Do(proxy)
