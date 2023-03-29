@@ -80,7 +80,7 @@ func (a *App) retrieveJWTBearerToken(userID string) string {
 	requestParams.Add("scope", "openid profile email teams permissions org.1")
 	buff := bytes.NewBufferString(requestParams.Encode())
 
-	return a.getToken(buff)
+	return a.postTokenRequest(buff)
 }
 
 func (a *App) retrieveSelfToken() string {
@@ -92,10 +92,10 @@ func (a *App) retrieveSelfToken() string {
 	requestParams.Add("scope", "openid profile email teams permissions org.1")
 	buff := bytes.NewBufferString(requestParams.Encode())
 
-	return a.getToken(buff)
+	return a.postTokenRequest(buff)
 }
 
-func (a *App) getToken(buff *bytes.Buffer) string {
+func (a *App) postTokenRequest(buff *bytes.Buffer) string {
 	req, err := http.NewRequest("POST", a.grafanaAppURL+"/oauth2/token", buff)
 	if err != nil {
 		panic(err)
