@@ -5,12 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -42,6 +42,12 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
+	// http clients created with httpclient.New have a middleware stack consisting
+	// of useful generic middlewares such as:
+	//  - TracingMiddleware (spans creates for each outgoing HTTP request)
+	//	- BasicAuthenticationMiddleware
+	//	- CustomHeadersMiddleware
+	//	- ContextualMiddleware
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
@@ -84,6 +90,11 @@ func (d *Datasource) Dispose() {
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
 // contains Frames ([]*Frame).
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	// Spans are created automatically for QueryData and all other plugin interface methods.
+	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Debug("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
+
 	// create response struct
 	response := backend.NewQueryDataResponse()
 
@@ -120,9 +131,12 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
+	// Create spans for this function.
+	// tracing.DefaultTracer() returns the tracer initialized when calling Manage().
+	// Refer to OpenTelemetry's Go SDK to know how to customize your spans.
 	ctx, span := tracing.DefaultTracer().Start(
 		ctx,
-		"query",
+		"query processing",
 		trace.WithAttributes(
 			attribute.String("query.ref_id", query.RefID),
 			attribute.String("query.type", query.QueryType),
@@ -133,7 +147,6 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		),
 	)
 	defer span.End()
-	log.DefaultLogger.Info("query", "traceID", trace.SpanContextFromContext(ctx).TraceID())
 
 	// Do HTTP request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
