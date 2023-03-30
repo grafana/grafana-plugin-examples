@@ -42,7 +42,7 @@
     "plugins": []
   },
   "oauthServiceRegistration": {
-    "name": "Test App %s",
+    "name": "myorg-withbackend-app",
     "redirect_uri": "https://localhost:3000/a/test-app/",
     "permissions": [
       { "action": "users:impersonate", "scope": "users:*" },

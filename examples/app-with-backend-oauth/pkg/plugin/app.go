@@ -9,7 +9,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/google/uuid"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
@@ -113,9 +112,8 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 
 	// This approach requires the API endpoint /oauth2/register to be exposed
 	// And would need a secure way to connect to it in the future.
-	authAppUID := uuid.New().String()
 	oauthAppInstance := oauthAppRegistration{
-		Name:        "Test App - " + authAppUID,
+		Name:        "myorg-withbackend-app",
 		RedirectURI: app.grafanaAppURL + "/a/test-app/",
 		Permissions: []permission{
 			{Action: "users:impersonate", Scope: "users:*"},

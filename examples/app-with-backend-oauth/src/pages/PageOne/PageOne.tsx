@@ -57,8 +57,11 @@ export const PageOne = () => {
   const apiRequest = () => {
     setApiResponse("Loading...");
     let params = {};
-    let parsedBody = JSON.parse(body);
-    params = { ...params, method: method, body: JSON.stringify(parsedBody) };
+    params = { ...params, method: method };
+    if (method === "POST") {
+      let parsedBody = JSON.parse(body);
+      params = { ...params, body: JSON.stringify(parsedBody) };
+    }
     if (onBehalfRequest) {
       params = { ...params, onBehalfRequest: true, userID: userID };
     }
