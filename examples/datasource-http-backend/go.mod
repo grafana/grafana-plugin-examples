@@ -2,10 +2,8 @@ module github.com/grafana/datasource-http-backend
 
 go 1.19
 
-replace github.com/grafana/grafana-plugin-sdk-go => ../../../grafana-plugin-sdk-go
-
 require (
-	github.com/grafana/grafana-plugin-sdk-go v0.142.0
+	github.com/grafana/grafana-plugin-sdk-go v0.157.0
 	github.com/magefile/mage v1.14.0
 	github.com/stretchr/testify v1.8.2
 	go.opentelemetry.io/otel v1.14.0
