@@ -44,7 +44,7 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	}
 	// http clients created with httpclient.New have a middleware stack consisting
 	// of useful generic middlewares such as:
-	//  - TracingMiddleware (spans creates for each outgoing HTTP request)
+	//	- TracingMiddleware (spans creates for each outgoing HTTP request)
 	//	- BasicAuthenticationMiddleware
 	//	- CustomHeadersMiddleware
 	//	- ContextualMiddleware
