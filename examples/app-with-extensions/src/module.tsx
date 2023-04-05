@@ -1,9 +1,8 @@
 import React from 'react';
-import { AppPlugin, PluginExtensionPlacements } from '@grafana/data';
+import { AppPlugin, PluginExtensionPoints, PluginExtensionPanelContext } from '@grafana/data';
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 import pluginJson from 'plugin.json';
-import { PluginExtensionPanelContext } from '@grafana/runtime';
 import { Modal } from 'components/Modal';
 
 export const plugin = new AppPlugin<{}>()
@@ -15,13 +14,13 @@ export const plugin = new AppPlugin<{}>()
     id: 'configuration',
   })
   .configureExtensionLink<PluginExtensionPanelContext>({
-    title: 'Open from time series or pie charts (link)',
+    title: 'Open from time series or pie charts (path)',
     description: 'This link will only be visible on time series and pie charts',
-    placement: PluginExtensionPlacements.DashboardPanelMenu,
+    extensionPointId: PluginExtensionPoints.DashboardPanelMenu,
     path: `/a/${pluginJson.id}/`,
     configure: (context) => {
       // Will only be visible for the Link Extensions dashboard
-      if (context?.dashboard?.title !== 'Link Extensions') {
+      if (context?.dashboard?.title !== 'Link Extensions (path)') {
         return undefined;
       }
 
@@ -39,19 +38,19 @@ export const plugin = new AppPlugin<{}>()
       }
     },
   })
-  .configureExtensionCommand<PluginExtensionPanelContext>({
-    title: 'Open from time series or pie charts (command)',
-    description: 'This command will only be visible on time series and pie charts',
-    placement: PluginExtensionPlacements.DashboardPanelMenu,
-    handler: (context, helper) => {
-      helper?.openModal({
-        title: 'Modal opened from command',
+  .configureExtensionLink<PluginExtensionPanelContext>({
+    title: 'Open from time series or pie charts (onClick)',
+    description: 'This link will only be visible on time series and pie charts',
+    extensionPointId: PluginExtensionPoints.DashboardPanelMenu,
+    onClick: (_, { openModal, context }) => {
+      openModal({
+        title: 'Modal opened from onClick',
         body: () => <Modal panelTitle={context?.title} />,
       });
     },
     configure: (context) => {
       // Will only be visible for the Command Extensions dashboard
-      if (context?.dashboard?.title !== 'Command Extensions') {
+      if (context?.dashboard?.title !== 'Link Extensions (onClick)') {
         return undefined;
       }
 

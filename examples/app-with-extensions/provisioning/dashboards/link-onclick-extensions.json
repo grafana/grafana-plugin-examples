@@ -18,7 +18,7 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
+    "id": 2,
     "links": [],
     "liveNow": false,
     "panels": [
@@ -76,7 +76,7 @@
           "showHeader": true,
           "showRowNums": false
         },
-        "pluginVersion": "9.5.0-53420pre",
+        "pluginVersion": "9.5.0-53470pre",
         "title": "No extensions",
         "type": "table"
       },
@@ -234,8 +234,8 @@
     },
     "timepicker": {},
     "timezone": "",
-    "title": "Link Extensions",
-    "uid": "d1fbb077-cd44-4738-8c8a-d4e66748b719",
-    "version": 3,
+    "title": "Link Extensions (onClick)",
+    "uid": "dbfb47c5-e5e5-4d28-8ac7-35f349b95946",
+    "version": 2,
     "weekStart": ""
   }
