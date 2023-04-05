@@ -2,7 +2,7 @@
 
 This example queries data from an HTTP API, which returns data in JSON format and then it's converted to data frames.
 
-This differs from the datasource-http example, because the data fetching happens on the backend.
+This differs from the datasource-http example, because the data fetching happens in the plugin backend rather than going through Grafana's datasource HTTP proxy.
 
 This allows to use the data source for alerting as well, as the query are executed on the backend.
 
