@@ -8,21 +8,21 @@ type AppExtensionContext = {};
 
 export class App extends React.PureComponent<AppRootProps> {
   render() {
-    const placement = 'plugins/myorg-extensionpoint-app/actions';
+    const extensionPointId = 'plugins/myorg-extensionpoint-app/actions';
     const context: AppExtensionContext = {};
 
     const { extensions } = getPluginExtensions({
-      placement,
+      extensionPointId,
       context,
     });
 
     return (
-      <div className="page-container" style={{ marginTop: '5%' }}>
-        <HorizontalGroup>
-          <span>Hello Grafana! This is the actions you can trigger from this plugin</span>
-        </HorizontalGroup>
-        <HorizontalGroup>
-          <ActionButton extensions={extensions} />
+      <div style={{ marginTop: '5%' }}>
+        <HorizontalGroup align="flex-start" justify="center">
+          <HorizontalGroup>
+            <span>Hello Grafana! This is the actions you can trigger from this plugin</span>
+            <ActionButton extensions={extensions} />
+          </HorizontalGroup>
         </HorizontalGroup>
       </div>
     );

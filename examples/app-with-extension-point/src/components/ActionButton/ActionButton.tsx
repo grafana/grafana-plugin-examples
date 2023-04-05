@@ -1,70 +1,66 @@
-import { isPluginExtensionCommand, isPluginExtensionLink, PluginExtension } from '@grafana/data';
-import { Button, ButtonGroup, ContextMenu, Menu } from '@grafana/ui';
+import { PluginExtension, PluginExtensionLink, SelectableValue } from '@grafana/data';
+import { isPluginExtensionLink } from '@grafana/runtime';
+import { Button, ButtonGroup, ButtonSelect, ToolbarButton } from '@grafana/ui';
+import { GoToLinkModal } from 'components/GoToLinkModal';
 import { testIds } from 'components/testIds';
-import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+
+import React, { ReactElement, useMemo, useState } from 'react';
 
 type Props = {
   extensions: PluginExtension[];
 };
 
 export function ActionButton(props: Props): ReactElement {
-  const { extensions } = props;
-  const [isOpen, setOpen] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const options = useExtensionsAsOptions(props.extensions);
+  const [extension, setExtension] = useState<PluginExtensionLink | undefined>();
 
-  useEffect(() => {
-    const { current } = buttonRef;
-
-    if (!current) {
-      return;
-    }
-
-    setPosition({
-      x: current.offsetLeft,
-      y: current.offsetTop + 25,
-    });
-  }, []);
-
-  if (extensions.length === 0) {
+  if (options.length === 0) {
     return <Button>Run default action</Button>;
   }
 
   return (
     <>
       <ButtonGroup>
-        <Button>Run default action</Button>
-        <Button data-testid={testIds.actions.button} ref={buttonRef} icon="angle-down" onClick={() => setOpen(true)} />
-      </ButtonGroup>
-      {isOpen && (
-        <ContextMenu
-          focusOnOpen={false}
-          renderMenuItems={renderExtensionMenu(extensions)}
-          x={position.x}
-          y={position.y}
-          onClose={() => setOpen(false)}
+        <ToolbarButton key="default-action" variant="canvas" onClick={() => alert('You triggered the default action')}>
+          Run default action
+        </ToolbarButton>
+        <ButtonSelect
+          data-testid={testIds.actions.button}
+          key="select-extension"
+          variant="canvas"
+          options={options}
+          onChange={(option) => {
+            const extension = option.value;
+
+            if (isPluginExtensionLink(extension)) {
+              if (extension.path) {
+                return setExtension(extension);
+              }
+              if (extension.onClick) {
+                return extension.onClick();
+              }
+            }
+          }}
         />
+      </ButtonGroup>
+      {extension && extension?.path && (
+        <GoToLinkModal title={extension.title} path={extension.path} onDismiss={() => setExtension(undefined)} />
       )}
     </>
   );
 }
 
-function renderExtensionMenu(extensions: PluginExtension[]): () => ReactNode {
-  return function renderMenuItems() {
-    return (
-      <div data-testid={testIds.actions.menu}>
-        {extensions.map((extension) => {
-          if (isPluginExtensionCommand(extension)) {
-            return <Menu.Item key={extension.key} label={extension.title} onClick={extension.callHandlerWithContext} />;
-          }
-
-          if (isPluginExtensionLink(extension)) {
-            return <Menu.Item key={extension.key} label={extension.title} url={extension.path} />;
-          }
-
-          return null;
-        })}
-      </div>
-    );
-  };
+function useExtensionsAsOptions(extensions: PluginExtension[]): Array<SelectableValue<PluginExtension>> {
+  return useMemo(() => {
+    return extensions.reduce((options: Array<SelectableValue<PluginExtension>>, extension) => {
+      if (isPluginExtensionLink(extension)) {
+        options.push({
+          label: extension.title,
+          title: extension.title,
+          value: extension,
+        });
+      }
+      return options;
+    }, []);
+  }, [extensions]);
 }
