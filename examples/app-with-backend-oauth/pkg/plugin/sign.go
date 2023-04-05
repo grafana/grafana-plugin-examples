@@ -12,6 +12,7 @@ Both commands should produce the same results.
 
 import (
 	"crypto"
+	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
@@ -25,12 +26,47 @@ import (
 type Signer interface {
 	// Sign returns raw signature for the given data. This method
 	// will apply the hash specified for the key type to the data.
-	Sign(data []byte) ([]byte, error)
 	SignSHA256(data []byte) ([]byte, error)
 }
 
 type rsaPrivateKey struct {
 	*rsa.PrivateKey
+}
+
+// Sign signs data with rsa-sha256
+func (r *rsaPrivateKey) SignSHA256(data []byte) ([]byte, error) {
+	h := sha256.New()
+	h.Write(data)
+	d := h.Sum(nil)
+	return rsa.SignPKCS1v15(rand.Reader, r.PrivateKey, crypto.SHA256, d)
+}
+
+type ecdsaPrivateKey struct {
+	*ecdsa.PrivateKey
+}
+
+// Sign signs data with rsa-sha256
+func (r *ecdsaPrivateKey) SignSHA256(data []byte) ([]byte, error) {
+	h := sha256.New()
+	h.Write(data)
+	d := h.Sum(nil)
+
+	rr, s, err := ecdsa.Sign(rand.Reader, r.PrivateKey, d)
+	if err != nil {
+		panic(err)
+	}
+
+	keyBytes := 32
+
+	rBytes := rr.Bytes()
+	rBytesPadded := make([]byte, keyBytes)
+	copy(rBytesPadded[keyBytes-len(rBytes):], rBytes)
+
+	sBytes := s.Bytes()
+	sBytesPadded := make([]byte, keyBytes)
+	copy(sBytesPadded[keyBytes-len(sBytes):], sBytes)
+
+	return append(rBytesPadded, sBytesPadded...), nil
 }
 
 func loadPrivateKey(key string) (Signer, error) {
@@ -52,6 +88,12 @@ func ParsePrivateKey(pemBytes []byte) (Signer, error) {
 			return nil, err
 		}
 		rawkey = rsa
+	case "PRIVATE KEY":
+		ecdsa, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if err != nil {
+			return nil, err
+		}
+		rawkey = ecdsa
 	default:
 		return nil, fmt.Errorf("crypto: unsupported private key type %q", block.Type)
 	}
@@ -63,21 +105,10 @@ func newSignerFromKey(k interface{}) (Signer, error) {
 	switch t := k.(type) {
 	case *rsa.PrivateKey:
 		sshKey = &rsaPrivateKey{t}
+	case *ecdsa.PrivateKey:
+		sshKey = &ecdsaPrivateKey{t}
 	default:
 		return nil, fmt.Errorf("crypto: unsupported key type %T", k)
 	}
 	return sshKey, nil
-}
-
-// Signs directly the data
-func (r *rsaPrivateKey) Sign(data []byte) ([]byte, error) {
-	return rsa.SignPKCS1v15(nil, r.PrivateKey, 0, data)
-}
-
-// Sign signs data with rsa-sha256
-func (r *rsaPrivateKey) SignSHA256(data []byte) ([]byte, error) {
-	h := sha256.New()
-	h.Write(data)
-	d := h.Sum(nil)
-	return rsa.SignPKCS1v15(rand.Reader, r.PrivateKey, crypto.SHA256, d)
 }
