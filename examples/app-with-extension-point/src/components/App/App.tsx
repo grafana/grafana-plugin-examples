@@ -21,7 +21,7 @@ export class App extends React.PureComponent<AppRootProps> {
       <div data-testid={testIds.container} style={{ marginTop: '5%' }}>
         <HorizontalGroup align="flex-start" justify="center">
           <HorizontalGroup>
-            <span>Hello Grafana! This is the actions you can trigger from this plugin</span>
+            <span>Hello Grafana! These are the actions you can trigger from this plugin</span>
             <ActionButton extensions={extensions} />
           </HorizontalGroup>
         </HorizontalGroup>
