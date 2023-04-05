@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { locationUtil } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
 import { Button, Modal, VerticalGroup } from '@grafana/ui';
+import { testIds } from 'components/testIds';
 
 type Props = {
   onDismiss: () => void;
@@ -19,7 +20,7 @@ export function GoToLinkModal(props: Props): ReactElement {
   const openInCurrentTab = () => locationService.push(path);
 
   return (
-    <Modal title={title} isOpen onDismiss={onDismiss}>
+    <Modal data-testid={testIds.modal.container} title={title} isOpen onDismiss={onDismiss}>
       <VerticalGroup spacing="sm">
         <p>Do you want to proceed in the current tab or open a new tab?</p>
       </VerticalGroup>
@@ -30,7 +31,7 @@ export function GoToLinkModal(props: Props): ReactElement {
         <Button type="submit" variant="secondary" onClick={openInNewTab} icon="external-link-alt">
           Open in new tab
         </Button>
-        <Button type="submit" variant="primary" onClick={openInCurrentTab} icon="apps">
+        <Button data-testid={testIds.modal.open} type="submit" variant="primary" onClick={openInCurrentTab} icon="apps">
           Open
         </Button>
       </Modal.ButtonRow>
