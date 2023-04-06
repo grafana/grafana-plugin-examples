@@ -42,12 +42,15 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
-	// http clients created with httpclient.New have a middleware stack consisting
-	// of useful generic middlewares such as:
-	//	- TracingMiddleware (spans creates for each outgoing HTTP request)
-	//	- BasicAuthenticationMiddleware
-	//	- CustomHeadersMiddleware
-	//	- ContextualMiddleware
+	// Using httpclient.New without any provided httpclient.Options creates a new HTTP client with a set of
+	// default middlewares (httpclient.DefaultMiddlewares) providing additional built-in functionality, such as:
+	//	- TracingMiddleware (creates spans for each outgoing HTTP request)
+	//	- BasicAuthenticationMiddleware (populates Authorization header if basic authentication been configured via the
+	//		DataSourceHttpSettings component from @grafana/ui)
+	//	- CustomHeadersMiddleware (populates headers if Custom HTTP Headers been configured via the DataSourceHttpSettings
+	//		component from @grafana/ui)
+	//	- ContextualMiddleware (custom middlewares per context.Context, e.g. forwarding HTTP headers based on Allowed cookies
+	//		and Forward OAuth Identity configured via the DataSourceHttpSettings component from @grafana/ui)
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
