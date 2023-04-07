@@ -9,12 +9,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -39,6 +42,15 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
+	// Using httpclient.New without any provided httpclient.Options creates a new HTTP client with a set of
+	// default middlewares (httpclient.DefaultMiddlewares) providing additional built-in functionality, such as:
+	//	- TracingMiddleware (creates spans for each outgoing HTTP request)
+	//	- BasicAuthenticationMiddleware (populates Authorization header if basic authentication been configured via the
+	//		DataSourceHttpSettings component from @grafana/ui)
+	//	- CustomHeadersMiddleware (populates headers if Custom HTTP Headers been configured via the DataSourceHttpSettings
+	//		component from @grafana/ui)
+	//	- ContextualMiddleware (custom middlewares per context.Context, e.g. forwarding HTTP headers based on Allowed cookies
+	//		and Forward OAuth Identity configured via the DataSourceHttpSettings component from @grafana/ui)
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
@@ -47,6 +59,17 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 		settings:   settings,
 		httpClient: cl,
 	}, nil
+}
+
+// DatasourceOpts contains the default ManageOpts for the datasource.
+var DatasourceOpts = datasource.ManageOpts{
+	TracingOpts: tracing.Opts{
+		// Optional custom attributes attached to the tracer's resource.
+		// The tracer will already have some SDK and runtime ones pre-populated.
+		CustomAttributes: []attribute.KeyValue{
+			attribute.String("my_plugin.my_attribute", "custom value"),
+		},
+	},
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
@@ -70,6 +93,11 @@ func (d *Datasource) Dispose() {
 // The QueryDataResponse contains a map of RefID to the response for each query, and each response
 // contains Frames ([]*Frame).
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	// Spans are created automatically for QueryData and all other plugin interface methods.
+	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
+	sctx := trace.SpanContextFromContext(ctx)
+	log.DefaultLogger.Debug("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
+
 	// create response struct
 	response := backend.NewQueryDataResponse()
 
@@ -106,6 +134,23 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
+	// Create spans for this function.
+	// tracing.DefaultTracer() returns the tracer initialized when calling Manage().
+	// Refer to OpenTelemetry's Go SDK to know how to customize your spans.
+	ctx, span := tracing.DefaultTracer().Start(
+		ctx,
+		"query processing",
+		trace.WithAttributes(
+			attribute.String("query.ref_id", query.RefID),
+			attribute.String("query.type", query.QueryType),
+			attribute.Int64("query.max_data_points", query.MaxDataPoints),
+			attribute.Int64("query.interval_ms", query.Interval.Milliseconds()),
+			attribute.Int64("query.time_range.from", query.TimeRange.From.Unix()),
+			attribute.Int64("query.time_range.to", query.TimeRange.To.Unix()),
+		),
+	)
+	defer span.End()
+
 	// Do HTTP request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
@@ -121,7 +166,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		q.Add("multiplier", strconv.Itoa(input.Multiplier))
 		req.URL.RawQuery = q.Encode()
 	}
-	resp, err := d.httpClient.Do(req)
+	httpResp, err := d.httpClient.Do(req)
 	switch {
 	case err == nil:
 		break
@@ -131,21 +176,23 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
 	}
 	defer func() {
-		if err := resp.Body.Close(); err != nil {
+		if err := httpResp.Body.Close(); err != nil {
 			log.DefaultLogger.Error("query: failed to close response body", "err", err)
 		}
 	}()
+	span.AddEvent("HTTP request done")
 
 	// Make sure the response was successful
-	if resp.StatusCode != http.StatusOK {
-		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, resp.StatusCode)
+	if httpResp.StatusCode != http.StatusOK {
+		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, httpResp.StatusCode)
 	}
 
 	// Decode response
 	var body apiMetrics
-	if err := json.NewDecoder(resp.Body).Decode(&body); err != nil {
+	if err := json.NewDecoder(httpResp.Body).Decode(&body); err != nil {
 		return backend.DataResponse{}, fmt.Errorf("%w: decode: %s", errRemoteRequest, err)
 	}
+	span.AddEvent("JSON response decoded")
 
 	// Create slice of values for time and values.
 	times := make([]time.Time, len(body.DataPoints))
@@ -154,9 +201,10 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		times[i] = p.Time
 		values[i] = p.Value
 	}
+	span.AddEvent("Datapoints created")
 
 	// Create frame and add it to the response
-	return backend.DataResponse{
+	dataResp := backend.DataResponse{
 		Frames: []*data.Frame{
 			data.NewFrame(
 				"response",
@@ -164,7 +212,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 				data.NewField("values", nil, values),
 			),
 		},
-	}, nil
+	}
+	span.AddEvent("Frames created")
+	return dataResp, err
 }
 
 // CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return

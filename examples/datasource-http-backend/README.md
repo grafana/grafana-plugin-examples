@@ -1,10 +1,18 @@
 # Grafana Data Source Plugin Template
 
-This example queries data from an HTTP API.
+This example queries data from an HTTP API, which returns data in JSON format and then it's converted to data frames.
 
-This differs from datasource-http, because the data fetching happens on the backend.
+This differs from the datasource-http example, because the data fetching happens in the plugin backend rather than going through Grafana's datasource HTTP proxy.
 
-This allows to use the data source for alerting as well.
+This allows to use the data source for alerting as well, as the query are executed on the backend.
+
+This plugin example also showcases other features and best-practices of backend plugins:
+
+- Using the httpclient provided by the Grafana Plugins SDK
+- Tracing, for better instrumentation of your plugin
+
+This plugin example also includes an example server returning data in the format expected by this plugin (`cmd/server`).
+Refer to the section below on how to build and run it.
 
 ## External service
 
