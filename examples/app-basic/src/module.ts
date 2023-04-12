@@ -1,5 +1,4 @@
 import { AppPlugin } from '@grafana/data';
-import { SampleModal } from './components/SampleModal';
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 
@@ -26,9 +25,9 @@ export const plugin = new AppPlugin<{}>()
   .configureExtensionLink({
     title: 'Go to basic app',
     description: 'Will navigate the user to the basic app',
-    placement: 'grafana/dashboard/panel/menu',
+    extensionPointId: 'grafana/dashboard/panel/menu',
     path: '/a/myorg-basic-app/one',
-    configure: (link: AppPluginLinkExtension, context: PanelContext): Partial<AppPluginLinkExtension> | undefined => {
+    configure: (context: PanelContext): Partial<AppPluginLinkExtension> | undefined => {
       switch (context?.pluginId) {
         case 'timeseries':
           return {
@@ -46,14 +45,14 @@ export const plugin = new AppPlugin<{}>()
           return undefined;
       }
     },
-  })
-  //@ts-ignore
-  .configureExtensionCommand({
-    title: 'Ping the "Basic App"',
-    description: 'Will trigger a command handler in the basic app',
-    placement: 'grafana/dashboard/panel/menu',
-    handler: (context: PanelContext, helpers: any): void => {
-      console.log('COMMAND HANDLER', { helpers, context });
-      helpers.openModal({ title: 'My super cool modal', body: SampleModal });
-    },
   });
+//@ts-ignore
+// .configureExtensionCommand({
+//   title: 'Ping the "Basic App"',
+//   description: 'Will trigger a command handler in the basic app',
+//   placement: 'grafana/dashboard/panel/menu',
+//   handler: (context: PanelContext, helpers: any): void => {
+//     console.log('COMMAND HANDLER', { helpers, context });
+//     helpers.openModal({ title: 'My super cool modal', body: SampleModal });
+//   },
+// });
