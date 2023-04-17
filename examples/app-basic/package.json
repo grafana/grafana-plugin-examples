@@ -64,6 +64,6 @@
     "@grafana/schema": "9.2.1",
     "@grafana/ui": "9.2.1",
     "@types/lodash": "latest",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^6.10.0"
   }
 }

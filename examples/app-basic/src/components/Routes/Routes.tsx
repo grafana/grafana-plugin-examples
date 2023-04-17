@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes as ReactRoutes } from 'react-router-dom';
 import { PageOne } from '../../pages/PageOne';
 import { PageTwo } from '../../pages/PageTwo';
 import { PageThree } from '../../pages/PageThree';
 import { PageFour } from '../../pages/PageFour';
-import { useNavigation, prefixRoute } from '../../utils/utils.routing';
+import { useNavigation } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 
 export const Routes = () => {
   useNavigation();
 
   return (
-    <Switch>
-      <Route exact path={prefixRoute(ROUTES.Two)} component={PageTwo} />
-      <Route exact path={prefixRoute(`${ROUTES.Three}/:id?`)} component={PageThree} />
-
-      {/* Full-width page (this page will have no navigation bar) */}
-      <Route exact path={prefixRoute(ROUTES.Four)} component={PageFour} />
-
+    // HEADS UP! We don't need a <BrowserRouter> here, as the core Grafana app already has a router.
+    <ReactRoutes>
+      {/* HEADS UP! We can use relative paths here now. */}
+      <Route path={ROUTES.One} element={<PageOne />} />
+      <Route path={ROUTES.Two} element={<PageTwo />} />
+      <Route path={`${ROUTES.Three}/:id?`} element={<PageThree />} />
+      <Route path={ROUTES.Four} element={<PageFour />} /> {/* Full-width page example */}
       {/* Default page */}
-      <Route component={PageOne} />
-    </Switch>
+      <Route path="*" element={<PageOne />} />
+    </ReactRoutes>
   );
 };
