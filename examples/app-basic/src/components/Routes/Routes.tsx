@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { PageOne } from '../../pages/PageOne';
 import { PageTwo } from '../../pages/PageTwo';
 import { PageThree } from '../../pages/PageThree';
@@ -12,11 +12,15 @@ export const Routes = () => {
 
   return (
     <Switch>
+      <Route exact path={prefixRoute(ROUTES.One)} component={PageOne} />
       <Route exact path={prefixRoute(ROUTES.Two)} component={PageTwo} />
       <Route exact path={prefixRoute(`${ROUTES.Three}/:id?`)} component={PageThree} />
 
       {/* Full-width page (this page will have no navigation bar) */}
       <Route exact path={prefixRoute(ROUTES.Four)} component={PageFour} />
+
+      {/* TEST! - Redirect inside a Switch */}
+      <Redirect to={'/connections/connect-data'} />
 
       {/* Default page */}
       <Route component={PageOne} />

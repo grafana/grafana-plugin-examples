@@ -13,7 +13,14 @@ export const PageOne = () => {
     <div data-testid={testIds.pageOne.container}>
       This is page one.
       <div className={s.marginTop}>
-        <LinkButton data-testid={testIds.pageOne.navigateToFour} href={prefixRoute(ROUTES.Four)}>Full-width page example</LinkButton>
+        <LinkButton data-testid={testIds.pageOne.navigateToFour} href={prefixRoute(ROUTES.Four)}>
+          Full-width page example
+        </LinkButton>
+
+        {/* TEST! (Link to a non-existing route) */}
+        <LinkButton href={prefixRoute('non-existing')} className={s.marginLeft}>
+          404 route
+        </LinkButton>
       </div>
     </div>
   );
@@ -22,5 +29,8 @@ export const PageOne = () => {
 const getStyles = (theme: GrafanaTheme2) => ({
   marginTop: css`
     margin-top: ${theme.spacing(2)};
+  `,
+  marginLeft: css`
+    margin-left: ${theme.spacing(2)};
   `,
 });
