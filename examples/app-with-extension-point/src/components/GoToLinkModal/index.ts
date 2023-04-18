@@ -1,0 +1,1 @@
+export { GoToLinkModal } from './GoToLinkModal';
