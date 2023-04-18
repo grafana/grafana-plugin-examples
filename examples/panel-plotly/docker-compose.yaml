@@ -3,12 +3,12 @@ version: '3.0'
 services:
   grafana:
     container_name: 'example'
-    build: 
+    build:
       context: ./.config
       args:
         grafana_version: ${GRAFANA_VERSION:-9.1.2}
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/example,
+      - ./dist:/var/lib/grafana/plugins/example
       - ./provisioning:/etc/grafana/provisioning

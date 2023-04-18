@@ -10,5 +10,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/basic-datasource,
+      - ./dist:/var/lib/grafana/plugins/basic-datasource
       - ./provisioning:/etc/grafana/provisioning
