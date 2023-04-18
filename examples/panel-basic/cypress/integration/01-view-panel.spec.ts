@@ -1,4 +1,8 @@
 import { e2e } from '@grafana/e2e';
+import { testIds } from '../../src/components/testIds';
+
+const { panel } = e2e.getSelectors(testIds);
+const title = 'Basic Panel';
 
 describe('viewing a panel with time series data', () => {
   beforeEach(() => {
@@ -12,12 +16,7 @@ describe('viewing a panel with time series data', () => {
   });
 
   it('should display a good looking graph', () => {
-    const panel = 'Basic Panel';
-
-    e2e.components.Panels.Panel.containerByTitle(panel)
-      .should('be.visible')
-      .find('.panel-content')
-      .find('[data-testid="basic-panel-example"]')
-      .should('be.visible');
+    e2e.components.Panels.Panel.title(title).should('be.visible');
+    panel.container().should('be.visible');
   });
 });
