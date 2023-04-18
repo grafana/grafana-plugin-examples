@@ -8,11 +8,11 @@ This example demonstrates how to add a plugin extension point that can be extend
 
 | **Example**                                                      | **Source**       |
 | ---------------------------------------------------------------- | ---------------- |
-| [How to add an extension point?](#how-to-add-an-extension-point) | [App.tsx#L12-18] |
+| [How to add an extension point?](#how-to-add-an-extension-point) | [`App.ts#L12-18`](./src/components/App/App.tsx#L12-18) |
 
 ### How to add an extension point?
 
-**Example:** [App.tsx#L12-18]
+**Example:** [`App.ts#L12-18`](./src/components/App/App.tsx#L12-18)
 
 The first thing you need to do is to define a id for your extension point. Each extension point needs an unique identifier that other plugins can reference when adding extensions. It should be in the following format: `plugins/<your-plugin-id>/<extension-name>`, where:
 
