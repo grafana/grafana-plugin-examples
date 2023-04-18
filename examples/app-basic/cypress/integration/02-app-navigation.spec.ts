@@ -7,7 +7,7 @@ const headerTitle = 'Basic App Plugin';
 
 describe('navigating app', () => {
   beforeEach(() => {
-    cy.visit(`http://localhost:3000/a/${pluginJson.id}/one`);    
+    cy.visit(`http://localhost:3000/a/${pluginJson.id}/one`);
   });
 
   it('should render page one successfully', () => {
@@ -20,7 +20,7 @@ describe('navigating app', () => {
     // wait for page to successfully render
     pageOne.container().should('be.visible');
     cy.get('h1').contains(headerTitle).should('be.visible');
-    
+
     // navigating to page four with full width layout
     pageOne.navigateToFour().click();
     cy.get('body').find('h1').should('not.exist');
@@ -34,9 +34,9 @@ describe('navigating app', () => {
     // wait for page to successfully render
     pageOne.container().should('be.visible');
     cy.get('h1').contains(headerTitle).should('be.visible');
-    
+
     // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Two').click();
+    e2e.components.Tab.title('Page Two').first().click();
     pageTwo.container().should('be.visible');
   });
 
@@ -44,9 +44,9 @@ describe('navigating app', () => {
     // wait for page to successfully render
     pageOne.container().should('be.visible');
     cy.get('h1').contains(headerTitle).should('be.visible');
-    
+
     // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Three').click();
+    e2e.components.Tab.title('Page Three').first().click();
     pageThree.container().should('be.visible');
   });
 });
