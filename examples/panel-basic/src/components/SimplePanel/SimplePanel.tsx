@@ -2,6 +2,7 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin } from '@grafana/ui';
 import { SimpleOptions } from '../../types';
+import { testIds } from '../testIds';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -18,7 +19,7 @@ export function SimplePanel({
   console.log('Panel rendered. ✔️');
 
   return (
-    <div data-testid="basic-panel-example">
+    <div data-testid={testIds.panel.container}>
       <div>
         <strong>Variable: </strong>
         {replaceVariables('"$myVariable"')}
