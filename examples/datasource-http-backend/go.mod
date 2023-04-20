@@ -1,6 +1,6 @@
 module github.com/grafana/datasource-http-backend
 
-go 1.19
+go 1.20
 
 require (
 	github.com/grafana/grafana-plugin-sdk-go v0.157.0
