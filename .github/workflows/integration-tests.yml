@@ -12,12 +12,31 @@ jobs:
     timeout-minutes: 30
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
+      canaryVersion: ${{ steps.npm-canary-version.outputs.version }}
+      canaryDockerTag: ${{ steps.docker-canary-tag.outputs.result }}
+      latestVersion: ${{ steps.npm-latest-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup plugin dir variable
         id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+      - name: Setup NPM canary version variable
+        id: npm-canary-version
+        run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
+      - name: Setup docker canary tag variable
+        id: docker-canary-tag
+        uses: actions/github-script@v6
+        env:
+          INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
+        with:
+          result-encoding: string
+          script: |
+            const script = require('./.github/workflows/scripts/npm-to-docker-image.js');
+            return await script({ core });
+      - name: Setup NPM latest version variable
+        id: npm-latest-version
+        run: echo "version=$(npm view @grafana/ui dist-tags.latest)" >> $GITHUB_OUTPUT
 
   run-integration-tests:
     needs: setup-matrix
@@ -80,8 +99,9 @@ jobs:
         run: |
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
-          echo "CANARY_VERSION=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_ENV
-          echo "LATEST_STABLE_VERSION=$(npm view @grafana/ui dist-tags.latest)" >> $GITHUB_ENV
+          echo "CANARY_VERSION=${{ needs.setup-matrix.outputs.canaryVersion }}" >> $GITHUB_ENV
+          echo "CANARY_DOCKER_TAG=${{ needs.setup-matrix.outputs.canaryDockerTag }}" >> $GITHUB_ENV
+          echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
@@ -202,21 +222,10 @@ jobs:
           workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      - name: Find docker image to use for grafana canary version
-        id: npm-to-docker-image
-        uses: actions/github-script@v6
-        env:
-          INPUT_NPM-TAG: ${{ env.CANARY_VERSION }}
-        with:
-          result-encoding: string
-          script: |
-            const script = require('./.github/workflows/scripts/npm-to-docker-image.js');
-            return await script({ core });
-
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:${{ steps.npm-to-docker-image.outputs.result }}
+          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana
