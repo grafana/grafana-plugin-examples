@@ -14,6 +14,7 @@ jobs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
       canaryVersion: ${{ steps.npm-canary-version.outputs.version }}
       canaryDockerTag: ${{ steps.docker-canary-tag.outputs.result }}
+      latestVersion: ${{ steps.npm-latest-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -33,6 +34,9 @@ jobs:
           script: |
             const script = require('./.github/workflows/scripts/npm-to-docker-image.js');
             return await script({ core });
+      - name: Setup NPM latest version variable
+        id: npm-latest-version
+        run: echo "version=$(npm view @grafana/ui dist-tags.latest)" >> $GITHUB_OUTPUT
 
   run-integration-tests:
     needs: setup-matrix
@@ -97,7 +101,7 @@ jobs:
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
           echo "CANARY_VERSION=${{ needs.setup-matrix.outputs.canaryVersion }}" >> $GITHUB_ENV
           echo "CANARY_DOCKER_TAG=${{ needs.setup-matrix.outputs.canaryDockerTag }}" >> $GITHUB_ENV
-          echo "LATEST_STABLE_VERSION=$(npm view @grafana/ui dist-tags.latest)" >> $GITHUB_ENV
+          echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
