@@ -1,7 +1,6 @@
 import { NavModelItem } from '@grafana/data';
 import pluginJson from './plugin.json';
 
-
 export const PLUGIN_BASE_URL = `/a/${pluginJson.id}`;
 
 export enum ROUTES {
@@ -11,7 +10,7 @@ export enum ROUTES {
   Four = 'four',
 }
 
-export const NAVIGATION_TITLE = 'Basic App Plugin';
+export const NAVIGATION_TITLE = 'Basic App Plugin (React Router v5)';
 export const NAVIGATION_SUBTITLE = 'Some extra description...';
 
 // Add a navigation item for each route you would like to display in the navigation bar
