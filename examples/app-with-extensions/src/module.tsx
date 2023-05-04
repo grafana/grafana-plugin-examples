@@ -46,10 +46,7 @@ export const plugin = new AppPlugin<{}>()
       const targets = context?.targets;
       const title = context?.title;
 
-      //@ts-ignore
-      console.log(context.target);
-
-      if (!Array.isArray(targets)) {
+      if (!Array.isArray(targets) || targets.length === 0) {
         return;
       }
 
@@ -67,6 +64,10 @@ export const plugin = new AppPlugin<{}>()
       // Will only be visible for the Command Extensions dashboard
       if (context?.dashboard?.title !== 'Link Extensions (onClick)') {
         return undefined;
+      }
+
+      if (!Array.isArray(context?.targets) || context?.targets.length === 0) {
+        return;
       }
 
       switch (context?.pluginId) {
