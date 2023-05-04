@@ -43,10 +43,25 @@ export const plugin = new AppPlugin<{}>()
     description: 'This link will only be visible on time series and pie charts',
     extensionPointId: PluginExtensionPoints.DashboardPanelMenu,
     onClick: (_, { openModal, context }) => {
-      openModal({
-        title: 'Modal opened from onClick',
-        body: () => <Modal panelTitle={context?.title} />,
-      });
+      const targets = context?.targets;
+      const title = context?.title;
+
+      //@ts-ignore
+      console.log(context.target);
+
+      if (!Array.isArray(targets)) {
+        return;
+      }
+
+      if (targets.length > 1) {
+        return openModal({
+          title: 'Modal opened from onClick',
+          body: () => <Modal panelTitle={title} targets={targets} />,
+        });
+      }
+
+      const [target] = targets;
+      console.log('One query in panel', { target });
     },
     configure: (context) => {
       // Will only be visible for the Command Extensions dashboard
