@@ -27,7 +27,6 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 | [How to add custom configuration values to your app?](#how-to-add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                        |
 | [How to add configuration options for setting secrets?](#how-to-add-configuration-options-for-setting-secrets)     | [AppConfig.tsx]                        |
 | [How to update the plugin settings using the API?](#how-to-update-the-plugin-settings-using-the-api)               | [AppConfig.tsx]                        |
-| [How to access the saved secrets (proxying requests)?](#how-to-access-the-saved-secrets-proxying-requests)         | [plugin.json]                          |
 
 ### How to enable the tab navigation bar?
 
@@ -35,7 +34,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 ![Navigation Bar](screenshots/screenshot-nav-bar.png)
 
-You can enable the tab navigation bar for your app plugin by passing a "nav-model" the `onNavChanged()` function that is passed in as a prop to your root App component.
+You can enable the tab navigation bar for your app plugin by passing a "nav-model" to the `onNavChanged()` function that is passed in as a prop to your root App component.
 If you don't want to get too much into the details you can just edit `NAVIGATION` object in [constants.ts#L17].
 
 **Setting the tabs in [constants.ts#L17]**
@@ -59,7 +58,7 @@ export const NAVIGATION: Record<string, NavItem> = {
 
 **Example:** [Routes.tsx], [constants.ts#L6]
 
-Grafana (and the app plugins are no exception) is using [React Router](https://reactrouter.com/). In order to register a new route based on our examples just add a new route constant in [constants.ts#L6] and use it in the [Routes.tsx].
+Grafana (and app plugins are no exception) is using [React Router](https://reactrouter.com/). In order to register a new route based on our examples just add a new route constant in [constants.ts#L6] and use it in the [Routes.tsx].
 
 ---
 
@@ -215,7 +214,7 @@ Below you can find source code for existing app plugins and other related docume
 - [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
 
 <!-- prettier-ignore-start -->
-[utils.routing.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L29
+[utils.routing.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L30
 [Routes.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L17
 [PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageThree/PageThree.tsx#L10
 [PageFour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L22
