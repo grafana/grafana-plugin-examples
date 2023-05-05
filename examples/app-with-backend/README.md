@@ -12,14 +12,14 @@ This plugin demonstrates how to use `CallResource`, which can be used to run cus
 
 ## Guides in this example
 
-| **Example**                                                           | **Source** |
-| --------------------------------------------------------------------- | ---------- |
-| How CallResource works                                                | TODO       |
-| How to define a custom HTTP CallResource handler for a backend plugin | TODO       |
-| How to define multiple HTTP routes in a CallResource handler          | TODO       |
-| How to call an HTTP CallResource handler from the frontend            | TODO       |
+| **Example**                                                                                                                                     | **Source** |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| [CallResource](#callresource)                                                                                                                   | TODO       |
+| [How to define a custom HTTP CallResource handler for a backend plugin](#how-to-define-a-custom-http-callresource-handler-for-a-backend-plugin) | TODO       |
+| [How to define multiple HTTP routes in a CallResource handler](#how-to-define-multiple-http-routes-in-a-callresource-handler)                   | TODO       |
+| [How to call an HTTP CallResource handler from the frontend](#how-to-call-an-http-callresource-handler-from-the-frontend)                       | TODO       |
 
-### How CallResource works
+### CallResource
 
 **Example:** [app.go](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/pkg/plugin/app.go#L35)
 
