@@ -1,77 +1,90 @@
-# Grafana App Plugin Template
+# Grafana App with Dashboards Template
 
-This template is a starting point for building an app plugin for Grafana.
+This template showcases how to bundle dashboards into an app plugin.
 
-## What are Grafana app plugins?
+## Guides in this example
 
-App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins.
+| **Example**                                                             | **Source**                                                          |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [How to bundle a dashboard](#how-to-bundle-a-dashboard)                 | [plugin.json], [example-dashboard1.json], [example-dashboard2.json] |
+| [How to access a bundled dashboard](#how-to-access-a-bundled-dashboard) | [App.tsx]                                                           |
 
-## Getting started
+### How to bundle a dashboard
 
-### Frontend
+**Examples**: [plugin.json], [example-dashboard1.json], [example-dashboard2.json]
 
-1. Install dependencies
+To bundle a dashboard in an app plugin:
 
-   ```bash
-   yarn install
-   ```
+1. Place the dashboard's JSON file inside `src/dashboards`.
+2. Define it in `plugin.json` inside `includes` as `"type": "dashboard"`:
 
-2. Build plugin in development mode or run in watch mode
+```json
+"includes": [
+    {
+      "type": "dashboard",
+      "name": "Example dashboard 1",
+      "path": "dashboards/example-dashboard1.json",
+      "role": "Admin",
+      "addToNav": true,
+      "uid": "Av57mRHVz"
+    },
+    {
+      "type": "dashboard",
+      "name": "Example dashboard 2",
+      "path": "dashboards/example-dashboard2.json",
+      "role": "Admin",
+      "addToNav": true,
+      "uid": "ND1Bfw3VcNGg"
+    }
+  ],
+```
 
-   ```bash
-   yarn dev
+### How to access a bundled dashboard
 
-   # or
+**Examples**: [App.tsx]
 
-   yarn watch
-   ```
+Bundled dashboards can be accessed by their ID.
 
-3. Build plugin in production mode
+This plugin example includes two links in `App.tsx`, which will redirect the browser to the bundled dashboards when clicked:
 
-   ```bash
-   yarn build
-   ```
+**example-dashboard1.json**
 
-4. Run the tests (using Jest)
+```json
+{
+  // ...
+  "uid": "Av57mRHVz" // <--
+  // ...
+}
+```
 
-   ```bash
-   # Runs the tests and watches for changes
-   yarn test
+**plugin.json**
 
-   # Exists after running all the tests
-   yarn lint:ci
-   ```
+```json
+{
+  "type": "dashboard",
+  "name": "Example dashboard 1",
+  "path": "dashboards/example-dashboard1.json",
+  "role": "Admin",
+  "addToNav": true,
+  "uid": "Av57mRHVz" // <--
+},
+```
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+**App.tsx**
 
-   ```bash
-   yarn server
-   ```
-
-6. Run the E2E tests (using Cypress)
-
-   ```bash
-   # Spin up a Grafana instance first that we tests against
-   yarn server
-
-   # Start the tests
-   yarn e2e
-   ```
-
-7. Run the linter
-
-   ```bash
-   yarn lint
-
-   # or
-
-   yarn lint:fix
-   ```
+```html
+<a href="/d/Av57mRHVz"> Example dashboard 1 </a>
+```
 
 ## Learn more
 
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+
+<!-- prettier-ignore-start -->
+[plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-dashboards/src/plugin.json
+[example-dashboard1.json]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-dashboards/src/dashboards/example-dashboard1.json
+[example-dashboard2.json]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-dashboards/src/dashboards/example-dashboard2.json
+[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-dashboards/src/components/App/App.tsx#L15-L17
+<!-- prettier-ignore-end -->
