@@ -4,95 +4,130 @@ This template is a starting point for building an app plugin for Grafana. It inc
 
 ## What are Grafana app plugins?
 
-App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins. A backend allows it to perform a variety of additional tasks, like handling incoming HTTP requests.
+App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins.
 
-## Getting started
+A backend allows it to perform a variety of additional tasks, like handling incoming HTTP requests.
 
-### Frontend
+This plugin demonstrates how to use `CallResource`, which can be used to run custom logic and return a HTTP JSON response to Grafana. This response can then be consumed on the frontend.
 
-1. Install dependencies
+## Guides in this example
 
-   ```bash
-   yarn install
-   ```
+| **Example**                                                           | **Source** |
+| --------------------------------------------------------------------- | ---------- |
+| How CallResource works                                                | TODO       |
+| How to define a custom HTTP CallResource handler for a backend plugin | TODO       |
+| How to define multiple HTTP routes in a CallResource handler          | TODO       |
+| How to call an HTTP CallResource handler from the frontend            | TODO       |
 
-2. Build plugin in development mode or run in watch mode
+### How CallResource works
 
-   ```bash
-   yarn dev
+**Example:** [app.go](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/pkg/plugin/app.go#L35)
 
-   # or
+Your backend app must implement the `backend.CallResourceHandler` interface:
 
-   yarn watch
-   ```
+```go
+type CallResourceHandler interface {
+	CallResource(ctx context.Context, req *CallResourceRequest, sender CallResourceResponseSender) error
+}
+```
 
-3. Build plugin in production mode
+This can be used to return a "resource" from the backend to the frontend.
 
-   ```bash
-   yarn build
-   ```
+`CallResource` is often used to implement an HTTP-like server in a backend plugin, which can be easily called and consumed from the frontend.
 
-4. Run the tests (using Jest)
+The Grafana Plugins SDK for Go provides an adapter to make `CallResource` act like an HTTP server. More details below.
 
-   ```bash
-   # Runs the tests and watches for changes
-   yarn test
-   
-   # Exists after running all the tests
-   yarn lint:ci
-   ```
+### How to define a custom HTTP CallResource handler for a backend plugin
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+**Example:** [app.go](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/pkg/plugin/app.go#L35)
 
-   ```bash
-   yarn server
-   ```
+The Grafana Plugins SDK for Go provides `httpadapter.New` to adapt an `http.Handler` to a `backend.CallResourceHandler`.
 
-6. Run the E2E tests (using Cypress)
+```go
+type App struct {
+   backend.CallResourceHandler
+}
 
-   ```bash
-   # Spin up a Grafana instance first that we tests against 
-   yarn server
-   
-   # Start the tests
-   yarn e2e
-   ```
+func NewApp(_ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+   var app App
 
-7. Run the linter
+   // ...
+   app.CallResourceHandler = httpadapter.New(stdHttpHandler)
+   // ...
 
-   ```bash
-   yarn lint
-   
-   # or
+   return app, nil
+}
+```
 
-   yarn lint:fix
-   ```
+### How to define multiple HTTP routes in a CallResource handler
 
-### Backend
+**Example:** [app.go](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/pkg/plugin/app.go#L34), [resources.go](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/pkg/plugin/resources.go)
 
-1. Update [Grafana plugin SDK for Go](https://grafana.com/docs/grafana/latest/developers/plugins/backend/grafana-plugin-sdk-for-go/) dependency to the latest minor version:
+A plugin can only have one `backend.CallResourceHandler` implementation (one handler). If your app needs more than one handler (e.g.: `/a`, `/b`, `/c`), you need to use a mux (also known as "router") instead.
 
-   ```bash
-   go get -u github.com/grafana/grafana-plugin-sdk-go
-   go mod tidy
-   ```
+`http.ServeMux` from the Go standard library implements `http.Handler`, and it's accepted by `httpadapter.New`.
 
-2. Build backend plugin binaries for Linux, Windows and Darwin:
+Combined with the mux, this allows you to easily define multiple HTTP handlers as functions:
 
-   ```bash
-   mage -v
-   ```
+```go
+func handleSomething(w http.ResponseWriter, req *http.Request) {
+   // handle the request
+}
 
-3. List all available Mage targets for additional commands:
+func handleSomethingElse(w http.ResponseWriter, req *http.Request) {
+   // handle the request
+}
 
-   ```bash
-   mage -l
-   ```
+func NewApp(_ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+   var app App
+
+   // ...
+   mux := http.NewServeMux()
+
+   mux.HandleFunc("/something", handleSomething)
+   mux.HandleFunc("/something_else", handleSomethingElse)
+
+   app.CallResourceHandler = httpadapter.New(mux)
+   // ...
+
+   return app, nil
+}
+
+```
+
+### How to call an HTTP CallResource handler from the frontend
+
+**Example:** [PageOne.tsx](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-with-backend/src/pages/PageOne/PageOne.tsx#L12)
+
+The routes are available under `api/plugins/PLUGIN_ID/resources/ROUTE`.
+
+Those can be retrieved through `getBackendSrv().get()`, `getBackendSrv().post()`, etc.
+
+```typescript
+const { error, loading, value } = useAsync(() => {
+  const backendSrv = getBackendSrv();
+
+  return Promise.all([
+    backendSrv.get(`api/plugins/myorg-withbackend-app/resources/something`),
+    backendSrv.get(
+      `api/plugins/myorg-withbackend-app/resources/something_else`
+    ),
+  ]);
+});
+
+// Loading, error handling, etc...
+
+// If the handler returns a JSON response, it's possible to get it like so:
+const [something, somethingElse] = value;
+const jsonMessage = something?.message;
+
+return (
+  <HorizontalGroup>
+    <h3>Ping Backend</h3> <span>{jsonMessage}</span>
+  </HorizontalGroup>
+);
+```
 
 ## Learn more
 
-Below you can find source code for existing app plugins and other related documentation.
-
-- [All plugin examples](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+TODO
