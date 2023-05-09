@@ -1,16 +1,30 @@
+import React from 'react';
 import { AppPlugin } from '@grafana/data';
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
+import { CustomDSConfig, JsonData } from './components/CustomDSConfig';
 
 type PanelContext = {
   title: string;
   pluginId: string;
 };
 
-type AppPluginLinkExtension = {
+type DataSourceSettingsContext = {
+  pluginId: string;
+  jsonData: Record<string, unknown>;
+  onUpdateJsonData: (jsonData: JsonData) => void;
+};
+
+type PluginExtensionLink = {
   title: string;
   description: string;
   path: string;
+};
+
+type PluginExtensionElement = {
+  title: string;
+  description: string;
+  element: React.ReactNode;
 };
 
 export const plugin = new AppPlugin<{}>()
@@ -27,7 +41,7 @@ export const plugin = new AppPlugin<{}>()
     description: 'Will navigate the user to the basic app',
     extensionPointId: 'grafana/dashboard/panel/menu',
     path: '/a/myorg-basic-app/one',
-    configure: (context: PanelContext): Partial<AppPluginLinkExtension> | undefined => {
+    configure: (context: PanelContext): Partial<PluginExtensionLink> | undefined => {
       switch (context?.pluginId) {
         case 'timeseries':
           return {
@@ -45,7 +59,23 @@ export const plugin = new AppPlugin<{}>()
           return undefined;
       }
     },
+  })
+  .configureExtensionElement({
+    title: 'Custom DS Config',
+    description: 'This will extend every datasource configuration',
+    extensionPointId: 'grafana/datasources/config',
+    element: <CustomDSConfig jsonData={{}} onUpdateJsonData={() => {}} />,
+    configure: (context?: DataSourceSettingsContext): Partial<PluginExtensionElement> | undefined => {
+      if (context?.pluginId?.includes('prometheus')) {
+        console.log('APP_BASIC: This is a Prometheus datasource.');
+      }
+
+      return {
+        element: <CustomDSConfig jsonData={context?.jsonData || {}} onUpdateJsonData={context?.onUpdateJsonData} />,
+      };
+    },
   });
+
 //@ts-ignore
 // .configureExtensionCommand({
 //   title: 'Ping the "Basic App"',
