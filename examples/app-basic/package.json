@@ -51,9 +51,6 @@
     "webpack-cli": "^4.9.2",
     "webpack-livereload-plugin": "^3.0.2"
   },
-  "resolutions": {
-    "rxjs": "7.3.0"
-  },
   "engines": {
     "node": ">=16"
   },
@@ -64,6 +61,7 @@
     "@grafana/schema": "9.2.1",
     "@grafana/ui": "9.2.1",
     "@types/lodash": "latest",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "rxjs": "7.5.6"
   }
 }
