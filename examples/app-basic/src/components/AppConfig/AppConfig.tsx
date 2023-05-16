@@ -106,7 +106,7 @@ export const AppConfig = ({ plugin }: Props) => {
             width={60}
             data-testid={testIds.appConfig.apiKey}
             id="api-key"
-            value={state?.apiKey}
+            value={state.apiKey}
             isConfigured={state.isApiKeySet}
             placeholder={'Your secret API key'}
             onChange={onChangeApiKey}
@@ -121,7 +121,7 @@ export const AppConfig = ({ plugin }: Props) => {
             id="api-url"
             data-testid={testIds.appConfig.apiUrl}
             label={`API Url`}
-            value={state?.apiUrl}
+            value={state.apiUrl}
             placeholder={`E.g.: http://mywebsite.com/api/v1`}
             onChange={onChangeApiUrl}
           />
