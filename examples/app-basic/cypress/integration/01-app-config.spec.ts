@@ -6,7 +6,7 @@ const { appConfig } = e2e.getSelectors(testIds);
 
 describe('configurating app', () => {
   beforeEach(() => {
-    cy.visit(`http://localhost:3000/plugins/${pluginJson.id}`);    
+    cy.visit(`http://localhost:3000/plugins/${pluginJson.id}`);
   });
 
   it('should be successfully configured', () => {
@@ -18,10 +18,12 @@ describe('configurating app', () => {
 
     // enter some configuration values
     appConfig.apiKey().type('secret-api-key');
+    appConfig.apiUrl().clear();
     appConfig.apiUrl().type('http://www.my-awsome-grafana-app.com/api');
     appConfig.submit().click();
 
     // make sure it got updated successfully
-    e2e.flows.assertSuccessNotification();
+    appConfig.apiKey().should('have.value', 'configured');
+    appConfig.apiUrl().should('have.value', 'http://www.my-awsome-grafana-app.com/api');
   });
 });
