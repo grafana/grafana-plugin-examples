@@ -3,7 +3,8 @@ import { AppPlugin, PluginExtensionPoints, PluginExtensionPanelContext } from '@
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 import pluginJson from 'plugin.json';
-import { Modal } from 'components/Modal';
+import { QueryModal } from 'components/QueryModal';
+import { selectQuery } from 'utils';
 
 export const plugin = new AppPlugin<{}>()
   .setRootPage(App)
@@ -43,15 +44,33 @@ export const plugin = new AppPlugin<{}>()
     description: 'This link will only be visible on time series and pie charts',
     extensionPointId: PluginExtensionPoints.DashboardPanelMenu,
     onClick: (_, { openModal, context }) => {
-      openModal({
-        title: 'Modal opened from onClick',
-        body: () => <Modal panelTitle={context?.title} />,
-      });
+      const targets = context?.targets ?? [];
+      const title = context?.title;
+
+      if (!isSupported(context)) {
+        return;
+      }
+
+      // Show a modal to display a UI for selecting between the available queries (targets)
+      // in case there are more available.
+      if (targets.length > 1) {
+        return openModal({
+          title: `Select query from "${title}"`,
+          body: (props) => <QueryModal {...props} targets={targets} />,
+        });
+      }
+
+      const [target] = targets;
+      selectQuery(target);
     },
     configure: (context) => {
       // Will only be visible for the Command Extensions dashboard
       if (context?.dashboard?.title !== 'Link Extensions (onClick)') {
         return undefined;
+      }
+
+      if (!isSupported(context)) {
+        return;
       }
 
       switch (context?.pluginId) {
@@ -68,3 +87,8 @@ export const plugin = new AppPlugin<{}>()
       }
     },
   });
+
+function isSupported(context?: PluginExtensionPanelContext): boolean {
+  const targets = context?.targets ?? [];
+  return targets.length > 0;
+}
