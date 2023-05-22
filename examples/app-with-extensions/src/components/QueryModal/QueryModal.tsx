@@ -30,7 +30,13 @@ export function QueryModal(props: Props): ReactElement {
         <Button variant="secondary" fill="outline" onClick={onDismiss}>
           Cancel
         </Button>
-        <Button disabled={!Boolean(selected)} onClick={() => selectQuery(selected)}>
+        <Button
+          disabled={!Boolean(selected)}
+          onClick={() => {
+            onDismiss?.();
+            selectQuery(selected);
+          }}
+        >
           OK
         </Button>
       </Modal.ButtonRow>
