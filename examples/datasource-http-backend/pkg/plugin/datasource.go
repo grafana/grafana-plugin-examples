@@ -42,6 +42,11 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
+
+	// Uncomment the following to forward all HTTP headers in the requests made by the client
+	// (disabled by default since SDK v0.161.0)
+	// opts.ForwardHTTPHeaders = true
+
 	// Using httpclient.New without any provided httpclient.Options creates a new HTTP client with a set of
 	// default middlewares (httpclient.DefaultMiddlewares) providing additional built-in functionality, such as:
 	//	- TracingMiddleware (creates spans for each outgoing HTTP request)
@@ -49,8 +54,7 @@ func NewDatasource(settings backend.DataSourceInstanceSettings) (instancemgmt.In
 	//		DataSourceHttpSettings component from @grafana/ui)
 	//	- CustomHeadersMiddleware (populates headers if Custom HTTP Headers been configured via the DataSourceHttpSettings
 	//		component from @grafana/ui)
-	//	- ContextualMiddleware (custom middlewares per context.Context, e.g. forwarding HTTP headers based on Allowed cookies
-	//		and Forward OAuth Identity configured via the DataSourceHttpSettings component from @grafana/ui)
+	//	- ContextualMiddleware (custom middlewares per context.Context, see httpclient.WithContextualMiddleware)
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)

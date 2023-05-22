@@ -1,9 +1,9 @@
 import React, { useState, ChangeEvent } from 'react';
-import { Button, Field, Input, useStyles2, FieldSet } from '@grafana/ui';
-import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
-import { getBackendSrv, locationService } from '@grafana/runtime';
+import { lastValueFrom } from 'rxjs';
 import { css } from '@emotion/css';
-import { SecretInput } from '../SecretInput';
+import { Button, Field, Input, useStyles2, FieldSet, SecretInput } from '@grafana/ui';
+import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
+import { getBackendSrv } from '@grafana/runtime';
 import { testIds } from '../testIds';
 
 export type JsonData = {
@@ -106,7 +106,7 @@ export const AppConfig = ({ plugin }: Props) => {
             width={60}
             data-testid={testIds.appConfig.apiKey}
             id="api-key"
-            value={state?.apiKey}
+            value={state.apiKey}
             isConfigured={state.isApiKeySet}
             placeholder={'Your secret API key'}
             onChange={onChangeApiKey}
@@ -121,7 +121,7 @@ export const AppConfig = ({ plugin }: Props) => {
             id="api-url"
             data-testid={testIds.appConfig.apiUrl}
             label={`API Url`}
-            value={state?.apiUrl}
+            value={state.apiUrl}
             placeholder={`E.g.: http://mywebsite.com/api/v1`}
             onChange={onChangeApiUrl}
           />
@@ -176,18 +176,18 @@ const updatePluginAndReload = async (pluginId: string, data: Partial<PluginMeta<
 
     // Reloading the page as the changes made here wouldn't be propagated to the actual plugin otherwise.
     // This is not ideal, however unfortunately currently there is no supported way for updating the plugin state.
-    locationService.reload();
+    window.location.reload();
   } catch (e) {
     console.error('Error while updating the plugin', e);
   }
 };
 
 export const updatePlugin = async (pluginId: string, data: Partial<PluginMeta>) => {
-  const response = await getBackendSrv().datasourceRequest({
+  const response = await getBackendSrv().fetch({
     url: `/api/plugins/${pluginId}/settings`,
     method: 'POST',
     data,
   });
 
-  return response?.data;
+  return lastValueFrom(response);
 };

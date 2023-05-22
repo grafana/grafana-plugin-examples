@@ -36,6 +36,7 @@ jobs:
           node-version: "16"
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
+
       - name: Install dependencies for ${{matrix.dir}}
         run: yarn install --immutable --prefer-offline
       - name: Build example ${{matrix.dir}}
