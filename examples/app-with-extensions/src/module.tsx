@@ -3,7 +3,8 @@ import { AppPlugin, PluginExtensionPoints, PluginExtensionPanelContext } from '@
 import { App } from './components/App';
 import { AppConfig } from './components/AppConfig';
 import pluginJson from 'plugin.json';
-import { Modal } from 'components/Modal';
+import { QueryModal } from 'components/QueryModal';
+import { selectQuery } from 'utils';
 
 export const plugin = new AppPlugin<{}>()
   .setRootPage(App)
@@ -43,22 +44,24 @@ export const plugin = new AppPlugin<{}>()
     description: 'This link will only be visible on time series and pie charts',
     extensionPointId: PluginExtensionPoints.DashboardPanelMenu,
     onClick: (_, { openModal, context }) => {
-      const targets = context?.targets;
+      const targets = context?.targets ?? [];
       const title = context?.title;
 
-      if (!Array.isArray(targets) || targets.length === 0) {
+      if (!isSupported(context)) {
         return;
       }
 
+      // Show a modal to display a UI for selecting between the available queries (targets)
+      // in case there are more available.
       if (targets.length > 1) {
         return openModal({
-          title: 'Modal opened from onClick',
-          body: () => <Modal panelTitle={title} targets={targets} />,
+          title: `Select query from "${title}"`,
+          body: (props) => <QueryModal {...props} targets={targets} />,
         });
       }
 
       const [target] = targets;
-      console.log('One query in panel', { target });
+      selectQuery(target);
     },
     configure: (context) => {
       // Will only be visible for the Command Extensions dashboard
@@ -66,7 +69,7 @@ export const plugin = new AppPlugin<{}>()
         return undefined;
       }
 
-      if (!Array.isArray(context?.targets) || context?.targets.length === 0) {
+      if (!isSupported(context)) {
         return;
       }
 
@@ -84,3 +87,8 @@ export const plugin = new AppPlugin<{}>()
       }
     },
   });
+
+function isSupported(context?: PluginExtensionPanelContext): boolean {
+  const targets = context?.targets ?? [];
+  return targets.length > 0;
+}
