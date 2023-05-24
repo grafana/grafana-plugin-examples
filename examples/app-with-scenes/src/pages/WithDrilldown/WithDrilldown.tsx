@@ -8,7 +8,6 @@ import {
   SceneFlexItem,
   SceneFlexLayout,
   SceneQueryRunner,
-  SceneRefreshPicker,
   SceneTimePicker,
   SceneTimeRange,
 } from '@grafana/scenes';
@@ -41,6 +40,7 @@ const getScene = () =>
           body: getRoomsTemperatureTable(),
         }),
         new SceneFlexItem({
+          ySizing: 'fill',
           body: getRoomsTemperatureStats(),
         }),
       ],
@@ -54,10 +54,9 @@ const getDrilldownsAppScene = () => {
         $timeRange: new SceneTimeRange({ from: 'now-6h', to: 'now' }),
         title: 'Page with drilldown',
         subTitle: 'This scene showcases a basic drilldown functionality. Interact with room to see room details scene.',
-        controls: [new SceneTimePicker({ isOnCanvas: true }), new SceneRefreshPicker({ isOnCanvas: true })],
+        controls: [new SceneTimePicker({ isOnCanvas: true })],
         url: prefixRoute(`${ROUTES.WithDrilldown}`),
         hideFromBreadcrumbs: true,
-        preserveUrlKeys: ['from', 'to'],
         getScene,
         drilldowns: [
           {
@@ -66,12 +65,9 @@ const getDrilldownsAppScene = () => {
               const roomName = routeMatch.params.roomName;
 
               return new SceneAppPage({
-                $timeRange: new SceneTimeRange({ from: 'now-6h', to: 'now' }),
-                controls: [new SceneTimePicker({ isOnCanvas: true }), new SceneRefreshPicker({ isOnCanvas: true })],
                 url: prefixRoute(`${ROUTES.WithDrilldown}`) + `/room/${roomName}/temperature`,
                 title: `${roomName} overview`,
                 subTitle: 'This scene is a particular room drilldown. It implements two tabs to organise the data.',
-                preserveUrlKeys: ['from', 'to'],
                 getParentPage: () => parent,
                 getScene: () => {
                   return new EmbeddedScene({ body: new SceneFlexLayout({ children: [] }) });
@@ -81,12 +77,10 @@ const getDrilldownsAppScene = () => {
                     title: 'Temperature',
                     url: prefixRoute(`${ROUTES.WithDrilldown}`) + `/room/${roomName}/temperature`,
                     getScene: () => getTemperatureOverviewScene(roomName),
-                    preserveUrlKeys: ['from', 'to'],
                   }),
                   new SceneAppPage({
                     title: 'Humidity',
                     url: prefixRoute(`${ROUTES.WithDrilldown}`) + `/room/${roomName}/humidity`,
-                    preserveUrlKeys: ['from', 'to'],
                     getScene: () => getHumidityOverviewScene(roomName),
                   }),
                 ],

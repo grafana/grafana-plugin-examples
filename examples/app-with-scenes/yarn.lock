@@ -1371,10 +1371,10 @@
     systemjs "0.20.19"
     tslib "2.5.0"
 
-"@grafana/scenes@0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@grafana/scenes/-/scenes-0.9.0.tgz#1a64a2fcf6a8759cff13b4585f44d4580797e1e6"
-  integrity sha512-2StZcy3vYvW49cp1BZvodlDMEYc/lDpzhWKY//o+4jS8dg6ur92WoJrhlPGE8X66mUM1c0DH0KqNtRz1Rlwtog==
+"@grafana/scenes@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@grafana/scenes/-/scenes-0.11.0.tgz#f9fafedea909d1b0ed32d6fbad76555fb7d7b6a0"
+  integrity sha512-yCk6aX6iU8BYTAD+Z5Eau8B1PMbRvrz7qraeyMMAhm+J++7GO/+iFoS1ywXp6MiRy90c7AsuO1DJxYOJGpM+4g==
   dependencies:
     "@grafana/e2e-selectors" canary
     "@grafana/experimental" "1.0.1"

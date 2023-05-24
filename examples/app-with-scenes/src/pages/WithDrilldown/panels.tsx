@@ -1,4 +1,4 @@
-import { InterpolateFunction, ReducerID, ThresholdsMode } from '@grafana/data';
+import { ReducerID, ThresholdsMode } from '@grafana/data';
 import {
   SceneByFrameRepeater,
   SceneDataNode,
@@ -6,10 +6,7 @@ import {
   SceneFlexItem,
   SceneFlexLayout,
   VizPanel,
-  sceneUtils,
 } from '@grafana/scenes';
-import { ROUTES } from '../../constants';
-import { prefixRoute } from '../../utils/utils.routing';
 
 export function getRoomsTemperatureTable() {
   return new VizPanel({
@@ -35,7 +32,9 @@ export function getRoomsTemperatureTable() {
         },
       ],
     }),
+    displayMode: 'transparent',
     title: 'Room temperature overview',
+    hoverHeader: true,
     options: {
       sortBy: ['Average temperature'],
     },
@@ -109,11 +108,7 @@ export function getRoomsTemperatureTable() {
               value: [
                 {
                   title: 'Go to room overview',
-                  onBuildUrl: ({ replaceVariables }: { replaceVariables: InterpolateFunction }) => {
-                    return sceneUtils.getUrlWithAppState(
-                      replaceVariables(prefixRoute(`${ROUTES.WithDrilldown}`) + '/room/${__value.text}/temperature')
-                    );
-                  },
+                  url: '${__url.path}/room/${__value.text}/temperature${__url.params}',
                 },
               ],
             },
@@ -151,11 +146,11 @@ export function getRoomsTemperatureStats() {
               links: [
                 {
                   title: 'Go to room temperature overview',
-                  url: prefixRoute(`${ROUTES.WithDrilldown}`) + '/room/${__field.name}/temperature',
+                  url: '${__url.path}/room/${__field.name}/temperature${__url.params}',
                 },
                 {
                   title: 'Go to room humidity overview',
-                  url: prefixRoute(`${ROUTES.WithDrilldown}`) + '/room/${__field.name}/humidity',
+                  url: '${__url.path}/room/${__field.name}/humidity${__url.params}',
                 },
               ],
             },
