@@ -1,5 +1,5 @@
 {
-    "video": true,
+    "video": false,
     "videoCompression": false,
     "screenshotOnRunFailure": true,
     "reporter": "spec",

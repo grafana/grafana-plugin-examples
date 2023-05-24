@@ -48,7 +48,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.2.1",
+    "grafanaDependency": ">=9.5.0",
     "plugins": []
   }
 }
