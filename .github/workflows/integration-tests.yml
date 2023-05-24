@@ -42,7 +42,6 @@ jobs:
     needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
       matrix:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
@@ -231,6 +230,10 @@ jobs:
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Wait for Docker container
+        run: sleep 10s
+        shell: bash
 
       - name: Start Integration tests using canary version of Grafana
         id: canary-version-tests
