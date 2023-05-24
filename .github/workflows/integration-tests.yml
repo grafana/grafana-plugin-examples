@@ -42,6 +42,7 @@ jobs:
     needs: setup-matrix
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 5
       matrix:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
@@ -66,11 +67,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
 
-      - uses: actions/setup-go@v4
-        with:
-          go-version: "~1.20"
-          check-latest: true
-
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile --prefer-offline
@@ -86,6 +82,13 @@ jobs:
         run: |
           echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "~1.20"
+          check-latest: true
+          cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
         uses: magefile/mage-action@v2
