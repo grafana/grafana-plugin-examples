@@ -4,8 +4,11 @@ import { SceneApp, SceneAppPage } from '@grafana/scenes';
 import { getBasicScene } from './scenes';
 import { prefixRoute } from '../../utils/utils.routing';
 import { DATASOURCE_REF, ROUTES } from '../../constants';
+import { testIds } from '../../components/testIds';
 import { config } from '@grafana/runtime';
-import { Alert } from '@grafana/ui';
+import { Alert, useStyles2 } from '@grafana/ui';
+import { GrafanaTheme2 } from '@grafana/data';
+import { css } from '@emotion/css';
 
 const getScene = () => {
   return new SceneApp({
@@ -23,10 +26,11 @@ const getScene = () => {
   });
 };
 export const HomePage = () => {
+  const s = useStyles2(getStyles);
   const scene = useMemo(() => getScene(), []);
 
   return (
-    <>
+    <div className={s.container} data-testid={testIds.pageHome.container}>
       {!config.featureToggles.topnav && (
         <Alert title="Missing topnav feature toggle">
           Scenes are designed to work with the new navigation wrapper that will be standard in Grafana 10
@@ -44,6 +48,13 @@ export const HomePage = () => {
       )}
 
       <scene.Component model={scene} />
-    </>
+    </div>
   );
 };
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  container: css`
+    display: flex;
+    flex-grow: 1;
+  `,
+});

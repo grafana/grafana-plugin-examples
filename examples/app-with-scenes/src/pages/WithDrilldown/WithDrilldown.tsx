@@ -13,6 +13,10 @@ import {
 } from '@grafana/scenes';
 import { getHumidityOverviewScene, getTemperatureOverviewScene } from './scenes';
 import { getRoomsTemperatureStats, getRoomsTemperatureTable } from './panels';
+import { testIds } from '../../components/testIds';
+import { GrafanaTheme2 } from '@grafana/data';
+import { css } from '@emotion/css';
+import { useStyles2 } from '@grafana/ui';
 
 const roomsTemperatureQuery = {
   refId: 'Rooms temperature',
@@ -94,7 +98,19 @@ const getDrilldownsAppScene = () => {
 };
 
 export const WithDrilldown = () => {
+  const s = useStyles2(getStyles);
   const scene = useMemo(() => getDrilldownsAppScene(), []);
 
-  return <scene.Component model={scene} />;
+  return (
+    <div className={s.container} data-testid={testIds.pageWithDrilldown.container}>
+      <scene.Component model={scene} />
+    </div>
+  );
 };
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  container: css`
+    display: flex;
+    flex-grow: 1;
+  `,
+});

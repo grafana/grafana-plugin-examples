@@ -2,7 +2,11 @@ import React, { useMemo } from 'react';
 import { SceneApp, SceneAppPage } from '@grafana/scenes';
 import { ROUTES } from '../../constants';
 import { prefixRoute } from '../../utils/utils.routing';
+import { testIds } from '../../components/testIds';
 import { getBasicScene } from '../Home/scenes';
+import { css } from '@emotion/css';
+import { GrafanaTheme2 } from '@grafana/data';
+import { useStyles2 } from '@grafana/ui';
 
 const getTab1Scene = () => {
   return getBasicScene(false, '__server_names');
@@ -42,7 +46,19 @@ const getScene = () =>
   });
 
 export const PageWithTabs = () => {
+  const s = useStyles2(getStyles);
   const scene = useMemo(() => getScene(), []);
 
-  return <scene.Component model={scene} />;
+  return (
+    <div className={s.container} data-testid={testIds.pageWithTabs.container}>
+      <scene.Component model={scene} />
+    </div>
+  );
 };
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  container: css`
+    display: flex;
+    flex-grow: 1;
+  `,
+});
