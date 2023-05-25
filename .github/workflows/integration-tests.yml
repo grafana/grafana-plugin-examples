@@ -66,11 +66,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           cache: "yarn"
 
-      - uses: actions/setup-go@v4
-        with:
-          go-version: "~1.20"
-          check-latest: true
-
       - name: Install dependencies
         run: |
           yarn install --frozen-lockfile --prefer-offline
@@ -86,6 +81,13 @@ jobs:
         run: |
           echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version: "~1.20"
+          check-latest: true
+          cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
         uses: magefile/mage-action@v2
@@ -256,7 +258,7 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
   notify:
-    if: ${{ always() }}
+    if: ${{ (always() && github.event_name == 'schedule') }}
     runs-on: ubuntu-latest
     needs: [run-integration-tests]
     steps:
