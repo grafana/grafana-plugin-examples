@@ -1,0 +1,14 @@
+{
+  "name": "grafana-plugin-examples",
+  "version": "0.0.1",
+  "description": "This repository contains example plugins to showcase different use cases.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grafana/grafana-plugin-examples.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/grafana/grafana-plugin-examples/issues"
+  },
+  "homepage": "https://github.com/grafana/grafana-plugin-examples#readme"
+}
