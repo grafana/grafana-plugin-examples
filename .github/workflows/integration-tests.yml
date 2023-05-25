@@ -258,14 +258,14 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
   notify:
-    if: ${{ always() }}
+    if: ${{ (always() && github.event_name == 'schedule') }}
     runs-on: ubuntu-latest
     needs: [run-integration-tests]
     steps:
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
-        if: ${{ github.event_name == 'schedule' }} && contains(fromJson('["failure"]'), needs.run-integration-tests.result)
+        if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload: |
