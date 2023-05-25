@@ -160,7 +160,7 @@ jobs:
       - name: Build plugin with latest version of e2e libraries
         if: steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          npm install @grafana/e2e-selectors@latest @grafana/e2e@latest --legacy-peer-deps
+          npm install @grafana/e2e-selectors@latest @grafana/e2e@latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using latest version of grafana
@@ -203,7 +203,7 @@ jobs:
 
       - name: Upgrade @grafana packages using canary_version
         run: |
-          npm install $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') ) --legacy-peer-deps
+          npm install $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin with canary_version @grafana dependencies
