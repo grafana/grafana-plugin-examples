@@ -11,6 +11,7 @@ This repository contains example plugins to showcase different use cases.
 | [app-with-backend](examples/app-with-backend)                 | demonstrates how to build an app plugin with its own backend.                                     |
 | [app-with-extensions](examples/app-with-extensions)           | demonstrates how to build an app plugin that extends the Grafana core ui.                         |
 | [app-with-extension-point](examples/app-with-extension-point) | demonstrates how to add an extension point in the plugin UI that can be extended by other plugins |
+| [app-with-scebes](examples/app-with-scenes)                   | demonstrates how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/) |
 
 ## Panel plugins
 
