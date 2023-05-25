@@ -5,15 +5,15 @@
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
-    "e2e": "yarn exec cypress install && yarn exec grafana-e2e run",
-    "test": "jest --watch --onlyChanged",
-    "test:ci": "jest --passWithNoTests --maxWorkers 4",
-    "typecheck": "tsc --noEmit",
+    "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots",
+    "e2e": "npm exec cypress install && npm exec grafana-e2e run",
+    "lint:fix": "npm run lint --fix",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
-    "lint:fix": "yarn run lint --fix",
     "server": "docker-compose up --build",
-    "e2e:update": "yarn exec cypress install && yarn exec grafana-e2e run --update-screenshots",
-    "sign": "npx --yes @grafana/sign-plugin@latest"
+    "sign": "npx --yes @grafana/sign-plugin@latest",
+    "test:ci": "jest --passWithNoTests --maxWorkers 4",
+    "test": "jest --watch --onlyChanged",
+    "typecheck": "tsc --noEmit"
   },
   "author": "Your name",
   "license": "Apache-2.0",
@@ -76,5 +76,5 @@
     "react-dom": "17.0.2",
     "tslib": "2.5.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "npm@9.3.1"
 }
