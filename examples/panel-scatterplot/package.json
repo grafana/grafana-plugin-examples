@@ -5,8 +5,6 @@
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
-    "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots",
-    "e2e": "npm exec cypress install && npm exec grafana-e2e run",
     "lint:fix": "npm run lint --fix",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "server": "docker-compose up --build",
@@ -26,8 +24,6 @@
     "@types/d3": "^5.7.2",
     "emotion": "10.0.27",
     "@babel/core": "^7.21.4",
-    "@grafana/e2e": "9.1.2",
-    "@grafana/e2e-selectors": "9.1.2",
     "@grafana/eslint-config": "^5.1.0",
     "@grafana/tsconfig": "^1.2.0-rc1",
     "@swc/core": "^1.3.51",
