@@ -7,9 +7,9 @@ export interface CustomSceneObjectState extends SceneObjectState {
 }
 
 export class CustomSceneObject extends SceneObjectBase<CustomSceneObjectState> {
-  public static Component = CustomSceneObjectRenderer;
+  static Component = CustomSceneObjectRenderer;
 
-  public onValueChange = (value: number) => {
+  onValueChange = (value: number) => {
     this.setState({ counter: value });
   };
 }

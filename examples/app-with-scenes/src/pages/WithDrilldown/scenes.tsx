@@ -1,10 +1,24 @@
 import { ReducerID } from '@grafana/data';
-import { EmbeddedScene, SceneFlexLayout, SceneQueryRunner, VizPanel, SceneFlexItem } from '@grafana/scenes';
+import {
+  EmbeddedScene,
+  SceneFlexLayout,
+  SceneQueryRunner,
+  VizPanel,
+  SceneTimeRange,
+  SceneTimePicker,
+  SceneControlsSpacer,
+  SceneRefreshPicker,
+  SceneFlexItem,
+} from '@grafana/scenes';
 import { DATASOURCE_REF } from '../../constants';
 import { getRoomTemperatureStatPanel } from './panels';
 
 export function getTemperatureOverviewScene(roomName: string) {
   return new EmbeddedScene({
+    $timeRange: new SceneTimeRange({
+      from: 'now-12h',
+      to: 'now',
+    }),
     $data: new SceneQueryRunner({
       datasource: DATASOURCE_REF,
       queries: [getRoomTemperatureQuery(roomName)],
@@ -45,12 +59,16 @@ export function getTemperatureOverviewScene(roomName: string) {
         }),
       ],
     }),
-    // controls: [new SceneControlsSpacer(), new SceneTimePicker({ isOnCanvas: true }), new SceneRefreshPicker({})],
+    controls: [new SceneControlsSpacer(), new SceneTimePicker({ isOnCanvas: true }), new SceneRefreshPicker({})],
   });
 }
 
 export function getHumidityOverviewScene(roomName: string) {
   return new EmbeddedScene({
+    $timeRange: new SceneTimeRange({
+      from: 'now-12h',
+      to: 'now',
+    }),
     $data: new SceneQueryRunner({
       datasource: DATASOURCE_REF,
       queries: [getRoomHumidityQuery(roomName)],
@@ -75,6 +93,7 @@ export function getHumidityOverviewScene(roomName: string) {
         }),
       ],
     }),
+    controls: [new SceneControlsSpacer(), new SceneTimePicker({ isOnCanvas: true }), new SceneRefreshPicker({})],
   });
 }
 
