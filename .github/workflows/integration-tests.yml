@@ -64,16 +64,16 @@ jobs:
         with:
           node-version: "16"
           registry-url: "https://registry.npmjs.org"
-          cache: "yarn"
+          cache: "npm"
 
       - name: Install dependencies
         run: |
-          yarn install --frozen-lockfile --prefer-offline
+          npm ci
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin frontend
         run: |
-          yarn build
+          npm run build
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Check for backend Mage file
@@ -130,7 +130,7 @@ jobs:
         if: steps.should-run-expected-latest-tests.outcome == 'success'
         continue-on-error: true
         run: |
-          yarn e2e
+          npm run e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
@@ -160,7 +160,7 @@ jobs:
       - name: Build plugin with latest version of e2e libraries
         if: steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          yarn upgrade @grafana/e2e-selectors @grafana/e2e --latest
+          npm install @grafana/e2e-selectors@latest @grafana/e2e@latest --legacy-peer-deps
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using latest version of grafana
@@ -174,7 +174,7 @@ jobs:
         id: latest-version-tests
         continue-on-error: true
         run: |
-          yarn e2e
+          npm run e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
@@ -201,20 +201,14 @@ jobs:
       ## Canary Version Tests
       ## Runs the plugin tests against the latest build of Grafana main branch.
 
-      # Yarn 1 doesn't remove nested deps on `upgrade` so we need to delete node_modules first
-      - name: Delete node_modules folder
-        run: |
-          rm -rf node_modules
-        working-directory: ${{ matrix.pluginDir }}
-
       - name: Upgrade @grafana packages using canary_version
         run: |
-          yarn upgrade $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          npm install $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') ) --legacy-peer-deps
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin with canary_version @grafana dependencies
         run: |
-          yarn build
+          npm run build
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
@@ -235,7 +229,7 @@ jobs:
         id: canary-version-tests
         continue-on-error: true
         run: |
-          yarn e2e
+          npm run e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
