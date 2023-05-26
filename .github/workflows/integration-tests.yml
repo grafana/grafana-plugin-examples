@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup plugin dir variable
         id: set-plugin-dirs
-        run: echo "pluginDirs=$(find ./examples -name package.json -type f -print | xargs grep -l '"e2e":' | xargs -n 1 dirname | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
       - name: Setup NPM canary version variable
         id: npm-canary-version
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
@@ -107,6 +107,13 @@ jobs:
           echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Has Integration Tests
+        id: has-integration-tests
+        continue-on-error: true
+        run: |
+          echo "DIR=$(test -d ./cypress && echo true || echo false)" >> $GITHUB_OUTPUT
+        working-directory: ${{ matrix.pluginDir }}
+
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
       ## will be greater than any stable release of Grafana and so will not be available on docker.
       - name: Should run tests against expected and latest
@@ -117,7 +124,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using expected version of grafana
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
@@ -127,7 +134,7 @@ jobs:
       # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
       - name: Start Integration tests using expected versions
         id: expected-version-tests
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         continue-on-error: true
         run: |
           npm run e2e
@@ -135,7 +142,7 @@ jobs:
 
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
-        if: steps.expected-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-expected-version-tests
           path: |
@@ -145,11 +152,11 @@ jobs:
           retention-days: 3
 
       - name: Failing build due to test failures (expected versions)
-        if: steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
 
       - name: Stop and remove Docker container
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
@@ -157,20 +164,20 @@ jobs:
       # Latest Version Tests
       # Runs the plugin tests against the latest stable version of Grafana.
       # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
-      - name: Build plugin with latest version of e2e libraries
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+      - name: Install latest version of e2e libraries
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           npm install @grafana/e2e-selectors@latest @grafana/e2e@latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Docker container using latest version of grafana
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using latest version of Grafana
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
         continue-on-error: true
         run: |
@@ -179,7 +186,7 @@ jobs:
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
-        if: steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
           path: |
@@ -189,11 +196,11 @@ jobs:
           retention-days: 3
 
       - name: Failing build due to test failures (latest version of Grafana)
-        if: steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
 
       - name: Stop and remove Docker container
-        if: steps.should-run-expected-latest-tests.outcome == 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
@@ -221,19 +228,21 @@ jobs:
 
       # Canary versions live at grafana/grafana-dev
       - name: Start Docker container using canary version of grafana
+        if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Start Integration tests using canary version of Grafana
         id: canary-version-tests
+        if: steps.has-integration-tests.outputs.DIR == 'true'
         continue-on-error: true
         run: |
           npm run e2e
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
-        if: steps.canary-version-tests.outcome != 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
         uses: actions/upload-artifact@v3
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
@@ -244,13 +253,15 @@ jobs:
           retention-days: 3
 
       - name: Failing build due to test failures (canary versions)
-        if: steps.canary-version-tests.outcome != 'success'
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
         run: exit 1
 
       - name: Stop and remove Docker container
+        if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
+
   notify:
     if: ${{ (always() && github.event_name == 'schedule') }}
     runs-on: ubuntu-latest
