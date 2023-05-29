@@ -26,9 +26,9 @@ work/
 ci/
 e2e-results/
 **/cypress/videos
-**/cypress/report.json 
+**/cypress/report.json
 
 # Editor
 .idea
 
-.eslintcache% 
+.eslintcache
