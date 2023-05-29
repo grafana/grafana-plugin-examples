@@ -1,6 +1,6 @@
 import { DataFrameView, FieldType, PanelProps } from '@grafana/data';
-import { scaleLinear, scaleTime } from '@vx/scale';
-import { AreaClosed } from '@vx/shape';
+import { scaleLinear, scaleTime } from '@visx/scale';
+import { AreaClosed } from '@visx/shape';
 import React from 'react';
 import { SimpleOptions } from 'types';
 

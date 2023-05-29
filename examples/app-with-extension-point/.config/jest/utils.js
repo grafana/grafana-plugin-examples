@@ -12,6 +12,7 @@ const nodeModulesToTransform = (moduleNames) => `node_modules\/(?!(${moduleNames
 
 // Array of known nested grafana package dependencies that only bundle an ESM version
 const grafanaESModules = [
+  '.pnpm', // Support using pnpm symlinked packages
   'd3',
   'd3-color',
   'd3-force',

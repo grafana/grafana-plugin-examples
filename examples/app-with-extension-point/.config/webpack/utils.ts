@@ -1,10 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
-import glob from 'glob';
+import { glob } from 'glob';
 import { SOURCE_DIR } from './constants';
-
-const globAsync = util.promisify(glob);
 
 export function getPackageJson() {
   return require(path.resolve(process.cwd(), 'package.json'));
@@ -21,11 +19,11 @@ export function hasReadme() {
 // Support bundling nested plugins by finding all plugin.json files in src directory
 // then checking for a sibling module.[jt]sx? file.
 export async function getEntries(): Promise<Record<string, string>> {
-  const pluginsJson = await globAsync('**/src/**/plugin.json', { absolute: true });
+  const pluginsJson = await glob('**/src/**/plugin.json', { absolute: true });
 
   const plugins = await Promise.all(pluginsJson.map((pluginJson) => {
       const folder = path.dirname(pluginJson);
-      return globAsync(`${folder}/module.{ts,tsx,js,jsx}`, { absolute: true });
+      return glob(`${folder}/module.{ts,tsx,js,jsx}`, { absolute: true });
     })
   );
 
