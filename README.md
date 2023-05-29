@@ -11,7 +11,7 @@ This repository contains example plugins to showcase different use cases.
 | [app-with-backend](examples/app-with-backend)                 | demonstrates how to build an app plugin with its own backend.                                     |
 | [app-with-extensions](examples/app-with-extensions)           | demonstrates how to build an app plugin that extends the Grafana core ui.                         |
 | [app-with-extension-point](examples/app-with-extension-point) | demonstrates how to add an extension point in the plugin UI that can be extended by other plugins |
-| [app-with-scenes](examples/app-with-scenes)                   | demonstrates how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/) |
+| [app-with-scenes](examples/app-with-scenes)                   | demonstrates how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/)  |
 
 ## Panel plugins
 
@@ -38,26 +38,26 @@ This repository contains example plugins to showcase different use cases.
 
 Some of the examples in this repository contain integration tests that make use of [`@grafana/e2e`](https://npmjs.com/package/@grafana/e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
 
-- `yarn e2e` - run integration tests
-- `yarn e2e:open` - open cypress ui and run integration tests
-- `yarn e2e:update` - run integration tests and update any screenshots
+- `npm run e2e` - run integration tests
+- `npm run e2e:open` - open cypress ui and run integration tests
+- `npm run e2e:update` - run integration tests and update any screenshots
 
 ### Testing against latest versions of Grafana
 
-There is a github workflow `.github/workflows/integration-tests.yml` which navigates all plugin examples looking for integration tests to run. For any example plugin that has a `e2e` npm script defined it will run the following:
+There is a github workflow `.github/workflows/integration-tests.yml` which finds all plugin examples identified by the existence of `src/plugin.json`. For every example plugin build scripts will be run to confirm the plugins can be built against intended and canary npm packages. Any example plugin that has a cypress directory defined it will run the following:
 
 1. Build the plugin with the provided version of Grafana packages and test against the provided version of Grafana
    - _asserting the plugin works with its expected versions_
-1. Build the plugin with the provided version of Grafana packages and test against the latest version of Grafana
+2. Build the plugin with the provided version of Grafana packages and test against the latest version of Grafana
    - _asserting the plugin can run with the packages provided by the latest Grafana core_
-1. Upgrade all Grafana NPM packages to the latest version and test against latest version of Grafana
+3. Upgrade all Grafana NPM packages to the latest version and test against latest version of Grafana
    - _asserting the plugin can still build with the latest Grafana NPM packages_
 
 ## Using the examples as the base for your plugins
 
-All of the examples use [grafana/create-plugin](https://github.com/grafana/create-plugin/) instead of `@grafana/toolkit`.
+All of the examples use [grafana/create-plugin](https://grafana.github.io/plugin-tools/) instead of `@grafana/toolkit`.
 
-You can read more about customizing and extending the base configuration [here](https://github.com/grafana/create-plugin/#customizing-or-extending-the-basic-configs)
+You can read more about customizing and extending the base configuration [here](https://grafana.github.io/plugin-tools/docs/advanced-configuration)
 
 ## API Compatibility
 
