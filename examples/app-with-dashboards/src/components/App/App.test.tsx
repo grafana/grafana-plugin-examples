@@ -27,6 +27,6 @@ describe('Components/App', () => {
   test('renders without an error"', () => {
     render(<App {...props} />);
 
-    expect(screen.queryByText(/Hello Grafana!/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Hello and welcome to our demo app!/i)).toBeInTheDocument();
   });
 });
