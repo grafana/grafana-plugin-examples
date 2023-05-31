@@ -1,5 +1,8 @@
 name: integration tests
 on:
+  push:
+    branches:
+      - "**"
   pull_request:
   schedule:
     - cron: "0 11 * * *" #once a day at 11 UTC
@@ -71,6 +74,11 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Run frontend tests
+        run: |
+          npm run test:ci
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Build plugin frontend
         run: |
           npm run build
@@ -87,6 +95,14 @@ jobs:
           go-version: "~1.20"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
+
+      - name: Test plugin backend
+        uses: magefile/mage-action@v2
+        with:
+          version: latest
+          args: -v test
+          workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
@@ -213,10 +229,23 @@ jobs:
           npm install $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Run frontend tests
+        run: |
+          npm run test:ci
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Build plugin with canary_version @grafana dependencies
         run: |
           npm run build
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Test plugin backend
+        uses: magefile/mage-action@v2
+        with:
+          version: latest
+          args: -v test
+          workdir: ${{ matrix.pluginDir }}
+        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
         uses: magefile/mage-action@v2
