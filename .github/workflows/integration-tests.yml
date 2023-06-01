@@ -1,8 +1,5 @@
 name: integration tests
 on:
-  push:
-    branches:
-      - "**"
   pull_request:
   schedule:
     - cron: "0 11 * * *" #once a day at 11 UTC
