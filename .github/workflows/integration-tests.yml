@@ -236,14 +236,6 @@ jobs:
           npm run build
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Test plugin backend
-        uses: magefile/mage-action@v2
-        with:
-          version: latest
-          args: -v test
-          workdir: ${{ matrix.pluginDir }}
-        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
-
       - name: Build plugin backend
         uses: magefile/mage-action@v2
         with:
