@@ -161,6 +161,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		token = a.retrieveSelfToken()
 		proxy.Header.Set("Authorization", token)
 	}
+	proxy.Header.Set("X-Grafana-Org-Id", "1")
 
 	if proxyMethod == "POST" {
 		proxy.Header.Set("Content-Type", "application/json")
