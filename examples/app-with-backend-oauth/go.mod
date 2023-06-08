@@ -1,10 +1,11 @@
-module github.com/grafana/app-with-backend
+module github.com/grafana/app-with-backend-oauth
 
 go 1.19
 
 require (
 	github.com/google/uuid v1.3.0
 	github.com/grafana/grafana-plugin-sdk-go v0.156.0
+	gopkg.in/square/go-jose.v2 v2.6.0
 )
 
 require (
@@ -65,7 +66,6 @@ require (
 	google.golang.org/grpc v1.41.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/fsnotify/fsnotify.v1 v1.4.7 // indirect
-	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 

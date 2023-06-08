@@ -28,7 +28,7 @@ func getPayload(userID, clientID, host string) map[string]interface{} {
 	u := uuid.New()
 	payload := map[string]interface{}{
 		"iss": clientID,
-		"sub": fmt.Sprintf("user:%s", userID),
+		"sub": fmt.Sprintf("user:id:%s", userID),
 		"aud": host + "/oauth2/token",
 		"exp": exp,
 		"iat": iat,
@@ -75,9 +75,8 @@ func (a *App) retrieveJWTBearerToken(userID string) string {
 	requestParams.Add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
 	requestParams.Add("assertion", assertion)
 	requestParams.Add("client_id", a.authApp.ClientID)
-	// Question: is this secure?
 	requestParams.Add("client_secret", a.authApp.ClientSecret)
-	requestParams.Add("scope", "openid profile email teams permissions org.1")
+	requestParams.Add("scope", "profile email entitlements")
 	buff := bytes.NewBufferString(requestParams.Encode())
 
 	return a.postTokenRequest(buff)
@@ -87,9 +86,8 @@ func (a *App) retrieveSelfToken() string {
 	requestParams := url.Values{}
 	requestParams.Add("grant_type", "client_credentials")
 	requestParams.Add("client_id", a.authApp.ClientID)
-	// Question: is this secure?
 	requestParams.Add("client_secret", a.authApp.ClientSecret)
-	requestParams.Add("scope", "openid profile email teams permissions org.1")
+	requestParams.Add("scope", "profile email entitlements")
 	buff := bytes.NewBufferString(requestParams.Encode())
 
 	return a.postTokenRequest(buff)

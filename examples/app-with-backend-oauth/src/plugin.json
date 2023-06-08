@@ -43,21 +43,22 @@
   },
   "oauthServiceRegistration": {
     "name": "myorg-withbackend-app",
-    "redirect_uri": "https://localhost:3000/a/test-app/",
-    "permissions": [
-      { "action": "users:impersonate", "scope": "users:*" },
-      { "action": "users:read", "scope": "global.users:*" },
-      { "action": "users.permissions:read", "scope": "users:*" },
-      { "action": "teams:read", "scope": "teams:*" },
-
-      { "action": "dashboards:create", "scope": "folders:uid:general" }
-    ],
-    "impersonatePermissions": [
-      { "action": "dashboards:create", "scope": "folders:*" },
-      { "action": "dashboards:read", "scope": "dashboards:*" },
-      { "action": "dashboards:read", "scope": "folders:*" },
-      { "action": "folders:read", "scope": "folders:*" }
-    ],
+    "self": {
+      "enabled": true,
+      "permissions": [
+        { "action": "dashboards:create", "scope": "folders:uid:general" }
+      ]
+    },
+    "impersonation": {
+      "enabled": true,
+      "group": true,
+      "permissions": [
+        { "action": "dashboards:create", "scope": "folders:*" },
+        { "action": "dashboards:read", "scope": "dashboards:*" },
+        { "action": "dashboards:read", "scope": "folders:*" },
+        { "action": "folders:read", "scope": "folders:*" }
+      ]
+    },
     "key": { "generate": true }
   }
 }

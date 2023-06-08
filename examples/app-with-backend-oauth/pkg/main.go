@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/grafana/app-with-backend/pkg/plugin"
+	"github.com/grafana/app-with-backend-oauth/pkg/plugin"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/app"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
