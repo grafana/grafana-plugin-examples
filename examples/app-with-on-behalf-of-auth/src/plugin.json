@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "App With On Behalf Of Auth",
+  "id": "grafana-appwithonbehalfofauth-app",
+  "backend": true,
+  "executable": "gpx_app_with_on_behalf_of_auth",
+  "info": {
+    "keywords": ["app"],
+    "description": "Example app demonstrating how to use the on behalf of flow to authenticate an app using another user account",
+    "author": {
+      "name": "Grafana"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Page One",
+      "path": "/a/%PLUGIN_ID%/one",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "icon": "cog",
+      "name": "Configuration",
+      "path": "/plugins/%PLUGIN_ID%",
+      "role": "Admin",
+      "addToNav": false
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=9.5.3",
+    "plugins": []
+  },
+  "oauthServiceRegistration": {
+    "self": {
+      "enabled": true,
+      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
+    },
+    "impersonation": {
+      "enabled": true,
+      "group": true,
+      "permissions": [
+        { "action": "dashboards:create", "scope": "folders:*" },
+        { "action": "dashboards:read", "scope": "dashboards:*" },
+        { "action": "dashboards:read", "scope": "folders:*" },
+        { "action": "folders:read", "scope": "folders:*" }
+      ]
+    },
+    "key": { "generate": true }
+  }
+}
