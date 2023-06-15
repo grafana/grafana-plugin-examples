@@ -41,21 +41,13 @@
     "grafanaDependency": ">=9.5.3",
     "plugins": []
   },
-  "oauthServiceRegistration": {
-    "self": {
-      "enabled": true,
-      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
-    },
-    "impersonation": {
-      "enabled": true,
-      "group": true,
-      "permissions": [
-        { "action": "dashboards:create", "scope": "folders:*" },
-        { "action": "dashboards:read", "scope": "dashboards:*" },
-        { "action": "dashboards:read", "scope": "folders:*" },
-        { "action": "folders:read", "scope": "folders:*" }
-      ]
-    },
-    "key": { "generate": true }
+  "externalServiceRegistration": {
+    "selfPermissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
+    "impersonationPermissions": [
+      { "action": "dashboards:create", "scope": "folders:*" },
+      { "action": "dashboards:read", "scope": "dashboards:*" },
+      { "action": "dashboards:read", "scope": "folders:*" },
+      { "action": "folders:read", "scope": "folders:*" }
+    ]
   }
 }
