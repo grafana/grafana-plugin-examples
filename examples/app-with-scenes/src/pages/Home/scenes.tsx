@@ -1,6 +1,7 @@
 import {
   CustomVariable,
   EmbeddedScene,
+  PanelBuilders,
   SceneControlsSpacer,
   SceneFlexItem,
   SceneFlexLayout,
@@ -10,7 +11,6 @@ import {
   SceneTimeRange,
   SceneVariableSet,
   VariableValueSelectors,
-  VizPanel,
 } from '@grafana/scenes';
 import { DATASOURCE_REF } from '../../constants';
 import { CustomSceneObject } from './CustomSceneObject';
@@ -78,11 +78,11 @@ export function getBasicScene(templatised = true, seriesToShow = '__server_names
     body: new SceneFlexLayout({
       children: [
         new SceneFlexItem({
-          body: new VizPanel({
-            pluginId: 'timeseries',
+          minHeight: 300,
+          body: PanelBuilders.timeseries()
             // Title is using variable value
-            title: templatised ? '${seriesToShow}' : seriesToShow,
-          }),
+            .setTitle(templatised ? '${seriesToShow}' : seriesToShow)
+            .build(),
         }),
       ],
     }),

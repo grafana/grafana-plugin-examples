@@ -1,4 +1,4 @@
-import { EmbeddedScene, SceneFlexLayout, SceneFlexItem, VizPanel } from '@grafana/scenes';
+import { EmbeddedScene, SceneFlexLayout, SceneFlexItem, PanelBuilders } from '@grafana/scenes';
 
 export function getScene() {
   return new EmbeddedScene({
@@ -7,13 +7,7 @@ export function getScene() {
         new SceneFlexItem({
           width: '100%',
           height: 300,
-          body: new VizPanel({
-            title: 'Hello world panel',
-            pluginId: 'text',
-            options: {
-              content: 'Hello world! ',
-            },
-          }),
+          body: PanelBuilders.text().setTitle('Hello world panel').setOption('content', 'Hello world!').build(),
         }),
       ],
     }),
