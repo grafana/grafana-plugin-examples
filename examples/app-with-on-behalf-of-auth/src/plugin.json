@@ -42,12 +42,16 @@
     "plugins": []
   },
   "externalServiceRegistration": {
-    "selfPermissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
-    "impersonationPermissions": [
-      { "action": "dashboards:create", "scope": "folders:*" },
-      { "action": "dashboards:read", "scope": "dashboards:*" },
-      { "action": "dashboards:read", "scope": "folders:*" },
-      { "action": "folders:read", "scope": "folders:*" }
-    ]
+    "self": {
+      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
+    },
+    "impersonation": {
+      "permissions": [
+        { "action": "dashboards:create", "scope": "folders:*" },
+        { "action": "dashboards:read", "scope": "dashboards:*" },
+        { "action": "dashboards:read", "scope": "folders:*" },
+        { "action": "folders:read", "scope": "folders:*" }
+      ]
+    }
   }
 }
