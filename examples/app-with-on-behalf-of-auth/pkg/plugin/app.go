@@ -12,7 +12,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
-	"github.com/grafana/grafana-plugin-sdk-go/experimental/sign"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/oauthtokenretriever"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -30,7 +30,7 @@ type App struct {
 	backend.CallResourceHandler
 	httpClient     *http.Client
 	grafanaAppURL  string
-	tokenRetriever *sign.TokenRetriever
+	tokenRetriever oauthtokenretriever.TokenRetriever
 }
 
 // NewApp creates a new example *App instance.
@@ -62,12 +62,13 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 	}
 	// Service account credentials required to obtain tokens
 	if os.Getenv("GF_PLUGIN_APP_CLIENT_ID") != "" {
-		tr, err := sign.New(
+		tr, err := oauthtokenretriever.New(
+			app.httpClient,
+			app.grafanaAppURL,
 			os.Getenv("GF_PLUGIN_APP_CLIENT_ID"),
 			os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET"),
 			os.Getenv("GF_PLUGIN_APP_PRIVATE_KEY"),
-			app.grafanaAppURL,
-			app.httpClient)
+		)
 		if err != nil {
 			return nil, err
 		}
