@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,9 +9,9 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/go-jose/go-jose/v3/jwt"
 	"github.com/google/uuid"
 	"github.com/grafana/grafana-plugin-sdk-go/experimental/sign"
-	"gopkg.in/square/go-jose.v2/jwt"
 )
 
 // tokenPayload returns a JWT payload for the given user ID, client ID, and host.
@@ -45,36 +44,14 @@ func (a *App) retrieveJWTBearerToken(userID string) string {
 		panic(err)
 	}
 
-	header := map[string]string{
-		"typ": "JWT",
-		"kid": "1",
-		"alg": signer.Alg(),
-	}
-	headerB, err := json.Marshal(header)
-	if err != nil {
-		panic(err)
-	}
-	headerB64 := base64.RawURLEncoding.EncodeToString(headerB)
-
-	payloadB, err := json.Marshal(tokenPayload(userID, a.externalSvcClientID, a.grafanaAppURL))
-	if err != nil {
-		panic(err)
-	}
-	payloadB64 := base64.RawURLEncoding.EncodeToString(payloadB)
-
-	input := fmt.Sprintf("%s.%s", headerB64, payloadB64)
-
-	signed, err := signer.SignSHA256([]byte(input))
+	signed, err := signer.Sign(tokenPayload(userID, a.externalSvcClientID, a.grafanaAppURL))
 	if err != nil {
 		panic(fmt.Sprintf("Could not sign the request: %v", err))
 	}
-	sig := base64.RawURLEncoding.EncodeToString(signed)
-
-	assertion := fmt.Sprintf("%s.%s", input, sig)
 
 	requestParams := url.Values{}
 	requestParams.Add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-	requestParams.Add("assertion", assertion)
+	requestParams.Add("assertion", signed)
 	requestParams.Add("client_id", a.externalSvcClientID)
 	requestParams.Add("client_secret", a.externalSvcClientSecret)
 	requestParams.Add("scope", "profile email entitlements")
