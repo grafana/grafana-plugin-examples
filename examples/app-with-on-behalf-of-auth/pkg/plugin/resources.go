@@ -3,102 +3,11 @@ package plugin
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
-	"net/url"
-	"time"
 
 	"github.com/go-jose/go-jose/v3/jwt"
-	"github.com/google/uuid"
-	"github.com/grafana/grafana-plugin-sdk-go/experimental/sign"
 )
-
-// tokenPayload returns a JWT payload for the given user ID, client ID, and host.
-func tokenPayload(userID, clientID, host string) map[string]interface{} {
-	iat := time.Now().Unix()
-	exp := iat + 1800
-	u := uuid.New()
-	payload := map[string]interface{}{
-		"iss": clientID,
-		"sub": fmt.Sprintf("user:id:%s", userID),
-		"aud": host + "/oauth2/token",
-		"exp": exp,
-		"iat": iat,
-		"jti": u.String(),
-	}
-	return payload
-}
-
-type JWTbearer struct {
-	AccessToken string `json:"access_token"`
-	ExpiresIn   int    `json:"expires_in"`
-	Scope       string `json:"scope"`
-	TokenType   string `json:"token_type"`
-}
-
-// retrieveJWTBearerToken returns a JWT bearer token for the given user ID.
-func (a *App) retrieveJWTBearerToken(userID string) string {
-	signer, err := sign.ParsePrivateKey([]byte(a.externalSvcPrivateKey))
-	if err != nil {
-		panic(err)
-	}
-
-	signed, err := signer.Sign(tokenPayload(userID, a.externalSvcClientID, a.grafanaAppURL))
-	if err != nil {
-		panic(fmt.Sprintf("Could not sign the request: %v", err))
-	}
-
-	requestParams := url.Values{}
-	requestParams.Add("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer")
-	requestParams.Add("assertion", signed)
-	requestParams.Add("client_id", a.externalSvcClientID)
-	requestParams.Add("client_secret", a.externalSvcClientSecret)
-	requestParams.Add("scope", "profile email entitlements")
-	buff := bytes.NewBufferString(requestParams.Encode())
-
-	return a.postTokenRequest(buff)
-}
-
-// retrieveSelfToken returns a JWT bearer token for the service account created with the app.
-func (a *App) retrieveSelfToken() string {
-	requestParams := url.Values{}
-	requestParams.Add("grant_type", "client_credentials")
-	requestParams.Add("client_id", a.externalSvcClientID)
-	requestParams.Add("client_secret", a.externalSvcClientSecret)
-	requestParams.Add("scope", "profile email entitlements")
-	buff := bytes.NewBufferString(requestParams.Encode())
-
-	return a.postTokenRequest(buff)
-}
-
-// postTokenRequest posts the given request body to the token endpoint and returns the access token.
-func (a *App) postTokenRequest(buff *bytes.Buffer) string {
-	req, err := http.NewRequest("POST", a.grafanaAppURL+"/oauth2/token", buff)
-	if err != nil {
-		panic(err)
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := a.httpClient.Do(req)
-	if err != nil {
-		panic(err)
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		panic(err)
-	}
-
-	var bearer JWTbearer
-	err = json.Unmarshal(body, &bearer)
-	if err != nil {
-		panic(err)
-	}
-
-	return bearer.AccessToken
-}
 
 // parseToken parses the given JWT token and returns the headers and claims.
 func (a *App) parseToken(token string) (map[string]interface{}, error) {
@@ -135,14 +44,13 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var token string
-	if req.FormValue("onBehalfRequest") == "true" {
-		token = a.retrieveJWTBearerToken(req.FormValue("userID"))
-		proxyReq.Header.Set("Authorization", token)
-	} else {
-		token = a.retrieveSelfToken()
-		proxyReq.Header.Set("Authorization", token)
+	token, err := a.tokenRetriever.GetExternalServiceToken(req.FormValue("userID"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	proxyReq.Header.Set("Authorization", token)
+
 	// TODO: Make this configurable.
 	proxyReq.Header.Set("X-Grafana-Org-Id", "1")
 
