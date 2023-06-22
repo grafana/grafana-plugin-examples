@@ -60,5 +60,6 @@ const getStyles = (theme: GrafanaTheme2) => ({
   container: css`
     display: flex;
     flex-grow: 1;
+    height: 100%;
   `,
 });
