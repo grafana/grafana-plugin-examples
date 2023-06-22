@@ -61,7 +61,7 @@
     "@grafana/data": "10.0.0",
     "@grafana/runtime": "10.0.0",
     "@grafana/scenes": "0.16.0",
-    "@grafana/schema": "10.1.0-122442pre",
+    "@grafana/schema": "canary",
     "@grafana/ui": "10.0.0",
     "@types/lodash": "latest",
     "react-router-dom": "^5.2.0",
