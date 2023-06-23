@@ -2,7 +2,6 @@ package plugin
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -60,23 +59,13 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 		// For debugging purposes only
 		app.grafanaAppURL = "http://localhost:3000"
 	}
-	// Service account credentials required to obtain tokens
-	if os.Getenv("GF_PLUGIN_APP_CLIENT_ID") != "" {
-		tr, err := oauthtokenretriever.New(
-			app.httpClient,
-			app.grafanaAppURL,
-			os.Getenv("GF_PLUGIN_APP_CLIENT_ID"),
-			os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET"),
-			os.Getenv("GF_PLUGIN_APP_PRIVATE_KEY"),
-		)
-		if err != nil {
-			return nil, err
-		}
-		app.tokenRetriever = tr
-		return &app, nil
+
+	app.tokenRetriever, err = oauthtokenretriever.New()
+	if err != nil {
+		return nil, err
 	}
 
-	return nil, errors.New("missing required OAuth credentials")
+	return &app, nil
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance

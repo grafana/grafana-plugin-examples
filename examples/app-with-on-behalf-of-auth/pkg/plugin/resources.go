@@ -44,12 +44,18 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	token, err := a.tokenRetriever.GetExternalServiceToken(req.FormValue("userID"))
+	userID := req.FormValue("userID")
+	var token string
+	if userID == "" {
+		token, err = a.tokenRetriever.Self()
+	} else {
+		token, err = a.tokenRetriever.OnBehalfOfUser(userID)
+	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	proxyReq.Header.Set("Authorization", token)
+	proxyReq.Header.Set("Authorization", "Bearer "+token)
 
 	// TODO: Make this configurable.
 	proxyReq.Header.Set("X-Grafana-Org-Id", "1")
