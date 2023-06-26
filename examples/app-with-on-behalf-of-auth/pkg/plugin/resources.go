@@ -47,9 +47,9 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	userID := req.FormValue("userID")
 	var token string
 	if userID == "" {
-		token, err = a.tokenRetriever.Self()
+		token, err = a.tokenRetriever.Self(req.Context())
 	} else {
-		token, err = a.tokenRetriever.OnBehalfOfUser(userID)
+		token, err = a.tokenRetriever.OnBehalfOfUser(req.Context(), userID)
 	}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
