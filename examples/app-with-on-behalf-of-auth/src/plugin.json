@@ -15,7 +15,12 @@
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "screenshots": [],
+    "screenshots": [
+      {
+        "name": "Showcase",
+        "path": "img/screenshot-showcase.png"
+      }
+    ],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },

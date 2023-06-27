@@ -1,129 +1,65 @@
-# Grafana app plugin template
+# Grafana app plugin with OAuth2 integration
 
-This template is a starting point for building an app plugin for Grafana.
+This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 
-## What are Grafana app plugins?
+**Note:** This plugin requires Grafana 10.1 or later.
 
-App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins.
+## How to use
 
-## Getting started
+This app allows you to do requests to the Grafana API using either a service account created with the plugin or on behalf of a user (specifying the user ID). The plugin will then use the access token to do requests to the Grafana API.
 
-### Backend
+![screenshot](./src/img/screenshot-showcase.png)
 
-1. Update [Grafana plugin SDK for Go](https://grafana.com/docs/grafana/latest/developers/plugins/backend/grafana-plugin-sdk-for-go/) dependency to the latest minor version:
+## Authentication flow
 
-   ```bash
-   go get -u github.com/grafana/grafana-plugin-sdk-go
-   go mod tidy
-   ```
+The plugin uses the [OAuth2 Authorization Code Flow](https://oauth.net/2/grant-types/authorization-code/) to authenticate users and obtain an access token that can be used to authorize requests against the Grafana API. To enable it, add the section below to your `plugin.json` file.
 
-2. Build backend plugin binaries for Linux, Windows and Darwin:
+```json
+  "externalServiceRegistration": {
+    "self": {
+      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
+    },
+    "impersonation": {
+      "permissions": [
+        { "action": "dashboards:create", "scope": "folders:*" },
+        { "action": "dashboards:read", "scope": "dashboards:*" },
+        { "action": "dashboards:read", "scope": "folders:*" },
+        { "action": "folders:read", "scope": "folders:*" }
+      ]
+    }
+  }
+```
 
-   ```bash
-   mage -v
-   ```
+The `self` section defines the permissions that the service account will have. The `impersonation` section defines the permissions that the service will have when impersonating a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
 
-3. List all available Mage targets for additional commands:
+## Service registration and token retrieval
 
-   ```bash
-   mage -l
-   ```
-### Frontend
+Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account for it. After that, to use it, there is a function exposed by the Grafana SDK that can be used to retrieve the access token for the service account. This function relies on environment variables that are set with the necessary credentials:
 
-1. Install dependencies
+```go
+	app.tokenRetriever, err = oauthtokenretriever.New()
+	if err != nil {
+		return nil, err
+	}
+```
 
-   ```bash
-   npm install
-   ```
+Once the token retriever is initialized, it can be used to retrieve access tokens, either for the service account or for a user impersonated by the service account:
 
-2. Build plugin in development mode and run in watch mode
+```go
+    // Service account token
+    token, err = a.tokenRetriever.Self(ctx)
+    ...
+    req.Header.Set("Authorization", "Bearer "+token)
+```
 
-   ```bash
-   npm run dev
-   ```
+```go
+    // User impersonation token
+    token, err = a.tokenRetriever.OnBehalfOfUser(ctx, userID)
+    ...
+    req.Header.Set("Authorization", "Bearer "+token)
+```
 
-3. Build plugin in production mode
-
-   ```bash
-   npm run build
-   ```
-
-4. Run the tests (using Jest)
-
-   ```bash
-   # Runs the tests and watches for changes, requires git init first
-   npm run test
-
-   # Exits after running all the tests
-   npm run test:ci
-   ```
-
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
-
-   ```bash
-   npm run server
-   ```
-
-6. Run the E2E tests (using Cypress)
-
-   ```bash
-   # Spins up a Grafana instance first that we tests against
-   npm run server
-
-   # Starts the tests
-   npm run e2e
-   ```
-
-7. Run the linter
-
-   ```bash
-   npm run lint
-
-   # or
-
-   npm run lint:fix
-   ```
-
-
-# Distributing your plugin
-
-When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
-
-_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
-
-## Initial steps
-
-Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/docs/grafana/latest/developers/plugins/publishing-and-signing-criteria/) documentation carefully.
-
-`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
-
-Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/#plugin-signature-levels) documentation to understand the differences between the types of signature level.
-
-1. Create a [Grafana Cloud account](https://grafana.com/signup).
-2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
-   - _You can find the plugin ID in the plugin.json file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
-3. Create a Grafana Cloud API key with the `PluginPublisher` role.
-4. Keep a record of this API key as it will be required for signing a plugin
-
-## Signing a plugin
-
-### Using Github actions release workflow
-
-If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
-
-1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
-2. Click "New repository secret"
-3. Name the secret "GRAFANA_API_KEY"
-4. Paste your Grafana Cloud API key in the Secret field
-5. Click "Add secret"
-
-#### Push a version tag
-
-To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
-
-1. Run `npm version <major|minor|patch>`
-2. Run `git push origin main --follow-tags`
-
+Check the [app.go](./pkg/plugin/app.go) and [resources.go](./pkg/plugin/resources.go) files for more details about how it's done for this plugin.
 
 ## Learn more
 
