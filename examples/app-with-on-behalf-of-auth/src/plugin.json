@@ -43,7 +43,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.5.3",
+    "grafanaDependency": ">=10.1",
     "plugins": []
   },
   "externalServiceRegistration": {
