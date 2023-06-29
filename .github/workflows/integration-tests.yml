@@ -150,8 +150,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nick-fields/retry@v2
         continue-on-error: true
-        with:
-          timeout_seconds: 15
+        with:          
           max_attempts: 3
           retry_on: error
           command: npm run e2e --prefix ${{ matrix.pluginDir }}
@@ -197,8 +196,7 @@ jobs:
         id: latest-version-tests
         uses: nick-fields/retry@v2
         continue-on-error: true        
-        with:
-          timeout_seconds: 15
+        with:          
           max_attempts: 3
           retry_on: error
           command: npm run e2e --prefix ${{ matrix.pluginDir }}        
@@ -263,8 +261,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         continue-on-error: true
         uses: nick-fields/retry@v2        
-        with:
-          timeout_seconds: 15
+        with:          
           max_attempts: 3
           retry_on: error
           command: npm run e2e --prefix ${{ matrix.pluginDir }}
