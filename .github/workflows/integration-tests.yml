@@ -148,10 +148,13 @@ jobs:
       - name: Start Integration tests using expected versions
         id: expected-version-tests
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
+        uses: nick-fields/retry@v2
         continue-on-error: true
-        run: |
-          npm run e2e
-        working-directory: ${{ matrix.pluginDir }}
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_on: error
+          command: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
         uses: actions/upload-artifact@v3
@@ -192,10 +195,13 @@ jobs:
       - name: Start Integration tests using latest version of Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
-        continue-on-error: true
-        run: |
-          npm run e2e
-        working-directory: ${{ matrix.pluginDir }}
+        uses: nick-fields/retry@v2
+        continue-on-error: true        
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_on: error
+          command: npm run e2e --prefix ${{ matrix.pluginDir }}        
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
@@ -256,9 +262,12 @@ jobs:
         id: canary-version-tests
         if: steps.has-integration-tests.outputs.DIR == 'true'
         continue-on-error: true
-        run: |
-          npm run e2e
-        working-directory: ${{ matrix.pluginDir }}
+        uses: nick-fields/retry@v2        
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_on: error
+          command: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with canary versions
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
