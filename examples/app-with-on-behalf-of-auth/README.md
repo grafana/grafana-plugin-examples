@@ -2,17 +2,17 @@
 
 This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.1 or later.
+**Note:** This plugin requires Grafana 10.1 or later and the `externalServiceAuth` feature toggle must be enabled. This is an experimental feature.
 
 ## How to use
 
-This app allows you to do requests to the Grafana API using either a service account created with the plugin or on behalf of a user (specifying the user ID). The plugin will then use the access token to do requests to the Grafana API.
+This app allows you to do requests to the Grafana API as the plugin or on behalf of a user (by specifying the user ID). The plugin will then use the access token to do requests to the Grafana API.
 
 ![screenshot](./src/img/screenshot-showcase.png)
 
 ## Authentication flow
 
-The plugin uses the [OAuth2 Authorization Code Flow](https://oauth.net/2/grant-types/authorization-code/) to authenticate users and obtain an access token that can be used to authorize requests against the Grafana API. To enable it, add the section below to your `plugin.json` file.
+The plugin uses the [JWT Bearer Assertion OAuth2 Extension](https://datatracker.ietf.org/doc/html/rfc7523) to authenticate users and obtain an access token that can be used to authorize requests against the Grafana API. To enable it, add the section below to your `plugin.json` file.
 
 ```json
   "externalServiceRegistration": {
@@ -30,7 +30,7 @@ The plugin uses the [OAuth2 Authorization Code Flow](https://oauth.net/2/grant-t
   }
 ```
 
-The `self` section defines the permissions that the service account will have. The `impersonation` section defines the permissions that the service will have when impersonating a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
+The `self` section defines the set of permissions granted to the plugin. The `impersonation` section defines the set of permissions that are granted to the impersonated user when the plugin makes requests on behalf of a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
 
 ## Service registration and token retrieval
 
@@ -43,10 +43,10 @@ Once a plugin is registered with an `externalServiceRegistration` section, Grafa
 	}
 ```
 
-Once the token retriever is initialized, it can be used to retrieve access tokens, either for the service account or for a user impersonated by the service account:
+Once the token retriever is initialized, it can be used to get access tokens, either for the plugin or for a user impersonated by the plugin:
 
 ```go
-    // Service account token
+    // Plugin token
     token, err = a.tokenRetriever.Self(ctx)
     ...
     req.Header.Set("Authorization", "Bearer "+token)
