@@ -57,7 +57,8 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	}
 	proxyReq.Header.Set("Authorization", "Bearer "+token)
 
-	// TODO: Make this configurable.
+	// The PoC implementation of the single-tenant external service auth only supports the default
+	// organization (orgId = 1), so for now it's okay to be harcoded to 1.
 	proxyReq.Header.Set("X-Grafana-Org-Id", "1")
 
 	if proxyMethod == "POST" {
