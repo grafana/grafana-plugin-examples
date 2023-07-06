@@ -6,9 +6,12 @@ services:
     build:
       context: ./.config
       args:
-        grafana_version: ${GRAFANA_VERSION:-9.5.3}
+        # Points to an unreleased v10.1 version of Grafana
+        grafana_version: ${GRAFANA_VERSION:-main}
     ports:
       - 3000:3000/tcp
+    environment:
+      - GF_FEATURE_TOGGLES_ENABLE=externalServiceAuth
     volumes:
       - ./dist:/var/lib/grafana/plugins/grafana-appwithonbehalfofauth-app
       - ./provisioning:/etc/grafana/provisioning
