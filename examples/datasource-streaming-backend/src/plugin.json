@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Datasource Streaming Backend",
+  "id": "grafana-streamingbackendexample-datasource",
+  "metrics": true,
+  "backend": true,
+  "executable": "gpx_streaming_backend_example",
+  "info": {
+    "description": "Example of a streaming backend plugin",
+    "author": {
+      "name": "Grafana"
+    },
+    "keywords": ["datasource"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=9.5.3",
+    "plugins": []
+  },
+  "streaming": true
+}
