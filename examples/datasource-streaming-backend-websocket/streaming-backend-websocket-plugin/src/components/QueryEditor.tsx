@@ -15,10 +15,10 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
   return (
     <div className="gf-form">
       <InlineField label="Lower Limit" labelWidth={16} tooltip="Random numbers lower limit">
-        <Input onChange={handleEvent('lowerLimit')} onBlur={onRunQuery} value={lowerLimit || ''} />
+        <Input onChange={handleEvent('lowerLimit', parseFloat)} onBlur={onRunQuery} value={lowerLimit || ''} />
       </InlineField>
       <InlineField label="Upper Limit" labelWidth={16} tooltip="Random numbers upper limit">
-        <Input onChange={handleEvent('upperLimit')} onBlur={onRunQuery} value={upperLimit || ''} />
+        <Input onChange={handleEvent('upperLimit', parseFloat)} onBlur={onRunQuery} value={upperLimit || ''} />
       </InlineField>
     </div>
   );
