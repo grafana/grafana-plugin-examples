@@ -196,12 +196,12 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
         uses: nick-fields/retry@v2
-        continue-on-error: true        
+        continue-on-error: true
         with:
           timeout_minutes: 30
           max_attempts: 3
           retry_on: error
-          command: npm run e2e --prefix ${{ matrix.pluginDir }}        
+          command: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v3
@@ -229,7 +229,7 @@ jobs:
 
       - name: Upgrade @grafana packages using canary_version
         run: |
-          npm install $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
           npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
         working-directory: ${{ matrix.pluginDir }}
 
@@ -262,7 +262,7 @@ jobs:
         id: canary-version-tests
         if: steps.has-integration-tests.outputs.DIR == 'true'
         continue-on-error: true
-        uses: nick-fields/retry@v2        
+        uses: nick-fields/retry@v2
         with:
           timeout_minutes: 30
           max_attempts: 3
