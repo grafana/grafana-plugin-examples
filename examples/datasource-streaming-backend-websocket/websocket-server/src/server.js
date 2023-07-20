@@ -2,17 +2,28 @@ const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({ port: 8080 });
 
+console.log("Server running on 8080");
+
 wss.on("connection", (ws) => {
-  console.log("Server running on 8080")
+  console.log("Connection opened");
+  let timeoutId;
+
   const sendData = () => {
     // Send a random value.
+    console.log("Sending data")
     ws.send(JSON.stringify({ time: Date.now(), value: Math.random() }));
 
     // Wait up to a second before sending the next value.
-    setTimeout(sendData, Math.random() * 1000);
+    timeoutId = setTimeout(sendData, Math.random() * 1000);
   };
+
+
+  ws.on("close", () => {
+    console.log("Connection closed");
+    clearTimeout(timeoutId)
+  })
+
 
   // Send the first value.
   sendData();
 });
-

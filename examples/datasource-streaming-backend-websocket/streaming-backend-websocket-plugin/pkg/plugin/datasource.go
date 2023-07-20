@@ -3,6 +3,7 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"path"
 	"time"
 
@@ -16,7 +17,7 @@ import (
 var Logger = log.DefaultLogger
 
 type WebsocketClient interface {
-	Read() <-chan string
+	Read(ctx context.Context) <-chan string
 	Close()
 	SendMessage(string) error
 	IsConnected() bool
@@ -91,7 +92,7 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
 		if err := d.parseQuery(q.JSON); err != nil {
-			response.Responses[q.RefID] = backend.DataResponse{}
+			response.Responses[q.RefID] = backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("parse query: %s", err))
 			continue
 		}
 
@@ -120,8 +121,8 @@ func (d *Datasource) parseQuery(rawQuery json.RawMessage) error {
 	return nil
 }
 
-// createChannelResponse creates a Channel in to be returned in the
-// Frameta. It's bery important that the channel followns the format
+// createChannelResponse creates a Channel to be returned in the
+// Frame meta. It's very important that the channel follows the format
 // /ds/<plugin-id>/<channel-name>
 func (d *Datasource) createChannelResponse() backend.DataResponse {
 	var response backend.DataResponse
@@ -154,12 +155,16 @@ func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequ
 	}, nil
 }
 
+// SubscribeStream just returns an ok in this case, since we will always allow the user to successfully connect
+// permissions verifications could be done here. Check backend.StreamHandler docs for more details.
 func (d *Datasource) SubscribeStream(context.Context, *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
 	return &backend.SubscribeStreamResponse{
 		Status: backend.SubscribeStreamStatusOK,
 	}, nil
 }
 
+// PublishStream just returns permission denied in this case, since in this example we don't want the user to send stream data
+// permissions verifications could be done here. Check backend.StreamHandler docs for more details.
 func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamRequest) (*backend.PublishStreamResponse, error) {
 	return &backend.PublishStreamResponse{
 		Status: backend.PublishStreamStatusPermissionDenied,
@@ -167,25 +172,32 @@ func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamReques
 }
 
 func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
-	messages := d.wsClient.Read()
+	messages := d.wsClient.Read(ctx)
 
 	for {
 		select {
 		case <-ctx.Done():
-			return nil
+			d.wsClient.Close()
+			return ctx.Err()
 		case rawMsg := <-messages:
 			var msg Message
-			json.Unmarshal([]byte(rawMsg), &msg)
+			if err := json.Unmarshal([]byte(rawMsg), &msg); err != nil {
+				Logger.Error("Failed to unmarshal message", "error", err)
+			}
 
 			value := msg.Value*(d.upperLimit-d.lowerLimit) + d.lowerLimit
 
-			sender.SendFrame(
+			err := sender.SendFrame(
 				data.NewFrame(
 					"response",
 					data.NewField("time", nil, []time.Time{time.UnixMilli(msg.Time)}),
 					data.NewField("value", nil, []float64{value})),
 				data.IncludeAll,
 			)
+
+			if err != nil {
+				Logger.Error("Failed send frame", "error", err)
+			}
 		}
 	}
 }

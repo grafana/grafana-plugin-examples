@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 
@@ -33,26 +34,36 @@ func NewClient(serverURL string) (*Client, error) {
 	return &Client{conn: conn}, nil
 }
 
-func (c *Client) Read() <-chan string {
+func (c *Client) Read(ctx context.Context) <-chan string {
 	messages := make(chan string)
 	go func() {
 		defer close(messages)
 		for {
-			var message string
-			err := websocket.Message.Receive(c.conn, &message)
-			if err != nil {
-				Logger.Info("Error reading message: %v", err)
-				continue
+			select {
+			case <-ctx.Done():
+				return
+			default:
+				var message string
+				err := websocket.Message.Receive(c.conn, &message)
+				if err != nil {
+					Logger.Error("Error reading message", "error", err)
+					continue
+				}
+				Logger.Info("message received", "message", message)
+				messages <- message
 			}
-			messages <- message
 		}
 	}()
 	return messages
 }
 
 func (c *Client) Close() {
+	if !c.IsConnected() {
+		return
+	}
+
 	if err := c.conn.Close(); err != nil {
-		panic(err)
+		Logger.Error("Error closing connection: %v", err)
 	}
 }
 
