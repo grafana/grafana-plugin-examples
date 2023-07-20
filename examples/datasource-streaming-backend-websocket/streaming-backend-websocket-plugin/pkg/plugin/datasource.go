@@ -150,16 +150,16 @@ func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequ
 	}, nil
 }
 
-// SubscribeStream just returns an ok in this case, since we will always allow the user to successfully connect
-// permissions verifications could be done here. Check backend.StreamHandler docs for more details.
+// SubscribeStream just returns an ok in this case, since we will always allow the user to successfully connect.
+// Permissions verifications could be done here. Check backend.StreamHandler docs for more details.
 func (d *Datasource) SubscribeStream(context.Context, *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
 	return &backend.SubscribeStreamResponse{
 		Status: backend.SubscribeStreamStatusOK,
 	}, nil
 }
 
-// PublishStream just returns permission denied in this case, since in this example we don't want the user to send stream data
-// permissions verifications could be done here. Check backend.StreamHandler docs for more details.
+// PublishStream just returns permission denied in this case, since in this example we don't want the user to send stream data.
+// Permissions verifications could be done here. Check backend.StreamHandler docs for more details.
 func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamRequest) (*backend.PublishStreamResponse, error) {
 	return &backend.PublishStreamResponse{
 		Status: backend.PublishStreamStatusPermissionDenied,
