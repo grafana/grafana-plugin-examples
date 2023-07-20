@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { FieldSet, InlineField, InlineFieldRow, Input } from '@grafana/ui';
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
 import { MyDataSourceOptions } from '../types';
-import { handlerFactory } from './handleEvent';
 
 interface Props extends DataSourcePluginOptionsEditorProps<MyDataSourceOptions> {}
 
@@ -12,7 +11,14 @@ export function ConfigEditor(props: Props) {
     options,
     options: { jsonData },
   } = props;
-  const handleChange = handlerFactory(options, onOptionsChange);
+
+  const onUriChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const jsonData = {
+      ...options.jsonData,
+      uri: event.target.value,
+    };
+    onOptionsChange({ ...options, jsonData });
+  };
 
   const { uri } = jsonData;
 
@@ -20,11 +26,7 @@ export function ConfigEditor(props: Props) {
     <div className="gf-form-group">
       <FieldSet label="Connection">
         <InlineFieldRow>
-          <InlineField
-            label="URI"
-            labelWidth={10}
-            tooltip="Supported schemes: WebSocket (ws://) or (wss://)"
-          >
+          <InlineField label="URI" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
             <Input
               width={30}
               name="uri"
@@ -32,7 +34,7 @@ export function ConfigEditor(props: Props) {
               value={uri}
               autoComplete="off"
               placeholder="ws://websocket-server:8080"
-              onChange={handleChange('jsonData.uri')}
+              onChange={onUriChange}
             />
           </InlineField>
         </InlineFieldRow>

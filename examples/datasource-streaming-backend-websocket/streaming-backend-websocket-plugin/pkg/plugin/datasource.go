@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path"
+	"strings"
 	"time"
 
 	"github.com/grafana/example-websocket-datasource/pkg/websocket"
@@ -17,10 +18,11 @@ import (
 var Logger = log.DefaultLogger
 
 type WebsocketClient interface {
+	Connect() error
+	CanConnect() bool
 	Read(ctx context.Context) <-chan string
 	Close()
 	SendMessage(string) error
-	IsConnected() bool
 }
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -42,15 +44,11 @@ func NewDatasource(s backend.DataSourceInstanceSettings) (instancemgmt.Instance,
 		return nil, err
 	}
 
-	c, err := websocket.NewClient(settings.URI)
-	if err != nil {
-		return nil, err
-	}
+	c := websocket.NewClient(settings.URI)
+
 	return &Datasource{
 		channelPrefix: path.Join("ds", s.UID),
 		wsClient:      c,
-		lowerLimit:    0,
-		upperLimit:    1,
 	}, nil
 }
 
@@ -68,8 +66,6 @@ func getDatasourceSettings(s backend.DataSourceInstanceSettings) (*websocket.Opt
 // its health and has streaming skills.
 type Datasource struct {
 	channelPrefix string
-	upperLimit    float64
-	lowerLimit    float64
 	wsClient      WebsocketClient
 }
 
@@ -91,13 +87,14 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		if err := d.parseQuery(q.JSON); err != nil {
+		query, err := parseQuery(q.JSON)
+		if err != nil {
 			response.Responses[q.RefID] = backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("parse query: %s", err))
 			continue
 		}
 
 		// this part allow the creation of a streaming channel
-		res := d.createChannelResponse()
+		res := d.createChannelResponse(query)
 		// save the response in a hashmap
 		// based on with RefID as identifier
 		response.Responses[q.RefID] = res
@@ -106,30 +103,28 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-func (d *Datasource) parseQuery(rawQuery json.RawMessage) error {
-	var q Query
+func parseQuery(rawQuery json.RawMessage) (Query, error) {
+	q := Query{
+		UpperLimit: "1",
+		LowerLimit: "0",
+	} //default limits
+
 	if err := json.Unmarshal(rawQuery, &q); err != nil {
-		return err
+		return q, err
 	}
 
-	// simple validation of provided parameters
-	if q.UpperLimit > q.LowerLimit {
-		d.upperLimit = q.UpperLimit
-		d.lowerLimit = q.LowerLimit
-	}
-
-	return nil
+	return q, nil
 }
 
 // createChannelResponse creates a Channel to be returned in the
 // Frame meta. It's very important that the channel follows the format
 // /ds/<plugin-id>/<channel-name>
-func (d *Datasource) createChannelResponse() backend.DataResponse {
+func (d *Datasource) createChannelResponse(q Query) backend.DataResponse {
 	var response backend.DataResponse
 
 	frame := data.NewFrame("")
 	frame.SetMeta(&data.FrameMeta{
-		Channel: path.Join(d.channelPrefix, "my-streaming-channel"),
+		Channel: path.Join(d.channelPrefix, "my-streaming-channel", q.LowerLimit, q.UpperLimit), //the path is used to send data to RunStream
 	})
 
 	response.Frames = append(response.Frames, frame)
@@ -142,9 +137,9 @@ func (d *Datasource) createChannelResponse() backend.DataResponse {
 // a datasource is working as expected.
 func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	var status = backend.HealthStatusOk
-	var message = "Connection successfully established"
+	var message = "Connection can be successfully established"
 
-	if !d.wsClient.IsConnected() {
+	if !d.wsClient.CanConnect() {
 		status = backend.HealthStatusError
 		message = "Connection not working"
 	}
@@ -172,6 +167,32 @@ func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamReques
 }
 
 func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
+	chunks := strings.Split(req.Path, "/")
+	if len(chunks) < 3 {
+		return fmt.Errorf("invalid path: %s", req.Path)
+	}
+
+	q := Query{
+		LowerLimit: chunks[1],
+		UpperLimit: chunks[2],
+	}
+
+	limitsData, err := json.Marshal(q)
+	if err != nil {
+		return err
+	}
+
+	err = d.wsClient.Connect()
+	if err != nil {
+		return err
+	}
+	defer d.wsClient.Close()
+
+	err = d.wsClient.SendMessage(string(limitsData))
+	if err != nil {
+		return err
+	}
+
 	messages := d.wsClient.Read(ctx)
 
 	for {
@@ -185,13 +206,11 @@ func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamReques
 				Logger.Error("Failed to unmarshal message", "error", err)
 			}
 
-			value := msg.Value*(d.upperLimit-d.lowerLimit) + d.lowerLimit
-
 			err := sender.SendFrame(
 				data.NewFrame(
 					"response",
 					data.NewField("time", nil, []time.Time{time.UnixMilli(msg.Time)}),
-					data.NewField("value", nil, []float64{value})),
+					data.NewField("value", nil, []float64{msg.Value})),
 				data.IncludeAll,
 			)
 
