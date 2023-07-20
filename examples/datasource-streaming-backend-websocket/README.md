@@ -2,7 +2,7 @@
 
 This is an example of how to implement a Grafana data source plugin with streaming backend support.
 
-The plugin connects to the backend through a streaming connection and in the backend a connection to an external websocket server.
+The plugin connects to the backend through a streaming connection and the backend establishes a connection to an external websocket server.
 
 ## Build
 
@@ -11,6 +11,7 @@ Build the data source plugin
   ```sh
 cd streaming-backend-websocket-plugin
 mage -v
+yarn install
 yarn build
   ```
 
