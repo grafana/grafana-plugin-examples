@@ -10,7 +10,6 @@ wss.on("connection", (ws) => {
 
   const sendData = () => {
     // Send a random value.
-    console.log("Sending data")
     ws.send(JSON.stringify({ time: Date.now(), value: Math.random() }));
 
     // Wait up to a second before sending the next value.
