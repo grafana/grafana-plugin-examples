@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { InlineField, Input } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
-import { MyDataSourceOptions, MyQuery } from '../types';
-import { handlerFactory } from './handleEvent';
+import { MyQuery } from '../types';
 
-type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
+type Props = QueryEditorProps<DataSource, MyQuery>;
 
 export function QueryEditor({ query, onChange, onRunQuery }: Props) {
-  const handleEvent = handlerFactory(query, onChange);
+  const onLowerLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...query, lowerLimit: event.target.value });
+    // executes the query
+    onRunQuery();
+  };
+
+  const onUpperLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...query, upperLimit: event.target.value });
+    // executes the query
+    onRunQuery();
+  };
+
+  const onTickIntervalChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onChange({ ...query, tickInterval: event.target.value });
+    // executes the query
+    onRunQuery();
+  };
 
   const { upperLimit, lowerLimit, tickInterval } = query;
 
   return (
     <div className="gf-form">
       <InlineField label="Lower Limit" labelWidth={16} tooltip="Random numbers lower limit">
-        <Input onChange={handleEvent('lowerLimit', parseFloat)} onBlur={onRunQuery} value={lowerLimit || ''} />
+        <Input onChange={onLowerLimitChange} onBlur={onRunQuery} value={lowerLimit || ''} />
       </InlineField>
       <InlineField label="Upper Limit" labelWidth={16} tooltip="Random numbers upper limit">
-        <Input onChange={handleEvent('upperLimit', parseFloat)} onBlur={onRunQuery} value={upperLimit || ''} />
+        <Input onChange={onUpperLimitChange} onBlur={onRunQuery} value={upperLimit || ''} />
       </InlineField>
       <InlineField label="Tick interval" labelWidth={16} tooltip="Server tick interval">
-        <Input onChange={handleEvent('tickInterval', parseFloat)} onBlur={onRunQuery} value={tickInterval || ''} />
+        <Input onChange={onTickIntervalChange} onBlur={onRunQuery} value={tickInterval || ''} />
       </InlineField>
     </div>
   );

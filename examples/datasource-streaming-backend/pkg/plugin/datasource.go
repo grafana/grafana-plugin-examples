@@ -3,8 +3,11 @@ package plugin
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"path"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -31,7 +34,6 @@ var (
 func NewDatasource(s backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	return &Datasource{
 		channelPrefix: path.Join("ds", s.UID),
-		tickInterval:  time.Duration(1000 * time.Millisecond),
 	}, nil
 }
 
@@ -39,9 +41,6 @@ func NewDatasource(s backend.DataSourceInstanceSettings) (instancemgmt.Instance,
 // its health and has streaming skills.
 type Datasource struct {
 	channelPrefix string
-	upperLimit    float64
-	lowerLimit    float64
-	tickInterval  time.Duration
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
@@ -61,13 +60,14 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 
 	// loop over queries and execute them individually.
 	for _, q := range req.Queries {
-		if err := d.parseQuery(q.JSON); err != nil {
-			response.Responses[q.RefID] = backend.DataResponse{}
+		query, err := parseQuery(q.JSON)
+		if err != nil {
+			response.Responses[q.RefID] = backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("parse query: %s", err))
 			continue
 		}
 
 		// this part allow the creation of a streaming channel
-		res := d.createChannelResponse()
+		res := d.createChannelResponse(query)
 
 		// save the response in a hashmap
 		// based on with RefID as identifier
@@ -77,34 +77,29 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-func (d *Datasource) parseQuery(rawQuery json.RawMessage) error {
-	var q Query
+func parseQuery(rawQuery json.RawMessage) (Query, error) {
+	q := Query{
+		UpperLimit:   "1",
+		LowerLimit:   "0",
+		TickInterval: "1000",
+	} //default limits
+
 	if err := json.Unmarshal(rawQuery, &q); err != nil {
-		return err
+		return q, err
 	}
 
-	// simple validation of provided parameters
-	if q.UpperLimit > q.LowerLimit {
-		d.upperLimit = q.UpperLimit
-		d.lowerLimit = q.LowerLimit
-	}
-
-	if q.TickInterval > 0 {
-		d.tickInterval = time.Duration(q.TickInterval) * time.Millisecond
-	}
-
-	return nil
+	return q, nil
 }
 
-// createChannelResponse creates a Channel in to be returned in the
-// Frameta. It's bery important that the channel followns the format
+// createChannelResponse creates a Channel to be returned in the
+// Frame meta. It's very important that the channel follows the format
 // /ds/<plugin-id>/<channel-name>
-func (d *Datasource) createChannelResponse() backend.DataResponse {
+func (d *Datasource) createChannelResponse(q Query) backend.DataResponse {
 	var response backend.DataResponse
 
 	frame := data.NewFrame("")
 	frame.SetMeta(&data.FrameMeta{
-		Channel: path.Join(d.channelPrefix, "my-streaming-channel"),
+		Channel: path.Join(d.channelPrefix, "my-streaming-channel", q.LowerLimit, q.UpperLimit, q.TickInterval), //the path is used to send data to RunStream
 	})
 
 	response.Frames = append(response.Frames, frame)
@@ -143,25 +138,48 @@ func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamReques
 }
 
 func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
+	chunks := strings.Split(req.Path, "/")
+	if len(chunks) < 4 {
+		return fmt.Errorf("invalid path: %s", req.Path)
+	}
+
+	lowerLimit := parseFloat(chunks[1], 0)
+	upperLimit := parseFloat(chunks[2], 1)
+	tickInterval := parseFloat(chunks[3], 1000)
+
 	s := rand.NewSource(time.Now().UnixNano())
 	r := rand.New(s)
 
-	ticker := time.NewTicker(d.tickInterval)
+	ticker := time.NewTicker(time.Duration(tickInterval) * time.Millisecond)
+	defer ticker.Stop()
 
 	for {
 		select {
 		case <-ctx.Done():
-			ticker.Stop()
-			return nil
+			return ctx.Err()
 		case <-ticker.C:
-			randomValue := r.Float64()*(d.upperLimit-d.lowerLimit) + d.lowerLimit
-			sender.SendFrame(
+			// we generate a random value using the intervals provided by the frontend
+			randomValue := r.Float64()*(upperLimit-lowerLimit) + lowerLimit
+
+			err := sender.SendFrame(
 				data.NewFrame(
 					"response",
 					data.NewField("time", nil, []time.Time{time.Now()}),
 					data.NewField("value", nil, []float64{randomValue})),
 				data.IncludeAll,
 			)
+
+			if err != nil {
+				Logger.Error("Failed send frame", "error", err)
+			}
 		}
 	}
+}
+
+func parseFloat(str string, fallback float64) float64 {
+	value, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		return fallback
+	}
+	return value
 }
