@@ -3,9 +3,7 @@ package plugin
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"path"
-	"strings"
 	"time"
 
 	"github.com/grafana/example-websocket-datasource/pkg/websocket"
@@ -31,7 +29,6 @@ type WebsocketClient interface {
 // backend.CheckHealthHandler interfaces. Plugin should not implement all these
 // interfaces- only those which are required for a particular task.
 var (
-	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 	_ backend.StreamHandler         = (*Datasource)(nil) // Streaming data source needs to implement this
@@ -77,60 +74,6 @@ func (d *Datasource) Dispose() {
 	d.wsClient.Close()
 }
 
-// QueryData handles multiple queries and returns multiple responses.
-// req contains the queries []DataQuery (where each query contains RefID as a unique identifier).
-// The QueryDataResponse contains a map of RefID to the response for each query, and each response
-// contains Frames ([]*Frame).
-func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
-	// create response struct
-	response := backend.NewQueryDataResponse()
-
-	// loop over queries and execute them individually.
-	for _, q := range req.Queries {
-		query, err := parseQuery(q.JSON)
-		if err != nil {
-			response.Responses[q.RefID] = backend.ErrDataResponse(backend.StatusBadRequest, fmt.Sprintf("parse query: %s", err))
-			continue
-		}
-
-		// this part allow the creation of a streaming channel
-		res := d.createChannelResponse(query)
-		// save the response in a hashmap
-		// based on with RefID as identifier
-		response.Responses[q.RefID] = res
-	}
-
-	return response, nil
-}
-
-func parseQuery(rawQuery json.RawMessage) (Query, error) {
-	q := Query{
-		UpperLimit: "1",
-		LowerLimit: "0",
-	} //default limits
-
-	if err := json.Unmarshal(rawQuery, &q); err != nil {
-		return q, err
-	}
-
-	return q, nil
-}
-
-// createChannelResponse creates a Channel to be returned in the
-// Frame meta. It's very important that the channel follows the format
-// /ds/<plugin-id>/<channel-name>
-func (d *Datasource) createChannelResponse(q Query) backend.DataResponse {
-	var response backend.DataResponse
-
-	frame := data.NewFrame("")
-	frame.SetMeta(&data.FrameMeta{
-		Channel: path.Join(d.channelPrefix, "my-streaming-channel", q.LowerLimit, q.UpperLimit), //the path is used to send data to RunStream
-	})
-
-	response.Frames = append(response.Frames, frame)
-	return response
-}
-
 // CheckHealth handles health checks sent from Grafana to the plugin.
 // The main use case for these health checks is the test button on the
 // datasource configuration page which allows users to verify that
@@ -152,7 +95,7 @@ func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequ
 
 // SubscribeStream just returns an ok in this case, since we will always allow the user to successfully connect.
 // Permissions verifications could be done here. Check backend.StreamHandler docs for more details.
-func (d *Datasource) SubscribeStream(context.Context, *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
+func (d *Datasource) SubscribeStream(_ context.Context, req *backend.SubscribeStreamRequest) (*backend.SubscribeStreamResponse, error) {
 	return &backend.SubscribeStreamResponse{
 		Status: backend.SubscribeStreamStatusOK,
 	}, nil
@@ -167,15 +110,8 @@ func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamReques
 }
 
 func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
-	chunks := strings.Split(req.Path, "/")
-	if len(chunks) < 3 {
-		return fmt.Errorf("invalid path: %s", req.Path)
-	}
-
-	q := Query{
-		LowerLimit: chunks[1],
-		UpperLimit: chunks[2],
-	}
+	q := Query{}
+	json.Unmarshal(req.Data, &q)
 
 	limitsData, err := json.Marshal(q)
 	if err != nil {
@@ -198,7 +134,6 @@ func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamReques
 	for {
 		select {
 		case <-ctx.Done():
-			d.wsClient.Close()
 			return ctx.Err()
 		case rawMsg := <-messages:
 			var msg Message

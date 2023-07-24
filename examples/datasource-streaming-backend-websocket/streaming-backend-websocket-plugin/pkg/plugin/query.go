@@ -1,6 +1,6 @@
 package plugin
 
 type Query struct {
-	UpperLimit string `json:"upperLimit"`
-	LowerLimit string `json:"lowerLimit"`
+	UpperLimit float64 `json:"upperLimit"`
+	LowerLimit float64 `json:"lowerLimit"`
 }

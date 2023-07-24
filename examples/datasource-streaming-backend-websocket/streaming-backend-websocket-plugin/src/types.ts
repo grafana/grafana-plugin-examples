@@ -1,13 +1,13 @@
 import { DataQuery, DataSourceJsonData } from '@grafana/data';
 
 export interface MyQuery extends DataQuery {
-  upperLimit?: string;
-  lowerLimit?: string;
+  upperLimit?: number;
+  lowerLimit?: number;
 }
 
 export const DEFAULT_QUERY: Partial<MyQuery> = {
-  upperLimit: '1',
-  lowerLimit: '0',
+  upperLimit: 1,
+  lowerLimit: 0,
 };
 
 /**

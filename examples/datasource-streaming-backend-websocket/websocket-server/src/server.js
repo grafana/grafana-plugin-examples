@@ -26,7 +26,11 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (data) => {
     const msg = JSON.parse(data);
-    if (!msg.lowerLimit || !msg.upperLimit || msg.lowerLimit > msg.upperLimit) {
+    if (
+      msg.lowerLimit === undefined ||
+      msg.upperLimit === undefined ||
+      msg.lowerLimit > msg.upperLimit
+    ) {
       console.log(`Message out of format: ${data}`);
       return;
     }
