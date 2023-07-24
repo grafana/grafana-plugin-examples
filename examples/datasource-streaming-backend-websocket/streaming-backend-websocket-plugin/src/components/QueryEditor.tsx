@@ -8,15 +8,11 @@ type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export function QueryEditor({ query, onChange, onRunQuery }: Props) {
   const onLowerLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, lowerLimit: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
+    onChange({ ...query, lowerLimit: event.target.valueAsNumber });
   };
 
   const onUpperLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, upperLimit: parseFloat(event.target.value) });
-    // executes the query
-    onRunQuery();
+    onChange({ ...query, upperLimit: event.target.valueAsNumber });
   };
 
   const { upperLimit, lowerLimit } = query;
@@ -24,10 +20,10 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
   return (
     <div className="gf-form">
       <InlineField label="Lower Limit" labelWidth={16} tooltip="Random numbers lower limit">
-        <Input onChange={onLowerLimitChange} onBlur={onRunQuery} value={lowerLimit || ''} type='number' />
+        <Input onChange={onLowerLimitChange} onBlur={onRunQuery} value={lowerLimit || ''} type="number" />
       </InlineField>
       <InlineField label="Upper Limit" labelWidth={16} tooltip="Random numbers upper limit">
-        <Input onChange={onUpperLimitChange} onBlur={onRunQuery} value={upperLimit || ''} type='number'/>
+        <Input onChange={onUpperLimitChange} onBlur={onRunQuery} value={upperLimit || ''} type="number" />
       </InlineField>
     </div>
   );

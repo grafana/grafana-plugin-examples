@@ -1,100 +1,44 @@
 package websocket
 
 import (
-	"context"
-	"crypto/tls"
-	"fmt"
-	"reflect"
-
+	"github.com/gorilla/websocket"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"golang.org/x/net/websocket"
 )
 
 var Logger = log.DefaultLogger
 
 type Client struct {
-	conn      *websocket.Conn
-	serverURL string
-	stopChan  chan struct{}
+	conn *websocket.Conn
 }
 
-type Options struct {
-	URI string `json:"uri"`
-}
+func NewClient(url string) (*Client, error) {
+	c := &Client{}
 
-func NewClient(serverURL string) *Client {
-	return &Client{serverURL: serverURL}
-}
-
-func (c *Client) Connect() error {
-	conn, err := c.createConnection()
+	// Connect to the WebSocket server
+	conn, _, err := websocket.DefaultDialer.Dial(url, nil)
 	if err != nil {
-		return fmt.Errorf("error connecting to WebSocket server: %v", err)
+		return nil, err
 	}
 
 	c.conn = conn
-	c.stopChan = make(chan struct{})
+	return c, nil
+}
+
+func (c *Client) ReadMessage() ([]byte, error) {
+	_, msg, err := c.conn.ReadMessage()
+	if err != nil {
+		return nil, err
+	}
+	return msg, nil
+}
+
+func (c *Client) Close() error {
+	if c.conn != nil {
+		return c.conn.Close()
+	}
 	return nil
 }
 
-func (c *Client) CanConnect() bool {
-	conn, err := c.createConnection()
-	if err != nil {
-		return false
-	}
-	conn.Close() // Close the temporary connection
-	return true
-}
-
-func (c *Client) createConnection() (*websocket.Conn, error) {
-	config, err := websocket.NewConfig(c.serverURL, "http://localhost")
-	if err != nil {
-		return nil, err
-	}
-	config.TlsConfig = &tls.Config{InsecureSkipVerify: true} // For testing with self-signed certificates
-	conn, err := websocket.DialConfig(config)
-	if err != nil {
-		return nil, err
-	}
-	return conn, nil
-}
-
-func (c *Client) Read(ctx context.Context) <-chan string {
-	messages := make(chan string)
-	go func() {
-		defer close(messages)
-		for {
-			select {
-			case <-c.stopChan:
-				return
-			case <-ctx.Done():
-				return
-			default:
-				var message string
-				err := websocket.Message.Receive(c.conn, &message)
-				// returning on any error for simplicity
-				if err != nil {
-					Logger.Error("Error reading message", "error", err, "error-type", reflect.TypeOf(err))
-					return
-				}
-				messages <- message
-			}
-		}
-	}()
-	return messages
-}
-
-func (c *Client) Close() {
-	if c.conn == nil {
-		return
-	}
-
-	if err := c.conn.Close(); err != nil {
-		Logger.Error("Error closing connection: %v", err)
-	}
-	close(c.stopChan)
-}
-
-func (c *Client) SendMessage(message string) error {
-	return websocket.Message.Send(c.conn, message)
+func (c *Client) WriteMessage(message []byte) error {
+	return c.conn.WriteMessage(websocket.TextMessage, message)
 }

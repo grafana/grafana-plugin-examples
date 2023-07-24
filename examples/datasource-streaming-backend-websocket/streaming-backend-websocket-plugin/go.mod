@@ -3,8 +3,8 @@ module github.com/grafana/example-websocket-datasource
 go 1.19
 
 require (
+	github.com/gorilla/websocket v1.5.0
 	github.com/grafana/grafana-plugin-sdk-go v0.169.0
-	golang.org/x/net v0.9.0
 )
 
 require (
@@ -73,6 +73,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	go.opentelemetry.io/proto/otlp v0.19.0 // indirect
+	golang.org/x/net v0.9.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect

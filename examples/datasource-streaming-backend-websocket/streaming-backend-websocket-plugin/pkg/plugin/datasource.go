@@ -15,14 +15,6 @@ import (
 
 var Logger = log.DefaultLogger
 
-type WebsocketClient interface {
-	Connect() error
-	CanConnect() bool
-	Read(ctx context.Context) <-chan string
-	Close()
-	SendMessage(string) error
-}
-
 // Make sure Datasource implements required interfaces. This is important to do
 // since otherwise we will only get a not implemented error response from plugin in
 // runtime. In this example datasource instance implements backend.QueryDataHandler,
@@ -41,16 +33,18 @@ func NewDatasource(s backend.DataSourceInstanceSettings) (instancemgmt.Instance,
 		return nil, err
 	}
 
-	c := websocket.NewClient(settings.URI)
-
 	return &Datasource{
 		channelPrefix: path.Join("ds", s.UID),
-		wsClient:      c,
+		uri:           settings.URI,
 	}, nil
 }
 
-func getDatasourceSettings(s backend.DataSourceInstanceSettings) (*websocket.Options, error) {
-	settings := &websocket.Options{}
+type Options struct {
+	URI string `json:"uri"`
+}
+
+func getDatasourceSettings(s backend.DataSourceInstanceSettings) (*Options, error) {
+	settings := &Options{}
 
 	if err := json.Unmarshal(s.JSONData, settings); err != nil {
 		return nil, err
@@ -63,7 +57,7 @@ func getDatasourceSettings(s backend.DataSourceInstanceSettings) (*websocket.Opt
 // its health and has streaming skills.
 type Datasource struct {
 	channelPrefix string
-	wsClient      WebsocketClient
+	uri           string
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
@@ -71,7 +65,6 @@ type Datasource struct {
 // be disposed and a new one will be created using NewSampleDatasource factory function.
 func (d *Datasource) Dispose() {
 	// Clean up datasource instance resources.
-	d.wsClient.Close()
 }
 
 // CheckHealth handles health checks sent from Grafana to the plugin.
@@ -82,7 +75,7 @@ func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequ
 	var status = backend.HealthStatusOk
 	var message = "Connection can be successfully established"
 
-	if !d.wsClient.CanConnect() {
+	if !d.canConnect() {
 		status = backend.HealthStatusError
 		message = "Connection not working"
 	}
@@ -91,6 +84,14 @@ func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequ
 		Status:  status,
 		Message: message,
 	}, nil
+}
+
+func (d *Datasource) canConnect() bool {
+	c, err := websocket.NewClient(d.uri)
+	if err != nil {
+		return false
+	}
+	return c.Close() == nil
 }
 
 // SubscribeStream just returns an ok in this case, since we will always allow the user to successfully connect.
@@ -110,38 +111,39 @@ func (d *Datasource) PublishStream(context.Context, *backend.PublishStreamReques
 }
 
 func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamRequest, sender *backend.StreamSender) error {
-	q := Query{}
-	json.Unmarshal(req.Data, &q)
-
-	limitsData, err := json.Marshal(q)
+	// for simplicity on any error the function returns and ends the streaming
+	ws, err := websocket.NewClient(d.uri)
 	if err != nil {
 		return err
 	}
+	defer func() {
+		if err := ws.Close(); err != nil {
+			Logger.Error("Error closing connection", "err", err)
+		}
+		Logger.Info("Connection close")
+	}()
 
-	err = d.wsClient.Connect()
-	if err != nil {
+	if err := ws.WriteMessage(req.Data); err != nil {
 		return err
 	}
-	defer d.wsClient.Close()
-
-	err = d.wsClient.SendMessage(string(limitsData))
-	if err != nil {
-		return err
-	}
-
-	messages := d.wsClient.Read(ctx)
 
 	for {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case rawMsg := <-messages:
-			var msg Message
-			if err := json.Unmarshal([]byte(rawMsg), &msg); err != nil {
-				Logger.Error("Failed to unmarshal message", "error", err)
+		default:
+			msg := Message{}
+			rawMsg, err := ws.ReadMessage()
+
+			if err != nil {
+				return err
 			}
 
-			err := sender.SendFrame(
+			if err := json.Unmarshal(rawMsg, &msg); err != nil {
+				return err
+			}
+
+			err = sender.SendFrame(
 				data.NewFrame(
 					"response",
 					data.NewField("time", nil, []time.Time{time.UnixMilli(msg.Time)}),
@@ -150,7 +152,7 @@ func (d *Datasource) RunStream(ctx context.Context, req *backend.RunStreamReques
 			)
 
 			if err != nil {
-				Logger.Error("Failed send frame", "error", err)
+				return err
 			}
 		}
 	}
