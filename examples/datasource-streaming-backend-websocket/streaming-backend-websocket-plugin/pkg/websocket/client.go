@@ -2,10 +2,7 @@ package websocket
 
 import (
 	"github.com/gorilla/websocket"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
-
-var Logger = log.DefaultLogger
 
 type Client struct {
 	conn *websocket.Conn
