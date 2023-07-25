@@ -25,7 +25,7 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
         addr: {
           scope: LiveChannelScope.DataSource,
           namespace: this.uid,
-          path: `my-ws/custom-${query.lowerLimit}-${query.upperLimit}`, // this will allow each new query to create a new connection
+          path: `my-ws/custom-${query.lowerLimit}-${query.upperLimit}-${query.tickInterval}`, // this will allow each new query to create a new connection
           data: {
             ...query,
           },
