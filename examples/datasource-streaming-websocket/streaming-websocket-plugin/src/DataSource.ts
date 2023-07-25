@@ -5,6 +5,7 @@ import {
   DataSourceApi,
   DataSourceInstanceSettings,
   FieldType,
+  LoadingState,
 } from '@grafana/data';
 import defaults from 'lodash/defaults';
 import { merge, Observable } from 'rxjs';
@@ -46,6 +47,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
           subscriber.next({
             data: [frame],
             key: query.refId,
+            state: LoadingState.Streaming,
           });
         };
       });
