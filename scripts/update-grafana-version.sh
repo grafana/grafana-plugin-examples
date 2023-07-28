@@ -87,3 +87,16 @@ done
 ###############################################
 # Upgrade docker-compose files
 ###############################################
+# Find the docker-compose.yaml files excluding node_modules
+files=$(find examples -type f -name "docker-compose.yaml" -not -path "*node_modules*")
+
+# Iterate over each file and modify the grafana_version field
+for file in $files; do
+    # Check if the file contains the grafana_version field
+    if grep -q "grafana_version:" "$file"; then
+        # Replace the grafana_version field with the target version
+        # sed -i "s/grafana_version:.*/grafana_version: ${GRAFANA_VERSION_TARGET}/" "$file"
+        sed -i "s/\(grafana_version: \)\${GRAFANA_VERSION:-[^}]*}/\1\${GRAFANA_VERSION:-$GRAFANA_VERSION_TARGET}/" "$file"
+        echo "Modified $file"
+    fi
+done
