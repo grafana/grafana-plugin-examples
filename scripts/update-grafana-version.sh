@@ -2,7 +2,21 @@
 #
 GRAFANA_VERSION_TARGET=${1:-10.0.3}
 
+# fail this script if jq is not installed
+command -v jq >/dev/null 2>&1 || { echo >&2 "jq is required but it's not installed.  Aborting."; exit 1; }
+
 dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
+
+
+# Specify the packages for version upgrade
+upgradePackages=(
+    "@grafana/data"
+    "@grafana/runtime"
+    "@grafana/schema"
+    "@grafana/ui"
+    "@grafana/e2e"
+    "@grafana/e2e-selectors"
+)
 
 # Iterate over each directory
 for dir in $dirs; do
@@ -13,11 +27,22 @@ for dir in $dirs; do
   # Concatenate the dependencies and devDependencies
   allDependencies="$dependencies $devDependencies"
 
-  Upgrade each dependency to version 10.0.3 using yarn
   upgradeCommand=""
   for dep in $allDependencies; do
-    upgradeCommand+="$dep@$GRAFANA_VERSION_TARGET "
-  done
+        upgradeFlag=false
+        for pkg in "${upgradePackages[@]}"; do
+            if [ "$dep" = "$pkg" ]; then
+                upgradeFlag=true
+                break
+            fi
+        done
+
+        if $upgradeFlag; then
+            upgradeCommand+="$dep@$GRAFANA_VERSION_TARGET "
+        else
+            upgradeCommand+="$dep@latest "
+        fi
+    done
   pushd "$dir" || exit 1
   yarn install
   yarn upgrade $upgradeCommand
