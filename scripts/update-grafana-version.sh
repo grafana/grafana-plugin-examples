@@ -43,8 +43,21 @@ for dir in $dirs; do
             upgradeCommand+="$dep@latest "
         fi
     done
+
   pushd "$dir" || exit 1
-  yarn install
-  yarn upgrade $upgradeCommand
+
+  # detect if a package-lock.json exists
+  if [ -f "package-lock.json" ]; then
+    echo "package-lock.json exists, running npm install"
+    npm install
+    npm upgrade $upgradeCommand
+  fi
+
+  # if a yarn.lock exists, run yarn install
+  if [ -f "yarn.lock" ]; then
+    echo "yarn.lock exists, running yarn install"
+    yarn install
+    yarn upgrade $upgradeCommand
+  fi
   popd || exit 1
 done
