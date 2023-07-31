@@ -23,6 +23,11 @@ upgradePackages=(
 
 # Iterate over each directory
 for dir in $dirs; do
+  # if $dir is the same as the current directory, skip it
+  if [ "$dir" = "." ]; then
+    echo "Skipping $dir"
+    continue
+  fi
   # Extract the dependencies and devDependencies starting with '@grafana' from the package.json
   dependencies=$(jq -r '.dependencies | to_entries | map(select(.key | startswith("@grafana"))) | .[].key' "$dir/package.json")
   devDependencies=$(jq -r '.devDependencies | to_entries | map(select(.key | startswith("@grafana"))) | .[].key' "$dir/package.json")
