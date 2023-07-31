@@ -12,7 +12,9 @@
     "author": {
       "name": "Grafana Labs"
     },
-    "keywords": ["datasource"],
+    "keywords": [
+      "datasource"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -32,7 +34,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=9.1.2",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

@@ -4,7 +4,11 @@
   "name": "Basic App",
   "id": "myorg-basic-app",
   "info": {
-    "keywords": ["basic", "app", "example"],
+    "keywords": [
+      "basic",
+      "app",
+      "example"
+    ],
     "description": "A basic grafana app plugin",
     "author": {
       "name": "Your name"
@@ -60,7 +64,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.2.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

@@ -4,7 +4,10 @@
   "name": "Basic Panel",
   "id": "basic-panel",
   "info": {
-    "keywords": ["panel", "example"],
+    "keywords": [
+      "panel",
+      "example"
+    ],
     "description": "Showcase how to build a basic panel plugin",
     "author": {
       "name": "Your Name"
@@ -28,7 +31,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=9.1.2",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

@@ -5,7 +5,9 @@
   "id": "myorg-b-app",
   "preload": true,
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "Will extend root app with ui extensions",
     "author": {
       "name": "Myorg"
@@ -29,7 +31,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.5.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }
