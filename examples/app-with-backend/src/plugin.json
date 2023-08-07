@@ -6,7 +6,11 @@
   "backend": true,
   "executable": "gpx_app-myorg-withbackend-app",
   "info": {
-    "keywords": ["bi", "app", "query jobs"],
+    "keywords": [
+      "bi",
+      "app",
+      "query jobs"
+    ],
     "description": "Example Grafana app with backend service handling HTTP requests",
     "author": {
       "name": "Grafana Labs"
@@ -38,7 +42,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.2.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

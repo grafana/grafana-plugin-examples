@@ -5,7 +5,9 @@
   "id": "myorg-extensionpoint-app",
   "preload": true,
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "Show case how to add an extension point to your plugin",
     "author": {
       "name": "Myorg"
@@ -29,7 +31,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.5.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

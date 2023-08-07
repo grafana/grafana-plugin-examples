@@ -4,7 +4,9 @@
   "name": "Basic App With Dashboards",
   "id": "myorg-dashboard-app",
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "A basic grafana app plugin with dashboards",
     "author": {
       "name": "Your name"
@@ -44,7 +46,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=9.2.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

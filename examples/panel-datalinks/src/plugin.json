@@ -8,7 +8,10 @@
     "author": {
       "name": "My org"
     },
-    "keywords": ["panel", "datalinks"],
+    "keywords": [
+      "panel",
+      "datalinks"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
@@ -28,7 +31,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=9.1.2",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   }
 }

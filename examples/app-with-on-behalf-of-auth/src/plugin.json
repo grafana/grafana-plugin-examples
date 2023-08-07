@@ -6,7 +6,9 @@
   "backend": true,
   "executable": "gpx_app_with_on_behalf_of_auth",
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "Example app demonstrating how to use the on behalf of flow to authenticate an app using another user account",
     "author": {
       "name": "Grafana"
@@ -43,19 +45,36 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.1",
+    "grafanaDependency": ">=10.0.3",
     "plugins": []
   },
   "externalServiceRegistration": {
     "self": {
-      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
+      "permissions": [
+        {
+          "action": "dashboards:create",
+          "scope": "folders:uid:general"
+        }
+      ]
     },
     "impersonation": {
       "permissions": [
-        { "action": "dashboards:create", "scope": "folders:*" },
-        { "action": "dashboards:read", "scope": "dashboards:*" },
-        { "action": "dashboards:read", "scope": "folders:*" },
-        { "action": "folders:read", "scope": "folders:*" }
+        {
+          "action": "dashboards:create",
+          "scope": "folders:*"
+        },
+        {
+          "action": "dashboards:read",
+          "scope": "dashboards:*"
+        },
+        {
+          "action": "dashboards:read",
+          "scope": "folders:*"
+        },
+        {
+          "action": "folders:read",
+          "scope": "folders:*"
+        }
       ]
     }
   }
