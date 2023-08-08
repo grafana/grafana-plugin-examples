@@ -8,9 +8,6 @@ fi
 
 SDK_TARGET="${1:-latest}"
 
-# Keep track of base directory
-base=$(pwd)
-
 # Find go.mod files (backend plugins)
 files=$(find examples -type f -name "go.mod")
 
@@ -18,10 +15,10 @@ files=$(find examples -type f -name "go.mod")
 for file in $files; do
   echo "Upgrading grafana-plugin-sdk-go to $SDK_TARGET in $file"
 
-  cd $(dirname "$file")
+  pushd $(dirname "$file") || exit 1
   go get -u "github.com/grafana/grafana-plugin-sdk-go@$SDK_TARGET"
   go mod tidy
 
   # Return to base directory
-  cd "$base"
+  popd || exit 1
 done
