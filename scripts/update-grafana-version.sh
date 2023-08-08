@@ -105,3 +105,10 @@ for file in $files; do
         echo "Modified $file"
     fi
 done
+
+
+###############################################
+# Upgrade grafana-plugin-sdk-go to latest version
+###############################################
+
+./scripts/update-backend-sdk.sh
