@@ -60,7 +60,7 @@ func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error)
 		app.grafanaAppURL = "http://localhost:3000"
 	}
 
-	app.tokenRetriever, err = oauthtokenretriever.New()
+	app.tokenRetriever, err = oauthtokenretriever.New(settings)
 	if err != nil {
 		return nil, err
 	}
