@@ -11,15 +11,11 @@ export class ConfigEditor extends PureComponent<Props, State> {
   render() {
     const { options } = this.props;
     return (
-      <div className="gf-form-group">
-        <div className="gf-form">
-          <DataSourceHttpSettings
-            defaultUrl="http://127.0.0.1:10000/metrics"
-            dataSourceConfig={options}
-            onChange={this.props.onOptionsChange}
-          />
-        </div>
-      </div>
+      <DataSourceHttpSettings
+        defaultUrl="http://127.0.0.1:10000/metrics"
+        dataSourceConfig={options}
+        onChange={this.props.onOptionsChange}
+      />
     );
   }
 }

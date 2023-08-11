@@ -14,49 +14,47 @@ export const AppConfig = ({ plugin }: AppConfigProps) => {
   const { enabled, jsonData } = plugin.meta;
 
   return (
-    <div className="gf-form-group">
-      <div>
-        {/* Enable the plugin */}
-        <Legend>Enable / Disable</Legend>
-        {!enabled && (
-          <>
-            <div className={s.colorWeak}>The plugin is currently not enabled.</div>
-            <Button
-              className={s.marginTop}
-              variant="primary"
-              onClick={() =>
-                updatePluginAndReload(plugin.meta.id, {
-                  enabled: true,
-                  pinned: true,
-                  jsonData,
-                })
-              }
-            >
-              Enable plugin
-            </Button>
-          </>
-        )}
+    <div>
+      {/* Enable the plugin */}
+      <Legend>Enable / Disable </Legend>
+      {!enabled && (
+        <>
+          <div className={s.colorWeak}>The plugin is currently not enabled.</div>
+          <Button
+            className={s.marginTop}
+            variant="primary"
+            onClick={() =>
+              updatePluginAndReload(plugin.meta.id, {
+                enabled: true,
+                pinned: true,
+                jsonData,
+              })
+            }
+          >
+            Enable plugin
+          </Button>
+        </>
+      )}
 
-        {/* Disable the plugin */}
-        {enabled && (
-          <>
-            <div className={s.colorWeak}>The plugin is currently enabled.</div>
-            <Button
-              className={s.marginTop}
-              variant="destructive"
-              onClick={() =>
-                updatePluginAndReload(plugin.meta.id, {
-                  enabled: false,
-                  pinned: false,
-                  jsonData,
-                })
-              }
-            >
-              Disable plugin
-            </Button>
-          </>
-        )}
-      </div>
+      {/* Disable the plugin */}
+      {enabled && (
+        <>
+          <div className={s.colorWeak}>The plugin is currently enabled.</div>
+          <Button
+            className={s.marginTop}
+            variant="destructive"
+            onClick={() =>
+              updatePluginAndReload(plugin.meta.id, {
+                enabled: false,
+                pinned: false,
+                jsonData,
+              })
+            }
+          >
+            Disable plugin
+          </Button>
+        </>
+      )}
     </div>
   );
 };

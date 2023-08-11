@@ -1,5 +1,5 @@
 import { QueryEditorProps } from '@grafana/data';
-import { LegacyForms } from '@grafana/ui';
+import { LegacyForms, HorizontalGroup } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { ChangeEvent, PureComponent } from 'react';
 import { DataSource } from './DataSource';
@@ -27,7 +27,7 @@ export class QueryEditor extends PureComponent<Props> {
     const { queryText, constant } = query;
 
     return (
-      <div className="gf-form">
+      <HorizontalGroup>
         <FormField
           width={4}
           value={constant}
@@ -43,7 +43,7 @@ export class QueryEditor extends PureComponent<Props> {
           label="Query Text"
           tooltip="Not used yet"
         />
-      </div>
+      </HorizontalGroup>
     );
   }
 }
