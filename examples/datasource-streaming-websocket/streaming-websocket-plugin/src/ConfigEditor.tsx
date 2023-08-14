@@ -24,17 +24,13 @@ export class ConfigEditor extends PureComponent<Props, State> {
     const { jsonData } = options;
 
     return (
-      <div className="gf-form-group">
-        <div className="gf-form">
-          <FormField
-            label="WebSocket server URL"
-            labelWidth={10}
-            inputWidth={20}
-            onChange={this.onURLChange}
-            value={jsonData.url || ''}
-          />
-        </div>
-      </div>
+      <FormField
+        label="WebSocket server URL"
+        labelWidth={10}
+        inputWidth={20}
+        onChange={this.onURLChange}
+        value={jsonData.url || ''}
+      />
     );
   }
 }

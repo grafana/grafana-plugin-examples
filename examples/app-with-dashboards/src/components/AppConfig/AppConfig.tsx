@@ -15,7 +15,7 @@ export const AppConfig = ({ plugin }: AppConfigProps) => {
   const { enabled, jsonData } = plugin.meta;
 
   return (
-    <div className="gf-form-group" data-testid={testIds.appConfig.container}>
+    <div data-testid={testIds.appConfig.container}>
       <div>
         {/* Enable the plugin */}
         <Legend>Enable / Disable</Legend>

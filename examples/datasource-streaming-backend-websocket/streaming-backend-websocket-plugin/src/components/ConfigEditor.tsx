@@ -23,22 +23,20 @@ export function ConfigEditor(props: Props) {
   const { uri } = jsonData;
 
   return (
-    <div className="gf-form-group">
-      <FieldSet label="Connection">
-        <InlineFieldRow>
-          <InlineField label="URI" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
-            <Input
-              width={30}
-              name="uri"
-              required
-              value={uri}
-              autoComplete="off"
-              placeholder="ws://websocket-server:8080"
-              onChange={onUriChange}
-            />
-          </InlineField>
-        </InlineFieldRow>
-      </FieldSet>
-    </div>
+    <FieldSet label="Connection">
+      <InlineFieldRow>
+        <InlineField label="URI" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
+          <Input
+            width={30}
+            name="uri"
+            required
+            value={uri}
+            autoComplete="off"
+            placeholder="ws://websocket-server:8080"
+            onChange={onUriChange}
+          />
+        </InlineField>
+      </InlineFieldRow>
+    </FieldSet>
   );
 }
