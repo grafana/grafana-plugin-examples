@@ -24,7 +24,7 @@ This repository contains example plugins to showcase different use cases.
 | [panel-visx](examples/panel-visx)                 | demonstrates how to use [visx](https://github.com/airbnb/visx) to create a time series graph.                                            |
 | [panel-basic](examples/panel-basic)               | demonstrates how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
 | [panel-datalinks](examples/panel-datalinks)       | demonstrates how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
-
+d
 ## Data source plugins
 
 | Example                                                                   | Description                                                                                                          |
