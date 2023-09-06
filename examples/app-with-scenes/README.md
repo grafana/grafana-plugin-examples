@@ -10,7 +10,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 [@grafana/scenes](https://github.com/grafana/scenes) is a framework to enable versatile app plugins implementation. It provides an easy way to build apps that resemble Grafana's dashboarding experience, including template variables support, versatile layouts, panels rendering and more.
 
-To learn more about @grafana/scenes usage please refer to [documentation](https://grafana.github.io/scenes)
+To learn more about @grafana/scenes usage please refer to [documentation](https://grafana.com/developers/scenes)
 
 ## What does this template contain?
 

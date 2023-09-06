@@ -56,9 +56,9 @@ There is a github workflow `.github/workflows/integration-tests.yml` which finds
 
 ## Using the examples as the base for your plugins
 
-All of the examples use [grafana/create-plugin](https://grafana.github.io/plugin-tools/) instead of `@grafana/toolkit`.
+All of the examples use [grafana/create-plugin](https://grafana.com/developers/plugin-tools) instead of `@grafana/toolkit`.
 
-You can read more about customizing and extending the base configuration [here](https://grafana.github.io/plugin-tools/docs/advanced-configuration)
+You can read more about customizing and extending the base configuration [here](https://grafana.com/developers/plugin-tools/create-a-plugin/extend-a-plugin/extend-configurations)
 
 ## API Compatibility
 
