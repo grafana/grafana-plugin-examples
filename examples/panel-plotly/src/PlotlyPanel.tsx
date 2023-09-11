@@ -1,5 +1,5 @@
-import { GrafanaTheme, PanelProps } from '@grafana/data';
-import { useTheme } from '@grafana/ui';
+import { GrafanaTheme2, PanelProps } from '@grafana/data';
+import { useTheme2 } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React from 'react';
 import Plot from 'react-plotly.js';
@@ -8,7 +8,7 @@ import { PlotlyOptions } from 'types';
 interface Props extends PanelProps<PlotlyOptions> {}
 
 export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) => {
-  const theme = useTheme();
+  const theme = useTheme2();
 
   const plotlyData: Plotly.Data[] = [
     {
@@ -33,7 +33,7 @@ export const PlotlyPanel: React.FC<Props> = ({ options, data, width, height }) =
 };
 
 // defaultLayout resets the Plotly layout to work better with the Grafana theme.
-const defaultLayout = (theme: GrafanaTheme) => ({
+const defaultLayout = (theme: GrafanaTheme2) => ({
   margin: {
     r: 40,
     l: 40,
@@ -43,6 +43,6 @@ const defaultLayout = (theme: GrafanaTheme) => ({
   plot_bgcolor: 'rgba(0,0,0,0)', // Transparent
   paper_bgcolor: 'rgba(0,0,0,0)', // Transparent
   font: {
-    color: theme.isDark ? theme.palette.white : theme.palette.black,
+    color: theme.visualization.getColorByName(theme.isDark ? 'white' : 'black'),
   },
 });
