@@ -4,8 +4,6 @@ import { QueryEditorProps } from '@grafana/data';
 import { MyDataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery } from '../types';
 
-// @ts-ignore
-// Does not seem to be a problem in the code, but rather in the types
 type Props = QueryEditorProps<MyDataSource, MyQuery, MyDataSourceOptions>;
 
 export function QueryEditor({ query, onChange }: Props) {

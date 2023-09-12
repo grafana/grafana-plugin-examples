@@ -21,7 +21,7 @@ import {
 
 import { MyQuery, MyDataSourceOptions } from './types';
 import { fetchLogs, Log } from './mockDataRequest'
-import { Observable, catchError, forkJoin, from, interval, lastValueFrom } from 'rxjs';
+import { catchError, forkJoin, from, interval, lastValueFrom } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators'
 
 export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> implements DataSourceWithLogsContextSupport<MyQuery> {
@@ -29,9 +29,7 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
     super(instanceSettings);
   }
 
-  // @ts-ignore
-  // TODO: There is an issue where Observable used and expected are different. Does not seem to be a problem in the code, but rather in the types.
-  query(request: DataQueryRequest<MyQuery>): Observable<DataQueryResponse> {
+  query(request: DataQueryRequest<MyQuery>): any {
     const { range, targets, liveStreaming } = request;
 
     // Process live streaming request
