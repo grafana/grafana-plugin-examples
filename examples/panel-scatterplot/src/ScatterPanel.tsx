@@ -1,5 +1,5 @@
 import { PanelProps } from '@grafana/data';
-import { useTheme } from '@grafana/ui';
+import { useTheme2 } from '@grafana/ui';
 import * as d3 from 'd3';
 import React from 'react';
 import { ScatterOptions } from 'types';
@@ -7,7 +7,7 @@ import { ScatterOptions } from 'types';
 interface Props extends PanelProps<ScatterOptions> {}
 
 export const ScatterPanel: React.FC<Props> = ({ options, data, width, height }) => {
-  const theme = useTheme();
+  const theme = useTheme2();
 
   const margin = { left: 30, top: 30, right: 30, bottom: 30 };
 
@@ -31,7 +31,13 @@ export const ScatterPanel: React.FC<Props> = ({ options, data, width, height }) 
       <g transform={`translate(${margin.left}, ${margin.top})`}>
         <g>
           {points.map((d: any, key: number) => (
-            <circle key={key} cx={xScale(d.x)} cy={yScale(d.y)} r={5} fill={theme.palette.greenBase}></circle>
+            <circle
+              key={key}
+              cx={xScale(d.x)}
+              cy={yScale(d.y)}
+              r={5}
+              fill={theme.visualization.getColorByName('green')}
+            ></circle>
           ))}
         </g>
         <g
