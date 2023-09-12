@@ -1,0 +1,28 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "example-logs",
+  "id": "grafana-logs-datasource",
+  "metrics": true,
+  "logs": true,
+  "streaming": true,
+  "info": {
+    "description": "Showcase how to build a basic datasource plugin with logging features",
+    "author": {
+      "name": "Grafana"
+    },
+    "keywords": ["datasource"],
+    "logos": {
+      "small": "img/log.png",
+      "large": "img/log.png"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10.1.0",
+    "plugins": []
+  }
+}
