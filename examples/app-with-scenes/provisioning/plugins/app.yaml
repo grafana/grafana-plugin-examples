@@ -7,6 +7,5 @@ apps:
     disabled: false
     jsonData:
       apiUrl: http://default-url.com
-      isApiKeySet: true
     secureJsonData:
       apiKey: secret-key

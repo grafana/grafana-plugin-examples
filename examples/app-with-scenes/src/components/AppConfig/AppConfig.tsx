@@ -7,7 +7,6 @@ import { testIds } from '../testIds';
 
 export type JsonData = {
   apiUrl?: string;
-  isApiKeySet?: boolean;
 };
 
 type State = {
@@ -25,11 +24,11 @@ interface Props extends PluginConfigPageProps<AppPluginMeta<JsonData>> {}
 
 export const AppConfig = ({ plugin }: Props) => {
   const s = useStyles2(getStyles);
-  const { enabled, pinned, jsonData } = plugin.meta;
+  const { enabled, pinned, jsonData, secureJsonFields } = plugin.meta;
   const [state, setState] = useState<State>({
     apiUrl: jsonData?.apiUrl || '',
     apiKey: '',
-    isApiKeySet: Boolean(jsonData?.isApiKeySet),
+    isApiKeySet: Boolean(secureJsonFields?.apiKey),
   });
 
   const onResetApiKey = () =>
@@ -136,7 +135,6 @@ export const AppConfig = ({ plugin }: Props) => {
                 pinned,
                 jsonData: {
                   apiUrl: state.apiUrl,
-                  isApiKeySet: true,
                 },
                 // This cannot be queried later by the frontend.
                 // We don't want to override it in case it was set previously and left untouched now.
