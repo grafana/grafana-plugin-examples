@@ -19,10 +19,11 @@ import {
   createDataFrame,
 } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions } from './types';
+import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY } from './types';
 import { fetchLogs, Log } from './mockDataRequest'
 import { catchError, forkJoin, from, interval, lastValueFrom } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators'
+import { defaults } from 'lodash';
 
 export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> implements DataSourceWithLogsContextSupport<MyQuery> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
@@ -36,12 +37,13 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
     if (liveStreaming) {
       // To simplify this, we only support one target in live streaming mode
       const target = targets[0]
+      const query = defaults(target, DEFAULT_QUERY);
       return interval(1000).pipe(
         mergeMap((i) => {
           const addedTime = i * 10000
-          return from(fetchLogs(target.limit, range!.from.valueOf() + addedTime, range!.to.valueOf() + addedTime, target.queryText)).pipe(
+          return from(fetchLogs(query.limit, range!.from.valueOf() + addedTime, range!.to.valueOf() + addedTime, query.queryText)).pipe(
             map((logs: Log[]) => {
-              return {data: [this.processLogsToDataFrames(logs, target)], state: LoadingState.Streaming}
+              return {data: [this.processLogsToDataFrames(logs, query)], state: LoadingState.Streaming}
             })
           )
         }),
@@ -50,9 +52,10 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
 
     // Process regular log request
     const fetchLogsObservables = targets.map((target) => {
-      return from(fetchLogs(target.limit, range!.from.valueOf(), range!.to.valueOf(), target.queryText)).pipe(
+      const query = defaults(target, DEFAULT_QUERY);
+      return from(fetchLogs(query.limit, range!.from.valueOf(), range!.to.valueOf(), query.queryText)).pipe(
         map((logs: Log[]) => {
-          return {data: [this.processLogsToDataFrames(logs, target)], state: LoadingState.Done}
+          return {data: [this.processLogsToDataFrames(logs, query)], state: LoadingState.Done}
         })
       )
     })
