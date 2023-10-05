@@ -70,7 +70,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 
 ### Backend
 
-1. Update [Grafana plugin SDK for Go](https://grafana.com/docs/grafana/latest/developers/plugins/backend/grafana-plugin-sdk-for-go/) dependency to the latest minor version:
+1. Update [Grafana plugin SDK for Go](https://grafana.com/developers/plugin-tools/introduction/grafana-plugin-sdk-for-go) dependency to the latest minor version:
 
    ```bash
    go get -u github.com/grafana/grafana-plugin-sdk-go
@@ -94,5 +94,5 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 Below you can find source code for existing app plugins and other related documentation.
 
 - [All plugin examples](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
