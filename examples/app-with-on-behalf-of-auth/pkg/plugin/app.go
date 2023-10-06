@@ -33,7 +33,7 @@ type App struct {
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us

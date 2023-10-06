@@ -29,7 +29,7 @@ type Datasource struct {
 }
 
 // NewDatasource creates a new datasource instance.
-func NewDatasource(dis backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func NewDatasource(_ context.Context, dis backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := models.LoadPluginSettings(dis)
 	if err != nil {
 		return nil, err

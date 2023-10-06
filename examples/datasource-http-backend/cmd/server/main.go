@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/grafana/datasource-http-backend/cmd/server/service"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/grafana/datasource-http-backend/cmd/server/service"
 )
 
 const defaultListenAddr = ":10000"

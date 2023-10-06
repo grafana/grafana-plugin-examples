@@ -3,9 +3,10 @@ package plugin
 import (
 	"bytes"
 	"context"
-	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"net/http"
 	"testing"
+
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 // mockCallResourceResponseSender implements backend.CallResourceResponseSender
@@ -24,7 +25,7 @@ func (s *mockCallResourceResponseSender) Send(response *backend.CallResourceResp
 // This ensures the httpadapter for CallResource works correctly.
 func TestCallResource(t *testing.T) {
 	// Initialize app
-	inst, err := NewApp(backend.AppInstanceSettings{})
+	inst, err := NewApp(context.Background(), backend.AppInstanceSettings{})
 	if err != nil {
 		t.Fatalf("new app: %s", err)
 	}
