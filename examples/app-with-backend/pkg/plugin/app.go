@@ -2,10 +2,11 @@ package plugin
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
-	"net/http"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -24,7 +25,7 @@ type App struct {
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
