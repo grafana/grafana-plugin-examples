@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/go-jose/go-jose/v3 v3.0.0
-	github.com/grafana/grafana-plugin-sdk-go v0.179.0
+	github.com/grafana/grafana-plugin-sdk-go v0.184.0
 )
 
 require (

@@ -2,7 +2,7 @@ module github.com/grafana/basic-datasource
 
 go 1.20
 
-require github.com/grafana/grafana-plugin-sdk-go v0.179.0
+require github.com/grafana/grafana-plugin-sdk-go v0.184.0
 
 require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
