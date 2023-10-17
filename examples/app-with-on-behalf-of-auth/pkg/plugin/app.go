@@ -33,7 +33,7 @@ type App struct {
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(ctx context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
@@ -43,7 +43,7 @@ func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemg
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
-	opts, err := settings.HTTPClientOptions()
+	opts, err := settings.HTTPClientOptions(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}

@@ -3,7 +3,7 @@ module github.com/grafana/datasource-http-backend
 go 1.20
 
 require (
-	github.com/grafana/grafana-plugin-sdk-go v0.179.0
+	github.com/grafana/grafana-plugin-sdk-go v0.184.0
 	github.com/magefile/mage v1.15.0
 	github.com/stretchr/testify v1.8.3
 	go.opentelemetry.io/otel v1.16.0
