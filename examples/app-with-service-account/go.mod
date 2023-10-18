@@ -1,4 +1,4 @@
-module github.com/grafana/app-with-on-behalf-of-auth
+module github.com/grafana/app-with-service-account
 
 go 1.19
 
