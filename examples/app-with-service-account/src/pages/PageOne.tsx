@@ -94,18 +94,10 @@ export function PageOne() {
         {method === 'POST' && (
           <TextArea className={s.body} value={body} onChange={(e) => setBody(e.currentTarget.value)} type="text" />
         )}
-        <HorizontalGroup align="flex-start">
-          <div className={s.section}>
-            <h3>Token used</h3>
-            <p>{apiToken}</p>
-          </div>
-        </HorizontalGroup>
-        <HorizontalGroup align="flex-start">
-          <div className={s.section}>
-            <h3>API Response</h3>
-            <JSONFormatter json={apiResponse} />
-          </div>
-        </HorizontalGroup>
+        <h3>Token used</h3>
+        <p>{apiToken}</p>
+        <h3>API Response</h3>
+        <JSONFormatter json={apiResponse} />
       </VerticalGroup>
     </div>
   );
