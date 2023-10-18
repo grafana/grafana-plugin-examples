@@ -53,7 +53,7 @@ func NewApp(ctx context.Context, settings backend.AppInstanceSettings) (instance
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
 
-	opts.BearerAuth = &httpclient.BearerAuthOptions{Token: app.saToken}
+	opts.Headers = map[string]string{"Authorization": "Bearer " + app.saToken}
 
 	cl, err := httpclient.New(opts)
 	if err != nil {
