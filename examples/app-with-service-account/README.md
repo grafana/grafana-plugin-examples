@@ -35,7 +35,23 @@ Once a plugin is registered with an `externalServiceRegistration` section, Grafa
 	}
 ```
 
-The token can be used to request Grafana:
+The token can be used to request Grafana. Set your http client's `BearerAuth` option directly and let SDK `BearerAuthMiddleware` set the header for you on every outgoing request:
+```go
+	opts, err := settings.HTTPClientOptions(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("http client options: %w", err)
+	}
+
+	opts.BearerAuth = &httpclient.BearerAuthOptions{Token: saToken}
+
+  // Now the client is pre-configured to use the bearer token
+	cl, err := httpclient.New(opts)
+	if err != nil {
+		return nil, fmt.Errorf("httpclient new: %w", err)
+	}
+```
+
+If for some reason you want to set the http request header yourself, here is how:
 
 ```go
     ...

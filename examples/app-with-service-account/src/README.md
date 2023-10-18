@@ -2,4 +2,4 @@
 
 # App With Service Account
 
-Example app demonstrating how to automatically setup a service account with tailored permission for an app and use its token to request the Grafana API.
+Example app demonstrating how to set up a tailored service account to authenticate against Grafana.

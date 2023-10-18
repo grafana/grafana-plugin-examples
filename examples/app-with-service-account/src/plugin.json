@@ -9,7 +9,7 @@
     "keywords": [
       "app"
     ],
-    "description": "Example app demonstrating how to use an automatically created a tailored service account to authenticate against Grafana",
+    "description": "Example app demonstrating how to set up a tailored service account to authenticate against Grafana",
     "author": {
       "name": "Grafana"
     },

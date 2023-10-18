@@ -1,7 +1,7 @@
 {
   "name": "app-with-service-account",
   "version": "1.0.0",
-  "description": "Example app demonstrating how to use a service account to authenticate an app against Grafana",
+  "description": "Example app demonstrating how to set up a tailored service account to authenticate against Grafana",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",

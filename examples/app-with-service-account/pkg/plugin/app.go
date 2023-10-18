@@ -42,10 +42,19 @@ func NewApp(ctx context.Context, settings backend.AppInstanceSettings) (instance
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
+	// Getting the service account token that has been shared with the plugin
+	app.saToken = os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
+	if app.saToken == "" {
+		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
+	}
+
 	opts, err := settings.HTTPClientOptions(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
+
+	opts.BearerAuth = &httpclient.BearerAuthOptions{Token: app.saToken}
+
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
@@ -58,14 +67,6 @@ func NewApp(ctx context.Context, settings backend.AppInstanceSettings) (instance
 		// For debugging purposes only
 		app.grafanaAppURL = "http://localhost:3000"
 	}
-
-	// Getting the service account token that has been shared with the plugin
-	saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
-	if saToken == "" {
-		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
-	}
-
-	app.saToken = saToken
 
 	return &app, nil
 }
