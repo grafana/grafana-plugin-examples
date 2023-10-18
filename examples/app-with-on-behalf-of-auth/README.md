@@ -2,13 +2,26 @@
 
 This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.1 or later and the `externalServiceAuth` feature toggle must be enabled. This is an experimental feature.
+**Note:** This plugin requires Grafana 10.1 or later
 
 ## How to use
 
 This app allows you to do requests to the Grafana API as the plugin or on behalf of a user (by specifying the user ID). The plugin will then use the access token to do requests to the Grafana API.
 
 ![screenshot](./src/img/screenshot-showcase.png)
+
+## Grafana configuration
+
+This is an experimental feature, the `externalServiceAuth` feature toggle must be enabled. 
+
+Additionally, Grafana needs `auth.extended_jwt` to be enabled and configured. Set your audience and issuer to your base URL. Example:
+
+```ini
+[auth.extended_jwt]
+enabled = true
+expect_audience = http://localhost:3000/
+expect_issuer = http://localhost:3000/
+```
 
 ## Authentication flow
 
@@ -66,5 +79,5 @@ Check the [app.go](./pkg/plugin/app.go) and [resources.go](./pkg/plugin/resource
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)

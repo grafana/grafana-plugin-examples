@@ -211,8 +211,8 @@ Example payload:
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Grafana Synthetic Monitoring App](https://github.com/grafana/synthetic-monitoring-app)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
 
 <!-- prettier-ignore-start -->
 [utils.routing.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/utils/utils.routing.ts#L29
