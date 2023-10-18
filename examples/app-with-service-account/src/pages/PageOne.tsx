@@ -27,7 +27,7 @@ export function PageOne() {
   });
   const [apiPath, setApiPath] = useState('/search');
   const [apiResponse, setApiResponse] = useState({});
-  const [apiToken, setApiToken] = useState("");
+  const [apiToken, setApiToken] = useState('');
   const [method, setMethod] = useState('GET');
   const [body, setBody] = useState('');
 
@@ -99,6 +99,8 @@ export function PageOne() {
             <h3>Token used</h3>
             <p>{apiToken}</p>
           </div>
+        </HorizontalGroup>
+        <HorizontalGroup align="flex-start">
           <div className={s.section}>
             <h3>API Response</h3>
             <JSONFormatter json={apiResponse} />
