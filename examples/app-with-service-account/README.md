@@ -25,7 +25,7 @@ See the Grafana documentation about [access control](https://grafana.com/docs/gr
 
 ## Service registration
 
-Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin in an environment variable:
+Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
 
 ```go
 	// Get the service account token that has been shared with the plugin
@@ -35,7 +35,7 @@ Once a plugin is registered with an `externalServiceRegistration` section, Grafa
 	}
 ```
 
-The token can be used to request Grafana. Set your http client's `Headers` option to authenticate every outgoing request:
+The token can be used to request Grafana. Set your http client's `Headers` option to set the `Authorization` header on every outgoing request:
 ```go
 	opts, err := settings.HTTPClientOptions(ctx)
 	if err != nil {
@@ -51,7 +51,7 @@ The token can be used to request Grafana. Set your http client's `Headers` optio
 	}
 ```
 
-If for some reason you want to set the http request header yourself, here is how:
+If for some reason you want to set the http request header on specific requests, here is how:
 
 ```go
     ...
