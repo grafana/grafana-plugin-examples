@@ -49,7 +49,6 @@
     "plugins": []
   },
   "externalServiceRegistration": {
-    "authProvider": "OAuth2Server",
     "self": {
       "permissions": [
         {
