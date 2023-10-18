@@ -9,7 +9,7 @@
     "keywords": [
       "app"
     ],
-    "description": "Example app demonstrating how to use an automatically created service account to authenticate against Grafana",
+    "description": "Example app demonstrating how to use an automatically created a tailored service account to authenticate against Grafana",
     "author": {
       "name": "Grafana"
     },
@@ -49,14 +49,11 @@
     "plugins": []
   },
   "externalServiceRegistration": {
-    "authProvider": "ServiceAccounts",
-    "self": {
-      "permissions": [
-        {
-          "action": "dashboards:create",
-          "scope": "folders:uid:general"
-        }
-      ]
-    }
+    "permissions": [
+      {
+        "action": "dashboards:create",
+        "scope": "folders:uid:general"
+      }
+    ]
   }
 }

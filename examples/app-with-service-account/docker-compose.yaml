@@ -11,7 +11,7 @@ services:
     ports:
       - 3000:3000/tcp
     environment:
-      - GF_FEATURE_TOGGLES_ENABLE=externalServiceAuth externalServiceAccounts
+      - GF_FEATURE_TOGGLES_ENABLE=externalServiceAccounts
     volumes:
       - ./dist:/var/lib/grafana/plugins/grafana-appwithserviceaccount-app
       - ./provisioning:/etc/grafana/provisioning

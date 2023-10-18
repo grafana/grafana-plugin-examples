@@ -16,39 +16,28 @@ The plugin uses a [Grafana service account token](https://grafana.com/docs/grafa
 
 ```json
   "externalServiceRegistration": {
-    "authProvider": "ServiceAccounts",
-    "self": {
-      "permissions": [
-        {
-          "action": "dashboards:create",
-          "scope": "folders:uid:general"
-        }
-      ]
-    }
+    "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
   }
 ```
 
-The `authProvider` section indicates that you want the plugin to be able to authenticate against the Grafana API
-using a service account. The `self` section defines the set of permissions granted to this service account. 
+The `permission` section defines the set of permissions granted to the plugin's service account.
+See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
 
-## Service registration and token retrieval
+## Service registration
 
-// TODO (Gamab) modify the sdk to provide this
-
-Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account for it. After that, to use it, there is a function exposed by the Grafana SDK that can be used to retrieve the access token for the service account. This function relies on environment variables that are set with the necessary credentials:
+Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin in an environment variable:
 
 ```go
-	app.tokenRetriever, err = serviceaccounttokenretriever.New()
-	if err != nil {
-		return nil, err
+	// Get the service account token that has been shared with the plugin
+	saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
+	if saToken == "" {
+		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
 	}
 ```
 
-Once the token retriever is initialized, it can be used to get access tokens, either for the plugin or for a user impersonated by the plugin:
+The token can be used to request Grafana:
 
 ```go
-    // Plugin token
-    token, err = a.tokenRetriever.Self(ctx)
     ...
     req.Header.Set("Authorization", "Bearer "+token)
 ```
@@ -60,5 +49,5 @@ Check the [app.go](./pkg/plugin/app.go) and [resources.go](./pkg/plugin/resource
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
