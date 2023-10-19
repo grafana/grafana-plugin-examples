@@ -51,7 +51,7 @@
   "externalServiceRegistration": {
     "permissions": [
       { "action": "dashboards:create", "scope": "folders:uid:general" },
-      { "action": "dashboards:read", "scope": "folders:uid:general"},
+      { "action": "dashboards:read", "scope": "folders:uid:general"}
     ]
   }
 }
