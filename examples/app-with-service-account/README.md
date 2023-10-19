@@ -18,7 +18,7 @@ The plugin uses a [Grafana service account token](https://grafana.com/docs/grafa
   "externalServiceRegistration": {
     "permissions": [
       { "action": "dashboards:create", "scope": "folders:uid:general" },
-      { "action": "dashboards:read", "scope": "folders:uid:general"},
+      { "action": "dashboards:read", "scope": "folders:uid:general"}
 	]
   }
 ```
