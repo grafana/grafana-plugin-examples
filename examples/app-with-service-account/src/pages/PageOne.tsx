@@ -52,7 +52,7 @@ export function PageOne() {
     setApiResponse('Loading...');
     let params = {};
     params = { ...params, method: method };
-    if (method === 'POST') {
+    if (method === 'POST' || method === "PUT") {
       let parsedBody = JSON.parse(body);
       params = { ...params, body: JSON.stringify(parsedBody) };
     }
@@ -81,6 +81,7 @@ export function PageOne() {
               options={[
                 { label: 'GET', value: 'GET' },
                 { label: 'POST', value: 'POST' },
+                { label: 'PUT', value: 'PUT' },
               ]}
               onChange={(e) => setMethod(e.value ? e.value : 'POST')}
             />
@@ -91,7 +92,7 @@ export function PageOne() {
             </div>
           </HorizontalGroup>
         </div>
-        {method === 'POST' && (
+        {(method === 'POST' || method === 'PUT') && (
           <TextArea className={s.body} value={body} onChange={(e) => setBody(e.currentTarget.value)} type="text" />
         )}
         <h3>Token used</h3>

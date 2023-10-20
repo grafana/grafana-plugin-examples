@@ -25,7 +25,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if proxyMethod == "POST" {
+	if proxyMethod == "POST" || proxyMethod == "PUT" {
 		proxyReq.Header.Set("Content-Type", "application/json")
 	}
 
