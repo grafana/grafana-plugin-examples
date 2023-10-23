@@ -100,7 +100,14 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	// Spans are created automatically for QueryData and all other plugin interface methods.
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
 	sctx := trace.SpanContextFromContext(ctx)
-	log.DefaultLogger.Debug("QueryData", "traceID", sctx.TraceID().String(), "spanID", sctx.SpanID().String())
+
+	// logger.FromContext creates a new sub-logger with the parameters stored in the context.
+	// By default, the following log parameters are added:
+	// traceID, pluginID, endpoint and some attributes identifying the datasource/user (if available)
+	// You can add more log parameters to a context.Context using log.WithContextualAttributes.
+	// You can also create your own loggers using log.New, rather than using log.DefaultLogger.
+	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	ctxLogger.Debug("QueryData", "spanID", sctx.SpanID().String())
 
 	// create response struct
 	response := backend.NewQueryDataResponse()
@@ -181,7 +188,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	}
 	defer func() {
 		if err := httpResp.Body.Close(); err != nil {
-			log.DefaultLogger.Error("query: failed to close response body", "err", err)
+			log.DefaultLogger.FromContext(ctx).Error("query: failed to close response body", "err", err)
 		}
 	}()
 	span.AddEvent("HTTP request done")
@@ -234,7 +241,7 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.DefaultLogger.Error("check health: failed to close response body", "err", err.Error())
+			log.DefaultLogger.FromContext(ctx).Error("check health: failed to close response body", "err", err.Error())
 		}
 	}()
 	if resp.StatusCode != http.StatusOK {
