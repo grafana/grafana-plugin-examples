@@ -97,7 +97,9 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
     return {...query, queryText};
   }
 
+  // This method can be used to show "context" button based on runtime conditions (for example, row model data or plugin settings)
   showContextToggle() {
+    // If you want to always show toggle, you can just return true
     return true
   }
 
