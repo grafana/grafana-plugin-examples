@@ -1,0 +1,17 @@
+version: '3.0'
+
+services:
+  grafana:
+    container_name: 'grafana-appwithserviceaccount-app'
+    build:
+      context: ./.config
+      args:
+        # Points to an unreleased v10.2 version of Grafana
+        grafana_version: ${GRAFANA_VERSION:-10.2.0}
+    ports:
+      - 3000:3000/tcp
+    environment:
+      - GF_FEATURE_TOGGLES_ENABLE=externalServiceAccounts
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/grafana-appwithserviceaccount-app
+      - ./provisioning:/etc/grafana/provisioning
