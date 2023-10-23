@@ -5,6 +5,8 @@ export interface MyQuery extends DataQuery {
   limit: number;
 }
 
+export interface MyDataSourceOptions {}
+
 export const DEFAULT_QUERY: Partial<MyQuery> = {
   queryText: '',
   // default limit is 100
