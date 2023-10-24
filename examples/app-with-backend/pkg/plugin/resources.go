@@ -11,12 +11,13 @@ import (
 
 // handlePing is an example HTTP GET resource that returns a {"message": "ok"} JSON response.
 func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
+	ctxLogger := log.DefaultLogger.FromContext(req.Context())
 	w.Header().Add("Content-Type", "application/json")
 	if _, err := w.Write([]byte(`{"message": "pong"}`)); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.DefaultLogger.Info("ping received")
+	ctxLogger.Info("ping received")
 	w.WriteHeader(http.StatusOK)
 }
 
