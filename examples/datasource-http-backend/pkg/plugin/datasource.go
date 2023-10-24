@@ -99,7 +99,8 @@ func (d *Datasource) Dispose() {
 func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
 	// Spans are created automatically for QueryData and all other plugin interface methods.
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
-	sctx := trace.SpanContextFromContext(ctx)
+	// Check out OpenTelemetry's Go SDK documentation for more information on how to use it.
+	// sctx := trace.SpanContextFromContext(ctx)
 
 	// logger.FromContext creates a new sub-logger with the parameters stored in the context.
 	// By default, the following log parameters are added:
@@ -107,13 +108,15 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	// You can add more log parameters to a context.Context using log.WithContextualAttributes.
 	// You can also create your own loggers using log.New, rather than using log.DefaultLogger.
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
-	ctxLogger.Debug("QueryData", "spanID", sctx.SpanID().String())
+	ctxLogger.Debug("QueryData", "queries", len(req.Queries))
 
 	// create response struct
 	response := backend.NewQueryDataResponse()
 
 	// loop over queries and execute them individually.
 	for i, q := range req.Queries {
+		ctxLogger.Debug("Processing query", "number", i, "ref", q.RefID)
+
 		if i%2 != 0 {
 			// Just to demonstrate how to return an error with a custom status code.
 			response.Responses[q.RefID] = backend.ErrDataResponse(
@@ -162,6 +165,8 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	)
 	defer span.End()
 
+	ctxLogger := log.DefaultLogger.FromContext(ctx)
+
 	// Do HTTP request
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
@@ -188,7 +193,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	}
 	defer func() {
 		if err := httpResp.Body.Close(); err != nil {
-			log.DefaultLogger.FromContext(ctx).Error("query: failed to close response body", "err", err)
+			ctxLogger.Error("query: failed to close response body", "err", err)
 		}
 	}()
 	span.AddEvent("HTTP request done")
@@ -231,6 +236,8 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 // CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return
 // a 200 OK response.
 func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+	ctxLogger := log.DefaultLogger.FromContext(ctx)
+
 	r, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
 		return newHealthCheckErrorf("could not create request"), nil
@@ -241,7 +248,7 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
-			log.DefaultLogger.FromContext(ctx).Error("check health: failed to close response body", "err", err.Error())
+			ctxLogger.Error("check health: failed to close response body", "err", err.Error())
 		}
 	}()
 	if resp.StatusCode != http.StatusOK {
