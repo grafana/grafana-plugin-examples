@@ -29,9 +29,7 @@ The plugin uses the [JWT Bearer Assertion OAuth2 Extension](https://datatracker.
 
 ```json
   "externalServiceRegistration": {
-    "self": {
-      "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }]
-    },
+    "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
     "impersonation": {
       "permissions": [
         { "action": "dashboards:create", "scope": "folders:*" },
@@ -43,7 +41,7 @@ The plugin uses the [JWT Bearer Assertion OAuth2 Extension](https://datatracker.
   }
 ```
 
-The `self` section defines the set of permissions granted to the plugin. The `impersonation` section defines the set of permissions that are granted to the impersonated user when the plugin makes requests on behalf of a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
+The `permissions` section defines the set of permissions granted to the plugin. The `impersonation` section defines the set of permissions that are granted to the impersonated user when the plugin makes requests on behalf of a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
 
 ## Service registration and token retrieval
 
