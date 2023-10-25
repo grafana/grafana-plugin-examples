@@ -12,6 +12,9 @@ services:
       - 3000:3000/tcp
     environment:
       - GF_FEATURE_TOGGLES_ENABLE=externalServiceAuth
+      - GF_AUTH_EXTENDED_JWT_ENABLED=true
+      - GF_AUTH_EXTENDED_JWT_EXPECT_AUDIENCE=http://localhost:3000/
+      - GF_AUTH_EXTENDED_JWT_EXPECT_ISSUER=http://localhost:3000/
     volumes:
       - ./dist:/var/lib/grafana/plugins/grafana-appwithonbehalfofauth-app
       - ./provisioning:/etc/grafana/provisioning
