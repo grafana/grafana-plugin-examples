@@ -6,8 +6,8 @@ services:
     build:
       context: ./.config
       args:
-        # Points to an unreleased v10.1 version of Grafana
-        grafana_version: ${GRAFANA_VERSION:-10.0.3}
+        # While 10.3.0 is not released you can set GRAFANA_VERSION to main 
+        grafana_version: ${GRAFANA_VERSION:-10.3.0}
     ports:
       - 3000:3000/tcp
     environment:
