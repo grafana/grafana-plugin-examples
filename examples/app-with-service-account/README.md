@@ -2,7 +2,7 @@
 
 This plugin is an example of how to integrate Service Account authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.2 or later and the `externalServiceAccounts` feature toggle must be enabled. This is an experimental feature.
+**Note:** This plugin requires Grafana 10.3 or later and the `externalServiceAccounts` feature toggle must be enabled. This is an experimental feature.
 
 ## How to use
 

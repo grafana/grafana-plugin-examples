@@ -2,7 +2,7 @@
 
 This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.1 or later
+**Note:** This plugin requires Grafana 10.3 or later
 
 ## How to use
 
