@@ -14,3 +14,7 @@ ENV GF_DEFAULT_APP_MODE "development"
 # Inject livereload script into grafana index.html
 USER root
 RUN sed -i 's/<\/body><\/html>/<script src=\"http:\/\/localhost:35729\/livereload.js\"><\/script><\/body><\/html>/g' /usr/share/grafana/public/views/index.html
+
+# Inject [extended_jwt] config in ini file
+COPY extended_jwt.ini /tmp/extended_jwt.ini
+RUN cat /tmp/extended_jwt.ini >> /etc/grafana/grafana.ini
