@@ -177,14 +177,14 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
     const bodyValues: string[] = []
     const severityValues: string[] = []
     const idValues: string[] = []
-    const attributesValues: object[] = []
+    const labelsValues: object[] = []
     logs.forEach((log) => {
       const {timestamp, body, severity, id, ...rest} = log
       timeStampValues.push(timestamp)
       bodyValues.push(body)
       severityValues.push(severity)
       idValues.push(id)
-      attributesValues.push(rest)
+      labelsValues.push(rest)
     })
     
     const dataFrame = createDataFrame({
@@ -194,7 +194,7 @@ export class MyDataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> im
           { name: 'body', type: FieldType.string, values: bodyValues },
           { name: 'severity', type: FieldType.string, values: severityValues },
           { name: 'id', type: FieldType.string, values: idValues },
-          { name: 'attributes', type: FieldType.other, values:  attributesValues},
+          { name: 'labels', type: FieldType.other, values:  labelsValues},
       ],
       meta: {
         type: DataFrameType.LogLines, 
