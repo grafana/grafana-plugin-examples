@@ -1,6 +1,6 @@
-# Grafana App Plugin Template
+# Grafana Basic App plugin
 
-The App Plugin Template sample demonstrates how to build a basic app plugin for Grafana with custom routing.
+The Grafana Basic App plugin sample demonstrates how to build a basic app plugin for Grafana with custom routing.
 
 ## What are Grafana app plugins?
 
