@@ -95,7 +95,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Test plugin backend
-        uses: magefile/mage-action@v2
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v test
@@ -103,7 +103,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v2
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v build:linux
@@ -244,7 +244,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v2
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v build:linux
