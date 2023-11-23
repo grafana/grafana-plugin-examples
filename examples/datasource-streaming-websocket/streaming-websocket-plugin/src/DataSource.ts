@@ -63,4 +63,11 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       message: 'Success',
     };
   }
+
+  filterQuery(query: MyQuery): boolean {
+    if (query.hide) {
+      return false;
+    }
+    return true;
+  }
 }
