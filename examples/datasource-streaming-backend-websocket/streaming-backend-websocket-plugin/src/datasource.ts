@@ -39,4 +39,11 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
   getDefaultQuery(app: CoreApp): Partial<MyQuery> {
     return DEFAULT_QUERY;
   }
+
+  filterQuery(query: MyQuery): boolean {
+    if (query.hide) {
+      return false;
+    }
+    return true;
+  }
 }

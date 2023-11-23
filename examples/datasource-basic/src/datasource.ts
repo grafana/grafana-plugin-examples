@@ -14,6 +14,13 @@ export class BasicDataSource extends DataSourceWithBackend<BasicQuery, BasicData
     };
   }
 
+  filterQuery(query: BasicQuery): boolean {
+    if (query.hide || query.rawQuery === '') {
+      return false;
+    }
+    return true;
+  }
+
   getAvailableQueryTypes(): Promise<QueryTypesResponse> {
     return this.getResource('/query-types');
   }
