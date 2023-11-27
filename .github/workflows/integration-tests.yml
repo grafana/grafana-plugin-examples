@@ -26,7 +26,7 @@ jobs:
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
         with:
