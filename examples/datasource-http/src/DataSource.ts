@@ -78,6 +78,13 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     return lastValueFrom(response);
   }
 
+  filterQuery(query: MyQuery): boolean {
+    if (query.hide) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Checks whether we can connect to the API.
    */
