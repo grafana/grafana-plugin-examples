@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "App With On Behalf Of Auth",
   "id": "grafana-appwithonbehalfofauth-app",
@@ -46,7 +46,7 @@
     "grafanaDependency": ">=10.3.0",
     "plugins": []
   },
-  "externalServiceRegistration": {
+  "iam": {
     "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
     "impersonation": {
       "permissions": [

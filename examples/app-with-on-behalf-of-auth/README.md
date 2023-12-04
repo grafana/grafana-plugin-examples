@@ -28,7 +28,7 @@ expect_issuer = http://localhost:3000/
 The plugin uses the [JWT Bearer Assertion OAuth2 Extension](https://datatracker.ietf.org/doc/html/rfc7523) to authenticate users and obtain an access token that can be used to authorize requests against the Grafana API. To enable it, add the section below to your `plugin.json` file.
 
 ```json
-  "externalServiceRegistration": {
+  "iam": {
     "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
     "impersonation": {
       "permissions": [
@@ -45,7 +45,7 @@ The `permissions` section defines the set of permissions granted to the plugin. 
 
 ## Service registration and token retrieval
 
-Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account for it. After that, to use it, there is a function exposed by the Grafana SDK that can be used to retrieve the access token for the service account. This function relies on environment variables that are set with the necessary credentials:
+Once a plugin is registered with an `iam` section, Grafana will automatically create a service account for it. After that, to use it, there is a function exposed by the Grafana SDK that can be used to retrieve the access token for the service account. This function relies on environment variables that are set with the necessary credentials:
 
 ```go
 	app.tokenRetriever, err = oauthtokenretriever.New()

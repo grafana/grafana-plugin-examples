@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "App With Service Account",
   "id": "grafana-appwithserviceaccount-app",
@@ -48,7 +48,7 @@
     "grafanaDependency": ">=10.3.0",
     "plugins": []
   },
-  "externalServiceRegistration": {
+  "iam": {
     "permissions": [
       { "action": "dashboards:create", "scope": "folders:uid:*" },
       { "action": "dashboards:read", "scope": "folders:uid:*"},
