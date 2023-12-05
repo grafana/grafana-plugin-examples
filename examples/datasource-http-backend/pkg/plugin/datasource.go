@@ -59,8 +59,14 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
 	}
+
+	s, err := loadSettings(settings)
+	if err != nil {
+		return nil, fmt.Errorf("load settings: %w", err)
+	}
+
 	return &Datasource{
-		settings:   settings,
+		settings:   s,
 		httpClient: cl,
 	}, nil
 }
@@ -79,7 +85,7 @@ var DatasourceOpts = datasource.ManageOpts{
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
 type Datasource struct {
-	settings backend.DataSourceInstanceSettings
+	settings Settings
 
 	httpClient *http.Client
 }
