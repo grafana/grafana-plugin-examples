@@ -12,11 +12,11 @@ This app allows you to create a service account in Grafana tailored to your plug
 
 ## Authentication flow
 
-The plugin uses a [Grafana service account token](https://grafana.com/docs/grafana/latest/administration/service-accounts/#service-account-tokens) to authenticate against the Grafana API. To enable it, add the `externalServiceRegistration` section to your `plugin.json` file.
+The plugin uses a [Grafana service account token](https://grafana.com/docs/grafana/latest/administration/service-accounts/#service-account-tokens) to authenticate against the Grafana API. To enable it, add the `iam` section to your `plugin.json` file.
 
 Here is an example to allow the plugin to create dashboards, list/update all dashboards and folders, list users, teams, team members:
 ```json
-  "externalServiceRegistration": {
+  "iam": {
     "permissions": [
       { "action": "dashboards:create", "scope": "folders:uid:*" },
       { "action": "dashboards:read", "scope": "folders:uid:*"},
@@ -35,7 +35,7 @@ See the Grafana documentation about [access control](https://grafana.com/docs/gr
 
 ## Service registration
 
-Once a plugin is registered with an `externalServiceRegistration` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
+Once a plugin is registered with an `iam` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
 
 ```go
 	// Get the service account token that has been shared with the plugin

@@ -46,7 +46,7 @@
     "grafanaDependency": ">=10.0.3",
     "plugins": []
   },
-  "externalServiceRegistration": {
+  "iam": {
     "permissions": [{ "action": "dashboards:create", "scope": "folders:uid:general" }],
     "impersonation": {
       "permissions": [
