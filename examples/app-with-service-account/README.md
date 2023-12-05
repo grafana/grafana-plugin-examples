@@ -14,7 +14,7 @@ This app allows you to create a service account in Grafana tailored to your plug
 
 The plugin uses a [Grafana service account token](https://grafana.com/docs/grafana/latest/administration/service-accounts/#service-account-tokens) to authenticate against the Grafana API. To enable it, add the `iam` section to your `plugin.json` file.
 
-Here is an example to allow the plugin to create dashboards, list/update all dashboards and folders, list users, teams, team members:
+Here is an example to allow the plugin to create dashboards, list or update all dashboards and folders, and list users, teams, and team members:
 ```json
   "iam": {
     "permissions": [
@@ -31,11 +31,11 @@ Here is an example to allow the plugin to create dashboards, list/update all das
 ```
 
 The `permission` section defines the set of permissions granted to the plugin's service account.
-See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
+Refer to the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
 
 ## Service registration
 
-Once a plugin is registered with an `iam` section, Grafana will automatically create a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
+Once a plugin is registered with an `iam` section, Grafana automatically creates a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
 
 ```go
 	// Get the service account token that has been shared with the plugin
@@ -45,7 +45,8 @@ Once a plugin is registered with an `iam` section, Grafana will automatically cr
 	}
 ```
 
-The token can be used to request Grafana. Set your http client's `Headers` option to set the `Authorization` header on every outgoing request:
+The token can be used to request Grafana. Set your HTTP client's `Headers` option to set the `Authorization` header on every outgoing request:
+
 ```go
 	opts, err := settings.HTTPClientOptions(ctx)
 	if err != nil {
@@ -61,7 +62,7 @@ The token can be used to request Grafana. Set your http client's `Headers` optio
 	}
 ```
 
-If for some reason you want to set the http request header on specific requests, here is how:
+If for some reason you want to set the HTTP request header on specific requests, here is how:
 
 ```go
     ...
@@ -76,4 +77,4 @@ Below you can find source code for existing app plugins and other related docume
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
 - [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)

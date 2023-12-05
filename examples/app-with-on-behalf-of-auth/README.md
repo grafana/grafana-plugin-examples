@@ -2,17 +2,17 @@
 
 This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.3 or later
+**Note:** This plugin requires Grafana 10.3 or later version.
 
-## How to use
+## How to use this sample
 
-This app allows you to do requests to the Grafana API as the plugin or on behalf of a user (by specifying the user ID). The plugin will then use the access token to do requests to the Grafana API.
+This app allows you to make requests to the Grafana API as the plugin or on behalf of a user by specifying the user ID. The plugin will then use the access token to make requests to the Grafana API.
 
 ![screenshot](./src/img/screenshot-showcase.png)
 
 ## Grafana configuration
 
-This is an experimental feature, the `externalServiceAuth` feature toggle must be enabled. 
+Because this is an experimental feature, the `externalServiceAuth` feature toggle must be enabled. 
 
 Additionally, Grafana needs `auth.extended_jwt` to be enabled and configured. Set your audience and issuer to your base URL. Example:
 
@@ -41,7 +41,7 @@ The plugin uses the [JWT Bearer Assertion OAuth2 Extension](https://datatracker.
   }
 ```
 
-The `permissions` section defines the set of permissions granted to the plugin. The `impersonation` section defines the set of permissions that are granted to the impersonated user when the plugin makes requests on behalf of a user. Note that for this to work, the user must have permissions as well to perform those actions. See the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/) for more information.
+The `permissions` section defines the set of permissions granted to the plugin. The `impersonation` section defines the set of permissions that are granted to the impersonated user when the plugin makes requests on behalf of a user. Note that for this to work, the user must have permissions as well to perform those actions. For more information, refer to the Grafana documentation about [access control](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/).
 
 ## Service registration and token retrieval
 
@@ -54,7 +54,7 @@ Once a plugin is registered with an `iam` section, Grafana will automatically cr
 	}
 ```
 
-Once the token retriever is initialized, it can be used to get access tokens, either for the plugin or for a user impersonated by the plugin:
+Once you have initialized the token retriever, you can use it to get access tokens, either for the plugin or for a user impersonated by the plugin:
 
 ```go
     // Plugin token
@@ -78,4 +78,4 @@ Below you can find source code for existing app plugins and other related docume
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
 - [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [How to sign a plugin?](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
