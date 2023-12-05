@@ -5,10 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
-	"strconv"
-	"time"
 
+	gapi "github.com/grafana/grafana-api-golang-client"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
@@ -17,7 +15,6 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -65,9 +62,13 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 		return nil, fmt.Errorf("load settings: %w", err)
 	}
 
+	c, err := newGrafanaClient(cl, s)
+	if err != nil {
+		return nil, fmt.Errorf("new grafana client: %w", err)
+	}
+
 	return &Datasource{
-		settings:   s,
-		httpClient: cl,
+		client: c,
 	}, nil
 }
 
@@ -85,9 +86,7 @@ var DatasourceOpts = datasource.ManageOpts{
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
 type Datasource struct {
-	settings Settings
-
-	httpClient *http.Client
+	client *gapi.Client
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
@@ -95,7 +94,6 @@ type Datasource struct {
 // be disposed and a new one will be created using NewSampleDatasource factory function.
 func (d *Datasource) Dispose() {
 	// Clean up datasource instance resources.
-	d.httpClient.CloseIdleConnections()
 }
 
 // QueryData handles multiple queries and returns multiple responses.
@@ -153,113 +151,39 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
-func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
-	// Create spans for this function.
-	// tracing.DefaultTracer() returns the tracer initialized when calling Manage().
-	// Refer to OpenTelemetry's Go SDK to know how to customize your spans.
-	ctx, span := tracing.DefaultTracer().Start(
-		ctx,
-		"query processing",
-		trace.WithAttributes(
-			attribute.String("query.ref_id", query.RefID),
-			attribute.String("query.type", query.QueryType),
-			attribute.Int64("query.max_data_points", query.MaxDataPoints),
-			attribute.Int64("query.interval_ms", query.Interval.Milliseconds()),
-			attribute.Int64("query.time_range.from", query.TimeRange.From.Unix()),
-			attribute.Int64("query.time_range.to", query.TimeRange.To.Unix()),
-		),
-	)
-	defer span.End()
-
-	ctxLogger := log.DefaultLogger.FromContext(ctx)
-
-	// Do HTTP request
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
+func (d *Datasource) query(_ context.Context, _ backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
+	input := &apiQuery{}
+	err := json.Unmarshal(query.JSON, input)
 	if err != nil {
-		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
-	}
-	if len(query.JSON) > 0 {
-		input := &apiQuery{}
-		err = json.Unmarshal(query.JSON, input)
-		if err != nil {
-			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
-		}
-		q := req.URL.Query()
-		q.Add("multiplier", strconv.Itoa(input.Multiplier))
-		req.URL.RawQuery = q.Encode()
-	}
-	httpResp, err := d.httpClient.Do(req)
-	switch {
-	case err == nil:
-		break
-	case errors.Is(err, context.DeadlineExceeded):
-		return backend.DataResponse{}, err
-	default:
-		return backend.DataResponse{}, fmt.Errorf("http client do: %w: %s", errRemoteRequest, err)
-	}
-	defer func() {
-		if err := httpResp.Body.Close(); err != nil {
-			ctxLogger.Error("query: failed to close response body", "err", err)
-		}
-	}()
-	span.AddEvent("HTTP request done")
-
-	// Make sure the response was successful
-	if httpResp.StatusCode != http.StatusOK {
-		return backend.DataResponse{}, fmt.Errorf("%w: expected 200 response, got %d", errRemoteResponse, httpResp.StatusCode)
+		return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
 	}
 
-	// Decode response
-	var body apiMetrics
-	if err := json.NewDecoder(httpResp.Body).Decode(&body); err != nil {
-		return backend.DataResponse{}, fmt.Errorf("%w: decode: %s", errRemoteRequest, err)
+	ds, err := d.client.DataSourceByUID(input.datasourceUID)
+	if err != nil {
+		return backend.DataResponse{}, fmt.Errorf("fetch datasource by UID: %w", err)
 	}
-	span.AddEvent("JSON response decoded")
 
-	// Create slice of values for time and values.
-	times := make([]time.Time, len(body.DataPoints))
-	values := make([]float64, len(body.DataPoints))
-	for i, p := range body.DataPoints {
-		times[i] = p.Time
-		values[i] = p.Value
-	}
-	span.AddEvent("Datapoints created")
-
-	// Create frame and add it to the response
 	dataResp := backend.DataResponse{
 		Frames: []*data.Frame{
 			data.NewFrame(
-				"response",
-				data.NewField("time", nil, times),
-				data.NewField("values", nil, values),
+				"datasource",
+				data.NewField("uid", nil, ds.UID),
+				data.NewField("name", nil, ds.Name),
 			),
 		},
 	}
-	span.AddEvent("Frames created")
-	return dataResp, err
+	return dataResp, nil
+
 }
 
 // CheckHealth performs a request to the specified data source and returns an error if the HTTP handler did not return
 // a 200 OK response.
 func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	_, err := d.client.Health()
+	if err != nil {
+		return newHealthCheckErrorf("could not check health"), nil
+	}
 
-	r, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
-	if err != nil {
-		return newHealthCheckErrorf("could not create request"), nil
-	}
-	resp, err := d.httpClient.Do(r)
-	if err != nil {
-		return newHealthCheckErrorf("request error"), nil
-	}
-	defer func() {
-		if err := resp.Body.Close(); err != nil {
-			ctxLogger.Error("check health: failed to close response body", "err", err.Error())
-		}
-	}()
-	if resp.StatusCode != http.StatusOK {
-		return newHealthCheckErrorf("got response code %d", resp.StatusCode), nil
-	}
 	return &backend.CheckHealthResult{
 		Status:  backend.HealthStatusOk,
 		Message: "Data source is working",

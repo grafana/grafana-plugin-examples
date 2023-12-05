@@ -1,13 +1,15 @@
 module github.com/grafana/datasource-http-backend
 
-go 1.20
+go 1.21
+
+toolchain go1.21.1
 
 require (
+	github.com/grafana/grafana-api-golang-client v0.26.0
 	github.com/grafana/grafana-plugin-sdk-go v0.187.0
 	github.com/magefile/mage v1.15.0
 	github.com/stretchr/testify v1.8.4
 	go.opentelemetry.io/otel v1.19.0
-	go.opentelemetry.io/otel/trace v1.19.0
 )
 
 require (
@@ -37,6 +39,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.2 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-hclog v1.5.0 // indirect
 	github.com/hashicorp/go-plugin v1.4.9 // indirect
 	github.com/hashicorp/yamux v0.1.1 // indirect
@@ -77,6 +80,7 @@ require (
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.19.0 // indirect
 	go.opentelemetry.io/otel/metric v1.19.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.19.0 // indirect
+	go.opentelemetry.io/otel/trace v1.19.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	golang.org/x/mod v0.9.0 // indirect
 	golang.org/x/net v0.17.0 // indirect

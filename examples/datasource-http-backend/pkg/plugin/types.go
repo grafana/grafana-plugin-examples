@@ -14,5 +14,5 @@ type apiDataPoint struct {
 }
 
 type apiQuery struct {
-	Multiplier int `json:"multiplier"`
+	datasourceUID string
 }
