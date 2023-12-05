@@ -1,9 +1,7 @@
 package plugin
 
 import (
-	"encoding/json"
-	"fmt"
-
+	"context"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
@@ -16,13 +14,16 @@ type Settings struct {
 }
 
 // loadSettings will read and validate Settings from DataSourceInstanceSettings
-func loadSettings(s backend.DataSourceInstanceSettings) (Settings, error) {
-	settings := Settings{}
+func loadSettings(ctx context.Context, s backend.DataSourceInstanceSettings) (Settings, error) {
+	gCfg := backend.GrafanaConfigFromContext(ctx)
 
-	if err := json.Unmarshal(s.JSONData, &settings); err != nil {
-		return settings, fmt.Errorf("could not unmarshal DataSourceInfo json: %w\n%s", err, s.JSONData)
+	appURL, err := gCfg.AppURL()
+	if err != nil {
+		return Settings{}, err
 	}
 
-	settings.GrafanaAPIKey = s.DecryptedSecureJSONData["grafanaAPIKey"]
-	return settings, nil
+	return Settings{
+		GrafanaURL:    appURL,
+		GrafanaAPIKey: s.DecryptedSecureJSONData["grafanaAPIKey"],
+	}, nil
 }

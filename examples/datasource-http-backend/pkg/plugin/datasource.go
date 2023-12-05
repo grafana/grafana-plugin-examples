@@ -57,7 +57,7 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 		return nil, fmt.Errorf("httpclient new: %w", err)
 	}
 
-	s, err := loadSettings(settings)
+	s, err := loadSettings(ctx, settings)
 	if err != nil {
 		return nil, fmt.Errorf("load settings: %w", err)
 	}
