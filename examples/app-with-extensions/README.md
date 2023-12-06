@@ -1,4 +1,4 @@
-# Grafana App extending Grafana Core UI template
+# Grafana App extending Grafana Core UI example
 
 > Note: This feature is available in Grafana 9.5 and later versions.
 

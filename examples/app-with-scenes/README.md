@@ -1,4 +1,4 @@
-# Grafana Scenes App plugin
+# Grafana Scenes App Plugin example
 
 This example demonstrates how to build a basic app plugin using @grafana/scenes framework.
 

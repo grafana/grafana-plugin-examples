@@ -1,4 +1,4 @@
-# Grafana App Plugin which adds a plugin UI extension point
+# Grafana App Plugin with UI extension point example
 
 This example demonstrates how to add a plugin extension point that can be extended by other plugins. It works by bundling three different app plugins within the same bundle. First we have the `myorg-extensionpoint-app` that creates an extension point. Then we have the `src/plugins/myorg-a-app` and `src/plugins/myorg-b-app` that extends the `myorg-extensionpoint-app` UI with links.
 

@@ -1,4 +1,4 @@
-# Grafana App with Backend plugin
+# Grafana App with Backend Plugin example
 
 This template is a starting point for building an app plugin for Grafana. It includes a backend component.
 

@@ -1,4 +1,4 @@
-# Grafana app plugin with Service Account integration
+# Grafana App Plugin with Service Account integration example
 
 This plugin is an example of how to integrate Service Account authentication into a Grafana plugin.
 

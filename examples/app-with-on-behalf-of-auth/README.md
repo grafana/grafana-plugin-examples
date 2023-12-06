@@ -1,4 +1,4 @@
-# Grafana app plugin with OAuth2 integration
+# Grafana App Plugin with OAuth2 integration example
 
 This plugin is an example of how to integrate OAuth2 authentication into a Grafana plugin.
 

@@ -1,4 +1,4 @@
-# Grafana App with Dashboards plugin
+# Grafana App with Dashboards Plugin example
 
 This template is a starting point for building an app plugin for Grafana. It includes a dashboard.
 
