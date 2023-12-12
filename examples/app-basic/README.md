@@ -1,4 +1,4 @@
-# Grafana Basic App plugin
+# Grafana Basic App plugin example
 
 The Grafana Basic App plugin sample demonstrates how to build a basic app plugin for Grafana with custom routing.
 
