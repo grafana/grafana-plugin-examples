@@ -157,7 +157,7 @@ jobs:
           command: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with expected versions
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-expected-version-tests
@@ -204,7 +204,7 @@ jobs:
           command: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
@@ -271,7 +271,7 @@ jobs:
 
       - name: Uploading artifacts for tests with canary versions
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
           path: |
