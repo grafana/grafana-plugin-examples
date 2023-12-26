@@ -14,13 +14,13 @@ A data source backend plugin consists of both frontend and backend components.
 
 ### Frontend
 
-1. Install dependencies
+1. Install dependencies:
 
    ```bash
    yarn install
    ```
 
-2. Build plugin in development mode or run in watch mode
+2. Build plugin in development mode or run in watch mode:
 
    ```bash
    yarn dev
@@ -32,7 +32,7 @@ A data source backend plugin consists of both frontend and backend components.
    yarn watch
    ```
 
-3. Build plugin in production mode
+3. Build plugin in production mode:
 
    ```bash
    yarn build
