@@ -13,7 +13,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
         },
       },
     },
-    useCustomConfig: (builder) => {
+    useCustomConfig: (builder) => { 
       builder
         .addRadio({
           path: 'gradientMode',
@@ -60,7 +60,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
         });
     },
   })
-  .setPanelOptions((builder) => {
+  .setPanelOptions((builder) => { 
     return builder
       .addRadio({
         path: 'legend.displayMode',
