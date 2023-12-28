@@ -1,7 +1,3 @@
-// Elements of this metadata file will be used in the Grafana  
-// UI and when publishing in the Grafana plugin catalog.
-// Refer to https://grafana.com/developers/plugin-tools/reference-plugin-json
-
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
