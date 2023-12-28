@@ -22,7 +22,7 @@ export function SimplePanel({ /** Takes in a list of props used in this example 
     <div data-testid={testIds.panel.container}>
       <div> 
         <strong>Variable: </strong> 
-        {replaceVariables('"$myVariable"')} /** Replaces any defined variable in dashboard with value of variable -->
+        {replaceVariables('"$myVariable"')} /** Replaces any defined variable in dashboard with value of variable */
               </div>
       <TimeSeries 
         width={width}
