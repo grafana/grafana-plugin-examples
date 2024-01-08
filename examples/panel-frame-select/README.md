@@ -1,5 +1,5 @@
-# Grafana Panel Plugin Template
+# Grafana Panel Plugin with Frame Select example
 
 This example shows how you can set panel options based on the response from a data query.
 
-Using the `onOptionsChange` prop from `PanelProps`, you can update the value of panel options.
+You can use the `onOptionsChange` prop from `PanelProps` to update the value of panel options.

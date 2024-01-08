@@ -1,4 +1,4 @@
-# Grafana panel plugin template
+# Grafana Panel Plugin with Flot example
 
 This example uses the [Flot](https://www.flotcharts.org) library to plot graphs.
 

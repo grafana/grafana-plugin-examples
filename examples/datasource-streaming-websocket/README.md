@@ -1,4 +1,4 @@
-# Streaming example
+# Grafana Streaming Data Source WebSocket Plugin example
 
 This is an example of how to implement a Grafana data source plugin with streaming support.
 
@@ -11,7 +11,7 @@ This is an example of how to implement a Grafana data source plugin with streami
   yarn dev
   ```
 
-- Build the data source plugin
+- Build the data source plugin:
 
   ```
   cd streaming-plugin
