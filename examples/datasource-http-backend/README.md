@@ -8,7 +8,7 @@ This allows the plugin to use the data source for alerting as well, as the queri
 
 This plugin example also showcases other features and best-practices of backend plugins:
 
-- Using the `httpclient` provided by the Grafana plugins SDK
+- Using the `httpclient` provided by the [Grafana plugins SDK](https://pkg.go.dev/github.com/grafana/grafana-plugin-sdk-go/backend/httpclient)
 - Tracing, for better instrumentation of your plugin
 
 This plugin example also includes an example server returning data in the format expected by this plugin (`cmd/server`). Refer to the section below on how to build and run it.
