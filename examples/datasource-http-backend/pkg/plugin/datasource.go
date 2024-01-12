@@ -237,6 +237,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 // a 200 OK response.
 func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	return nil, backend.ErrorWithSource(errors.New("oops"), backend.ErrorSourceDownstream)
 
 	r, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
