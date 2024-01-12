@@ -1,4 +1,4 @@
-# Grafana Panel Plugin
+# Grafana Basic Panel Plugin example
 
 This example provides a template for how to build a basic panel plugin. The definition for the panel is provided in `/src/components/SimplePanel/SimplePanel.tsx`.
 
@@ -21,6 +21,7 @@ Use panel plugins when you want to do things like visualize data returned by dat
    ```
 
 2. Build the plugin in development mode and run inside Grafana using Docker:
+
 
    ```bash
    # Start watching for changes

@@ -1,10 +1,10 @@
-# Grafana Panel Plugin Template
+# Grafana Panel Plugin with Plotly example
 
 This example uses the [Plotly](https://plotly.com/) library to plot graphs.
 
 ## Dependencies
 
-To add Plotly to a plugin, install the following dependencies.
+To add Plotly to a plugin, install the following dependencies:
 
 ```
 yarn add react-plotly.js plotly.js

@@ -1,3 +1,3 @@
-# Example of Grafana data source plugin with logs feature
+# Grafana Data Source Plugin with Logs example
 
-Example of a data source plugin that implements logging features. You can find more in https://grafana.com/docs/grafana/next/developers/plugins/create-a-grafana-plugin/develop-a-plugin/build-a-logs-data-source-plugin/. 
+This is an example of a data source plugin that implements logging features. You can learn more in our [documentation](https://grafana.com/developers/plugin-tools/tutorials/build-a-logs-data-source-plugin).

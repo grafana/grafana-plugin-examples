@@ -1,7 +1,7 @@
-# Grafana Panel Plugin Template
+# Grafana Panel Plugin with Visx example
 
-This example uses visx to render an SVG graph.
+This plugin example uses visx to render an SVG graph.
 
-## Read more
+## Learn more
 
 [visx](https://github.com/airbnb/visx)
