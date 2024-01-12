@@ -4,10 +4,10 @@ import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin } from '@graf
 import { SimpleOptions } from '../../types';
 import { testIds } from '../testIds';
 
-interface Props extends PanelProps<SimpleOptions> {} /** Entry point */
+interface Props extends PanelProps<SimpleOptions> {} 
 
-export function SimplePanel({ /** Takes in a list of props used in this example */
-  options, /** Options declared within module.ts, allow creation of form elements on Grafana sidebar */
+export function SimplePanel({ // Takes in a list of props used in this example
+  options, // Options declared within module.ts and standard Grafana options
   data,
   width,
   height,
@@ -35,7 +35,7 @@ export function SimplePanel({ /** Takes in a list of props used in this example 
         {(config, alignedDataFrame) => {
           return (
             <>
-              <TooltipPlugin 
+              <TooltipPlugin
                 config={config}
                 data={alignedDataFrame}
                 mode={TooltipDisplayMode.Multi}

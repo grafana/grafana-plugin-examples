@@ -1,10 +1,10 @@
 # Grafana Panel Plugin
 
-This example provides a template for how to build a basic panel plugin. The entry point is `/src/components/SimplePanel/SimplePanel.tsx`.
+This example provides a template for how to build a basic panel plugin. The definition for the panel is provided in `/src/components/SimplePanel/SimplePanel.tsx`.
 
-By default, the plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties of `SimplePanel`. The plugin also allows a tooltip to be shown when user hovers over a visualization.
+The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization.
 
-Additionally, the plugin is configured to allow features such as a gradient mode selector and a list display mode on the Grafana sidebar.
+Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
 
 ## What is a Grafana panel plugin?
 
@@ -24,22 +24,22 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
    ```bash
    # Start watching for changes
-   yarn dev
+   npm dev
 
-   # Run Grafana inside a docker container in a separate session
+   # Run Grafana inside a Docker container in a separate session
    docker-compose up
    ```
 
 3. Build plugin in production mode:
 
    ```bash
-   yarn build
+   npm build
    ```
 
 4. Run e2e tests:
 
    ```bash
-   yarn e2e
+   npm e2e
    ```
 
 ## Learn more
