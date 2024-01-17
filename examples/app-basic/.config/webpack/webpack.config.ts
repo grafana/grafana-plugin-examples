@@ -49,7 +49,6 @@ const config = async (env): Promise<Configuration> => ({
     'redux',
     'rxjs',
     'react-router',
-    'react-router-dom',
     'd3',
     'angular',
     '@grafana/ui',
@@ -96,7 +95,7 @@ const config = async (env): Promise<Configuration> => ({
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader'],
       },
       {
         test: /\.s[ac]ss$/,
