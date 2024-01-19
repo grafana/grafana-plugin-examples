@@ -17,15 +17,14 @@ Use panel plugins when you want to do things like visualize data returned by dat
 1. Install dependencies:
 
    ```bash
-   yarn install
+   npm install
    ```
 
 2. Build the plugin in development mode and run inside Grafana using Docker:
 
-
    ```bash
    # Start watching for changes
-   npm dev
+   npm run dev
 
    # Run Grafana inside a Docker container in a separate session
    docker-compose up
@@ -34,13 +33,13 @@ Use panel plugins when you want to do things like visualize data returned by dat
 3. Build plugin in production mode:
 
    ```bash
-   npm build
+   npm run build
    ```
 
 4. Run e2e tests:
 
    ```bash
-   npm e2e
+   npm run e2e
    ```
 
 ## Learn more
