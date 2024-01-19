@@ -4,10 +4,10 @@ import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin } from '@graf
 import { SimpleOptions } from '../../types';
 import { testIds } from '../testIds';
 
-interface Props extends PanelProps<SimpleOptions> {}
+interface Props extends PanelProps<SimpleOptions> {} 
 
-export function SimplePanel({
-  options,
+export function SimplePanel({ // Takes in a list of props used in this example
+  options, // Options declared within module.ts and standard Grafana options
   data,
   width,
   height,
@@ -20,11 +20,11 @@ export function SimplePanel({
 
   return (
     <div data-testid={testIds.panel.container}>
-      <div>
-        <strong>Variable: </strong>
-        {replaceVariables('"$myVariable"')}
-      </div>
-      <TimeSeries
+      <div> 
+        <strong>Variable: </strong> 
+        {replaceVariables('"$myVariable"')} {/** Replaces any defined variable in dashboard with value of variable */}
+              </div>
+      <TimeSeries 
         width={width}
         height={height}
         timeRange={timeRange}
@@ -41,7 +41,7 @@ export function SimplePanel({
                 mode={TooltipDisplayMode.Multi}
                 timeZone={timeZone}
               />
-              <ZoomPlugin config={config} onZoom={onChangeTimeRange} />
+              <ZoomPlugin config={config} onZoom={onChangeTimeRange} /> 
             </>
           );
         }}

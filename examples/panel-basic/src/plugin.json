@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Basic Panel",
-  "id": "basic-panel",
+  "name": "Basic Panel", 
+  "id": "basic-panel", 
   "info": {
-    "keywords": [
+    "keywords": [ 
       "panel",
       "example"
     ],
@@ -27,11 +27,11 @@
       }
     ],
     "screenshots": [],
-    "version": "%VERSION%",
-    "updated": "%TODAY%"
+    "version": "%VERSION%", 
+    "updated": "%TODAY%" 
   },
   "dependencies": {
-    "grafanaDependency": ">=10.0.3",
-    "plugins": []
+    "grafanaDependency": ">=10.0.3", 
+    "plugins": [] 
   }
 }
