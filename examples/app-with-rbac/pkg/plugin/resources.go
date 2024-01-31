@@ -3,6 +3,8 @@ package plugin
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 )
 
 type ResearchDocument struct {
@@ -12,12 +14,15 @@ type ResearchDocument struct {
 
 // handlePapers is an example HTTP GET resource that returns a [ {"title": "reasearch doc title", "authors": ["Dr something"]} ] JSON response.
 func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
+	ctxLogger := log.DefaultLogger.FromContext(req.Context())
+	ctxLogger.Info("Research papers handler called")
+
 	w.Header().Add("Content-Type", "application/json")
 
 	res := []ResearchDocument{
 		{
 			Title:   "Quantum Supremacy: A Path Towards Practical Quantum Computing",
-			Authors: []string{"Dr. A", " Dr. B"},
+			Authors: []string{"Dr. A", "Dr. B"},
 		},
 		{
 			Title:   "Bioinspired Robotics: Mimicking Nature's Designs for Autonomous Systems",
@@ -60,32 +65,35 @@ type Patent struct {
 
 // handlePatents is an example HTTP GET resource that returns a [ {"title": "patent title", "inventors": ["Dr something"]} ] JSON response.
 func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
+	ctxLogger := log.DefaultLogger.FromContext(req.Context())
+	ctxLogger.Info("Patents handler called")
+
 	w.Header().Add("Content-Type", "application/json")
 
 	res := []Patent{
 		{
 			Title:     "Self-Driving Umbrella: A Weather-Sensing Canopy for Hands-Free Protection",
-			Inventors: []string{"Dr. A", " Dr. B"},
+			Inventors: []string{"Dr. A", "Dr. B"},
 		},
 		{
 			Title:     "Mind-Controlled Virtual Reality: Telepathic Immersion System for Gaming and Beyond",
-			Inventors: []string{"Dr. C", " Dr. D"},
+			Inventors: []string{"Dr. C", "Dr. D"},
 		},
 		{
 			Title:     "Bio-Nano Fusion Patch: Revolutionary Wound Healing Technology Integrating Nanoparticles and Biological Agents",
-			Inventors: []string{"Dr. D", " Dr. E"},
+			Inventors: []string{"Dr. D", "Dr. E"},
 		},
 		{
 			Title:     "Invisibility Cloak: Adaptive Meta-Material Camouflage for Stealth Applications",
-			Inventors: []string{"Dr. A", " Dr. C"},
+			Inventors: []string{"Dr. A", "Dr. C"},
 		},
 		{
 			Title:     "Quantum Energy: Harvesting Subatomic Particles for Unlimited Power Generation",
-			Inventors: []string{"Dr. C", " Dr. E"},
+			Inventors: []string{"Dr. C", "Dr. E"},
 		},
 		{
 			Title:     "Memory Implant: Neural Prosthesis for Enhancing Cognitive Function and Memory Recall",
-			Inventors: []string{"Dr. B", " Dr. D"},
+			Inventors: []string{"Dr. B", "Dr. D"},
 		},
 	}
 
