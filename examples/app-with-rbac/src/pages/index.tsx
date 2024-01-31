@@ -1,4 +1,3 @@
-export { PageFour } from './PageFour';
-export { PageOne } from './PageOne';
-export { PageThree } from './PageThree';
-export { PageTwo } from './PageTwo';
+export { Hello } from './Hello';
+export { Patents } from './Patents';
+export { ResearchDocs } from './ResearchDocs';

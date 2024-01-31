@@ -1,7 +1,7 @@
 {
   "name": "grafana-appwithrbac-app",
   "version": "1.0.0",
-  "description": "A basic grafana app plugin defining it s own permissions",
+  "description": "A basic grafana app plugin defining its own permissions",
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",

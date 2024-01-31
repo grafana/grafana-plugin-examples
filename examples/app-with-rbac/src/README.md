@@ -4,7 +4,7 @@ Remove any remaining comments before publishing as these may be displayed on Gra
 
 # Grafana app with RBAC
 
-A basic grafana app plugin defining it s own permissions
+A basic grafana app plugin defining its own permissions
 
 <!-- To help maximize the impact of your README and improve usability for users, we propose the following loose structure:
 

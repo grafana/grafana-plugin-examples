@@ -9,6 +9,8 @@ services:
       args:
         grafana_image: ${GRAFANA_IMAGE:-grafana-enterprise}
         grafana_version: ${GRAFANA_VERSION:-10.0.3}
+    environment:
+      - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall
     ports:
       - 3000:3000/tcp
     volumes:

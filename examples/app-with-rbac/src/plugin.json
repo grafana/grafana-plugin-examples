@@ -7,7 +7,7 @@
   "executable": "gpx_grafana_appwithrbac_app",
   "info": {
     "keywords": ["app", "rbac"],
-    "description": "A basic grafana app plugin defining it s own permissions",
+    "description": "A basic grafana app plugin defining its own permissions",
     "author": {
       "name": "Your name"
     },
@@ -22,43 +22,48 @@
   "includes": [
     {
       "type": "page",
-      "name": "Page One",
-      "path": "/a/%PLUGIN_ID%/one",
-      "role": "Admin",
+      "name": "Hello",
+      "path": "/a/%PLUGIN_ID%/hello",
       "addToNav": true,
       "defaultNav": true
     },
     {
       "type": "page",
-      "name": "Page Two",
-      "path": "/a/%PLUGIN_ID%/two",
-      "role": "Admin",
+      "name": "Research documents",
+      "path": "/a/%PLUGIN_ID%/research-docs",
+      "action": "grafana-appwithrbac-app.papers:read",
       "addToNav": true,
       "defaultNav": false
     },
     {
       "type": "page",
-      "name": "Page Three",
-      "path": "/a/%PLUGIN_ID%/three",
-      "role": "Admin",
+      "name": "Patents",
+      "path": "/a/%PLUGIN_ID%/patents",
+      "action": "grafana-appwithrbac-app.patents:read",
       "addToNav": true,
       "defaultNav": false
+    }
+  ],
+  "roles": [
+    {
+      "role": {
+        "name": "Patents Reader",
+        "description": "Read patents",
+        "permissions": [
+          {"action": "grafana-appwithrbac-app.patents:read"}
+        ]
+      },
+      "grants": ["Admin"]
     },
     {
-      "type": "page",
-      "name": "Page Four",
-      "path": "/a/%PLUGIN_ID%/four",
-      "role": "Admin",
-      "addToNav": true,
-      "defaultNav": false
-    },
-    {
-      "type": "page",
-      "icon": "cog",
-      "name": "Configuration",
-      "path": "/plugins/%PLUGIN_ID%",
-      "role": "Admin",
-      "addToNav": true
+      "role": {
+        "name": "Reasearch paper Reader",
+        "description": "Read research papers",
+        "permissions": [
+          {"action": "grafana-appwithrbac-app.papers:read"}
+        ]
+      },
+      "grants": ["Viewer"]
     }
   ],
   "dependencies": {
