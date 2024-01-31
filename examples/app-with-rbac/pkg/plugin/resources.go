@@ -5,32 +5,97 @@ import (
 	"net/http"
 )
 
-// handlePing is an example HTTP GET resource that returns a {"message": "ok"} JSON response.
-func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
+type ResearchDocument struct {
+	Title   string   `json:"title"`
+	Authors []string `json:"authors"`
+}
+
+// handlePapers is an example HTTP GET resource that returns a [ {"title": "reasearch doc title", "authors": ["Dr something"]} ] JSON response.
+func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
-	if _, err := w.Write([]byte(`{"message": "ok"}`)); err != nil {
+
+	res := []ResearchDocument{
+		{
+			Title:   "Quantum Supremacy: A Path Towards Practical Quantum Computing",
+			Authors: []string{"Dr. A", " Dr. B"},
+		},
+		{
+			Title:   "Bioinspired Robotics: Mimicking Nature's Designs for Autonomous Systems",
+			Authors: []string{"Dr. C", "Dr. D"},
+		},
+		{
+
+			Title:   "Neuroplasticity and Learning: Unraveling the Brain's Adaptive Mechanisms",
+			Authors: []string{"Dr. A", "Dr. D"},
+		},
+		{
+
+			Title:   "Augmented Reality in Education: Enhancing Learning Experiences Through Immersive Technology",
+			Authors: []string{"Dr. B", "Dr. C"},
+		},
+		{
+
+			Title:   "Advances in CRISPR Gene Editing: Towards Precision Medicine",
+			Authors: []string{"Dr. B", "Dr. C"},
+		},
+	}
+
+	data, err := json.Marshal(res)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if _, err := w.Write(data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 }
 
-// handleEcho is an example HTTP POST resource that accepts a JSON with a "message" key and
-// returns to the client whatever it is sent.
-func (a *App) handleEcho(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-	var body struct {
-		Message string `json:"message"`
-	}
-	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+type Patent struct {
+	Title     string   `json:"title"`
+	Inventors []string `json:"inventors"`
+}
+
+// handlePatents is an example HTTP GET resource that returns a [ {"title": "patent title", "inventors": ["Dr something"]} ] JSON response.
+func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
 	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(body); err != nil {
+
+	res := []Patent{
+		{
+			Title:     "Self-Driving Umbrella: A Weather-Sensing Canopy for Hands-Free Protection",
+			Inventors: []string{"Dr. A", " Dr. B"},
+		},
+		{
+			Title:     "Mind-Controlled Virtual Reality: Telepathic Immersion System for Gaming and Beyond",
+			Inventors: []string{"Dr. C", " Dr. D"},
+		},
+		{
+			Title:     "Bio-Nano Fusion Patch: Revolutionary Wound Healing Technology Integrating Nanoparticles and Biological Agents",
+			Inventors: []string{"Dr. D", " Dr. E"},
+		},
+		{
+			Title:     "Invisibility Cloak: Adaptive Meta-Material Camouflage for Stealth Applications",
+			Inventors: []string{"Dr. A", " Dr. C"},
+		},
+		{
+			Title:     "Quantum Energy: Harvesting Subatomic Particles for Unlimited Power Generation",
+			Inventors: []string{"Dr. C", " Dr. E"},
+		},
+		{
+			Title:     "Memory Implant: Neural Prosthesis for Enhancing Cognitive Function and Memory Recall",
+			Inventors: []string{"Dr. B", " Dr. D"},
+		},
+	}
+
+	data, err := json.Marshal(res)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if _, err := w.Write(data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -39,6 +104,6 @@ func (a *App) handleEcho(w http.ResponseWriter, req *http.Request) {
 
 // registerRoutes takes a *http.ServeMux and registers some HTTP handlers.
 func (a *App) registerRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/ping", a.handlePing)
-	mux.HandleFunc("/echo", a.handleEcho)
+	mux.HandleFunc("/papers", a.handlePapers)
+	mux.HandleFunc("/patents", a.handlePatents)
 }
