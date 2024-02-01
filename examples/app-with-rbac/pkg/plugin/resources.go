@@ -17,6 +17,11 @@ func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
 	ctxLogger := log.DefaultLogger.FromContext(req.Context())
 	ctxLogger.Info("Research papers handler called")
 
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
 	w.Header().Add("Content-Type", "application/json")
 
 	res := []ResearchDocument{
@@ -67,6 +72,11 @@ type Patent struct {
 func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
 	ctxLogger := log.DefaultLogger.FromContext(req.Context())
 	ctxLogger.Info("Patents handler called")
+
+	if req.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
 	w.Header().Add("Content-Type", "application/json")
 
