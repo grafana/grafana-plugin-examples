@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { css } from '@emotion/css';
+import { GrafanaTheme2 } from '@grafana/data';
 import { testIds } from '../components/testIds';
 import { PluginPage } from '@grafana/runtime';
-import { InteractiveTable, Column, CellProps } from '@grafana/ui';
+import { useStyles2, InteractiveTable, Column, CellProps } from '@grafana/ui';
 
 interface Patent {
   title: string;
@@ -9,6 +11,7 @@ interface Patent {
 }
 
 export function Patents() {
+  const s = useStyles2(getStyles);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [patents, setPatents] = useState<Patent[]>([]);
@@ -52,7 +55,7 @@ export function Patents() {
   let content = <></>;
 
   if (isLoading) {
-    content = <div> The page is loading </div>;
+    content = <div> The page is loading... </div>;
   }
 
   if (error) {
@@ -65,8 +68,22 @@ export function Patents() {
 
   return (
     <PluginPage>
-      <div data-testid={testIds.patents.container}>This is the patents page, normally restricted to admins.</div>
-      {content}
+      <div data-testid={testIds.patents.container}>
+        <div className={s.large}>
+          &#x1F512; Normally restricted to <span className={s.blue}>Administrators</span> (requires{' '}
+          <span className={s.blue}>grafana-appwithrbac-app.patents:read</span>).
+        </div>
+        {content}
+      </div>
     </PluginPage>
   );
 }
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  large: css({
+    fontSize: 'large',
+  }),
+  blue: css({
+    color: '#6e9fff',
+  }),
+});

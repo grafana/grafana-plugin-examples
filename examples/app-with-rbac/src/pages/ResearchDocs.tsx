@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { css } from '@emotion/css';
+import { GrafanaTheme2 } from '@grafana/data';
 import { testIds } from '../components/testIds';
 import { PluginPage } from '@grafana/runtime';
-import { InteractiveTable, Column, CellProps } from '@grafana/ui';
+import { useStyles2, InteractiveTable, Column, CellProps } from '@grafana/ui';
 
 interface Paper {
   title: string;
@@ -9,6 +11,7 @@ interface Paper {
 }
 
 export function ResearchDocs() {
+  const s = useStyles2(getStyles);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [papers, setPapers] = useState<Paper[]>([]);
@@ -21,7 +24,7 @@ export function ResearchDocs() {
       },
       {
         id: 'authors',
-        header: 'authors',
+        header: 'Authors',
         cell: ({ cell: { value } }: CellProps<string[]>) => value.join(', '),
       },
     ],
@@ -52,7 +55,7 @@ export function ResearchDocs() {
   let content = <></>;
 
   if (isLoading) {
-    content = <div> The page is loading </div>;
+    content = <div> The page is loading... </div>;
   }
 
   if (error) {
@@ -66,9 +69,21 @@ export function ResearchDocs() {
   return (
     <PluginPage>
       <div data-testid={testIds.researchDocs.container}>
-        This is the research papers page, normally allowed to viewers.
+        <div className={s.large}>
+          &#x1F512; Normally accessible to <span className={s.blue}>anyone</span> (requires{' '}
+          <span className={s.blue}>grafana-appwithrbac-app.papers:read</span>).
+        </div>
+        {content}
       </div>
-      {content}
     </PluginPage>
   );
 }
+
+const getStyles = (theme: GrafanaTheme2) => ({
+  large: css({
+    fontSize: 'large',
+  }),
+  blue: css({
+    color: '#6e9fff',
+  }),
+});
