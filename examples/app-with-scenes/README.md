@@ -22,8 +22,8 @@ To learn more about @grafana/scenes usage please refer to [documentation](https:
 
 To run the plugin in development:
 
-1. Install dependencies (`yarn install`)
-1. Run the plugin (`yarn dev`)
+1. Install dependencies (`npm install`)
+1. Run the plugin (`npm run dev`)
 1. Run Grafana with Docker compose (`docker compose up -d`)
 1. Go to [http://localhost:3000/a/myorg-scenes-app/](http://localhost:3000/a/myorg-scenes-app/).
 

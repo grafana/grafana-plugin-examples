@@ -33,8 +33,8 @@ An example HTTP server that returns dummy data in this format is included in `cm
 ### Frontend
 
 ```bash
-$ yarn install
-$ yarn build
+$ npm install
+$ npm run build
 ```
 
 ### Backend
