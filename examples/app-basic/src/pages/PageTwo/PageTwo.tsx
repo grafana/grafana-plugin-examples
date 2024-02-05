@@ -1,4 +1,13 @@
-import * as React from 'react';
+import React from 'react';
 import { testIds } from '../../components/testIds';
+import { PluginPage } from '@grafana/runtime';
 
-export const PageTwo = () => <div data-testid={testIds.pageTwo.container}>This is page two.</div>;
+export function PageTwo() {
+  return (
+    <PluginPage>
+      <div data-testid={testIds.pageTwo.container}>
+        <p>This is page two.</p>
+      </div>
+    </PluginPage>
+  );
+}
