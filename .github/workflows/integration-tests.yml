@@ -148,7 +148,7 @@ jobs:
       - name: Start Integration tests using expected versions
         id: expected-version-tests
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         continue-on-error: true
         with:
           timeout_minutes: 30
@@ -195,7 +195,7 @@ jobs:
       - name: Start Integration tests using latest version of Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         continue-on-error: true
         with:
           timeout_minutes: 30
@@ -262,7 +262,7 @@ jobs:
         id: canary-version-tests
         if: steps.has-integration-tests.outputs.DIR == 'true'
         continue-on-error: true
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@v3
         with:
           timeout_minutes: 30
           max_attempts: 3
