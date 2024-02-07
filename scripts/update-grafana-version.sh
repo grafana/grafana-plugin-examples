@@ -62,13 +62,6 @@ for dir in $dirs; do
     npm install --save-exact $upgradeCommand
   fi
 
-  # if a yarn.lock exists, run yarn install
-  if [ -f "yarn.lock" ]; then
-    echo "yarn.lock exists, running yarn install"
-    yarn install
-    echo "upgrading packages with yarn upgrade $upgradeCommand"
-    yarn upgrade --exact $upgradeCommand
-  fi
   popd || exit 1
 done
 
