@@ -36,7 +36,7 @@ This repository contains example plugins to showcase different use cases.
 | [datasource-basic](examples/datasource-basic)                             | Shows how to build a basic data source plugin.                                                                |
 
 > [!NOTE]
-> The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead we offer no support for them.
+> The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead, we offer no support for them.
 
 ## Integration tests
 
