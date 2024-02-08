@@ -35,6 +35,9 @@ This repository contains example plugins to showcase different use cases.
 | [datasource-streaming-backend-websocket](examples/datasource-streaming-backend-websocket) | Shows how to create an event-based data source plugin using backend streams.                             |
 | [datasource-basic](examples/datasource-basic)                             | Shows how to build a basic data source plugin.                                                                |
 
+> [!NOTE]
+> The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead, we offer no support for them.
+
 ## Integration tests
 
 Some of the examples in this repository contain integration tests that make use of [`@grafana/e2e`](https://npmjs.com/package/@grafana/e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
@@ -95,9 +98,9 @@ jobs:
         with:
           node-version: "20"
       - name: Install dependencies
-        run: yarn install
+        run: npm install
       - name: Build plugin
-        run: yarn build
+        run: npm run build
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@v1
         with:

@@ -11,8 +11,8 @@ Build the data source plugin
   ```sh
 cd streaming-backend-websocket-plugin
 mage -v
-yarn install
-yarn build
+npm install
+npm run build
   ```
 
 and run the Grafana and the example websocket server with Docker compose:

@@ -7,8 +7,8 @@ This example uses the [Plotly](https://plotly.com/) library to plot graphs.
 To add Plotly to a plugin, install the following dependencies:
 
 ```
-yarn add react-plotly.js plotly.js
-yarn add --dev @types/react-plotly.js
+npm add react-plotly.js plotly.js
+npm add --dev @types/react-plotly.js
 ```
 
 ## Learn more
