@@ -24,7 +24,8 @@ describe('editing a panel with time series data', () => {
       .should('be.visible')
       .within(() => {
         selectors.gradientScheme().should('be.checked');
-        selectors.gradientHue().check({ force: true }).should('be.checked');
+        selectors.gradientHue().should('not.be.visible').check({ force: true })
+        selectors.gradientHue().should('be.checked');
       });
 
     e2e.components.PanelEditor.applyButton().click();
@@ -52,7 +53,9 @@ describe('editing a panel with time series data', () => {
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
       .within(() => {
-        selectors.legendDisplayHidden().check({ force: true }).should('be.checked');
+        // RadioButtons input is not visible but we need to check it's finished rendering
+        selectors.legendDisplayHidden().should('not.be.visible').check({ force: true });
+        selectors.legendDisplayHidden().should('be.checked');
       });
 
     e2e.components.PanelEditor.applyButton().click();
@@ -65,7 +68,9 @@ describe('editing a panel with time series data', () => {
     e2e.components.PanelEditor.OptionsPane.content()
       .should('be.visible')
       .within(() => {
-        selectors.legendPlacementRight().check({ force: true }).should('be.checked');
+        // RadioButtons input is not visible but we need to check it's finished rendering
+        selectors.legendPlacementRight().should('not.be.visible').check({ force: true })
+        selectors.legendPlacementRight().should('be.checked');
       });
 
     e2e.components.PanelEditor.applyButton().click();
