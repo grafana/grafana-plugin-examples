@@ -2,11 +2,16 @@ package plugin
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
+	"github.com/grafana/rbac-client-poc/pkg/authz/api"
+	"github.com/grafana/rbac-client-poc/pkg/authz/permissions"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -22,10 +27,11 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
+	permissionClient permissions.EnforcementClient
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
@@ -34,6 +40,29 @@ func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Inst
 	mux := http.NewServeMux()
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
+
+	grafanaURL := os.Getenv("GF_APP_URL")
+	if grafanaURL == "" {
+		return nil, fmt.Errorf("GF_APP_URL is required")
+	}
+
+	saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
+	if saToken == "" {
+		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
+	}
+
+	// Initialize the RBAC client
+	client, err := api.NewClient(api.ClientCfg{
+		GrafanaURL: grafanaURL,
+		Token:      saToken,
+		JWKsURL:    strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys", // TODO how do we provision this?
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	app.permissionClient = permissions.NewEnforcementClient(client,
+		permissions.WithPreloadPrefixedPermissions("grafana-appwithrbac-app"))
 
 	return &app, nil
 }

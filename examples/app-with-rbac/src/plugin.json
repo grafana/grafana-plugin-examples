@@ -19,6 +19,11 @@
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
+  "iam": {
+    "permissions": [
+      {"action": "users.permissions:read", "scope": "users:*"}
+    ]
+  },
   "includes": [
     {
       "type": "page",

@@ -22,6 +22,22 @@ func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	idToken := req.Header.Get("X-Grafana-Id")
+	if idToken == "" {
+		ctxLogger.Error("Missing ID token, make sure you have enabled idForwarding in your Grafana config file.")
+		http.Error(w, "id token not found", http.StatusUnauthorized)
+		return
+	}
+
+	hasAccess, err := a.permissionClient.HasAccess(req.Context(), idToken, "grafana-appwithrbac-app.papers:read", "")
+	if err != nil || !hasAccess {
+		if err != nil {
+			ctxLogger.Error("Error checking access", "error", err)
+		}
+		http.Error(w, "permission denied", http.StatusForbidden)
+		return
+	}
+
 	w.Header().Add("Content-Type", "application/json")
 
 	res := []ResearchDocument{
@@ -75,6 +91,22 @@ func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
+	idToken := req.Header.Get("X-Grafana-Id")
+	if idToken == "" {
+		ctxLogger.Error("Missing ID token")
+		http.Error(w, "id token not found", http.StatusUnauthorized)
+		return
+	}
+
+	hasAccess, err := a.permissionClient.HasAccess(req.Context(), idToken, "grafana-appwithrbac-app.patents:read", "")
+	if err != nil || !hasAccess {
+		if err != nil {
+			ctxLogger.Error("Error checking access", "error", err)
+		}
+		http.Error(w, "permission denied", http.StatusForbidden)
 		return
 	}
 
