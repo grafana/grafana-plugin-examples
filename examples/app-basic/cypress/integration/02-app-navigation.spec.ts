@@ -3,7 +3,7 @@ import { testIds } from '../../src/components/testIds';
 import pluginJson from '../../src/plugin.json';
 
 const { pageOne, pageFour, pageTwo, pageThree } = e2e.getSelectors(testIds);
-const headerTitle = 'Basic App Plugin';
+const headerTitle = 'Basic App';
 
 describe('navigating app', () => {
   beforeEach(() => {
