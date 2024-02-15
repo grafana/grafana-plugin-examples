@@ -7,11 +7,10 @@ import (
 	"os"
 	"strings"
 
+	"github.com/grafana/authlib/authz"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
-	"github.com/grafana/rbac-client-poc/pkg/authz/api"
-	"github.com/grafana/rbac-client-poc/pkg/authz/permissions"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -27,7 +26,7 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
-	permissionClient permissions.EnforcementClient
+	authzClient authz.EnforcementClient
 }
 
 // NewApp creates a new example *App instance.
@@ -51,18 +50,18 @@ func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemg
 		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
 	}
 
-	// Initialize the RBAC client
-	client, err := api.NewClient(api.ClientCfg{
-		GrafanaURL: grafanaURL,
-		Token:      saToken,
-		JWKsURL:    strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys", // TODO how do we provision this?
-	})
+	// Initialize the authorization client
+	client, err := authz.NewEnforcementClient(authz.Config{
+		APIURL: grafanaURL,
+		Token:  saToken,
+		// Grafana is signing the JWTs on local setups
+		JWKsURL: strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys", // TODO how do we provision this?
+	}, authz.WithSearchByPrefix("grafana-appwithrbac-app"))
 	if err != nil {
 		return nil, err
 	}
 
-	app.permissionClient = permissions.NewEnforcementClient(client,
-		permissions.WithPreloadPrefixedPermissions("grafana-appwithrbac-app"))
+	app.authzClient = client
 
 	return &app, nil
 }

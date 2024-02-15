@@ -2,6 +2,7 @@ package plugin
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -10,6 +11,28 @@ import (
 type ResearchDocument struct {
 	Title   string   `json:"title"`
 	Authors []string `json:"authors"`
+}
+
+func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
+	// Retrieve the id token
+	idToken := req.Header.Get("X-Grafana-Id")
+	if idToken == "" {
+		return false, errors.New("id token not found")
+	}
+
+	// Check user access
+	hasAccess, err := a.authzClient.HasAccess(req.Context(), idToken, action)
+	if err != nil || !hasAccess {
+		return false, err
+	}
+	return true, nil
+}
+
+func DenyAccess(w http.ResponseWriter, ctxLogger log.Logger, err error) {
+	if err != nil {
+		ctxLogger.Error("Error checking access", "error", err)
+	}
+	http.Error(w, "permission denied", http.StatusForbidden)
 }
 
 // handlePapers is an example HTTP GET resource that returns a [ {"title": "reasearch doc title", "authors": ["Dr something"]} ] JSON response.
@@ -22,19 +45,8 @@ func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	idToken := req.Header.Get("X-Grafana-Id")
-	if idToken == "" {
-		ctxLogger.Error("Missing ID token, make sure you have enabled idForwarding in your Grafana config file.")
-		http.Error(w, "id token not found", http.StatusUnauthorized)
-		return
-	}
-
-	hasAccess, err := a.permissionClient.HasAccess(req.Context(), idToken, "grafana-appwithrbac-app.papers:read", "")
-	if err != nil || !hasAccess {
-		if err != nil {
-			ctxLogger.Error("Error checking access", "error", err)
-		}
-		http.Error(w, "permission denied", http.StatusForbidden)
+	if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.papers:read"); err != nil || !hasAccess {
+		DenyAccess(w, ctxLogger, err)
 		return
 	}
 
@@ -94,19 +106,8 @@ func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	idToken := req.Header.Get("X-Grafana-Id")
-	if idToken == "" {
-		ctxLogger.Error("Missing ID token")
-		http.Error(w, "id token not found", http.StatusUnauthorized)
-		return
-	}
-
-	hasAccess, err := a.permissionClient.HasAccess(req.Context(), idToken, "grafana-appwithrbac-app.patents:read", "")
-	if err != nil || !hasAccess {
-		if err != nil {
-			ctxLogger.Error("Error checking access", "error", err)
-		}
-		http.Error(w, "permission denied", http.StatusForbidden)
+	if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); err != nil || !hasAccess {
+		DenyAccess(w, ctxLogger, err)
 		return
 	}
 

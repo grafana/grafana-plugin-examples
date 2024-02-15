@@ -62,7 +62,7 @@
     },
     {
       "role": {
-        "name": "Reasearch paper Reader",
+        "name": "Research papers Reader",
         "description": "Read research papers",
         "permissions": [
           {"action": "grafana-appwithrbac-app.papers:read"}

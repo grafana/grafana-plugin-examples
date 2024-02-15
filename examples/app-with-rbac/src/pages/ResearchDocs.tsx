@@ -20,7 +20,7 @@ export function ResearchDocs() {
     () => [
       {
         id: 'title',
-        header: 'Patent title',
+        header: 'Document Title',
       },
       {
         id: 'authors',
