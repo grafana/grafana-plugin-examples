@@ -3,7 +3,7 @@ import { testIds } from '../../src/components/testIds';
 import pluginJson from '../../src/plugin.json';
 
 const { pageOne, pageFour, pageTwo, pageThree } = e2e.getSelectors(testIds);
-const headerTitle = 'Basic App Plugin';
+const headerTitle = 'Basic App';
 
 describe('navigating app', () => {
   beforeEach(() => {
@@ -35,8 +35,7 @@ describe('navigating app', () => {
     pageOne.container().should('be.visible');
     cy.get('h1').contains(headerTitle).should('be.visible');
 
-    // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Two').first().click();
+    cy.visit(`http://localhost:3000/a/${pluginJson.id}/two`);
     pageTwo.container().should('be.visible');
   });
 
@@ -46,7 +45,7 @@ describe('navigating app', () => {
     cy.get('h1').contains(headerTitle).should('be.visible');
 
     // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Three').first().click();
+    cy.visit(`http://localhost:3000/a/${pluginJson.id}/three`);
     pageThree.container().should('be.visible');
   });
 });
