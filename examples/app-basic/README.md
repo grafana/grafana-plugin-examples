@@ -56,7 +56,7 @@ export const MyComponent = () => {
 
 ### Create a full-width page
 
-You can hide the tab navigation bar and have access to the full view right to the Grafana sidebar by changing the layout of the `<PluginPage>` component.
+You can hide the left sidebar and get access to the full width of the page by changing the layout of the `<PluginPage>` component.
 
 **Example:** [PageFour.tsx]
 
