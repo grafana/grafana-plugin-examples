@@ -36,7 +36,8 @@ describe('navigating app', () => {
     cy.get('h1').contains(headerTitle).should('be.visible');
 
     // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Two').first().click();
+    e2e.components.NavToolbar.container().get('[aria-label="Expand section Basic App"]').click();
+    e2e.components.NavMenu.item().contains('Page Two').click();
     pageTwo.container().should('be.visible');
   });
 
@@ -46,7 +47,8 @@ describe('navigating app', () => {
     cy.get('h1').contains(headerTitle).should('be.visible');
 
     // navigating to page two which is opened in a tab
-    e2e.components.Tab.title('Page Three').first().click();
+    e2e.components.NavToolbar.container().get('[aria-label="Expand section Basic App"]').click();
+    e2e.components.NavMenu.item().contains('Page Three').click();
     pageThree.container().should('be.visible');
   });
 });
