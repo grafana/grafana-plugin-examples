@@ -5,8 +5,7 @@
   "scripts": {
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
-    "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots",
-    "e2e": "npm exec cypress install && npm exec grafana-e2e run",
+    "e2e": "npx playwright test",
     "lint:fix": "npm run lint --fix",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "server": "docker-compose up --build",
