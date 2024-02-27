@@ -134,7 +134,7 @@ jobs:
         id: has-integration-tests
         continue-on-error: true
         run: |
-          echo "DIR=$(test -d ./cypress && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "DIR=$($(test -d ./cypress || test -d ./playwright) && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
