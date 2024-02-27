@@ -71,8 +71,15 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Check for playwright
+        id: playwright-check
+        run: |
+          echo "PLAYWRIGHT_EXISTS=$(test -f playwright.config.ts && echo true || echo false)" >> $GITHUB_OUTPUT
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Setup playwright browser
         run: npx playwright install --with-deps
+        if: steps.playwright-check.outputs.PLAYWRIGHT_EXISTS == 'true'
 
       - name: Run frontend tests
         run: |
