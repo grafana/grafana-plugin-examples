@@ -14,7 +14,7 @@ export function PageOne() {
       <div>
         This is page one.
         <div className={s.marginTop}>
-          <LinkButton href={prefixRoute(ROUTES.Four)}>Full-width page example</LinkButton>
+          <LinkButton href={prefixRoute(ROUTES.Three)}>Full-width page example</LinkButton>
         </div>
       </div>
     </PluginPage>
