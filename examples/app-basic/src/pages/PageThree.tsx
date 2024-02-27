@@ -3,9 +3,8 @@ import { css } from '@emotion/css';
 import { useParams, Link } from 'react-router-dom';
 import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
-import { prefixRoute } from '../../utils/utils.routing';
-import { ROUTES } from '../../constants';
-import { testIds } from '../../components/testIds';
+import { prefixRoute } from '../utils/utils.routing';
+import { ROUTES } from '../constants';
 import { PluginPage } from '@grafana/runtime';
 
 export function PageThree() {
@@ -14,7 +13,7 @@ export function PageThree() {
 
   return (
     <PluginPage>
-      <div data-testid={testIds.pageThree.container}>
+      <div>
         This is page three.
         <br />
         <br />

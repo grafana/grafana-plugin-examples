@@ -1,4 +1,7 @@
+import { dirname } from 'path';
 import { defineConfig, devices } from '@playwright/test';
+
+const pluginE2eAuth = `${dirname(require.resolve('@grafana/plugin-e2e'))}/auth`;
 
 /**
  * Read environment variables from file.
@@ -24,7 +27,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -35,6 +38,19 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'auth',
+      testDir: pluginE2eAuth,
+      testMatch: [/.*\.js/],
+    },
+    {
+      name: 'run-tests',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/admin.json',
+      },
+      dependencies: ['auth'],
     },
   ],
 });
