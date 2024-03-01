@@ -80,6 +80,7 @@ jobs:
       - name: Setup playwright browser
         run: npx playwright install --with-deps chromium
         if: steps.playwright-check.outputs.PLAYWRIGHT_EXISTS == 'true'
+        working-directory: ${{ matrix.pluginDir }}
 
       - name: Run frontend tests
         run: |
