@@ -1,8 +1,7 @@
-import pluginJson from '../src/plugin.json';
 import { test, expect } from './fixtures';
 
 test('configuring app', async ({ appConfigPage, page }) => {
-  await appConfigPage.goto(`/plugins/${pluginJson.id}`);
+  await appConfigPage.goto();
 
   const saveForm = page.getByRole('button', { name: /Save API settings/i });
   await expect(saveForm).toBeVisible();
