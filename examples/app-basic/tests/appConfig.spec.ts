@@ -1,8 +1,8 @@
 import pluginJson from '../src/plugin.json';
-import { test, expect } from '@grafana/plugin-e2e';
+import { test, expect } from './fixtures';
 
-test('configuring app', async ({ page }) => {
-  await page.goto(`/plugins/${pluginJson.id}`);
+test('configuring app', async ({ appConfigPage, page }) => {
+  await appConfigPage.goto(`/plugins/${pluginJson.id}`);
 
   const saveForm = page.getByRole('button', { name: /Save API settings/i });
   await expect(saveForm).toBeVisible();
@@ -16,7 +16,7 @@ test('configuring app', async ({ page }) => {
   await page.getByLabel('API Url').fill('http://www.my-awsome-grafana-app.com/api');
 
   // listen for the server response on the saved form
-  const saveResponse = page.waitForResponse(`/api/plugins/${pluginJson.id}/settings`);
+  const saveResponse = appConfigPage.waitForSaveResponse();
 
   await saveForm.click();
   await expect(saveResponse).toBeOK();
