@@ -15,7 +15,7 @@ test('configuring app', async ({ appConfigPage, page }) => {
   await page.getByLabel('API Url').fill('http://www.my-awsome-grafana-app.com/api');
 
   // listen for the server response on the saved form
-  const saveResponse = appConfigPage.waitForSaveResponse();
+  const saveResponse = appConfigPage.waitForSettingsResponse();
 
   await saveForm.click();
   await expect(saveResponse).toBeOK();

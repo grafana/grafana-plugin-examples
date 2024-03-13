@@ -1,23 +1,19 @@
+import { AppConfigPage, test as base } from '@grafana/plugin-e2e';
 import pluginJson from '../src/plugin.json';
-import { test as base } from '@playwright/test';
 
-// Should be imported from plugin-e2e
-class AppConfigPage {
-  private pluginId: string;
+type AppTestFixture = { appConfigPage: AppConfigPage };
 
-  constructor(args: { pluginId: string }) {
-    this.pluginId = args.pluginId;
-  }
-}
-
-export const test = base.extend<{ appConfigPage: AppConfigPage }>({
-  appConfigPage: async (ctx, use) => {
+export const test = base.extend<AppTestFixture>({
+  appConfigPage: async ({ page, selectors, grafanaVersion, request }, use, testInfo) => {
     await use(
-      new AppConfigPage(ctx, {
-        pluginId: pluginJson.id,
-      })
+      new AppConfigPage(
+        { page, selectors, grafanaVersion, request, testInfo },
+        {
+          pluginId: pluginJson.id,
+        }
+      )
     );
   },
 });
 
-export { expect } from '@playwright/test';
+export { expect } from '@grafana/plugin-e2e';
