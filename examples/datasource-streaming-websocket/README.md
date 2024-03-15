@@ -8,14 +8,14 @@ This is an example of how to implement a Grafana data source plugin with streami
 
   ```
   cd websocket-server
-  yarn dev
+  npm run dev
   ```
 
 - Build the data source plugin:
 
   ```
   cd streaming-plugin
-  yarn dev
+  npm run dev
   ```
 
 ## Packages
