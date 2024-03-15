@@ -1,16 +1,16 @@
-# Grafana Basic Panel Plugin example
+# Basic Panel Plugin for Grafana
 
-This example provides a template for how to build a basic panel plugin. The definition for the panel is provided in `/src/components/SimplePanel/SimplePanel.tsx`.
+This repository contains an example plugin for Grafana called Basic Panel Plugin. It serves as a foundational example for creating custom panel plugins within Grafana.
 
-The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization.
+## Overview
 
-Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
+The Basic Panel Plugin demonstrates the fundamental structure and functionality required for developing custom panels in Grafana. It provides a starting point for developers looking to create their own custom visualizations or extend Grafana's capabilities. 
 
-## What is a Grafana panel plugin?
+Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more. Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
 
-Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
+The definition for the Basic Panel Plugin is provided in []`/src/components/SimplePanel/SimplePanel.tsx`](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-basic/src/components/SimplePanel/SimplePanel.tsx).
 
-Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
+The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization. Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
 
 ## Getting started
 
@@ -45,6 +45,6 @@ Use panel plugins when you want to do things like visualize data returned by dat
 ## Learn more
 
 - [Grafana developer portal](https://grafana.com/developers)
-- [Build a panel plugin tutorial](https://grafana.com/tutorials/build-a-panel-plugin/)
+- [Build a panel plugin tutorial](https://grafana.com/developers/plugin-tools/tutorials/build-a-panel-plugin)
 - [Grafana documentation](https://grafana.com/docs/)
 - [Grafana tutorials](https://grafana.com/tutorials/)
