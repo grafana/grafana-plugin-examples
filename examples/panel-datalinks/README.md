@@ -10,6 +10,8 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
 ## Get started
 
+A data source backend plugin consists of both frontend and backend components. Install these with the following CLI commands.
+
 ### Frontend
 
 1. Install dependencies:

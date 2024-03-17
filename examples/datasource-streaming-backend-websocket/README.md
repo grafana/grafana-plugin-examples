@@ -1,12 +1,17 @@
-# Grafana Data Source Streaming Backend Plugin example
+# Streaming Backend WebSocket Data Source Plugin for Grafana
 
-This is an example of how to implement a Grafana data source plugin with streaming backend support.
+This repository contains a streaming data source plugin complete with WebSocket integration.
+## Overview
 
-The plugin connects to the backend through a streaming connection and the backend establishes a connection to an external websocket server.
+The Streaming Backend WebSocket Data Source Plugin demonstrates the integration of a backend WebSocket service as a custom data source within Grafana. This plugin serves as a reference implementation for developers seeking to incorporate WebSocket-based data sources into their Grafana dashboards for streaming data scenarios.
 
-## Build
+The plugin connects to the backend through a streaming connection and the backend establishes a connection to an external WebSocket server.
 
-Build the data source plugin
+The example server sends random numbers controlled by a query parameter.
+
+## Get started
+
+1. Build the data source plugin:
 
   ```sh
 cd streaming-backend-websocket-plugin
@@ -15,7 +20,7 @@ npm install
 npm run build
   ```
 
-and run the Grafana and the example websocket server with Docker compose:
+2. Run the Grafana and the example WebSocket server with Docker compose:
 
 ```sh
 cd streaming-backend-websocket-plugin
@@ -26,8 +31,6 @@ The server can be accessed by the Grafana backend in `ws://websocket-server:8080
 
 Refer to the [`docker-compose.yaml`](./streaming-backend-websocket-plugin/docker-compose.yaml) for more details.
 
-The example server sends random numbers controlled by a query parameter.
-
 ## Packages
 
 ### `streaming-backend-websocket-plugin`
@@ -37,3 +40,9 @@ This package contains a Grafana data source plugin that establishes a connection
 ### `websocket-server`
 
 This package contains a WebSocket server that returns random values at random intervals.
+
+## Learn more
+
+- [Grafana plugins documentation](https://grafana.com/developers/plugin-tools/)
+- [Build a data source plugin tutorial](https://grafana.com/developers/plugin-tools/tutorials/build-a-data-source-plugin)
+- [Grafana documentation](https://grafana.com/docs/)
