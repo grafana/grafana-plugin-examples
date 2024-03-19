@@ -129,7 +129,15 @@ client, err := authz.NewEnforcementClient(authz.Config{
   Token:      saToken,
   // Grafana is signing the JWTs on local setups
   JWKsURL:    strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys",
-}, authz.WithSearchByPrefix("grafana-appwithrbac-app"))
+}, 
+	// Fetch all the user permission prefixed with grafana-appwithrbac-app
+	authz.WithSearchByPrefix("grafana-appwithrbac-app"),
+	// Use a cache with a lower expiry time
+	authz.WithCache(cache.NewLocalCache(cache.Config{
+		Expiry:          10 * time.Second,
+		CleanupInterval: 5 * time.Second,
+	})),
+)
 if err != nil {
   return nil, err
 }
