@@ -5,6 +5,7 @@ test("page one should successfully call backend and display reply", async ({
   page,
 }) => {
   await pageOne.goto();
+  await expect(page.getByText("pong")).toBeVisible();
 });
 
 test("page one should succesfully check health and display status", async ({
@@ -12,4 +13,5 @@ test("page one should succesfully check health and display status", async ({
   page,
 }) => {
   await pageOne.goto();
+  await expect(page.getByText("OK")).toBeVisible();
 });
