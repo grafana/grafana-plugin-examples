@@ -1,8 +1,26 @@
-import { test as base, AppPage } from "@grafana/plugin-e2e";
+import {
+  test as base,
+  AppPage,
+  PluginTestCtx,
+  PluginPageArgs,
+} from "@grafana/plugin-e2e";
 import pluginJson from "../src/plugin.json";
 
+class PageOne extends AppPage {
+  private path: string;
+
+  constructor(ctx: PluginTestCtx, args: PluginPageArgs & { path: string }) {
+    super(ctx, args);
+    this.path = args.path;
+  }
+
+  goto(): Promise<void> {
+    return super.goto({ path: this.path });
+  }
+}
+
 type AppTestFixture = {
-  pageOne: AppPage;
+  pageOne: PageOne;
 };
 
 export const test = base.extend<AppTestFixture>({
@@ -12,7 +30,7 @@ export const test = base.extend<AppTestFixture>({
     testInfo
   ) => {
     await use(
-      new AppPage(
+      new PageOne(
         { page, selectors, grafanaVersion, request, testInfo },
         {
           pluginId: pluginJson.id,
