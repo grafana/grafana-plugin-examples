@@ -6,10 +6,13 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/grafana/authlib/authz"
+	"github.com/grafana/authlib/cache"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 )
 
@@ -30,8 +33,10 @@ type App struct {
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
+
+	ctxLogger := log.DefaultLogger.FromContext(pCtx)
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
 	// to use a *http.ServeMux for resource calls, so we can map multiple routes
@@ -55,12 +60,22 @@ func NewApp(_ context.Context, settings backend.AppInstanceSettings) (instancemg
 		APIURL: grafanaURL,
 		Token:  saToken,
 		// Grafana is signing the JWTs on local setups
-		JWKsURL: strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys", // TODO how do we provision this?
-	}, authz.WithSearchByPrefix("grafana-appwithrbac-app"))
+		JWKsURL: strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys",
+	},
+		// Fetch all the user permission prefixed with grafana-appwithrbac-app
+		authz.WithSearchByPrefix("grafana-appwithrbac-app"),
+		// Use a cache with a lower expiry time
+		authz.WithCache(cache.NewLocalCache(cache.Config{
+			Expiry:          10 * time.Second,
+			CleanupInterval: 5 * time.Second,
+		})),
+	)
 	if err != nil {
+		ctxLogger.Error("Initializing authz client", "error", err)
 		return nil, err
 	}
 
+	ctxLogger.Info("Authz client initialized")
 	app.authzClient = client
 
 	return &app, nil

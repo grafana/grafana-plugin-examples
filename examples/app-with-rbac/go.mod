@@ -1,10 +1,13 @@
 module github.com/grafana/app-with-rbac
 
-go 1.21
+go 1.22
 
-toolchain go1.21.3
+toolchain go1.22.1
 
-require github.com/grafana/grafana-plugin-sdk-go v0.204.0
+require (
+	github.com/grafana/authlib v0.0.0-20240318132843-56180bacf0d3
+	github.com/grafana/grafana-plugin-sdk-go v0.204.0
+)
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
@@ -31,7 +34,6 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/grafana/authlib v0.0.0-20240313094709-13ce38f75588 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.2 // indirect
