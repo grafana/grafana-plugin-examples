@@ -144,6 +144,7 @@ if err != nil {
 ```
 
 > Note that the `WithSearchByPrefix` option is specified here to avoid querying the authorization server every time we want to check a different action.
+> The `WithCache` option allows you to override the library's internal cache with you own or with different settings. The default expiry time is 5 minutes.
 
 Enforcing access control can then be done with the client as follow:
 
