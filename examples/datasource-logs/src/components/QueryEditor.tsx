@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { InlineField, Input } from '@grafana/ui';
+import { HorizontalGroup, InlineField, Input } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { MyDataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery } from '../types';
@@ -12,18 +12,17 @@ export function QueryEditor({ query, onChange }: Props) {
   };
 
   const onQueryLimitChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange({ ...query, limit: parseInt(event.target.value,10) });
+    onChange({ ...query, limit: parseInt(event.target.value, 10) });
   };
 
   return (
-    <div className="gf-form">
+    <HorizontalGroup spacing="none">
       <InlineField label="Query" labelWidth={20} tooltip="Query text">
-        <Input onChange={onQueryTextChange} value={query.queryText || ''} width={70}/>
+        <Input onChange={onQueryTextChange} value={query.queryText || ''} width={70} />
       </InlineField>
       <InlineField label="Log limit" labelWidth={20} tooltip="Log limit">
-        <Input onChange={onQueryLimitChange} value={query.limit || 100} width={20} type='number'/>
+        <Input onChange={onQueryLimitChange} value={query.limit || 100} width={20} type="number" />
       </InlineField>
-
-    </div>
+    </HorizontalGroup>
   );
 }
