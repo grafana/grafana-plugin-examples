@@ -1,4 +1,5 @@
 import {
+  CoreApp,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
@@ -8,7 +9,6 @@ import {
 } from '@grafana/data';
 import { getBackendSrv, isFetchError } from '@grafana/runtime';
 import _ from 'lodash';
-import defaults from 'lodash/defaults';
 import { DataSourceResponse, defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 import { lastValueFrom } from 'rxjs';
 
@@ -21,9 +21,16 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     this.baseUrl = instanceSettings.url!;
   }
 
+  getDefaultQuery(_: CoreApp): Partial<MyQuery> {
+    return defaultQuery;
+  }
+
+  filterQuery(query: MyQuery): boolean {
+    return !!query.queryText;
+  }
+
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-    const promises = options.targets.map(async (target) => {
-      const query = defaults(target, defaultQuery);
+    const promises = options.targets.map(async (query) => {
       const response = await this.request('/api/metrics', `query=${query.queryText}`);
 
       /**
@@ -76,13 +83,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       url: `${this.baseUrl}${url}${params?.length ? `?${params}` : ''}`,
     });
     return lastValueFrom(response);
-  }
-
-  filterQuery(query: MyQuery): boolean {
-    if (query.hide) {
-      return false;
-    }
-    return true;
   }
 
   /**
