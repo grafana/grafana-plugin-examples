@@ -1,7 +1,6 @@
 import { test, expect } from './fixtures';
 
 test('configuring app', async ({ appConfigPage, page }) => {
-  await appConfigPage.goto();
   const saveForm = page.getByRole('button', { name: /Save API settings/i });
 
   // reset the configured secret
