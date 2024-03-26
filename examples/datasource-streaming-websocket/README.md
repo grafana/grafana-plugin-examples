@@ -1,8 +1,14 @@
-# Grafana Streaming Data Source WebSocket Plugin example
+# Streaming WebSocket Data Source Plugin for Grafana
 
-This is an example of how to implement a Grafana data source plugin with streaming support.
+This repository provides an example of how to implement a Grafana data source plugin with streaming support.
 
-## Build
+## Overview
+
+The Streaming WebSocket Data Source Plugin illustrates the integration of WebSocket-based data sources into Grafana dashboards. This plugin serves as a reference implementation for developers aiming to incorporate real-time streaming data into their Grafana visualizations.
+
+This server returns random numeric values at random intervals.
+
+## Get started
 
 - Start the WebSocket server:
 
@@ -27,3 +33,9 @@ This package contains a Grafana data source plugin that establishes a connection
 ### `websocket-server`
 
 This package contains a WebSocket server that returns random values at random intervals.
+
+## Learn more
+
+- [Grafana plugins documentation](https://grafana.com/developers/plugin-tools/)
+- [Build a data source plugin tutorial](https://grafana.com/developers/plugin-tools/tutorials/build-a-data-source-plugin)
+- [Grafana documentation](https://grafana.com/docs/)
