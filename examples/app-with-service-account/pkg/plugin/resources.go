@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"net/url"
+
+	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
 // handleAPI handles requests to the /api endpoint.
@@ -19,7 +22,19 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 		bodyReader = bytes.NewReader([]byte(proxyBody))
 	}
 
-	proxyReq, err := http.NewRequest(proxyMethod, a.grafanaAppURL+req.URL.Path, bodyReader)
+	cfg := backend.GrafanaConfigFromContext(req.Context())
+	grafanaAppURL, err := cfg.AppURL()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	reqURL, err := url.JoinPath(grafanaAppURL, req.URL.Path)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	proxyReq, err := http.NewRequest(proxyMethod, reqURL, bodyReader)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -28,6 +43,13 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	if proxyMethod == "POST" || proxyMethod == "PUT" {
 		proxyReq.Header.Set("Content-Type", "application/json")
 	}
+
+	saToken, err := cfg.PluginAppClientSecret()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	proxyReq.Header.Set("Authorization", "Bearer "+saToken)
 
 	res, err := a.httpClient.Do(proxyReq)
 	if err != nil {
@@ -55,7 +77,7 @@ func (a *App) handleAPI(w http.ResponseWriter, req *http.Request) {
 	}
 
 	response := map[string]interface{}{
-		"token":   a.saToken, // This is just for demo purpose, you normally don't expose your token
+		"token":   saToken, // This is just for demo purpose, you normally don't expose your token
 		"results": bodyRes,
 	}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
