@@ -5,7 +5,6 @@ import { PluginPropsContext } from '../../utils/utils.plugin';
 import { PageOne } from '../../pages/PageOne';
 import { PageTwo } from '../../pages/PageTwo';
 import { PageThree } from '../../pages/PageThree';
-import { PageFour } from '../../pages/PageFour';
 import { ROUTES } from '../../constants';
 
 export class App extends React.PureComponent<AppRootProps> {
@@ -13,11 +12,10 @@ export class App extends React.PureComponent<AppRootProps> {
     return (
       <PluginPropsContext.Provider value={this.props}>
         <Routes>
-          <Route path={ROUTES.Two} element={<PageTwo />} />
-          <Route path={`${ROUTES.Three}/:id?`} element={<PageThree />} />
+          <Route path={`${ROUTES.Two}/:id?`} element={<PageTwo />} />
 
           {/* Full-width page (this page will have no navigation bar) */}
-          <Route path={ROUTES.Four} element={<PageFour />} />
+          <Route path={ROUTES.Three} element={<PageThree />} />
 
           {/* Default page */}
           <Route path="*" element={<PageOne />} />

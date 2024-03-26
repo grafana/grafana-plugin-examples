@@ -1,5 +1,6 @@
 import {
   CircularDataFrame,
+  CoreApp,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
@@ -7,7 +8,6 @@ import {
   FieldType,
   LoadingState,
 } from '@grafana/data';
-import defaults from 'lodash/defaults';
 import { merge, Observable } from 'rxjs';
 import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 
@@ -20,10 +20,12 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     this.serverURL = instanceSettings.jsonData.url || 'ws://localhost:8080';
   }
 
-  query(options: DataQueryRequest<MyQuery>): Observable<DataQueryResponse> {
-    const observables = options.targets.map((target) => {
-      const query = defaults(target, defaultQuery);
+  getDefaultQuery(app: CoreApp): Partial<MyQuery> {
+    return defaultQuery;
+  }
 
+  query(options: DataQueryRequest<MyQuery>): Observable<DataQueryResponse> {
+    const observables = options.targets.map((query) => {
       return new Observable<DataQueryResponse>((subscriber) => {
         const frame = new CircularDataFrame({
           append: 'tail',
@@ -65,9 +67,6 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
   }
 
   filterQuery(query: MyQuery): boolean {
-    if (query.hide) {
-      return false;
-    }
-    return true;
+    return !!query.queryText;
   }
 }

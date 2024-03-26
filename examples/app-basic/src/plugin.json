@@ -4,11 +4,7 @@
   "name": "Basic App",
   "id": "myorg-basic-app",
   "info": {
-    "keywords": [
-      "basic",
-      "app",
-      "example"
-    ],
+    "keywords": ["basic", "app", "example"],
     "description": "A basic grafana app plugin",
     "author": {
       "name": "Your name"
@@ -42,14 +38,6 @@
       "type": "page",
       "name": "Page Three",
       "path": "/a/%PLUGIN_ID%/three",
-      "role": "Admin",
-      "addToNav": true,
-      "defaultNav": false
-    },
-    {
-      "type": "page",
-      "name": "Page Four",
-      "path": "/a/%PLUGIN_ID%/four",
       "role": "Admin",
       "addToNav": true,
       "defaultNav": false
