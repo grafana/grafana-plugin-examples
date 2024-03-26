@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
-	"strings"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
@@ -26,9 +24,9 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
-	httpClient    *http.Client
-	grafanaAppURL string
-	saToken       string
+	httpClient *http.Client
+	// grafanaAppURL string
+	// saToken       string
 }
 
 // NewApp creates a new example *App instance.
@@ -42,31 +40,16 @@ func NewApp(ctx context.Context, settings backend.AppInstanceSettings) (instance
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
-	// Getting the service account token that has been shared with the plugin
-	app.saToken = os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
-	if app.saToken == "" {
-		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
-	}
-
 	opts, err := settings.HTTPClientOptions(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("http client options: %w", err)
 	}
-
-	opts.Headers = map[string]string{"Authorization": "Bearer " + app.saToken}
 
 	cl, err := httpclient.New(opts)
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
 	}
 	app.httpClient = cl
-
-	// The Grafana URL is required to request Grafana API later
-	app.grafanaAppURL = strings.TrimRight(os.Getenv("GF_APP_URL"), "/")
-	if app.grafanaAppURL == "" {
-		// For debugging purposes only
-		app.grafanaAppURL = "http://localhost:3000"
-	}
 
 	return &app, nil
 }
