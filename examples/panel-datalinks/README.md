@@ -1,12 +1,14 @@
-# Grafana Panel Plugin with Datalinks example
+# Panel Datalinks Plugin for Grafana
 
-This template is a starting point for building a panel plugin with data links for Grafana.
+This repository contains an example plugin for Grafana called Panel Datalinks Plugin. It demonstrates how to create a custom panel plugin that adds interactive data links to Grafana dashboards.
 
-## What are Grafana panel plugins?
+## Overview
 
-Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
+The Panel Datalinks plugin enhances the functionality of Grafana dashboards by allowing users to add custom links to specific data points or series within panels. These links can lead to external resources or other dashboards, providing users with quick access to additional information or related content.
 
-Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
+The definition for the panel is provided in [`/src/components/DataLinksPanel.tsx`](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-datalinks/src/components/DataLinksPanel.tsx).
+
+The plugin uses `DataLinksContextMenu` from the `grafana-ui` package to build data links with the properties passed to the panel. The plugin also styles the panel according to custom styles passed to `grafana-ui`.
 
 ## Get started
 
@@ -68,8 +70,7 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
 ## Learn more
 
-Below you can find source code for existing app plugins and other related documentation.
-
-- [Basic panel plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/panel-basic#readme)
-- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin/)
+- [Grafana developer portal](https://grafana.com/developers)
+- [Build a panel plugin tutorial](https://grafana.com/developers/plugin-tools/tutorials/build-a-panel-plugin)
+- [Grafana documentation](https://grafana.com/docs/)
+- [Grafana tutorials](https://grafana.com/tutorials/)
