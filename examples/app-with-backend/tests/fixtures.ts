@@ -29,15 +29,15 @@ export const test = base.extend<AppTestFixture>({
     use,
     testInfo
   ) => {
-    await use(
-      new PageOne(
-        { page, selectors, grafanaVersion, request, testInfo },
-        {
-          pluginId: pluginJson.id,
-          path: "/one",
-        }
-      )
+    const pageOne = new PageOne(
+      { page, selectors, grafanaVersion, request, testInfo },
+      {
+        pluginId: pluginJson.id,
+        path: "/one",
+      }
     );
+    await pageOne.goto();
+    await use(pageOne);
   },
 });
 
