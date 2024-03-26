@@ -25,8 +25,6 @@ var (
 type App struct {
 	backend.CallResourceHandler
 	httpClient *http.Client
-	// grafanaAppURL string
-	// saToken       string
 }
 
 // NewApp creates a new example *App instance.
