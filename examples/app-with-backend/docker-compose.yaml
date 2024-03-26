@@ -1,9 +1,9 @@
-version: '3.0'
+version: "3.0"
 
 services:
   grafana:
     image: grafana/grafana:latest
-    container_name: 'app-with-backend'
+    container_name: "app-with-backend"
     build:
       context: ./.config
       args:
@@ -24,8 +24,6 @@ services:
       # allow anonymous admin so we don't have to set up a password to start testing
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      # skip login page
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
       # disable alerting because it vomits logs
       - GF_ALERTING_ENABLED=false
       - GF_UNIFIED_ALERTING_ENABLED=false

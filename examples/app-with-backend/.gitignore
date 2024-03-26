@@ -32,3 +32,8 @@ e2e-results/
 .idea
 
 .eslintcache
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
