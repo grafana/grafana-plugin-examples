@@ -83,7 +83,7 @@ This is not demonstrated in this plugin but if you want to protect your proxied 
 ]
 ```
 
-### Protect you plugin backend resources
+### Protect plugin backend resources
 
 If your backend is exposing resources, you can also protect them behind an action check.
 
