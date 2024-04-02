@@ -13,18 +13,18 @@ export function Hello() {
       <div data-testid={testIds.hello.container}>
         <h2>&#x1F44B; Welcome!</h2>
         <p>
-          This mock plugin uses <span className={s.blue}>Role-Based Access Control (RBAC)</span> to control access to
+          This mock plugin uses <span className={s.orange}>Role-Based Access Control (RBAC)</span> to control access to
           the following pages:
           <ul className={s.list}>
             <li>
               &#128196; Research Documents: Accessible to individuals with the{' '}
-              <span className={s.blue}>grafana-appwithrbac-app.papers:read</span> permission, which is granted by
-              default to <span className={s.blue}>Viewers</span>.
+              <span className={s.orange}>grafana-appwithrbac-app.papers:read</span> permission, which is granted by
+              default to <span className={s.orange}>Viewers</span>.
             </li>
             <li>
               &#x1F512; Patents: Accessible to individuals with the{' '}
-              <span className={s.blue}>grafana-appwithrbac-app.patents:read</span> permission, which is granted by
-              default to <span className={s.blue}>Administrators</span> only.
+              <span className={s.orange}>grafana-appwithrbac-app.patents:read</span> permission, which is granted by
+              default to <span className={s.orange}>Administrators</span> only.
             </li>
           </ul>
         </p>
@@ -42,7 +42,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
     padding: theme.spacing(1),
   }),
 
-  blue: css({
-    color: '#6e9fff',
+  orange: css({
+    color: '#fbad37',
   }),
 });

@@ -70,8 +70,8 @@ export function Patents() {
     <PluginPage>
       <div data-testid={testIds.patents.container}>
         <div className={s.large}>
-          &#x1F512; Normally restricted to <span className={s.blue}>Administrators</span> (requires{' '}
-          <span className={s.blue}>grafana-appwithrbac-app.patents:read</span>).
+          &#x1F512; Normally restricted to <span className={s.orange}>Administrators</span> (requires{' '}
+          <span className={s.orange}>grafana-appwithrbac-app.patents:read</span>).
         </div>
         {content}
       </div>
@@ -83,7 +83,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   large: css({
     fontSize: 'large',
   }),
-  blue: css({
-    color: '#6e9fff',
+  orange: css({
+    color: '#fbad37',
   }),
 });

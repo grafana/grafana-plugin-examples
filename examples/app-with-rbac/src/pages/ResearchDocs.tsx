@@ -70,8 +70,8 @@ export function ResearchDocs() {
     <PluginPage>
       <div data-testid={testIds.researchDocs.container}>
         <div className={s.large}>
-          &#x1F512; Normally accessible to <span className={s.blue}>anyone</span> (requires{' '}
-          <span className={s.blue}>grafana-appwithrbac-app.papers:read</span>).
+          &#x1F512; Normally accessible to <span className={s.orange}>anyone</span> (requires{' '}
+          <span className={s.orange}>grafana-appwithrbac-app.papers:read</span>).
         </div>
         {content}
       </div>
@@ -83,7 +83,7 @@ const getStyles = (theme: GrafanaTheme2) => ({
   large: css({
     fontSize: 'large',
   }),
-  blue: css({
-    color: '#6e9fff',
+  orange: css({
+    color: '#fbad37',
   }),
 });
