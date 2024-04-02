@@ -4,11 +4,11 @@ go 1.21
 
 toolchain go1.22.1
 
-require github.com/grafana/grafana-plugin-sdk-go v0.184.0
+require github.com/grafana/grafana-plugin-sdk-go v0.219.0
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
-	github.com/apache/arrow/go/v15 v15.0.0 // indirect
+	github.com/apache/arrow/go/v15 v15.0.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
@@ -90,5 +90,3 @@ require (
 	gopkg.in/fsnotify/fsnotify.v1 v1.4.7 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/grafana/grafana-plugin-sdk-go => ../../../grafana-plugin-sdk-go
