@@ -12,6 +12,10 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
   const theme = useTheme2();
   const ContextMenu = DataLinksContextMenu as React.FC<PreviousContextMenuProps>;
 
+  if (data.series.length === 0) {
+    return <div data-testid={testIds.panel.noData}>No data</div>;
+  }
+
   const fieldDisplayValues = getFieldDisplayValues({
     fieldConfig,
     reduceOptions: options.reduceOptions,

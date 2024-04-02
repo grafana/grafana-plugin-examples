@@ -7,6 +7,15 @@ test.describe('panel-datalinks panel', () => {
     panelEditPage = await gotoPanelEditPage({ dashboard: { uid: 'fTh-POZ4k' }, id: '2' });
   });
 
+  test('should display "No data" when no data is passed to the panel', async ({ page }) => {
+    await expect(page.getByTestId(testIds.panel.noData)).not.toBeVisible();
+    await page.getByLabel('Scenario').last().click();
+    await page.keyboard.insertText('No Data Points');
+    await page.keyboard.press('Tab');
+    await panelEditPage.refreshPanel();
+    await expect(page.getByTestId(testIds.panel.noData)).toBeVisible();
+  });
+
   test('should display context menu links when clicking on circle', async ({ page }) => {
     const menu = panelEditPage.getByTestIdOrAriaLabel('Context menu');
     expect(menu).not.toBeVisible();
