@@ -2,14 +2,14 @@ package plugin
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/grafana/authlib/authz"
 	"github.com/grafana/authlib/cache"
+
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
@@ -29,14 +29,13 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
+	saToken     string
 	authzClient authz.EnforcementClient
 }
 
 // NewApp creates a new example *App instance.
 func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
-
-	ctxLogger := log.DefaultLogger.FromContext(pCtx)
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
 	// to use a *http.ServeMux for resource calls, so we can map multiple routes
@@ -45,14 +44,47 @@ func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instanc
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
-	grafanaURL := os.Getenv("GF_APP_URL")
-	if grafanaURL == "" {
-		return nil, fmt.Errorf("GF_APP_URL is required")
+	return &app, nil
+}
+
+// Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
+// created.
+func (a *App) Dispose() {
+	// cleanup
+}
+
+// CheckHealth handles health checks sent from Grafana to the plugin.
+func (a *App) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+	return &backend.CheckHealthResult{
+		Status:  backend.HealthStatusOk,
+		Message: "ok",
+	}, nil
+}
+
+// GetClientFromContext returns an authz enforcement client configured thanks to the plugin context.
+func (a *App) GetClientFromContext(req *http.Request) (authz.EnforcementClient, error) {
+	ctx := req.Context()
+	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	cfg := backend.GrafanaConfigFromContext(ctx)
+
+	saToken, err := cfg.PluginAppClientSecret()
+	if err != nil || saToken == "" {
+		if err == nil {
+			err = errors.New("service account token not found")
+		}
+		ctxLogger.Error("Service account token not found", "error", err)
+		return nil, err
 	}
 
-	saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
-	if saToken == "" {
-		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
+	if saToken == a.saToken {
+		ctxLogger.Debug("Token unchanged returning existing client")
+		return a.authzClient, nil
+	}
+
+	grafanaURL, err := cfg.AppURL()
+	if err != nil {
+		ctxLogger.Error("App URL not found", "error", err)
+		return nil, err
 	}
 
 	// Initialize the authorization client
@@ -75,22 +107,8 @@ func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instanc
 		return nil, err
 	}
 
-	ctxLogger.Info("Authz client initialized")
-	app.authzClient = client
+	a.saToken = saToken
+	a.authzClient = client
 
-	return &app, nil
-}
-
-// Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
-// created.
-func (a *App) Dispose() {
-	// cleanup
-}
-
-// CheckHealth handles health checks sent from Grafana to the plugin.
-func (a *App) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	return &backend.CheckHealthResult{
-		Status:  backend.HealthStatusOk,
-		Message: "ok",
-	}, nil
+	return client, nil
 }
