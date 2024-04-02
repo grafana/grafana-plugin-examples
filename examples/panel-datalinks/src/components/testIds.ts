@@ -1,5 +1,6 @@
 export const testIds = {
   panel: {
-    svg: 'data-testid datalinks-panel-svg',
+    svg: 'datalinks-panel-svg',
+    circle: (index?: number) => `datalinks-panel-circle ${index ?? ''}`,
   },
 };

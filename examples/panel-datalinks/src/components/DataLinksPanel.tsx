@@ -49,6 +49,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
                 <ContextMenu key={idx} links={data.getLinks} config={data.field}>
                   {(api) => (
                     <circle
+                      data-testid={testIds.panel.circle(idx)}
                       r={data.display.numeric}
                       onClick={api.openMenu}
                       transform={`translate(${idx * step + step / 2}, 0)`}
