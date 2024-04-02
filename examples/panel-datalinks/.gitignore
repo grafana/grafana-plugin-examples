@@ -31,9 +31,9 @@ e2e-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/test-results/
 
 # Editor
 .idea
 
 .eslintcache
-/test-results/
