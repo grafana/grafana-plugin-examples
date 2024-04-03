@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/grafana/authlib/authz"
@@ -31,6 +32,7 @@ type App struct {
 	backend.CallResourceHandler
 	saToken     string
 	authzClient authz.EnforcementClient
+	mx          sync.Mutex
 }
 
 // NewApp creates a new example *App instance.
@@ -43,6 +45,7 @@ func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instanc
 	mux := http.NewServeMux()
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
+	app.mx = sync.Mutex{}
 
 	return &app, nil
 }
@@ -75,6 +78,10 @@ func (a *App) GetClientFromContext(req *http.Request) (authz.EnforcementClient, 
 		ctxLogger.Error("Service account token not found", "error", err)
 		return nil, err
 	}
+
+	// Prevent two concurrent calls from updating the client
+	a.mx.Lock()
+	defer a.mx.Unlock()
 
 	if saToken == a.saToken {
 		ctxLogger.Debug("Token unchanged returning existing client")
