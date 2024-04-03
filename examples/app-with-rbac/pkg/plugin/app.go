@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/grafana/authlib/authz"
@@ -29,8 +30,9 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
-	saToken     string
 	authzClient authz.EnforcementClient
+	mx          sync.Mutex
+	saToken     string
 }
 
 // NewApp creates a new example *App instance.
@@ -43,6 +45,7 @@ func NewApp(pCtx context.Context, settings backend.AppInstanceSettings) (instanc
 	mux := http.NewServeMux()
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
+	app.mx = sync.Mutex{}
 
 	return &app, nil
 }
@@ -61,8 +64,8 @@ func (a *App) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest) (*ba
 	}, nil
 }
 
-// GetClientFromContext returns an authz enforcement client configured thanks to the plugin context.
-func (a *App) GetClientFromContext(req *http.Request) (authz.EnforcementClient, error) {
+// GetAuthZClient returns an authz enforcement client configured thanks to the plugin context.
+func (a *App) GetAuthZClient(req *http.Request) (authz.EnforcementClient, error) {
 	ctx := req.Context()
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
 	cfg := backend.GrafanaConfigFromContext(ctx)
@@ -75,6 +78,10 @@ func (a *App) GetClientFromContext(req *http.Request) (authz.EnforcementClient, 
 		ctxLogger.Error("Service account token not found", "error", err)
 		return nil, err
 	}
+
+	// Prevent two concurrent calls from updating the client
+	a.mx.Lock()
+	defer a.mx.Unlock()
 
 	if saToken == a.saToken {
 		ctxLogger.Debug("Token unchanged returning existing client")

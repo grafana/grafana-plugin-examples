@@ -20,7 +20,7 @@ func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
 		return false, errors.New("id token not found")
 	}
 
-	authzClient, err := a.GetClientFromContext(req)
+	authzClient, err := a.GetAuthZClient(req)
 	if err != nil {
 		return false, err
 	}
