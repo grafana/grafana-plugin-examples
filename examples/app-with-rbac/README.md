@@ -207,6 +207,25 @@ if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); e
 }
 ```
 
+### Protect frontend routes
+
+To prevent a broken UI, we suggest implementing access control checks on the frontend as well. This means only registering routes and displaying links based on users' permissions.
+
+To perform access control checks, you'll have to import a Grafana core component that's not exported yet.
+
+```ts
+// @ts-ignore
+import { contextSrv } from 'grafana/app/core/core';
+```
+
+Then checks can be performed as follow:
+
+```ts
+if (contextSrv.hasPermission('grafana-appwithrbac-app.papers:read')) {
+  // Example: register route, display link etc...
+}
+```
+
 ### Assign the role
 
 Assigning roles to specific users requires an [enterprise license](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/#role-based-access-control-rbac).
