@@ -71,6 +71,17 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Check for playwright
+        id: playwright-check
+        run: |
+          echo "PLAYWRIGHT_EXISTS=$(test -f playwright.config.ts && echo true || echo false)" >> $GITHUB_OUTPUT
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Setup playwright browser
+        run: npx playwright install --with-deps chromium
+        if: steps.playwright-check.outputs.PLAYWRIGHT_EXISTS == 'true'
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Run frontend tests
         run: |
           npm run test:ci
@@ -89,7 +100,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "~1.20"
+          go-version: "~1.21"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -124,7 +135,7 @@ jobs:
         id: has-integration-tests
         continue-on-error: true
         run: |
-          echo "DIR=$(test -d ./cypress && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "DIR=$($(test -f ./playwright.config.ts || test -d ./cypress)  && echo "true" || echo "false")" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
@@ -165,6 +176,7 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
+            ${{ matrix.pluginDir }}/playwright-report
           retention-days: 3
 
       - name: Failing build due to test failures (expected versions)
@@ -229,7 +241,7 @@ jobs:
 
       - name: Upgrade @grafana packages using canary_version
         run: |
-          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
           npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
         working-directory: ${{ matrix.pluginDir }}
 
