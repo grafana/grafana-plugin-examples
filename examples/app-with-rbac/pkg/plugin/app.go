@@ -30,9 +30,9 @@ var (
 // App is an example app backend plugin which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
-	saToken     string
 	authzClient authz.EnforcementClient
 	mx          sync.Mutex
+	saToken     string
 }
 
 // NewApp creates a new example *App instance.
@@ -64,8 +64,8 @@ func (a *App) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest) (*ba
 	}, nil
 }
 
-// GetClientFromContext returns an authz enforcement client configured thanks to the plugin context.
-func (a *App) GetClientFromContext(req *http.Request) (authz.EnforcementClient, error) {
+// GetAuthZClient returns an authz enforcement client configured thanks to the plugin context.
+func (a *App) GetAuthZClient(req *http.Request) (authz.EnforcementClient, error) {
 	ctx := req.Context()
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
 	cfg := backend.GrafanaConfigFromContext(ctx)

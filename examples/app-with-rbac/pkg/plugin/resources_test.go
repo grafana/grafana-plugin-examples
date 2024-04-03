@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/stretchr/testify/mock"
+
+	"github.com/grafana/authlib/authz"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 )
 
@@ -19,6 +22,28 @@ type mockCallResourceResponseSender struct {
 func (s *mockCallResourceResponseSender) Send(response *backend.CallResourceResponse) error {
 	s.response = response
 	return nil
+}
+
+type mockAuthZClient struct {
+	mock.Mock
+}
+
+// Compile implements authz.EnforcementClient.
+func (m *mockAuthZClient) Compile(ctx context.Context, idToken string, action string, kinds ...string) (authz.Checker, error) {
+	args := m.Called(ctx, idToken, action, kinds)
+	return args.Get(0).(authz.Checker), args.Error(1)
+}
+
+// HasAccess implements authz.EnforcementClient.
+func (m *mockAuthZClient) HasAccess(ctx context.Context, idToken string, action string, resources ...authz.Resource) (bool, error) {
+	args := m.Called(ctx, idToken, action, resources)
+	return args.Get(0).(bool), args.Error(1)
+}
+
+// LookupResources implements authz.EnforcementClient.
+func (m *mockAuthZClient) LookupResources(ctx context.Context, idToken string, action string) ([]authz.Resource, error) {
+	args := m.Called(ctx, idToken, action)
+	return args.Get(0).([]authz.Resource), args.Error(1)
 }
 
 // TestCallResource tests CallResource calls, using backend.CallResourceRequest and backend.CallResourceResponse.
@@ -37,6 +62,8 @@ func TestCallResource(t *testing.T) {
 		t.Fatal("inst must be of type *App")
 	}
 
+	app.saToken = "FakeSecret"
+
 	// Set up and run test cases
 	for _, tc := range []struct {
 		name string
@@ -45,19 +72,27 @@ func TestCallResource(t *testing.T) {
 		path   string
 		body   []byte
 
+		init func(*testing.T, *mockAuthZClient)
+
 		expStatus int
 		expBody   []byte
 	}{
 		{
-			name:      "get papers",
-			method:    http.MethodGet,
-			path:      "papers",
+			name:   "get papers",
+			method: http.MethodGet,
+			path:   "papers",
+			init: func(t *testing.T, m *mockAuthZClient) {
+				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.papers:read", mock.Anything).Return(true, nil)
+			},
 			expStatus: http.StatusOK,
 		},
 		{
-			name:      "get patents",
-			method:    http.MethodGet,
-			path:      "papers",
+			name:   "get patents",
+			method: http.MethodGet,
+			path:   "patents",
+			init: func(t *testing.T, m *mockAuthZClient) {
+				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.patents:read", mock.Anything).Return(true, nil)
+			},
 			expStatus: http.StatusOK,
 		},
 		{
@@ -73,14 +108,49 @@ func TestCallResource(t *testing.T) {
 			body:      []byte(`{"message":"ok"}`),
 			expStatus: http.StatusMethodNotAllowed,
 		},
+		{
+			name:   "get papers forbidden",
+			method: http.MethodGet,
+			path:   "papers",
+			init: func(t *testing.T, m *mockAuthZClient) {
+				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.papers:read", mock.Anything).Return(false, nil)
+			},
+			expStatus: http.StatusForbidden,
+		},
+		{
+			name:   "get patents forbidden",
+			method: http.MethodGet,
+			path:   "patents",
+			init: func(t *testing.T, m *mockAuthZClient) {
+				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.patents:read", mock.Anything).Return(false, nil)
+			},
+			expStatus: http.StatusForbidden,
+		},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			// Request by calling CallResource. This tests the httpadapter.
 			var r mockCallResourceResponseSender
-			err = app.CallResource(context.Background(), &backend.CallResourceRequest{
+
+			// Initialize mockAuthZClient
+			mock := &mockAuthZClient{}
+			if tc.init != nil {
+				tc.init(t, mock)
+			}
+			app.authzClient = mock
+
+			// Initialize context with Grafana config
+			ctx := backend.WithGrafanaConfig(context.Background(), backend.NewGrafanaCfg(map[string]string{
+				backend.AppURL:          "http://localhost",
+				backend.AppClientSecret: "FakeSecret",
+			}))
+
+			err = app.CallResource(ctx, &backend.CallResourceRequest{
 				Method: tc.method,
 				Path:   tc.path,
 				Body:   tc.body,
+				Headers: map[string][]string{
+					"X-Grafana-Id": {"FakeId"},
+				},
 			}, &r)
 			if err != nil {
 				t.Fatalf("CallResource error: %s", err)
