@@ -1,16 +1,27 @@
-# Grafana app with RBAC
+# Grafana App with RBAC example
 
-This App plugin example shows you how to leverage Grafana role base access control to control accesses to your routes with your own set of roles and permissions.
+This template is a starting point for building Grafana app plugins with support for role-based access control (RBAC)
 
 ![screenshot](./src/img/showcase.png)
 
-## How to use
+# Overview
 
-Requires Grafana version 10.4.0 or later. Currently, this is behind the `accessControlOnCall` feature toggle.
+This App plugin example shows you how to leverage Grafana RBAC to control accesses to your routes with your own set of roles and permissions.
+
+## Before you begin
+
+Your development environment must meet the following prerequisite:
+
+- Grafana version 10.4.0 or later. 
+- You must enable RBAC by setting the `accessControlOnCall` feature toggle.
+
+## Plugin usage
+
+Follow these instructions regarding role definitions, protect includes, and other features to use the plugin.
 
 ### Define roles
 
-To define roles, you just need to add a `roles` section to the `plugin.json` file. Here is an example:
+To define roles, add a `roles` section to the `plugin.json` file. Here is an example:
 
 ```json
 "roles": [
@@ -39,7 +50,7 @@ To define roles, you just need to add a `roles` section to the `plugin.json` fil
 
 ### Protect includes
 
-To protect you frontend pages behind an action check, add `action` to the include definitions of your `plugin.json` file:
+To protect your frontend pages behind an action check, add `action` to the include definitions of your `plugin.json` file. For example:
 
 ```json
 "includes": [
@@ -64,7 +75,7 @@ To protect you frontend pages behind an action check, add `action` to the includ
 
 ### Protect routes
 
-This is not demonstrated in this plugin but if you want to protect your proxied routes behind an action check, add `reqAction` to the route definitions of your `plugin.json` file:
+If you want to protect your proxied routes behind an action check, add `reqAction` to the route definitions of your `plugin.json` file. For example:
 
 ```json
 "routes": [
@@ -83,14 +94,16 @@ This is not demonstrated in this plugin but if you want to protect your proxied 
 ]
 ```
 
+Note that this feature is not demonstrated in this plugin. 
+
 ### Protect plugin backend resources
 
 If your backend is exposing resources, you can also protect them behind an action check.
 
-You'll need to activate two additional features:
+To do so, activate two additional features:
 
-- `externalServiceAccounts` to be able to query Grafana's users permissions.
-- `idForwarding` to be able to identify the user/service account.
+- `externalServiceAccounts` - queries Grafana's user permissions.
+- `idForwarding` - identifies the user/service account.
 
 In your `plugin.json`, add the `iam` section to get a service account token with the needed permissions:
 
@@ -102,7 +115,7 @@ In your `plugin.json`, add the `iam` section to get a service account token with
 }
 ```
 
-You'll need to import our authlib/authz library:
+You'll need to import our `authlib/authz` library:
 
 ```go
 import "github.com/grafana/authlib/authz"
@@ -144,13 +157,13 @@ if err != nil {
 ```
 
 > Note that the `WithSearchByPrefix` option is specified here to avoid querying the authorization server every time we want to check a different action.
-> The `WithCache` option allows you to override the library's internal cache with you own or with different settings. The default expiry time is 5 minutes.
+> The `WithCache` option allows you to override the library's internal cache with you own `or` with different settings. The default expiry time is 5 minutes.
 
-Enforcing access control can then be done with the client as follow:
+Then you can enforcing access control with the client as follows:
 
 ```go
 func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
-	// Retrieve the id token
+	// Retrieve the ID token
 	idToken := req.Header.Get("X-Grafana-Id")
 	if idToken == "" {
 		return false, errors.New("id token not found")
@@ -178,7 +191,8 @@ if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); e
 ### Assign the role
 
 Assigning roles to specific users requires an [enterprise license](https://grafana.com/docs/grafana/latest/administration/roles-and-permissions/access-control/#role-based-access-control-rbac).
-If you have one you can edit the docker-compose file as follow:
+
+If you have an enterprise license, then you can edit the docker-compose file as follows:
 
 ```yaml
 environment:
