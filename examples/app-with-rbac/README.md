@@ -108,42 +108,69 @@ You'll need to import our authlib/authz library:
 import "github.com/grafana/authlib/authz"
 ```
 
-Then instantiate a client:
+To instantiate the authorization client, you can retrieve the client secret from the plugin context attached to incoming request.
+Given the secret is not changing, we are going to do the instantiation once to leverage the client cache.
+Here is a function to get the authorization client:
 
 ```go
-// Get Grafana URL
-grafanaURL := os.Getenv("GF_APP_URL")
-if grafanaURL == "" {
-  return nil, fmt.Errorf("GF_APP_URL is required")
-}
+// GetAuthZClient returns an authz enforcement client configured thanks to the plugin context.
+func (a *App) GetAuthZClient(req *http.Request) (authz.EnforcementClient, error) {
+	ctx := req.Context()
+	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	cfg := backend.GrafanaConfigFromContext(ctx)
 
-// Get the service account token to query Grafana
-saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
-if saToken == "" {
-  return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
-}
+	saToken, err := cfg.PluginAppClientSecret()
+	if err != nil || saToken == "" {
+		if err == nil {
+			err = errors.New("service account token not found")
+		}
+		ctxLogger.Error("Service account token not found", "error", err)
+		return nil, err
+	}
 
-// Initialize the authorization client
-client, err := authz.NewEnforcementClient(authz.Config{
-  APIURL: grafanaURL,
-  Token:      saToken,
-  // Grafana is signing the JWTs on local setups
-  JWKsURL:    strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys",
-}, 
-	// Fetch all the user permission prefixed with grafana-appwithrbac-app
-	authz.WithSearchByPrefix("grafana-appwithrbac-app"),
-	// Use a cache with a lower expiry time
-	authz.WithCache(cache.NewLocalCache(cache.Config{
-		Expiry:          10 * time.Second,
-		CleanupInterval: 5 * time.Second,
-	})),
-)
-if err != nil {
-  return nil, err
+	// Prevent two concurrent calls from updating the client
+	a.mx.Lock()
+	defer a.mx.Unlock()
+
+	if saToken == a.saToken {
+		ctxLogger.Debug("Token unchanged returning existing client")
+		return a.authzClient, nil
+	}
+
+	grafanaURL, err := cfg.AppURL()
+	if err != nil {
+		ctxLogger.Error("App URL not found", "error", err)
+		return nil, err
+	}
+
+	// Initialize the authorization client
+	client, err := authz.NewEnforcementClient(authz.Config{
+		APIURL: grafanaURL,
+		Token:  saToken,
+		// Grafana is signing the JWTs on local setups
+		JWKsURL: strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys",
+	},
+		// Fetch all the user permission prefixed with grafana-appwithrbac-app
+		authz.WithSearchByPrefix("grafana-appwithrbac-app"),
+		// Use a cache with a lower expiry time
+		authz.WithCache(cache.NewLocalCache(cache.Config{
+			Expiry:          10 * time.Second,
+			CleanupInterval: 5 * time.Second,
+		})),
+	)
+	if err != nil {
+		ctxLogger.Error("Initializing authz client", "error", err)
+		return nil, err
+	}
+
+	a.saToken = saToken
+	a.authzClient = client
+
+	return client, nil
 }
 ```
 
-> Note that the `WithSearchByPrefix` option is specified here to avoid querying the authorization server every time we want to check a different action.
+> Note that the `WithSearchByPrefix` option is specified here to avoid querying the authorization server every time we want to check a different action.<br/>
 > The `WithCache` option allows you to override the library's internal cache with you own or with different settings. The default expiry time is 5 minutes.
 
 Enforcing access control can then be done with the client as follow:
@@ -155,9 +182,14 @@ func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
 	if idToken == "" {
 		return false, errors.New("id token not found")
 	}
-  
+
+	authzClient, err := a.GetAuthZClient(req)
+	if err != nil {
+		return false, err
+	}
+
 	// Check user access
-	hasAccess, err := a.authzClient.HasAccess(req.Context(), idToken, action)
+	hasAccess, err := authzClient.HasAccess(req.Context(), idToken, action)
 	if err != nil || !hasAccess {
 		return false, err
 	}
