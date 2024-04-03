@@ -207,7 +207,7 @@ if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); e
 }
 ```
 
-### Protect frontend routes
+### Perform access control checks in the frontend
 
 To prevent a broken UI, we suggest implementing access control checks on the frontend as well. This means only registering routes and displaying links based on users' permissions.
 
