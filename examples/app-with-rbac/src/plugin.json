@@ -1,0 +1,72 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "Grafana app with RBAC",
+  "id": "grafana-appwithrbac-app",
+  "backend": true,
+  "executable": "gpx_grafana_appwithrbac_app",
+  "info": {
+    "keywords": ["app", "rbac"],
+    "description": "A basic grafana app plugin defining its own permissions",
+    "author": {
+      "name": "Your name"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "iam": {
+    "permissions": [{ "action": "users.permissions:read", "scope": "users:*" }]
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Hello",
+      "path": "/a/%PLUGIN_ID%/hello",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Research documents",
+      "path": "/a/%PLUGIN_ID%/research-docs",
+      "action": "grafana-appwithrbac-app.papers:read",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Patents",
+      "path": "/a/%PLUGIN_ID%/patents",
+      "action": "grafana-appwithrbac-app.patents:read",
+      "addToNav": true,
+      "defaultNav": false
+    }
+  ],
+  "roles": [
+    {
+      "role": {
+        "name": "Patents Reader",
+        "description": "Read patents",
+        "permissions": [{ "action": "grafana-appwithrbac-app.patents:read" }]
+      },
+      "grants": ["Admin"]
+    },
+    {
+      "role": {
+        "name": "Research papers Reader",
+        "description": "Read research papers",
+        "permissions": [{ "action": "grafana-appwithrbac-app.papers:read" }]
+      },
+      "grants": ["Viewer"]
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=10.4.0",
+    "plugins": []
+  }
+}
