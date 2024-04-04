@@ -12,6 +12,10 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
   const theme = useTheme2();
   const ContextMenu = DataLinksContextMenu as React.FC<PreviousContextMenuProps>;
 
+  if (data.series.length === 0) {
+    return <div data-testid={testIds.panel.noData}>No data</div>;
+  }
+
   const fieldDisplayValues = getFieldDisplayValues({
     fieldConfig,
     reduceOptions: options.reduceOptions,
@@ -49,6 +53,7 @@ export const DataLinksPanel = ({ data, width, height, options, replaceVariables,
                 <ContextMenu key={idx} links={data.getLinks} config={data.field}>
                   {(api) => (
                     <circle
+                      data-testid={testIds.panel.circle(idx)}
                       r={data.display.numeric}
                       onClick={api.openMenu}
                       transform={`translate(${idx * step + step / 2}, 0)`}
