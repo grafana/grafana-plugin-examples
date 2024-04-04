@@ -103,7 +103,7 @@ If your backend is exposing resources, you can also protect them behind an actio
 To do so, activate two additional features:
 
 - `externalServiceAccounts` - To obtain a managed service account to retrieve Grafana users' permissions.
-- `idForwarding` - To obtain ID tokens that identify the requester (user or service account).
+- `idForwarding` - To obtain an ID token that identify the requester (user or service account).
 
 In your `plugin.json`, add the `iam` section to get a service account token with the needed permissions:
 
