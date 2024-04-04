@@ -10,6 +10,10 @@ This app allows you to create a service account in Grafana tailored to your plug
 
 ![screenshot](./src/img/screenshot-showcase.png)
 
+The service account cannot be modified or deleted by users.
+
+![managed_service_account](./src/img/generated-service-account.png)
+
 ## Authentication flow
 
 The plugin uses a [Grafana service account token](https://grafana.com/docs/grafana/latest/administration/service-accounts/#service-account-tokens) to authenticate against the Grafana API. To enable it, add the `iam` section to your `plugin.json` file.
