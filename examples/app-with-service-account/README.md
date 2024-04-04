@@ -36,7 +36,7 @@ Refer to the Grafana documentation about [access control](https://grafana.com/do
 
 ## Service registration
 
-Once a plugin is registered with an `iam` section, Grafana automatically creates a service account and a token for it. Grafana will then share the service account token with the plugin using the incoming requests' context:
+Once a plugin is registered with an `iam` section, Grafana automatically creates a service account and a token for it. Grafana will then share the service account token with the plugin, using the incoming requests' context:
 
 ```go
 	// Get the service account token that has been shared with the plugin
@@ -45,7 +45,6 @@ Once a plugin is registered with an `iam` section, Grafana automatically creates
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	proxyReq.Header.Set("Authorization", "Bearer "+saToken)
 ```
 
 The token can be used to request Grafana. Set your HTTP client's `Headers` option to set the `Authorization` header on every outgoing request:
