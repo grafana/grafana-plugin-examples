@@ -12,7 +12,7 @@ This App plugin example shows you how to leverage Grafana RBAC to control access
 
 Your development environment must meet the following prerequisite:
 
-- Grafana version 10.4.0 or later. 
+- Grafana version 10.4.0 or later.
 - You must enable RBAC by setting the `accessControlOnCall` feature toggle.
 
 ## Plugin usage
@@ -94,7 +94,7 @@ If you want to protect your proxied routes behind an action check, add `reqActio
 ]
 ```
 
-Note that this feature is not demonstrated in this plugin. 
+Note that this feature is not demonstrated in this plugin.
 
 ### Protect plugin backend resources
 
@@ -102,8 +102,8 @@ If your backend is exposing resources, you can also protect them behind an actio
 
 To do so, activate two additional features:
 
-- `externalServiceAccounts` - queries Grafana's user permissions.
-- `idForwarding` - identifies the user/service account.
+- `externalServiceAccounts` - to get a service account to query Grafana's user permissions.
+- `idForwarding` - to receive id tokens identifying the requester (user/service account).
 
 In your `plugin.json`, add the `iam` section to get a service account token with the needed permissions:
 
@@ -186,7 +186,7 @@ func (a *App) GetAuthZClient(req *http.Request) (authz.EnforcementClient, error)
 > Note that the `WithSearchByPrefix` option is specified here to avoid querying the authorization server every time we want to check a different action.<br/>
 > The `WithCache` option allows you to override the library's internal cache with you own `or` with different settings. The default expiry time is 5 minutes.
 
-Then you can enforcing access control with the client as follows:
+Then you can enforce access control with the client as follows:
 
 ```go
 func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
