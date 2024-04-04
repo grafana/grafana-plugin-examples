@@ -13,7 +13,7 @@ test.describe('panel-datalinks panel', () => {
     await page.keyboard.insertText('No Data Points');
     await page.keyboard.press('Tab');
     await panelEditPage.refreshPanel();
-    await expect(page.getByTestId(testIds.panel.noData)).toBeVisible();
+    await expect(panelEditPage.panel.locator).toContainText('No data');
   });
 
   test('should display context menu links when clicking on circle', async ({ page }) => {
