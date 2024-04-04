@@ -15,6 +15,7 @@ This app allows you to create a service account in Grafana tailored to your plug
 The plugin uses a [Grafana service account token](https://grafana.com/docs/grafana/latest/administration/service-accounts/#service-account-tokens) to authenticate against the Grafana API. To enable it, add the `iam` section to your `plugin.json` file.
 
 Here is an example to allow the plugin to create dashboards, list or update all dashboards and folders, and list users, teams, and team members:
+
 ```json
   "iam": {
     "permissions": [
@@ -35,14 +36,16 @@ Refer to the Grafana documentation about [access control](https://grafana.com/do
 
 ## Service registration
 
-Once a plugin is registered with an `iam` section, Grafana automatically creates a service account and a token for it. Grafana will then share the service account token with the plugin, using an environment variable:
+Once a plugin is registered with an `iam` section, Grafana automatically creates a service account and a token for it. Grafana will then share the service account token with the plugin using the incoming requests' context:
 
 ```go
 	// Get the service account token that has been shared with the plugin
-	saToken := os.Getenv("GF_PLUGIN_APP_CLIENT_SECRET")
-	if saToken == "" {
-		return nil, fmt.Errorf("GF_PLUGIN_APP_CLIENT_SECRET is required")
+	saToken, err := cfg.PluginAppClientSecret()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+	proxyReq.Header.Set("Authorization", "Bearer "+saToken)
 ```
 
 The token can be used to request Grafana. Set your HTTP client's `Headers` option to set the `Authorization` header on every outgoing request:
