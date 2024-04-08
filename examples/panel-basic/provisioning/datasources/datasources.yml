@@ -8,3 +8,7 @@ datasources:
     orgId: 1
     version: 1
     editable: true
+
+  - name: TestData DB
+    type: testdata
+    uid: trlxrdZVk
