@@ -27,7 +27,7 @@ test.describe('panel-datalinks panel', () => {
 
   test('should hide "Calculation" field when "All values" is enabled', async ({ page, selectors }) => {
     panelEditPage.collapseSection('Value options');
-    const calculationField = panelEditPage.getByTestIdOrAriaLabel(
+    const calculationField = panelEditPage.getByGrafanaSelector(
       selectors.components.PanelEditor.OptionsPane.fieldLabel('Value options Calculation')
     );
     await expect(calculationField).toBeVisible();
