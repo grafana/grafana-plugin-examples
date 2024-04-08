@@ -17,7 +17,7 @@ test.describe('panel-datalinks panel', () => {
   });
 
   test('should display context menu links when clicking on circle', async ({ page }) => {
-    const menu = panelEditPage.getByTestIdOrAriaLabel('Context menu');
+    const menu = panelEditPage.getByGrafanaSelector('Context menu');
     expect(menu).not.toBeVisible();
     await page.getByTestId(testIds.panel.svg).getByTestId(testIds.panel.circle(0)).click();
     await expect(menu.getByRole('link')).toHaveCount(2);
