@@ -9,3 +9,8 @@ datasources:
     version: 1
     editable: true
     uid: U9sW5bank
+    jsonData:
+      path: '/resources'
+      defaultTimeField: 
+    secureJsonData: 
+      apiKey: 'api-key'
