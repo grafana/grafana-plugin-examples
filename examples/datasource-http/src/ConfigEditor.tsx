@@ -50,7 +50,7 @@ export function ConfigEditor(props: Props) {
         dataSourceConfig={options}
         onChange={onOptionsChange}
       />
-      <InlineField label="Path" labelWidth={14} interactive tooltip={'Json field returned to frontend'}>
+      <InlineField label="Path" labelWidth={26} interactive tooltip={'Json field returned to frontend'}>
         <Input
           id="config-editor-path"
           onChange={onPathChange}
@@ -59,7 +59,7 @@ export function ConfigEditor(props: Props) {
           width={40}
         />
       </InlineField>
-      <InlineField label="API Key" labelWidth={14} interactive tooltip={'Secure json field (backend only)'}>
+      <InlineField label="API Key" labelWidth={26} interactive tooltip={'Secure json field (backend only)'}>
         <SecretInput
           required
           id="config-editor-api-key"
