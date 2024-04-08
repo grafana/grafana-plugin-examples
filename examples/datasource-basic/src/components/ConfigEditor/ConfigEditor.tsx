@@ -1,46 +1,48 @@
 import React, { ReactElement } from 'react';
-import { FieldSet, InlineField, Input, LegacyForms } from '@grafana/ui';
+import { InlineField, Input, SecretInput } from '@grafana/ui';
 import type { EditorProps } from './types';
 import { useChangeOptions } from './useChangeOptions';
 import { useChangeSecureOptions } from './useChangeSecureOptions';
 import { useResetSecureOptions } from './useResetSecureOptions';
-import { testIds } from '../testIds';
-
-const { SecretFormField } = LegacyForms;
 
 export function ConfigEditor(props: EditorProps): ReactElement {
   const { jsonData, secureJsonData, secureJsonFields } = props.options;
   const onTimeFieldChange = useChangeOptions(props, 'defaultTimeField');
+  const onPathFieldChange = useChangeOptions(props, 'path');
   const onApiKeyChange = useChangeSecureOptions(props, 'apiKey');
   const onResetApiKey = useResetSecureOptions(props, 'apiKey');
 
   return (
     <>
-      <FieldSet label="General">
-        <InlineField label="Time Field" tooltip="Default time field used when interpolate the $__timeFilter()">
-          <Input
-            onChange={onTimeFieldChange}
-            placeholder="time"
-            data-testid={testIds.configEditor.timeField}
-            value={jsonData?.defaultTimeField ?? ''}
-          />
-        </InlineField>
-      </FieldSet>
-
-      <FieldSet label="API Settings">
-        <SecretFormField
-          tooltip="API Key used to make calls to your data source"
-          isConfigured={Boolean(secureJsonFields.apiKey)}
-          value={secureJsonData?.apiKey || ''}
-          label="API Key"
-          placeholder="secure json field (backend only)"
-          labelWidth={6}
-          inputWidth={20}
-          data-testid={testIds.configEditor.apiKey}
+      <InlineField label="Path" labelWidth={14} interactive tooltip={'Json field returned to frontend'}>
+        <Input
+          id="config-editor-path"
+          onChange={onPathFieldChange}
+          value={jsonData.path}
+          placeholder="Enter the path, e.g. /api/v1"
+          width={40}
+        />
+      </InlineField>
+      <InlineField
+        label="Time Field"
+        labelWidth={14}
+        interactive
+        tooltip="Default time field used when interpolate the $__timeFilter()"
+      >
+        <Input onChange={onTimeFieldChange} placeholder="time" value={jsonData?.defaultTimeField ?? ''} width={40} />
+      </InlineField>
+      <InlineField label="API Key" labelWidth={14} interactive tooltip={'Secure json field (backend only)'}>
+        <SecretInput
+          required
+          id="config-editor-api-key"
+          isConfigured={secureJsonFields.apiKey}
+          value={secureJsonData?.apiKey}
+          placeholder="Enter your API key"
+          width={40}
           onReset={onResetApiKey}
           onChange={onApiKeyChange}
         />
-      </FieldSet>
+      </InlineField>
     </>
   );
 }
