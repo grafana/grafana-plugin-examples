@@ -1,10 +1,21 @@
+import * as semver from 'semver';
 import { PanelEditPage, expect, test } from '@grafana/plugin-e2e';
 import { testIds } from '../src/components/testIds';
+import { Locator } from '@playwright/test';
 
 test.describe('panel-datalinks panel', () => {
   let panelEditPage: PanelEditPage;
-  test.beforeEach(async ({ gotoPanelEditPage }) => {
+  let getByText: (text: string) => Locator;
+
+  test.beforeEach(async ({ gotoPanelEditPage, grafanaVersion, page }) => {
     panelEditPage = await gotoPanelEditPage({ dashboard: { uid: 'fTh-POZ4k' }, id: '2' });
+
+    // seems label association was introduced in 10.2.3 - https://github.com/grafana/grafana/pull/78010
+    getByText = (text: string) => {
+      return semver.gte(grafanaVersion, '10.2.3')
+        ? page.getByLabel(text, { exact: true })
+        : page.getByText(text, { exact: true });
+    };
   });
 
   test('should display "No data" when no data is passed to the panel', async ({ page }) => {
@@ -31,7 +42,7 @@ test.describe('panel-datalinks panel', () => {
       selectors.components.PanelEditor.OptionsPane.fieldLabel('Value options Calculation')
     );
     await expect(calculationField).toBeVisible();
-    await page.getByText('All values', { exact: true }).click();
+    await getByText('All values').click();
     await expect(calculationField).not.toBeVisible();
   });
 
@@ -40,7 +51,7 @@ test.describe('panel-datalinks panel', () => {
     const seriesCount = page.locator(`[data-testid^="${testIds.panel.circle()}"]`);
     await expect(seriesCount).toHaveCount(1);
     panelEditPage.collapseSection('Value options');
-    await page.getByText('All values', { exact: true }).click();
+    await getByText('All values').click();
     await expect(await seriesCount.count()).toBeGreaterThan(1);
   });
 });
