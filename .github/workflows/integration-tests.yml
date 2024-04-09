@@ -224,7 +224,7 @@ jobs:
             ${{ matrix.pluginDir }}/cypress/screenshots
             ${{ matrix.pluginDir }}/cypress/videos
             ${{ matrix.pluginDir }}/cypress/report.json
-            playwright-report/
+            ${{ matrix.pluginDir }}/playwright-report/
           retention-days: 3
 
       - name: Failing build due to test failures (latest version of Grafana)
