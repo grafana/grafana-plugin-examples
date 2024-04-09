@@ -16,9 +16,3 @@ test('should extend the actions menu with a command triggered from b-app plugin'
   await page.getByTestId(testIds.container).getByText('Open from B').click();
   await expect(page.getByTestId(testIds.appB.modal)).toBeVisible();
 });
-
-// it('should extend the actions menu with a command triggered from b-app plugin', () => {
-//   actions.button().should('be.visible').click();
-//   container().within(() => cy.get(menuItem).contains('Open from B').click());
-//   appB.modal().should('be.visible');
-// });
