@@ -4,20 +4,21 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                                                       | Description                                                                                       |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                            |
-| [app-with-dashboards](examples/app-with-dashboards)           | Shows how to include pre-built dashboards in an app plugin                                |
-| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                     |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                         |
+| Example                                                       | Description                                                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
+| [app-with-dashboards](examples/app-with-dashboards)           | Shows how to include pre-built dashboards in an app plugin                                 |
+| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
+| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
 | [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
 | [app-with-scenes](examples/app-with-scenes)                   | Shows how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/)  |
+| [app-with-service-account](examples/app-with-service-account) | Shows how an app can request a service account to query the Grafana API.                   |
 | [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
 
 ## Panel plugins
 
-| Example                                           | Description                                                                                                                              |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Example                                           | Description                                                                                                                       |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [panel-flot](examples/panel-flot)                 | Shows how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.                                        |
 | [panel-frame-select](examples/panel-frame-select) | Shows how to update panel options with values from a data query response.                                                         |
 | [panel-plotly](examples/panel-plotly)             | Shows how to use the [Plotly](https://plotly.com/javascript/) graphing library in a panel plugin.                                 |
@@ -28,13 +29,13 @@ This repository contains example plugins to showcase different use cases.
 
 ## Data source plugins
 
-| Example                                                                   | Description                                                                                                          |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [datasource-http](examples/datasource-http)                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
-| [datasource-http-backend](examples/datasource-http-backend)               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
-| [datasource-streaming-websocket](examples/datasource-streaming-websocket) | Shows how to create an event-based data source plugin using RxJS and WebSockets.                             |
-| [datasource-streaming-backend-websocket](examples/datasource-streaming-backend-websocket) | Shows how to create an event-based data source plugin using backend streams.                             |
-| [datasource-basic](examples/datasource-basic)                             | Shows how to build a basic data source plugin.                                                                |
+| Example                                                                                   | Description                                                                                                   |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [datasource-http](examples/datasource-http)                                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
+| [datasource-http-backend](examples/datasource-http-backend)                               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
+| [datasource-streaming-websocket](examples/datasource-streaming-websocket)                 | Shows how to create an event-based data source plugin using RxJS and WebSockets.                              |
+| [datasource-streaming-backend-websocket](examples/datasource-streaming-backend-websocket) | Shows how to create an event-based data source plugin using backend streams.                                  |
+| [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
 
 > [!NOTE]
 > The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead, we offer no support for them.
