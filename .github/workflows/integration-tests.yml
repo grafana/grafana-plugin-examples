@@ -195,6 +195,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Wait for Grafana to start
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
           url: 'http://localhost:3000/'
