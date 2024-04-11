@@ -71,17 +71,6 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Check for playwright
-        id: playwright-check
-        run: |
-          echo "PLAYWRIGHT_EXISTS=$(test -f playwright.config.ts && echo true || echo false)" >> $GITHUB_OUTPUT
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Setup playwright browser
-        run: npx playwright install --with-deps chromium
-        if: steps.playwright-check.outputs.PLAYWRIGHT_EXISTS == 'true'
-        working-directory: ${{ matrix.pluginDir }}
-
       - name: Run frontend tests
         run: |
           npm run test:ci
@@ -131,11 +120,22 @@ jobs:
           echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
         working-directory: ${{ matrix.pluginDir }}
 
+      # - name: Check for playwright
+      # id: playwright-check
+      # run: |
+      #   echo "PLAYWRIGHT_EXISTS=$(test -f playwright.config.ts && echo true || echo false)" >> $GITHUB_OUTPUT
+      # working-directory: ${{ matrix.pluginDir }}
+
       - name: Has Integration Tests
         id: has-integration-tests
         continue-on-error: true
         run: |
           echo "DIR=$($(test -f ./playwright.config.ts)  && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Setup playwright browser
+        if: steps.has-integration-tests.outputs.DIR == 'true'
+        run: npx playwright install --with-deps chromium
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
@@ -152,6 +152,14 @@ jobs:
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Wait for Grafana to start
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: 'http://localhost:3000/'
+          responseCode: 200
+          timeout: 60000
+          interval: 500
 
       - name: Run Playwright tests using expected versions
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -180,28 +188,16 @@ jobs:
       # Latest Version Tests
       # Runs the plugin tests against the latest stable version of Grafana.
       # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
-      - name: Install latest version of e2e libraries
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: |
-          npm install @grafana/e2e-selectors@latest @grafana/e2e@latest
-        working-directory: ${{ matrix.pluginDir }}
-
       - name: Start Docker container using latest version of grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Start Integration tests using latest version of Grafana
+      - name: Run Playwright tests using expected versions
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
-        uses: nick-fields/retry@v3
-        continue-on-error: true
-        with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_on: error
-          command: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Uploading artifacts for tests with latest version of Grafana
         uses: actions/upload-artifact@v4
