@@ -179,11 +179,11 @@ jobs:
             ${{ matrix.pluginDir }}/playwright-report
           retention-days: 3
 
-      - name: Publish report to GCS
+      - name: Publish report for expected version to GCS
         if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
         uses: grafana/plugin-actions/publish-report@main
         with:
-          grafana-version: $EXPECTED_GRAFANA_VERSION
+          grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
       - name: Failing build due to test failures (expected versions)
@@ -227,11 +227,11 @@ jobs:
           path: ${{ matrix.pluginDir }}/playwright-report/
           retention-days: 3
 
-      - name: Publish report to GCS
+      - name: Publish report for latest to GCS
         if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
         uses: grafana/plugin-actions/publish-report@main
         with:
-          grafana-version: $EXPECTED_GRAFANA_VERSION
+          grafana-version: latest
           path: ${{ matrix.pluginDir }}/playwright-report/
 
       - name: Failing build due to test failures (latest version of Grafana)
@@ -298,11 +298,11 @@ jobs:
             ${{ matrix.pluginDir }}/playwright-report/
           retention-days: 3
 
-      - name: Publish report to GCS
+      - name: Publish report for canary to GCS
         if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
         uses: grafana/plugin-actions/publish-report@main
         with:
-          grafana-version: $CANARY_DOCKER_TAG
+          grafana-version: ${{ env.CANARY_DOCKER_TAG }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
       - name: Failing build due to test failures (canary versions)
