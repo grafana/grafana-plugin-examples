@@ -1,50 +1,38 @@
-import defaults from 'lodash/defaults';
-
-import React, { ChangeEvent, PureComponent } from 'react';
-import { LegacyForms, HorizontalGroup } from '@grafana/ui';
+import React, { ChangeEvent } from 'react';
+import { InlineField, Input } from '@grafana/ui';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from './DataSource';
-import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
-
-const { FormField } = LegacyForms;
+import { MyDataSourceOptions, MyQuery } from './types';
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
-export class QueryEditor extends PureComponent<Props> {
-  onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query } = this.props;
+export function QueryEditor({ query, onChange, onRunQuery }: Props) {
+  const onQueryTextChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange({ ...query, queryText: event.target.value });
   };
 
-  onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { onChange, query, onRunQuery } = this.props;
+  const onConstantChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange({ ...query, constant: parseFloat(event.target.value) });
     // executes the query
     onRunQuery();
   };
 
-  render() {
-    const query = defaults(this.props.query, defaultQuery);
-    const { queryText, constant } = query;
+  const { queryText, constant } = query;
 
-    return (
-      <HorizontalGroup>
-        <FormField
-          width={4}
-          value={constant}
-          onChange={this.onConstantChange}
-          label="Constant"
-          type="number"
-          step="0.1"
-        />
-        <FormField
-          labelWidth={8}
+  return (
+    <>
+      <InlineField label="Constant" labelWidth={14}>
+        <Input id="query-editor-constant" onChange={onConstantChange} value={constant} type="number" step="0.1" />
+      </InlineField>
+      <InlineField label="Query Text" labelWidth={14} tooltip="Not used yet">
+        <Input
+          id="query-editor-query-text"
+          onChange={onQueryTextChange}
           value={queryText || ''}
-          onChange={this.onQueryTextChange}
-          label="Query Text"
-          tooltip="Not used yet"
+          required
+          placeholder="Enter a query"
         />
-      </HorizontalGroup>
-    );
-  }
+      </InlineField>
+    </>
+  );
 }
