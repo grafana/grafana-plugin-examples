@@ -17,8 +17,6 @@ upgradePackages=(
     "@grafana/runtime"
     "@grafana/schema"
     "@grafana/ui"
-    "@grafana/e2e"
-    "@grafana/e2e-selectors"
 )
 
 # Iterate over each directory

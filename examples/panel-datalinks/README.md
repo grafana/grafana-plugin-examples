@@ -46,7 +46,7 @@ Use panel plugins when you want to do things like visualize data returned by dat
    npm run server
    ```
 
-6. Run the E2E tests (using Cypress):
+6. Run the E2E tests:
 
    ```bash
    # Spin up a Grafana instance first that we tests against
