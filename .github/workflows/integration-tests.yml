@@ -154,6 +154,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Wait for Grafana to start
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
           url: 'http://localhost:3000/'
@@ -174,6 +175,13 @@ jobs:
           path: |
             ${{ matrix.pluginDir }}/playwright-report
           retention-days: 3
+
+      - name: Publish report to GCS
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+        uses: grafana/plugin-actions/publish-report@main
+        with:
+          grafana-version: $EXPECTED_GRAFANA_VERSION
+          path: ${{ matrix.pluginDir }}/playwright-report/
 
       - name: Failing build due to test failures (expected versions)
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -284,10 +292,15 @@ jobs:
         with:
           name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
           path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
+            ${{ matrix.pluginDir }}/playwright-report/
           retention-days: 3
+
+      - name: Publish report to GCS
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
+        uses: grafana/plugin-actions/publish-report@main
+        with:
+          grafana-version: $CANARY_DOCKER_TAG
+          path: ${{ matrix.pluginDir }}/playwright-report/
 
       - name: Failing build due to test failures (canary versions)
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
