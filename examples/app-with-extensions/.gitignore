@@ -24,11 +24,15 @@ dist/
 artifacts/
 work/
 ci/
-e2e-results/
-**/cypress/videos
-**/cypress/report.json 
 
 # Editor
 .idea
 
 .eslintcache
+
+# Playwright
+/playwright/.auth/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/test-results/
