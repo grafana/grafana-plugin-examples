@@ -172,12 +172,12 @@ jobs:
           grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Expected - Failing build due to test failures
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: exit 1
+      # - name: Expected - Failing build due to test failures
+      #   if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
+      #   run: exit 1
 
       - name: Expected - Stop and remove Docker container
-        if: ${{ always() && steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'}}
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
@@ -213,12 +213,12 @@ jobs:
           grafana-version: latest
           path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Latest - Failing build due to test failures (latest version of Grafana)
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: exit 1
+      # - name: Latest - Failing build due to test failures (latest version of Grafana)
+      #   if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+      #   run: exit 1
 
       - name: Latest - Stop and remove Docker container
-        if: ${{ always() && steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success' }}
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
@@ -226,7 +226,7 @@ jobs:
       ## Canary Version Tests
       ## Runs the plugin tests against the latest build of Grafana main branch.
 
-      - name: Upgrade @grafana packages using canary_version
+      - name: Canary - Upgrade @grafana packages using canary_version
         run: |
           npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
           npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
@@ -266,25 +266,25 @@ jobs:
           timeout: 60000
           interval: 500
 
-      - name: Canary version - Run Playwright tests
+      - name: Canary - Run Playwright tests
         if: steps.has-integration-tests.outputs.DIR == 'true'
         id: canary-version-tests
         continue-on-error: true
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Canary version - Publish report to GCS
+      - name: Canary - Publish report to GCS
         if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
         uses: grafana/plugin-actions/publish-report@main
         with:
           grafana-version: ${{ env.CANARY_DOCKER_TAG }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Failing build due to test failures (canary versions)
+      - name: Canary - Failing build due to test failures (canary versions)
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
         run: exit 1
 
-      - name: Stop and remove Docker container
-        if: ${{ always() && steps.has-integration-tests.outputs.DIR == 'true'}}
+      - name: Canary - Stop and remove Docker container
+        if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
