@@ -6,6 +6,9 @@ on:
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
