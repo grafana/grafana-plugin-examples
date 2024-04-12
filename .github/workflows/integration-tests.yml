@@ -172,9 +172,9 @@ jobs:
           grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
-      # - name: Expected - Failing build due to test failures
-      #   if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
-      #   run: exit 1
+      - name: Expected - Failing build due to test failures
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
+        run: exit 1
 
       - name: Expected - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -210,12 +210,12 @@ jobs:
         if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
         uses: grafana/plugin-actions/publish-report@main
         with:
-          grafana-version: latest
+          grafana-version: ${{ env.LATEST_STABLE_VERSION }}
           path: ${{ matrix.pluginDir }}/playwright-report/
 
-      # - name: Latest - Failing build due to test failures (latest version of Grafana)
-      #   if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
-      #   run: exit 1
+      - name: Latest - Failing build due to test failures (latest version of Grafana)
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+        run: exit 1
 
       - name: Latest - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -290,7 +290,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
   notify:
-    if: ${{ (always() && github.event_name == 'schedule') }}
+    if: ${{ (always()) }}
     runs-on: ubuntu-latest
     needs: [run-integration-tests]
     steps:
@@ -346,6 +346,10 @@ jobs:
                         {
                           "type": "mrkdwn",
                           "text": "*PR Number*: `${{ github.event.pull_request.number || 'Not triggered by a PR' }}`"
+                        },
+                        {
+                          "type": "mrkdwn",
+                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github. run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
                         }
                       ]
                     }
