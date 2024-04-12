@@ -8,7 +8,7 @@ The Basic Panel Plugin demonstrates the fundamental structure and functionality 
 
 Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more. Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
 
-The definition for the Basic Panel Plugin is provided in []`/src/components/SimplePanel/SimplePanel.tsx`](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-basic/src/components/SimplePanel/SimplePanel.tsx).
+The definition for the Basic Panel Plugin is provided in [`/src/components/SimplePanel/SimplePanel.tsx`](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-basic/src/components/SimplePanel/SimplePanel.tsx).
 
 The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization. Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
 
