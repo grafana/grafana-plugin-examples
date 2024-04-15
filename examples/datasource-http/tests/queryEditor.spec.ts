@@ -7,5 +7,5 @@ test('data query should return a value', async ({ panelEditPage, readProvisioned
   await panelEditPage.getQueryEditorRow('A').getByRole('textbox', { name: 'Query Text' }).fill('test query');
   await panelEditPage.getQueryEditorRow('A').getByRole('spinbutton').fill('10');
   await expect(panelEditPage.panel.fieldNames).toContainText(['Time', 'Value']);
-  await expect(panelEditPage.panel.data).toContainText(['!10']);
+  await expect(panelEditPage.panel.data).toContainText(['10']);
 });
