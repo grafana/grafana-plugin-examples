@@ -1,6 +1,6 @@
 # Frame Select Panel Plugin for Grafana
 
-This repository contains an example plugin for Grafana called Frame Select Panel Plugin. It showcases how to create a custom panel plugin that enables users to select and display different [data frames](https://grafana.com/developers/plugin-tools/introduction/data-frames) within Grafana dashboards.
+This repository contains an example plugin for Grafana called Frame Select Panel Plugin.  It showcases how panel plugins can read [data frames](https://grafana.com/developers/plugin-tools/introduction/data-frames) and act on them.
 
 ## Overview
 

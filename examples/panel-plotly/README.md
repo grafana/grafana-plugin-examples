@@ -12,26 +12,19 @@ The definition for Plotly Panel Plugin is provided in [`/src/PlotlyPanel.tsx`](h
 
 ### Frontend
 
-1. Install dependencies:
-
-    ```
-    npm add react-plotly.js plotly.js
-    npm add --dev @types/react-plotly.js
-    ```
-
-2. Build plugin in development mode or run in watch mode:
+1. Build plugin in development mode or run in watch mode:
 
    ```bash
    npm run dev
    ```
 
-3. Build plugin in production mode:
+2. Build plugin in production mode:
 
    ```bash
    npm run build
    ```
 
-4. Run the tests (using Jest):
+3. Run the tests (using Jest):
 
    ```bash
    # Runs the tests and watches for changes
@@ -41,13 +34,13 @@ The definition for Plotly Panel Plugin is provided in [`/src/PlotlyPanel.tsx`](h
    npm run lint:ci
    ```
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker):
+4. Spin up a Grafana instance and run the plugin inside it (using Docker):
 
    ```bash
    npm run server
    ```
 
-6. Run the E2E tests (using Cypress):
+5. Run the E2E tests (using Cypress):
 
    ```bash
    # Spin up a Grafana instance first that we tests against
@@ -57,7 +50,7 @@ The definition for Plotly Panel Plugin is provided in [`/src/PlotlyPanel.tsx`](h
    npm run e2e
    ```
 
-7. Run the linter:
+6. Run the linter:
 
    ```bash
    npm run lint

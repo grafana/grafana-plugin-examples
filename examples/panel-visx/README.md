@@ -6,7 +6,7 @@ This repository provides an illustration of how to develop a custom panel plugin
 
 The Visx Panel Plugin showcases the integration of [Visx](https://github.com/airbnb/visx), a collection of expressive, low-level React components for building visualizations, within Grafana. Visx empowers developers to create highly customizable and performant data visualizations in a React-friendly environment.
 
-The definition for the plugin is provided in [/src/SimplePanel.tsx](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-visx/src/SimplePanel.tsx). The plugin also allows you to customize Grafana styles.
+The definition for the plugin is provided in [/src/SimplePanel.tsx](https://github.com/grafana/grafana-plugin-examples/blob/main/examples/panel-visx/src/SimplePanel.tsx). 
 
 ## Getting started
 
