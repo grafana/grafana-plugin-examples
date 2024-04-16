@@ -1,9 +1,7 @@
 import { DataSourcePluginOptionsEditorProps } from '@grafana/data';
-import { LegacyForms } from '@grafana/ui';
+import { InlineField, Input } from '@grafana/ui';
 import React, { ChangeEvent, PureComponent } from 'react';
 import { MyDataSourceOptions } from './types';
-
-const { FormField } = LegacyForms;
 
 interface Props extends DataSourcePluginOptionsEditorProps<MyDataSourceOptions> {}
 
@@ -24,13 +22,16 @@ export class ConfigEditor extends PureComponent<Props, State> {
     const { jsonData } = options;
 
     return (
-      <FormField
-        label="WebSocket server URL"
-        labelWidth={10}
-        inputWidth={20}
-        onChange={this.onURLChange}
-        value={jsonData.url || ''}
-      />
+      <InlineField label="URL" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
+        <Input
+          width={50}
+          name="url"
+          value={jsonData.url || ''}
+          autoComplete="off"
+          placeholder="ws://websocket-server:8080"
+          onChange={this.onURLChange}
+        />
+      </InlineField>
     );
   }
 }

@@ -1,11 +1,9 @@
 import { QueryEditorProps } from '@grafana/data';
-import { LegacyForms, HorizontalGroup } from '@grafana/ui';
+import { InlineField, Input, HorizontalGroup } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { ChangeEvent, PureComponent } from 'react';
 import { DataSource } from './DataSource';
 import { defaultQuery, MyDataSourceOptions, MyQuery } from './types';
-
-const { FormField } = LegacyForms;
 
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
@@ -28,21 +26,12 @@ export class QueryEditor extends PureComponent<Props> {
 
     return (
       <HorizontalGroup>
-        <FormField
-          width={4}
-          value={constant}
-          onChange={this.onConstantChange}
-          label="Constant"
-          type="number"
-          step="0.1"
-        />
-        <FormField
-          labelWidth={8}
-          value={queryText || ''}
-          onChange={this.onQueryTextChange}
-          label="Query Text"
-          tooltip="Not used yet"
-        />
+        <InlineField label="Constant" labelWidth={16}>
+          <Input onChange={this.onConstantChange} value={constant} type="number" step={0.1} />
+        </InlineField>
+        <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
+          <Input onChange={this.onQueryTextChange} value={queryText || ''} />
+        </InlineField>
       </HorizontalGroup>
     );
   }
