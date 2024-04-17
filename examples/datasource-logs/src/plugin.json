@@ -11,7 +11,9 @@
     "author": {
       "name": "Grafana"
     },
-    "keywords": ["datasource"],
+    "keywords": [
+      "datasource"
+    ],
     "logos": {
       "small": "img/log.png",
       "large": "img/log.png"
@@ -22,7 +24,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.1.0",
+    "grafanaDependency": ">=10.2.3",
     "plugins": []
   }
 }

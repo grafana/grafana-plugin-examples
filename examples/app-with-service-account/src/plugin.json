@@ -45,19 +45,43 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.3.0",
+    "grafanaDependency": ">=10.2.3",
     "plugins": []
   },
   "iam": {
     "permissions": [
-      { "action": "dashboards:create", "scope": "folders:uid:*" },
-      { "action": "dashboards:read", "scope": "folders:uid:*"},
-      { "action": "dashboards:write", "scope": "folders:uid:*"},
-      { "action": "folders:read", "scope": "folders:uid:*"},
-      { "action": "folders:write", "scope": "folders:uid:*"},
-      { "action": "org.users:read", "scope": "users:*"},
-      { "action": "teams:read", "scope": "teams:*"},
-      { "action": "teams.permissions:read", "scope": "teams:*"}
+      {
+        "action": "dashboards:create",
+        "scope": "folders:uid:*"
+      },
+      {
+        "action": "dashboards:read",
+        "scope": "folders:uid:*"
+      },
+      {
+        "action": "dashboards:write",
+        "scope": "folders:uid:*"
+      },
+      {
+        "action": "folders:read",
+        "scope": "folders:uid:*"
+      },
+      {
+        "action": "folders:write",
+        "scope": "folders:uid:*"
+      },
+      {
+        "action": "org.users:read",
+        "scope": "users:*"
+      },
+      {
+        "action": "teams:read",
+        "scope": "teams:*"
+      },
+      {
+        "action": "teams.permissions:read",
+        "scope": "teams:*"
+      }
     ]
   }
 }

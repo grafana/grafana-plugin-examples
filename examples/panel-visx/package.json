@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@grafana/eslint-config": "6.0.0",
+    "@grafana/eslint-config": "7.0.0",
     "@grafana/tsconfig": "1.3.0-rc1",
     "@swc/core": "1.3.75",
     "@swc/helpers": "^0.5.0",
@@ -60,9 +60,9 @@
   },
   "dependencies": {
     "@emotion/css": "^11.1.3",
-    "@grafana/data": "10.0.3",
-    "@grafana/runtime": "10.0.3",
-    "@grafana/ui": "10.0.3",
+    "@grafana/data": "10.2.3",
+    "@grafana/runtime": "10.2.3",
+    "@grafana/ui": "10.2.3",
     "@types/lodash": "latest",
     "@visx/group": "^3.0.0",
     "@visx/mock-data": "^3.0.0",
