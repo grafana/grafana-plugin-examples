@@ -42,11 +42,9 @@ This repository contains example plugins to showcase different use cases.
 
 ## Integration tests
 
-Some of the examples in this repository contain integration tests that make use of [`@grafana/e2e`](https://npmjs.com/package/@grafana/e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
+Some of the examples in this repository contain integration tests that make use of [`@grafana/plugin-e2e`](https://npmjs.com/package/@grafana/plugin-e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
 
-- `npm run e2e` - run integration tests
-- `npm run e2e:open` - open cypress ui and run integration tests
-- `npm run e2e:update` - run integration tests and update any screenshots
+- `npm run e2e` - run Playwright e2e tests
 
 ### Testing against latest versions of Grafana
 
@@ -98,7 +96,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20'
       - name: Install dependencies
         run: npm install
       - name: Build plugin
@@ -106,9 +104,9 @@ jobs:
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@v1
         with:
-          module: "./src/module.ts"
-          comment-pr: "yes"
-          fail-if-incompatible: "no"
+          module: './src/module.ts'
+          comment-pr: 'yes'
+          fail-if-incompatible: 'no'
 ```
 
 This runs a compatibility check for the latest release of Grafana plugins API in your project every time a new push or pull request is open. If it finds an error you will see a message indicating you have an incompatibility.
