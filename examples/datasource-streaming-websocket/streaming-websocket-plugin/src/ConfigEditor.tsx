@@ -22,7 +22,7 @@ export class ConfigEditor extends PureComponent<Props, State> {
     const { jsonData } = options;
 
     return (
-      <InlineField label="URL" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
+      <InlineField label="URL" labelWidth={14} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
         <Input
           width={50}
           name="url"

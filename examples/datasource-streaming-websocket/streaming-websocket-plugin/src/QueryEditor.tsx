@@ -1,5 +1,5 @@
 import { QueryEditorProps } from '@grafana/data';
-import { InlineField, Input, HorizontalGroup } from '@grafana/ui';
+import { InlineField, Input, Stack } from '@grafana/ui';
 import defaults from 'lodash/defaults';
 import React, { ChangeEvent, PureComponent } from 'react';
 import { DataSource } from './DataSource';
@@ -25,14 +25,14 @@ export class QueryEditor extends PureComponent<Props> {
     const { queryText, constant } = query;
 
     return (
-      <HorizontalGroup>
+      <Stack>
         <InlineField label="Constant" labelWidth={16}>
           <Input onChange={this.onConstantChange} value={constant} type="number" step={0.1} />
         </InlineField>
         <InlineField label="Query Text" labelWidth={16} tooltip="Not used yet">
           <Input onChange={this.onQueryTextChange} value={queryText || ''} />
         </InlineField>
-      </HorizontalGroup>
+      </Stack>
     );
   }
 }
