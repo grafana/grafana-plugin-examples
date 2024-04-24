@@ -7,17 +7,13 @@ type AppTestFixture = {
 };
 
 export const test = base.extend<AppTestFixture>({
-  appConfigPage: async ({ page, selectors, grafanaVersion, request }, use, testInfo) => {
-    const configPage = new AppConfigPage(
-      { page, selectors, grafanaVersion, request, testInfo },
-      {
-        pluginId: pluginJson.id,
-      }
-    );
-    await configPage.goto();
+  appConfigPage: async ({ gotoAppConfigPage }, use) => {
+    const configPage = await gotoAppConfigPage({
+      pluginId: pluginJson.id,
+    });
     await use(configPage);
   },
-  gotoPage: ({ gotoAppPage }, use) =>
+  gotoPage: async ({ gotoAppPage }, use) =>
     use((path) =>
       gotoAppPage({
         path,
