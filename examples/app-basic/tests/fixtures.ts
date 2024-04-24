@@ -13,13 +13,14 @@ export const test = base.extend<AppTestFixture>({
     });
     await use(configPage);
   },
-  gotoPage: async ({ gotoAppPage }, use) =>
-    use((path) =>
+  gotoPage: async ({ gotoAppPage }, use) => {
+    await use((path) =>
       gotoAppPage({
         path,
         pluginId: pluginJson.id,
       })
-    ),
+    );
+  },
 });
 
 export { expect } from '@grafana/plugin-e2e';
