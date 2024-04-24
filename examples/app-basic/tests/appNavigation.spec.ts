@@ -1,4 +1,3 @@
-import pluginJson from '../src/plugin.json';
 import { test, expect } from './fixtures';
 
 test.describe('navigating app', () => {
