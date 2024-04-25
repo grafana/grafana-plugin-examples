@@ -74,11 +74,6 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Update plugin-e2e
-        run: |
-          npm update @grafana/plugin-e2e
-        working-directory: ${{ matrix.pluginDir }}
-
       - name: Run frontend tests
         run: |
           npm run test:ci
@@ -133,6 +128,12 @@ jobs:
         continue-on-error: true
         run: |
           echo "DIR=$($(test -f ./playwright.config.ts)  && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Update plugin-e2e
+        if: steps.has-integration-tests.outputs.DIR == 'true'
+        run: |
+          npm update @grafana/plugin-e2e
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
