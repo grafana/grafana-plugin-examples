@@ -74,6 +74,11 @@ jobs:
           npm ci
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Update plugin-e2e
+        run: |
+          npm update @grafana/plugin-e2e
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Run frontend tests
         run: |
           npm run test:ci
