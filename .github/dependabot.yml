@@ -9,7 +9,7 @@ updates:
       - "grafana/plugins-platform"
 
   - package-ecosystem: "npm"
-    directory: "/app-basic"
+    directory: "/examples/app-basic"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
@@ -17,7 +17,33 @@ updates:
       - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
-    directory: "/app-with-dashboards"
+    directory: "/examples/app-basic"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-backend"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-backend"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-dashboards"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
@@ -25,7 +51,136 @@ updates:
       - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
-    directory: "/datasource-basic"
+    directory: "/examples/app-with-dashboards"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-extension-point"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-extension-point"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-extensions"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-extensions"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-rbac"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-rbac"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-scenes"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-scenes"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-scenes-account"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/app-with-scenes-account"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-basic"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "grafana/plugins-platform-frontend"¨
+
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-basic"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-http"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-http"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-http-backend"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
@@ -33,32 +188,16 @@ updates:
       - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
-    directory: "/datasource-http"
+    directory: "/examples/datasource-http-backend"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
+      interval: "daily"
     reviewers:
       - "grafana/plugins-platform-frontend"
-  
-  
+
   - package-ecosystem: "npm"
-    directory: "/datasource-http-backend"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"
-  
-  - package-ecosystem: "npm"
-    directory: "/datasource-streaming-websocket"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"
-  
-  - package-ecosystem: "npm"
-    directory: "/panel-basic"
+    directory: "/examples/datasource-logs"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
@@ -66,7 +205,25 @@ updates:
       - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
-    directory: "/panel-datalinks"
+    directory: "/examples/datasource-logs"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-streaming-websocket"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/datasource-streaming-websocket"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
@@ -74,7 +231,25 @@ updates:
       - "grafana/plugins-platform-frontend"
   
   - package-ecosystem: "npm"
-    directory: "/panel-flot"
+    directory: "/examples/panel-basic"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-basic"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-datalinks"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
@@ -82,33 +257,95 @@ updates:
       - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
-    directory: "/panel-frame-select"
+    directory: "/examples/panel-datalinks"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-flot"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
     reviewers:
       - "grafana/plugins-platform-frontend"
-  
+
   - package-ecosystem: "npm"
-    directory: "/panel-plotly"
+    directory: "/examples/panel-flot"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-frame-select"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
     reviewers:
       - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-frame-select"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
   
   - package-ecosystem: "npm"
-    directory: "/panel-scatterplot"
+    directory: "/examples/panel-plotly"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-plotly"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
+  
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-scatterplot"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
     reviewers:
       - "grafana/plugins-platform-frontend"    
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-scatterplot"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend"
   
   - package-ecosystem: "npm"
-    directory: "/panel-visx"
+    directory: "/examples/panel-visx"
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 3
     reviewers:
-      - "grafana/plugins-platform-frontend"        
+      - "grafana/plugins-platform-frontend"       
+
+  - package-ecosystem: "npm"
+    directory: "/examples/panel-visx"
+    allow:
+      - dependency-name: "@grafana/plugin-e2e"
+    schedule:
+      interval: "daily"
+    reviewers:
+      - "grafana/plugins-platform-frontend" 
