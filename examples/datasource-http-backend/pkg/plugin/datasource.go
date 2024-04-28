@@ -28,6 +28,7 @@ import (
 var (
 	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
+	_ backend.CallResourceHandler   = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 )
 
@@ -237,6 +238,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 // a 200 OK response.
 func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
+	return nil, backend.ErrorWithSource(errors.New("oops"), backend.ErrorSourceDownstream)
 
 	r, err := http.NewRequestWithContext(ctx, http.MethodGet, d.settings.URL, nil)
 	if err != nil {
@@ -264,4 +266,17 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 // and the specified message, which is formatted with Sprintf.
 func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHealthResult {
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
+}
+
+func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	if req.Method == http.MethodPost {
+		return sender.Send(&backend.CallResourceResponse{
+			Error: backend.ErrorWithSource(errors.New("call resource oops"), backend.ErrorSourceDownstream),
+		})
+	}
+	return sender.Send(&backend.CallResourceResponse{
+		Status:  http.StatusOK,
+		Headers: map[string][]string{"Content-Type": {"application/json"}},
+		Body:    []byte(`{"message": "Hello from the plugin backend!"}`),
+	})
 }
