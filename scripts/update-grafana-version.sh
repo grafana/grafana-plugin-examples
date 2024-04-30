@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-GRAFANA_VERSION_TARGET=${1:-10.2.3}
+GRAFANA_VERSION_TARGET=${1:-10.3.1}
 
 # fail this script if jq is not installed
 command -v jq >/dev/null 2>&1 || { echo >&2 "jq is required but it's not installed.  Aborting."; exit 1; }
