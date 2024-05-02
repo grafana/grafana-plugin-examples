@@ -6,7 +6,10 @@
   "backend": true,
   "executable": "gpx_grafana_appwithrbac_app",
   "info": {
-    "keywords": ["app", "rbac"],
+    "keywords": [
+      "app",
+      "rbac"
+    ],
     "description": "A basic grafana app plugin defining its own permissions",
     "author": {
       "name": "Your name"
@@ -20,7 +23,12 @@
     "updated": "%TODAY%"
   },
   "iam": {
-    "permissions": [{ "action": "users.permissions:read", "scope": "users:*" }]
+    "permissions": [
+      {
+        "action": "users.permissions:read",
+        "scope": "users:*"
+      }
+    ]
   },
   "includes": [
     {
@@ -52,17 +60,29 @@
       "role": {
         "name": "Patents Reader",
         "description": "Read patents",
-        "permissions": [{ "action": "grafana-appwithrbac-app.patents:read" }]
+        "permissions": [
+          {
+            "action": "grafana-appwithrbac-app.patents:read"
+          }
+        ]
       },
-      "grants": ["Admin"]
+      "grants": [
+        "Admin"
+      ]
     },
     {
       "role": {
         "name": "Research papers Reader",
         "description": "Read research papers",
-        "permissions": [{ "action": "grafana-appwithrbac-app.papers:read" }]
+        "permissions": [
+          {
+            "action": "grafana-appwithrbac-app.papers:read"
+          }
+        ]
       },
-      "grants": ["Viewer"]
+      "grants": [
+        "Viewer"
+      ]
     }
   ],
   "dependencies": {

@@ -80,7 +80,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
       if (typeof err === 'string') {
         message = err;
       } else if (isFetchError(err)) {
-        message = `Fetch error: ${err.data.error.message ?? err.statusText}`;
+        message = `Fetch error: ${err.data.error?.message ?? err.statusText}`;
       }
       return {
         status: 'error',
