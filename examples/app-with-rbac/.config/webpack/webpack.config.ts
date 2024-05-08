@@ -12,6 +12,7 @@ import LiveReloadPlugin from 'webpack-livereload-plugin';
 import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import { Configuration } from 'webpack';
+import { GrafanaPluginMetaExtractor } from '@grafana/plugin-meta-extractor';
 
 import { getPackageJson, getPluginJson, hasReadme, getEntries, isWSL } from './utils';
 import { SOURCE_DIR, DIST_DIR } from './constants';
@@ -140,6 +141,7 @@ const config = async (env): Promise<Configuration> => {
     },
 
     plugins: [
+      new GrafanaPluginMetaExtractor(),
       new CopyWebpackPlugin({
         patterns: [
           // If src/README.md exists use it; otherwise the root README
