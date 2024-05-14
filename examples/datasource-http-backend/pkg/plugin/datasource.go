@@ -16,6 +16,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/concurrent"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )
@@ -92,11 +93,7 @@ func (d *Datasource) Dispose() {
 	d.httpClient.CloseIdleConnections()
 }
 
-// QueryData handles multiple queries and returns multiple responses.
-// req contains the queries []DataQuery (where each query contains RefID as a unique identifier).
-// The QueryDataResponse contains a map of RefID to the response for each query, and each response
-// contains Frames ([]*Frame).
-func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+func (d *Datasource) handleSingleQueryData(ctx context.Context, q concurrent.SingleQuery) (res backend.DataResponse) {
 	// Spans are created automatically for QueryData and all other plugin interface methods.
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
 	// Check out OpenTelemetry's Go SDK documentation for more information on how to use it.
@@ -108,43 +105,40 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	// You can add more log parameters to a context.Context using log.WithContextualAttributes.
 	// You can also create your own loggers using log.New, rather than using log.DefaultLogger.
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
-	ctxLogger.Debug("QueryData", "queries", len(req.Queries))
+	ctxLogger.Debug("Processing query", "number", q.Index, "ref", q.DataQuery.RefID)
 
-	// create response struct
-	response := backend.NewQueryDataResponse()
-
-	// loop over queries and execute them individually.
-	for i, q := range req.Queries {
-		ctxLogger.Debug("Processing query", "number", i, "ref", q.RefID)
-
-		if i%2 != 0 {
-			// Just to demonstrate how to return an error with a custom status code.
-			response.Responses[q.RefID] = backend.ErrDataResponse(
-				backend.StatusBadRequest,
-				fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", i+1),
-			)
-			continue
-		}
-
-		res, err := d.query(ctx, req.PluginContext, q)
-		switch {
-		case err == nil:
-			break
-		case errors.Is(err, context.DeadlineExceeded):
-			res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
-		case errors.Is(err, errRemoteRequest):
-			res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway request")
-		case errors.Is(err, errRemoteResponse):
-			res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
-		default:
-			res = backend.ErrDataResponse(backend.StatusInternal, err.Error())
-		}
-		// save the response in a hashmap
-		// based on with RefID as identifier
-		response.Responses[q.RefID] = res
+	if q.Index%2 != 0 {
+		// Just to demonstrate how to return an error with a custom status code.
+		return backend.ErrDataResponse(
+			backend.StatusBadRequest,
+			fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", q.Index+1),
+		)
+		// Or just panic with a message that does not contain any sensitive information.
+		// panic(fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", query.Index+1))
 	}
 
-	return response, nil
+	res, err := d.query(ctx, q.PluginContext, q.DataQuery)
+	switch {
+	case err == nil:
+		break
+	case errors.Is(err, context.DeadlineExceeded):
+		res = backend.ErrDataResponse(backend.StatusTimeout, "gateway timeout")
+	case errors.Is(err, errRemoteRequest):
+		res = backend.ErrDataResponse(backend.StatusBadGateway, "bad gateway request")
+	case errors.Is(err, errRemoteResponse):
+		res = backend.ErrDataResponse(backend.StatusValidationFailed, "bad gateway response")
+	default:
+		res = backend.ErrDataResponse(backend.StatusInternal, err.Error())
+	}
+	return res
+}
+
+// QueryData handles multiple queries and returns multiple responses.
+// req contains the queries []DataQuery (where each query contains RefID as a unique identifier).
+// The QueryDataResponse contains a map of RefID to the response for each query, and each response
+// contains Frames ([]*Frame).
+func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryDataResponse, error) {
+	return concurrent.QueryData(ctx, req, d.handleSingleQueryData, 10)
 }
 
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
