@@ -228,7 +228,7 @@ jobs:
 
       - name: Canary - Upgrade @grafana packages using canary_version
         run: |
-          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e", "@grafana/plugin-meta-extractor"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
           npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
         working-directory: ${{ matrix.pluginDir }}
 
