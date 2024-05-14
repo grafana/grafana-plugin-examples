@@ -2,7 +2,7 @@ name: integration tests
 on:
   pull_request:
   schedule:
-    - cron: '0 11 * * *' #once a day at 11 UTC
+    - cron: "0 11 * * *" #once a day at 11 UTC
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -49,11 +49,11 @@ jobs:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     env:
-      GF_AUTH_ANONYMOUS_ENABLED: 'true'
-      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
-      GF_AUTH_BASIC_ENABLED: 'false'
-      GF_DEFAULT_APP_MODE: 'development'
-      GF_INSTALL_PLUGINS: 'marcusolsson-static-datasource'
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_BASIC_ENABLED: "false"
+      GF_DEFAULT_APP_MODE: "development"
+      GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
       - uses: actions/checkout@v4
 
@@ -65,9 +65,9 @@ jobs:
       - name: Setup node version
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
 
       - name: Install dependencies
         run: |
@@ -92,7 +92,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: '~1.21'
+          go-version: "~1.21"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -154,7 +154,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
-          url: 'http://localhost:3000/'
+          url: "http://localhost:3000/"
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -195,7 +195,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
-          url: 'http://localhost:3000/'
+          url: "http://localhost:3000/"
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -261,7 +261,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         uses: nev7n/wait_for_response@v1
         with:
-          url: 'http://localhost:3000/'
+          url: "http://localhost:3000/"
           responseCode: 200
           timeout: 60000
           interval: 500
