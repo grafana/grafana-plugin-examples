@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.1
 
 require (
-	github.com/grafana/grafana-plugin-sdk-go v0.230.1-0.20240515111615-562799fa0718
+	github.com/grafana/grafana-plugin-sdk-go v0.230.1-0.20240515130813-55b7c612ff33
 	github.com/magefile/mage v1.15.0
 	github.com/stretchr/testify v1.9.0
 	go.opentelemetry.io/otel v1.26.0

@@ -105,16 +105,16 @@ func (d *Datasource) handleSingleQueryData(ctx context.Context, q concurrent.Que
 	// You can add more log parameters to a context.Context using log.WithContextualAttributes.
 	// You can also create your own loggers using log.New, rather than using log.DefaultLogger.
 	ctxLogger := log.DefaultLogger.FromContext(ctx)
-	ctxLogger.Debug("Processing query", "number", q.Index, "ref", q.DataQuery.RefID)
+	ctxLogger.Debug("Processing query", "ref", q.DataQuery.RefID)
 
-	if q.Index%2 != 0 {
+	if q.DataQuery.RefID == "B" {
 		// Just to demonstrate how to return an error with a custom status code.
 		return backend.ErrDataResponse(
 			backend.StatusBadRequest,
-			fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", q.Index+1),
+			fmt.Sprintf("user friendly error for query %v, excluding any sensitive information", q.DataQuery.RefID),
 		)
 		// Or just panic with a message that does not contain any sensitive information.
-		// panic(fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", query.Index+1))
+		// panic(fmt.Sprintf("user friendly error for query number %v, excluding any sensitive information", q.DataQuery.RefID))
 	}
 
 	res, err := d.query(ctx, q.PluginContext, q.DataQuery)
