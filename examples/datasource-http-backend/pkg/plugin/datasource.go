@@ -93,7 +93,7 @@ func (d *Datasource) Dispose() {
 	d.httpClient.CloseIdleConnections()
 }
 
-func (d *Datasource) handleSingleQueryData(ctx context.Context, q concurrent.SingleQuery) (res backend.DataResponse) {
+func (d *Datasource) handleSingleQueryData(ctx context.Context, q concurrent.Query) (res backend.DataResponse) {
 	// Spans are created automatically for QueryData and all other plugin interface methods.
 	// The span's context is in the ctx, you can get it with trace.SpanContextFromContext(ctx)
 	// Check out OpenTelemetry's Go SDK documentation for more information on how to use it.
