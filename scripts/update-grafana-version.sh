@@ -2,12 +2,12 @@
 #
 GRAFANA_VERSION_TARGET=${1:-10.3.1}
 
-dirs=$(find examples -maxdepth 2 -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
+dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
 for plugin in $dirs; do
     if [ -d "$plugin" ]; then  # Check if it is indeed a directory
         echo "Processing plugin folder: $plugin"
         # Run the npx command in the plugin directory
-        (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install)
+        (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install && rm -rf node_modules))
     fi
 done
 
@@ -16,7 +16,7 @@ done
 ###############################################
 
 
-plugin_files=$(find examples -maxdepth 3 -type f -name 'plugin.json' -not -path '*/node_modules/*')
+plugin_files=$(find examples -type f -name 'plugin.json' -not -path '*/node_modules/*')
 
 # Iterate over each plugin.json file
 for file in $plugin_files; do
