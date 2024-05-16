@@ -24,7 +24,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.3.1",
+    "grafanaDependency": ">=10.3.3",
     "plugins": []
   },
   "streaming": true
