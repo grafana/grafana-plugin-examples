@@ -47,7 +47,6 @@ for file in $files; do
     # Check if the file contains the grafana_version field
     if grep -q "grafana_version:" "$file"; then
         # Replace the grafana_version field with the target version
-        # sed -i "s/grafana_version:.*/grafana_version: ${GRAFANA_VERSION_TARGET}/" "$file"
         sed_i "s/\(grafana_version: \)\${GRAFANA_VERSION:-[^}]*}/\1\${GRAFANA_VERSION:-$target_version}/" "$file"
         echo "Modified $file"
     fi
@@ -58,4 +57,4 @@ done
 # Upgrade grafana-plugin-sdk-go to latest version
 ###############################################
 
-# ./scripts/update-backend-sdk.sh
+./scripts/update-backend-sdk.sh
