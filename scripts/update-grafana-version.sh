@@ -2,7 +2,7 @@
 #
 GRAFANA_VERSION_TARGET=${1:-10.3.1}
 
-dirs=$(find examples/panel-plotly -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
+dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
 #dirs=('examples/panel-plotly' 'examples/panel-scatterplot' 'examples/panel-visx')
 for plugin in $dirs; do
     if [ -d "$plugin" ]; then  # Check if it is indeed a directory
@@ -17,7 +17,7 @@ done
 ###############################################
 get_newer_version () { printf "%s\n" "$@" | sort --version-sort | tail -1 ; }
 
-plugin_files=$(find examples/panel-plotly -type f -name 'plugin.json' -not -path '*/node_modules/*')
+plugin_files=$(find examples -type f -name 'plugin.json' -not -path '*/node_modules/*')
 # Iterate over each plugin.json file
 for file in $plugin_files; do
     # Get the current value of dependencies.grafanaDependency using jq
@@ -32,7 +32,7 @@ done
 # Upgrade docker-compose files
 ###############################################
 # Find the docker-compose.yaml files excluding node_modules
-files=$(find examples/panel-plotly -type f -name "docker-compose.yaml" -not -path "*node_modules*")
+files=$(find examples -type f -name "docker-compose.yaml" -not -path "*node_modules*")
 # Make a wrapper to support Linux and MacOS
 case $(sed --help 2>&1) in
   *GNU*) sed_i () { sed -i "$@"; };;
