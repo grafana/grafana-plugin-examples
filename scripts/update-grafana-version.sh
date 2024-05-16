@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-GRAFANA_VERSION_TARGET=${1:-10.3.1}
+GRAFANA_VERSION_TARGET=${1:-10.3.3}
 
 dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
 #dirs=('examples/panel-plotly' 'examples/panel-scatterplot' 'examples/panel-visx')
