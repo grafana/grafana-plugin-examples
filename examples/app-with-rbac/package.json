@@ -11,7 +11,7 @@
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "npm run lint -- --fix",
     "server": "docker-compose up --build",
-    "sign": "npx --yes @grafana/sign-plugin@latest",
+    "sign": "npx --yes @grafana/sign-plugin@latest"
   },
   "author": "Your name",
   "license": "Apache-2.0",
