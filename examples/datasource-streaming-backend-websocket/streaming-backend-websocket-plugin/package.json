@@ -11,9 +11,7 @@
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "npm run lint -- --fix",
     "server": "docker-compose up --build",
-    "sign": "npx --yes @grafana/sign-plugin@latest",
-    "e2e": "npm exec cypress install && npm exec grafana-e2e run",
-    "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots"
+    "sign": "npx --yes @grafana/sign-plugin@latest"
   },
   "author": "Grafana",
   "license": "Apache-2.0",
@@ -49,8 +47,6 @@
     "webpack": "^5.86.0",
     "webpack-cli": "^5.1.4",
     "webpack-livereload-plugin": "^3.0.2",
-    "@grafana/e2e": "10.3.3",
-    "@grafana/e2e-selectors": "10.3.3",
     "@grafana/plugin-meta-extractor": "^0.0.2",
     "@types/react-router-dom": "^5.2.0",
     "@types/testing-library__jest-dom": "5.14.8",
