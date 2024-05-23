@@ -11,9 +11,7 @@
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
     "test": "jest --watch --onlyChanged",
-    "typecheck": "tsc --noEmit",
-    "e2e": "npm exec cypress install && npm exec grafana-e2e run",
-    "e2e:update": "npm exec cypress install && npm exec grafana-e2e run --update-screenshots"
+    "typecheck": "tsc --noEmit"
   },
   "author": "Your name",
   "license": "Apache-2.0",
@@ -50,8 +48,6 @@
     "webpack": "^5.86.0",
     "webpack-cli": "^5.1.4",
     "webpack-livereload-plugin": "^3.0.2",
-    "@grafana/e2e": "10.3.3",
-    "@grafana/e2e-selectors": "10.3.3",
     "@grafana/plugin-meta-extractor": "^0.0.2",
     "@types/testing-library__jest-dom": "5.14.8",
     "eslint-plugin-deprecation": "^2.0.0"
