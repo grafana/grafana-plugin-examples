@@ -151,7 +151,7 @@ version: '3.7'
 
 services:
   grafana:
-    container_name: 'app-with-rbac-app'
+    container_name: 'myorg-basic-app'
     build:
       context: ./.config
       args:
