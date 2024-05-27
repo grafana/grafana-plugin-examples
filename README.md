@@ -19,11 +19,7 @@ This repository contains example plugins to showcase different use cases.
 
 | Example                                           | Description                                                                                                                       |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [panel-flot](examples/panel-flot)                 | Shows how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.                                        |
 | [panel-frame-select](examples/panel-frame-select) | Shows how to update panel options with values from a data query response.                                                         |
-| [panel-plotly](examples/panel-plotly)             | Shows how to use the [Plotly](https://plotly.com/javascript/) graphing library in a panel plugin.                                 |
-| [panel-scatterplot](examples/panel-scatterplot)   | Shows how to use D3 and SVG to create a scatter plot panel.                                                                       |
-| [panel-visx](examples/panel-visx)                 | Shows how to use [visx](https://github.com/airbnb/visx) to create a time series graph.                                            |
 | [panel-basic](examples/panel-basic)               | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
 | [panel-datalinks](examples/panel-datalinks)       | Shows how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
 
