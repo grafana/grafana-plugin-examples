@@ -1,12 +1,10 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App With Dashboards",
   "id": "myorg-dashboard-app",
   "info": {
-    "keywords": [
-      "app"
-    ],
+    "keywords": ["app"],
     "description": "A basic grafana app plugin with dashboards",
     "author": {
       "name": "Your name"
