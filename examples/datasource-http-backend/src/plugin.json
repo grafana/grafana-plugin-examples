@@ -7,14 +7,13 @@
   "backend": true,
   "alerting": true,
   "executable": "gpx_datasource_http_backend",
+  "apiVersion": "v0alpha1",
   "info": {
     "description": "",
     "author": {
       "name": "Grafana Labs"
     },
-    "keywords": [
-      "datasource"
-    ],
+    "keywords": ["datasource"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

@@ -29,6 +29,7 @@ var (
 	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
+	_ backend.AdmissionHandler      = (*Datasource)(nil)
 )
 
 var (
@@ -264,4 +265,64 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 // and the specified message, which is formatted with Sprintf.
 func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHealthResult {
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
+}
+
+// ValidateAdmission implements backend.AdmissionHandler.
+func (d *Datasource) ValidateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.ValidationResponse, error) {
+	rsp, err := d.MutateAdmission(ctx, req)
+	if rsp != nil {
+		return &backend.ValidationResponse{
+			Allowed:  rsp.Allowed,
+			Result:   rsp.Result,
+			Warnings: rsp.Warnings,
+		}, err
+	}
+	return nil, err
+}
+
+// MutateAdmission implements backend.AdmissionHandler.
+func (d *Datasource) MutateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.MutationResponse, error) {
+	expected := (&backend.DataSourceInstanceSettings{}).GVK()
+	if req.Kind.Kind != expected.Kind && req.Kind.Group != expected.Group {
+		return getBadRequest("expected DataSourceInstanceSettings protobuf payload"), nil
+	}
+
+	// Convert the payload from protobuf to an SDK struct
+	settings, err := backend.DataSourceInstanceSettingsFromProto(req.ObjectBytes, "")
+	if err != nil {
+		return nil, err
+	}
+	if settings == nil {
+		return getBadRequest("missing datasource settings"), nil
+	}
+
+	switch settings.APIVersion {
+	case "", "v0alpha1":
+		// OK!
+	default:
+		return getBadRequest(fmt.Sprintf("expected apiVersion: v0alpha1, found: %s", settings.APIVersion)), nil
+	}
+
+	pb, err := backend.DataSourceInstanceSettingsToProtoBytes(settings)
+	return &backend.MutationResponse{
+		Allowed:     true,
+		ObjectBytes: pb,
+	}, err
+}
+
+// ConvertObject implements backend.AdmissionHandler.
+func (d *Datasource) ConvertObject(ctx context.Context, req *backend.ConversionRequest) (*backend.ConversionResponse, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
+func getBadRequest(msg string) *backend.MutationResponse {
+	return &backend.MutationResponse{
+		Allowed: false,
+		Result: &backend.StatusResult{
+			Status:  "Failure",
+			Message: msg,
+			Reason:  "BadRequest",
+			Code:    http.StatusBadRequest,
+		},
+	}
 }
