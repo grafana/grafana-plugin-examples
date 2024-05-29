@@ -29,7 +29,7 @@ var (
 	_ backend.QueryDataHandler      = (*Datasource)(nil)
 	_ backend.CheckHealthHandler    = (*Datasource)(nil)
 	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
-	_ backend.AdmissionHandler      = (*Datasource)(nil)
+	_ backend.AdmissionHandler      = (*admissionHandler)(nil)
 )
 
 var (
@@ -75,6 +75,7 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
+	AdmissionHandler: &admissionHandler{},
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
@@ -267,9 +268,11 @@ func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHeal
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
 }
 
+type admissionHandler struct{}
+
 // ValidateAdmission implements backend.AdmissionHandler.
-func (d *Datasource) ValidateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.ValidationResponse, error) {
-	rsp, err := d.MutateAdmission(ctx, req)
+func (a *admissionHandler) ValidateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.ValidationResponse, error) {
+	rsp, err := a.MutateAdmission(ctx, req)
 	if rsp != nil {
 		return &backend.ValidationResponse{
 			Allowed:  rsp.Allowed,
@@ -281,7 +284,7 @@ func (d *Datasource) ValidateAdmission(ctx context.Context, req *backend.Admissi
 }
 
 // MutateAdmission implements backend.AdmissionHandler.
-func (d *Datasource) MutateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.MutationResponse, error) {
+func (a *admissionHandler) MutateAdmission(ctx context.Context, req *backend.AdmissionRequest) (*backend.MutationResponse, error) {
 	expected := (&backend.DataSourceInstanceSettings{}).GVK()
 	if req.Kind.Kind != expected.Kind && req.Kind.Group != expected.Group {
 		return getBadRequest("expected DataSourceInstanceSettings protobuf payload"), nil
@@ -311,7 +314,7 @@ func (d *Datasource) MutateAdmission(ctx context.Context, req *backend.Admission
 }
 
 // ConvertObject implements backend.AdmissionHandler.
-func (d *Datasource) ConvertObject(ctx context.Context, req *backend.ConversionRequest) (*backend.ConversionResponse, error) {
+func (a *admissionHandler) ConvertObject(ctx context.Context, req *backend.ConversionRequest) (*backend.ConversionResponse, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 
