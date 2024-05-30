@@ -24,7 +24,8 @@
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@grafana/eslint-config": "^7.0.0",
-    "@grafana/plugin-e2e": "^1.2.0",
+    "@grafana/plugin-e2e": "^1.2.2",
+    "@grafana/plugin-meta-extractor": "^0.0.2",
     "@grafana/tsconfig": "1.3.0-rc1",
     "@playwright/test": "^1.43.0",
     "@swc/core": "^1.3.90",
@@ -33,10 +34,14 @@
     "@testing-library/jest-dom": "6.1.4",
     "@testing-library/react": "14.0.0",
     "@types/jest": "^29.5.0",
+    "@types/lodash": "^4.14.194",
     "@types/node": "^20.8.7",
+    "@types/react-router-dom": "^5.2.0",
+    "@types/testing-library__jest-dom": "5.14.8",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "emotion": "10.0.27",
+    "eslint-plugin-deprecation": "^2.0.0",
     "eslint-webpack-plugin": "^4.0.1",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "glob": "^10.2.7",
@@ -54,12 +59,7 @@
     "typescript": "4.8.4",
     "webpack": "^5.86.0",
     "webpack-cli": "^5.1.4",
-    "webpack-livereload-plugin": "^3.0.2",
-    "@grafana/plugin-meta-extractor": "^0.0.2",
-    "@types/lodash": "^4.14.194",
-    "@types/react-router-dom": "^5.2.0",
-    "@types/testing-library__jest-dom": "5.14.8",
-    "eslint-plugin-deprecation": "^2.0.0"
+    "webpack-livereload-plugin": "^3.0.2"
   },
   "engines": {
     "node": ">=20"
@@ -68,11 +68,11 @@
     "@emotion/css": "11.10.6",
     "@grafana/data": "10.3.3",
     "@grafana/runtime": "10.3.3",
+    "@grafana/schema": "10.3.3",
     "@grafana/ui": "10.3.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "tslib": "2.5.3",
-    "@grafana/schema": "10.3.3"
+    "tslib": "2.5.3"
   },
   "packageManager": "npm@9.3.1"
 }
