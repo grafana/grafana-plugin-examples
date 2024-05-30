@@ -13,7 +13,7 @@ This App plugin example shows you how to leverage Grafana RBAC to control access
 Your development environment must meet the following prerequisite:
 
 - Grafana version 10.4.0 or later.
-- You must enable RBAC by setting the `accessControlOnCall` feature toggle.
+- You must enable the following features by setting the `accessControlOnCall,idForwarding,externalServiceAccounts` feature toggle.
 
 ## Plugin usage
 
