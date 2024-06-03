@@ -1,13 +1,10 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
   "name": "Basic Panel",
   "id": "basic-panel",
   "info": {
-    "keywords": [
-      "panel",
-      "example"
-    ],
+    "keywords": ["panel", "example"],
     "description": "Showcase how to build a basic panel plugin",
     "author": {
       "name": "Your Name"

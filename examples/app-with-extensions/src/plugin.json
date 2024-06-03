@@ -1,13 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Extensions App",
   "id": "myorg-extensions-app",
   "preload": true,
   "info": {
-    "keywords": [
-      "app"
-    ],
+    "keywords": ["app"],
     "description": "Example on how to extend grafana ui from a plugin",
     "author": {
       "name": "Myorg"
