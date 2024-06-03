@@ -31,5 +31,19 @@
   "dependencies": {
     "grafanaDependency": ">=10.3.3",
     "plugins": []
-  }
+  },
+  "extensions": [
+    {
+      "extensionPointId": "grafana/dashboard/panel/menu",
+      "type": "link",
+      "title": "Open from time series or pie charts (path)",
+      "description": "This link will only be visible on time series and pie charts"
+    },
+    {
+      "extensionPointId": "grafana/dashboard/panel/menu",
+      "type": "link",
+      "title": "Open from time series or pie charts (onClick)",
+      "description": "This link will only be visible on time series and pie charts"
+    }
+  ]
 }
