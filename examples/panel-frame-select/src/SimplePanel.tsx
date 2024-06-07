@@ -1,5 +1,6 @@
 import { PanelProps, SelectableValue } from '@grafana/data';
 import { Select } from '@grafana/ui';
+import { PanelDataErrorView } from '@grafana/runtime';
 import React from 'react';
 import { SimpleOptions } from 'types';
 
@@ -37,7 +38,9 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, onO
           <Select value={selectedRefId} options={values} onChange={(value) => setSelectedRefId(value.value)} />
           <p>Currently selected: {selectedFrame.name}</p>
         </>
-      ) : null}
+      ) : (
+        <PanelDataErrorView panelId={Number(selectedRefId)} data={data} needsStringField />
+      )}
     </div>
   );
 };
