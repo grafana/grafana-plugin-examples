@@ -4,8 +4,7 @@ test('data query should return a value', async ({ panelEditPage, readProvisioned
   const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
   await panelEditPage.datasource.set(ds.name);
   await panelEditPage.setVisualization('Table');
-  // await panelEditPage.getQueryEditorRow('A').getByRole('textbox', { name: 'Query Text' }).fill('test query');
-  // await panelEditPage.getQueryEditorRow('A').getByRole('spinbutton').fill('10');
-  // await expect(panelEditPage.panel.fieldNames).toContainText(['Time', 'Value']);
-  // await expect(panelEditPage.panel.data).toContainText(['10']);
+  await panelEditPage.getQueryEditorRow('A').getByLabel('multiplier').fill('10');
+  await expect(panelEditPage.refreshPanel()).toBeOK();
+  await expect(panelEditPage.panel.fieldNames).toHaveText(['time', 'values']);
 });

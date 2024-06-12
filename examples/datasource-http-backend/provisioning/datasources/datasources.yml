@@ -7,8 +7,9 @@ datasources:
     orgId: 1
     version: 1
     editable: true
+    url: 'http://host.docker.internal:10000/metrics'
     jsonData:
       path: '/resources'
-      defaultTimeField: 
-    secureJsonData: 
+      defaultTimeField:
+    secureJsonData:
       apiKey: 'api-key'

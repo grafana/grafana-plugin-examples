@@ -10,10 +10,11 @@ export class QueryEditor extends PureComponent<Props> {
   render() {
     return (
       <HorizontalGroup>
-        <Label>Multiplier</Label>
+        <Label htmlFor="multiplier">Multiplier</Label>
         <Input
           type="number"
-          label="Multiplier"
+          id="multiplier"
+          name="multiplier"
           value={this.props.query.multiplier}
           onChange={(e) => this.props.onChange({ ...this.props.query, multiplier: e.currentTarget.valueAsNumber })}
         />

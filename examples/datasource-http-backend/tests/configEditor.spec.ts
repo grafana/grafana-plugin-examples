@@ -9,8 +9,9 @@ test('"Save & test" should be successful when configuration is valid', async ({
 }) => {
   const ds = await readProvisionedDataSource<MyDataSourceOptions, MySecureJsonData>({ fileName: 'datasources.yml' });
   const configPage = await createDataSourceConfigPage({ type: ds.type });
-  await page.getByLabel('URL').fill('https://jsonplaceholder.typicode.com/users');
+  await page.getByLabel('URL').fill('http://host.docker.internal:10000/metrics');
   await expect(configPage.saveAndTest()).toBeOK();
+  expect(configPage).toHaveAlert('success');
 });
 
 test('"Save & test" should fail when configuration is invalid', async ({
@@ -22,5 +23,5 @@ test('"Save & test" should fail when configuration is invalid', async ({
   const configPage = await createDataSourceConfigPage({ type: ds.type });
   await page.getByLabel('URL').fill('http://test.com/tests');
   await expect(configPage.saveAndTest()).not.toBeOK();
-  await expect(configPage).toHaveAlert('error', { hasText: 'request error' });
+  expect(configPage).toHaveAlert('error', { hasText: 'request error' });
 });
