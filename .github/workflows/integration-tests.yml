@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup plugin dir variable
         id: set-plugin-dirs
-        run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | grep http-backend | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
       - name: Setup NPM canary version variable
         id: npm-canary-version
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
@@ -199,11 +199,6 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Stop mockserver if running
-        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
-        run: docker compose down mockserver
-        working-directory: ${{ matrix.pluginDir }}
-
       # Latest Version Tests
       # Runs the plugin tests against the latest stable version of Grafana.
       # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
@@ -309,6 +304,11 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Stop mockserver if running
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
 
   notify:

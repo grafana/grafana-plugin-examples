@@ -13,3 +13,9 @@ services:
     volumes:
       - ./dist:/var/lib/grafana/plugins/example
       - ./provisioning:/etc/grafana/provisioning
+  mockserver:
+    container_name: 'websocket-server-example'
+    build:
+      context: ../websocket-server
+    ports:
+      - 8080:8080/tcp
