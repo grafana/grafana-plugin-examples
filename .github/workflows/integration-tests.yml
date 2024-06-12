@@ -142,6 +142,8 @@ jobs:
       - name: Check if mockserver is defined
         id: mockserver-check
         run: |
+          echo "hello?"
+          echo $(docker compose config --services)
           if docker compose config --services | grep -wq mockserver; then
             echo "MOCKSERVER_DEFINED=true" >> $GITHUB_ENV
           else
@@ -150,7 +152,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Run mock server
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
 
@@ -198,7 +200,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Stop mockserver if running
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
 
