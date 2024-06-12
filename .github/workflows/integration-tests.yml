@@ -145,9 +145,9 @@ jobs:
           echo "hello?"
           echo $(docker compose config --services)
           if docker compose config --services | grep -wq mockserver; then
-            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_ENV
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
           else
-            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_ENV
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
           fi
         working-directory: ${{ matrix.pluginDir }}
 
