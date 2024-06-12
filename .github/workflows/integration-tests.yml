@@ -142,8 +142,11 @@ jobs:
       - name: Check if mockserver is defined
         id: mockserver-check
         run: |
-          MOCKSERVER_DEFINED=$(docker compose config --services | grep -w mockserver && echo true || echo false)
-          echo "MOCKSERVER_DEFINED=$MOCKSERVER_DEFINED" >> $GITHUB_OUTPUT
+          if docker compose config --services | grep -wq mockserver; then
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_ENV
+          else
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_ENV
+          fi
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Run mock server
