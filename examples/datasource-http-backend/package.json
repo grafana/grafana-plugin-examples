@@ -11,7 +11,8 @@
     "sign": "npx --yes @grafana/sign-plugin@latest",
     "test:ci": "jest --passWithNoTests --maxWorkers 4",
     "test": "jest --watch --onlyChanged",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "e2e": "playwright test"
   },
   "author": "Grafana Labs",
   "license": "Apache-2.0",
