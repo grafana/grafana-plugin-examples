@@ -11,7 +11,7 @@ This plugin example also showcases other features and best-practices of backend 
 - Using the `httpclient` provided by the [Grafana plugins SDK](https://pkg.go.dev/github.com/grafana/grafana-plugin-sdk-go/backend/httpclient)
 - Tracing, for better instrumentation of your plugin
 
-This plugin example also includes an example server returning data in the format expected by this plugin (`cmd/server`). Refer to the section below on how to build and run it.
+This plugin example also includes an example server returning data in the format expected by this plugin (`/server`). Refer to the section below on how to build and run it.
 
 ## External service
 
@@ -25,8 +25,6 @@ The plugin expects the following JSON from a remote HTTP API:
   ]
 }
 ```
-
-An example HTTP server that returns dummy data in this format is included in `cmd/server`.
 
 ## Building
 
@@ -45,14 +43,20 @@ $ mage -v
 
 ### Example server
 
+mockserver is included to docker-compose file. You can run or run server separetaly 
+
 ```bash
-$ mage server
-$ ./cmd/server/server :10000
-2022/10/28 15:43:16 listening on :10000
+cd server
+docker-compose up
 ```
 
 Then, add a new data source in Grafana and use the following URL:
 
+in case of running server locally:
 ```
 http://127.0.0.1:10000/metrics
+```
+in case of running server in docker:
+```
+http://host.docker.internal:10000/metrics
 ```
