@@ -26,9 +26,10 @@ export class ConfigEditor extends PureComponent<Props, State> {
         <Input
           width={50}
           name="url"
+          data-testid="uri-websocket-server"
           value={jsonData.url || ''}
           autoComplete="off"
-          placeholder="ws://websocket-server:8080"
+          placeholder="ws://mockserver:8080"
           onChange={this.onURLChange}
         />
       </InlineField>

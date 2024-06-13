@@ -27,10 +27,10 @@ export class QueryEditor extends PureComponent<Props> {
     return (
       <Stack>
         <InlineField label="Constant" labelWidth={14}>
-          <Input onChange={this.onConstantChange} value={constant} type="number" step={0.1} />
+          <Input data-testid="constant" onChange={this.onConstantChange} value={constant} type="number" step={0.1} />
         </InlineField>
         <InlineField label="Query Text" labelWidth={14} tooltip="Not used yet">
-          <Input onChange={this.onQueryTextChange} value={queryText || ''} />
+          <Input data-testid="query-text" onChange={this.onQueryTextChange} value={queryText || ''} />
         </InlineField>
       </Stack>
     );

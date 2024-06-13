@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'example'
+    container_name: 'example-websocket-datasource'
     build:
       context: ./.config
       args:
@@ -11,7 +11,7 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/example
+      - ./dist:/var/lib/grafana/plugins/example-websocket-datasource
       - ./provisioning:/etc/grafana/provisioning
   mockserver:
     container_name: 'websocket-server-example'
