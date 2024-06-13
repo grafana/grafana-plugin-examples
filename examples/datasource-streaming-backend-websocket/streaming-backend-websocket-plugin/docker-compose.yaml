@@ -14,7 +14,7 @@ services:
       - ./dist:/var/lib/grafana/plugins/example-websocket-datasource
       - ./provisioning:/etc/grafana/provisioning
   mockserver:
-    container_name: 'websocket-server-example'
+    container_name: 'mockserver-streamingbackend-datasource'
     build:
       context: ../websocket-server
     ports:

@@ -28,11 +28,11 @@ export function ConfigEditor(props: Props) {
         <InlineField label="URI" labelWidth={10} tooltip="Supported schemes: WebSocket (ws://) or (wss://)">
           <Input
             width={30}
-            name="uri"
+            data-testid="uri-websocket-server"
             required
             value={uri}
             autoComplete="off"
-            placeholder="ws://websocket-server:8080"
+            placeholder="ws://mockserver:8080"
             onChange={onUriChange}
           />
         </InlineField>
