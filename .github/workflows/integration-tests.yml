@@ -142,7 +142,6 @@ jobs:
       - name: Check if mockserver is defined
         id: mockserver-check
         run: |
-          echo "hello?"
           echo $(docker compose config --services)
           if docker compose config --services | grep -wq mockserver; then
             echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
@@ -205,7 +204,7 @@ jobs:
       - name: Latest - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Latest - Wait for Grafana to start
@@ -271,7 +270,7 @@ jobs:
       - name: Canary - Start Grafana dev image
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Canary - Wait for Grafana to start

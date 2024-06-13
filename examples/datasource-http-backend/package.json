@@ -61,13 +61,13 @@
   },
   "dependencies": {
     "@emotion/css": "11.10.6",
-    "@grafana/data": "10.3.3",
-    "@grafana/runtime": "10.3.3",
-    "@grafana/ui": "10.3.3",
+    "@grafana/data": "10.4.0",
+    "@grafana/runtime": "10.4.0",
+    "@grafana/ui": "10.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tslib": "2.5.3",
-    "@grafana/schema": "10.3.3"
+    "@grafana/schema": "10.4.0"
   },
   "packageManager": "npm@9.3.1"
 }
