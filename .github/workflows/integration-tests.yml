@@ -139,6 +139,23 @@ jobs:
           npm exec --package semver-compare-cli --call 'semver-compare $LATEST_STABLE_VERSION ge $EXPECTED_GRAFANA_VERSION'
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Check if mockserver is defined
+        id: mockserver-check
+        run: |
+          echo "hello?"
+          echo $(docker compose config --services)
+          if docker compose config --services | grep -wq mockserver; then
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
+          else
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Run mock server
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        run: docker compose up -d mockserver
+        working-directory: ${{ matrix.pluginDir }}
+
       - name: Setup playwright browser
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: npx playwright install --with-deps chromium
@@ -147,7 +164,7 @@ jobs:
       - name: Expected version - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Expected - Wait for Grafana to start
@@ -287,6 +304,11 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Stop mockserver if running
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
 
   notify:

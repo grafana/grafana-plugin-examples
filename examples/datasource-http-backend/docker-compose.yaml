@@ -13,3 +13,11 @@ services:
     volumes:
       - ./dist:/var/lib/grafana/plugins/grafana-datasourcehttpbackend-datasource
       - ./provisioning:/etc/grafana/provisioning
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+  mockserver:
+    container_name: 'mockserver-datasourcehttpbackend-datasource'
+    build:
+      context: ./server
+    ports:
+      - 10000:10000/tcp
