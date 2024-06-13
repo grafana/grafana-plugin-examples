@@ -43,20 +43,9 @@ $ mage -v
 
 ### Example server
 
-mockserver is included to docker-compose file. You can run or run server separetaly 
+The mockserver required for testing has been included in the Docker Compose file 
 
-```bash
-cd server
-docker-compose up
-```
-
-Then, add a new data source in Grafana and use the following URL:
-
-in case of running server locally:
-```
-http://127.0.0.1:10000/metrics
-```
-in case of running server in docker:
+Add a new data source in Grafana using the following URL:
 ```
 http://host.docker.internal:10000/metrics
 ```
