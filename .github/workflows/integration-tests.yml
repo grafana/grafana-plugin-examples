@@ -141,8 +141,7 @@ jobs:
 
       - name: Check if mockserver is defined
         id: mockserver-check
-        run: |
-          echo "hello?"
+        run:
           echo $(docker compose config --services)
           if docker compose config --services | grep -wq mockserver; then
             echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
