@@ -151,7 +151,7 @@ jobs:
           fi
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Run mock server
+      - name: Run mockserver
         if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
@@ -204,7 +204,20 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Run mock server
+      - name: Check if mockserver is defined
+        id: mockserver-check
+        run: |
+          echo "hello?"
+          echo $(docker compose config --services)
+          if docker compose config --services | grep -wq mockserver; then
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
+          else
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Run mockserver
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
 
@@ -281,11 +294,23 @@ jobs:
           workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      - name: Run mock server
+      - name: Check if mockserver is defined
+        id: mockserver-check
+        run: |
+          echo "hello?"
+          echo $(docker compose config --services)
+          if docker compose config --services | grep -wq mockserver; then
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
+          else
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
+          fi
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Run mockserver
         if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
-        
+
       # Canary versions live at grafana/grafana-dev
       - name: Canary - Start Grafana dev image
         if: steps.has-integration-tests.outputs.DIR == 'true'
