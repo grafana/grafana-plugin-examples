@@ -151,7 +151,7 @@ jobs:
           fi
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Run mockserver
+      - name: Run mock server
         if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
@@ -192,33 +192,11 @@ jobs:
       - name: Expected - Failing build due to test failures
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
-      
-      - name: Stop mockserver if running
-        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
-        run: docker compose down mockserver
-        working-directory: ${{ matrix.pluginDir }}
 
       - name: Expected - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Check if mockserver is defined
-        id: mockserver-check
-        run: |
-          echo "hello?"
-          echo $(docker compose config --services)
-          if docker compose config --services | grep -wq mockserver; then
-            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
-          else
-            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
-          fi
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Run mockserver
-        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
-        run: docker compose up -d mockserver
         working-directory: ${{ matrix.pluginDir }}
 
       # Latest Version Tests
@@ -256,11 +234,6 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
 
-      - name: Stop mockserver if running
-        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
-        run: docker compose down mockserver
-        working-directory: ${{ matrix.pluginDir }}
-
       - name: Latest - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
@@ -293,23 +266,6 @@ jobs:
           args: -v build:linux
           workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
-
-      - name: Check if mockserver is defined
-        id: mockserver-check
-        run: |
-          echo "hello?"
-          echo $(docker compose config --services)
-          if docker compose config --services | grep -wq mockserver; then
-            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
-          else
-            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
-          fi
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Run mockserver
-        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
-        run: docker compose up -d mockserver
-        working-directory: ${{ matrix.pluginDir }}
 
       # Canary versions live at grafana/grafana-dev
       - name: Canary - Start Grafana dev image
