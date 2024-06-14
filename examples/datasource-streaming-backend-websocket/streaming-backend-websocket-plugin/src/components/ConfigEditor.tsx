@@ -32,7 +32,7 @@ export function ConfigEditor(props: Props) {
             required
             value={uri}
             autoComplete="off"
-            placeholder="ws://mockserver:8080"
+            placeholder="ws://host.docker.internal:8080"
             onChange={onUriChange}
           />
         </InlineField>

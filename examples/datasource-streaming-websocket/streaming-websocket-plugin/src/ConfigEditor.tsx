@@ -29,7 +29,7 @@ export class ConfigEditor extends PureComponent<Props, State> {
           data-testid="uri-websocket-server"
           value={jsonData.url || ''}
           autoComplete="off"
-          placeholder="ws://mockserver:8080"
+          placeholder="ws://host.docker.internal:8080"
           onChange={this.onURLChange}
         />
       </InlineField>
