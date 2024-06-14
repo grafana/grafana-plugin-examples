@@ -7,7 +7,6 @@ import {
 } from '@grafana/data';
 import { DataSourceWithBackend, getGrafanaLiveSrv } from '@grafana/runtime';
 
-import { defaults } from 'lodash';
 import { Observable, merge } from 'rxjs';
 
 import { MyQuery, MyDataSourceOptions, DEFAULT_QUERY } from './types';
@@ -18,9 +17,7 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
   }
 
   query(request: DataQueryRequest<MyQuery>): Observable<DataQueryResponse> {
-    const observables = request.targets.map((target, index) => {
-      const query = defaults(target, DEFAULT_QUERY);
-
+    const observables = request.targets.map((query) => {
       return getGrafanaLiveSrv().getDataStream({
         addr: {
           scope: LiveChannelScope.DataSource,
@@ -36,7 +33,7 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
     return merge(...observables);
   }
 
-  getDefaultQuery(app: CoreApp): Partial<MyQuery> {
+  getDefaultQuery(_: CoreApp): Partial<MyQuery> {
     return DEFAULT_QUERY;
   }
 }

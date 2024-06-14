@@ -8,7 +8,6 @@ import { testIds } from '../testIds';
 
 export type JsonData = {
   apiUrl?: string;
-  isApiKeySet?: boolean;
 };
 
 interface Props extends PluginConfigPageProps<AppPluginMeta<JsonData>> {}

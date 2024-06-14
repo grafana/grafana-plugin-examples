@@ -6,6 +6,9 @@ on:
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: read
+  id-token: write
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
@@ -17,7 +20,7 @@ jobs:
       latestVersion: ${{ steps.npm-latest-version.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup plugin dir variable
         id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -26,7 +29,7 @@ jobs:
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
         with:
@@ -52,7 +55,7 @@ jobs:
       GF_DEFAULT_APP_MODE: "development"
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set the name of the plugin-example to be tested
         id: example-name
@@ -60,9 +63,9 @@ jobs:
           echo "PLUGIN_NAME=$(basename ${{ matrix.pluginDir }})" >> $GITHUB_OUTPUT
 
       - name: Setup node version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
 
@@ -87,15 +90,15 @@ jobs:
           echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
-      - uses: actions/setup-go@v4
+      - uses: actions/setup-go@v5
         with:
-          go-version: "~1.20"
+          go-version: "~1.21"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Test plugin backend
-        uses: magefile/mage-action@v2
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v test
@@ -103,7 +106,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v2
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v build:linux
@@ -124,7 +127,7 @@ jobs:
         id: has-integration-tests
         continue-on-error: true
         run: |
-          echo "DIR=$(test -d ./cypress && echo true || echo false)" >> $GITHUB_OUTPUT
+          echo "DIR=$($(test -f ./playwright.config.ts)  && echo "true" || echo "false")" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
       ## If we're creating examples for new features that are only found in canary versions the grafanaDependency
@@ -136,42 +139,60 @@ jobs:
           npm exec --package semver-compare-cli --call 'semver-compare $LATEST_STABLE_VERSION ge $EXPECTED_GRAFANA_VERSION'
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Start Docker container using expected version of grafana
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
+      - name: Check if mockserver is defined
+        id: mockserver-check
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          echo $(docker compose config --services)
+          if docker compose config --services | grep -wq mockserver; then
+            echo "MOCKSERVER_DEFINED=true" >> $GITHUB_OUTPUT
+          else
+            echo "MOCKSERVER_DEFINED=false" >> $GITHUB_OUTPUT
+          fi
         working-directory: ${{ matrix.pluginDir }}
 
-      ## Expected Version Tests
-      ## Runs the plugin tests against the minimum compatible version of Grafana defined in its plugin.json.
-      # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
-      - name: Start Integration tests using expected versions
-        id: expected-version-tests
+      - name: Run mock server
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        run: docker compose up -d mockserver
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Setup playwright browser
+        if: steps.has-integration-tests.outputs.DIR == 'true'
+        run: npx playwright install --with-deps chromium
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Expected version - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nick-fields/retry@v2
+        run: |
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Expected - Wait for Grafana to start
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: "http://localhost:3000/"
+          responseCode: 200
+          timeout: 60000
+          interval: 500
+
+      - name: Expected - Run Playwright tests
+        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
+        id: expected-version-tests
         continue-on-error: true
-        with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_on: error
-          command: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Uploading artifacts for tests with expected versions
-        uses: actions/upload-artifact@v3
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+      - name: Expected - Publish report to GCS
+        if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
+        uses: grafana/plugin-actions/publish-report@main
         with:
-          name: ${{steps.example-name.outputs.PLUGIN_NAME}}-expected-version-tests
-          path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
+          grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
+          path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Failing build due to test failures (expected versions)
+      - name: Expected - Failing build due to test failures
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
 
-      - name: Stop and remove Docker container
+      - name: Expected - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
@@ -180,45 +201,39 @@ jobs:
       # Latest Version Tests
       # Runs the plugin tests against the latest stable version of Grafana.
       # Only run if should-run-expected-latest-tests so we can build examples of new features without failing tests.
-      - name: Install latest version of e2e libraries
+      - name: Latest - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          npm install @grafana/e2e-selectors@latest @grafana/e2e@latest
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Start Docker container using latest version of grafana
+      - name: Latest - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:latest
-        working-directory: ${{ matrix.pluginDir }}
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: "http://localhost:3000/"
+          responseCode: 200
+          timeout: 60000
+          interval: 500
 
-      - name: Start Integration tests using latest version of Grafana
+      - name: Latest - Run Playwright tests
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
-        uses: nick-fields/retry@v2
         continue-on-error: true
-        with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_on: error
-          command: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Uploading artifacts for tests with latest version of Grafana
-        uses: actions/upload-artifact@v3
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
+      - name: Latest - Publish report to GCS
+        if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
+        uses: grafana/plugin-actions/publish-report@main
         with:
-          name: ${{steps.example-name.outputs.PLUGIN_NAME}}-latest-version-tests
-          path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
+          grafana-version: ${{ env.LATEST_STABLE_VERSION }}
+          path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Failing build due to test failures (latest version of Grafana)
+      - name: Latest - Failing build due to test failures (latest version of Grafana)
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: exit 1
 
-      - name: Stop and remove Docker container
+      - name: Latest - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
@@ -227,24 +242,24 @@ jobs:
       ## Canary Version Tests
       ## Runs the plugin tests against the latest build of Grafana main branch.
 
-      - name: Upgrade @grafana packages using canary_version
+      - name: Canary - Upgrade @grafana packages using canary_version
         run: |
-          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
+          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e", "@grafana/plugin-meta-extractor"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
           npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Run frontend tests
+      - name: Canary - Run frontend tests
         run: |
           npm run test:ci
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build plugin with canary_version @grafana dependencies
+      - name: Canary - Build plugin with grafana dependencies
         run: |
           npm run build
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Build plugin backend
-        uses: magefile/mage-action@v2
+      - name: Canary - Build plugin backend
+        uses: magefile/mage-action@v3
         with:
           version: latest
           args: -v build:linux
@@ -252,42 +267,47 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       # Canary versions live at grafana/grafana-dev
-      - name: Start Docker container using canary version of grafana
+      - name: Canary - Start Grafana dev image
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
-          docker run -d -p 3000:3000 --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana-dev:$CANARY_DOCKER_TAG
         working-directory: ${{ matrix.pluginDir }}
 
-      - name: Start Integration tests using canary version of Grafana
-        id: canary-version-tests
+      - name: Canary - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true'
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: "http://localhost:3000/"
+          responseCode: 200
+          timeout: 60000
+          interval: 500
+
+      - name: Canary - Run Playwright tests
+        if: steps.has-integration-tests.outputs.DIR == 'true'
+        id: canary-version-tests
         continue-on-error: true
-        uses: nick-fields/retry@v2
-        with:
-          timeout_minutes: 30
-          max_attempts: 3
-          retry_on: error
-          command: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Uploading artifacts for tests with canary versions
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
-        uses: actions/upload-artifact@v3
+      - name: Canary - Publish report to GCS
+        if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
+        uses: grafana/plugin-actions/publish-report@main
         with:
-          name: ${{steps.example-name.outputs.PLUGIN_NAME}}-canary-version-tests
-          path: |
-            ${{ matrix.pluginDir }}/cypress/screenshots
-            ${{ matrix.pluginDir }}/cypress/videos
-            ${{ matrix.pluginDir }}/cypress/report.json
-          retention-days: 3
+          grafana-version: ${{ env.CANARY_DOCKER_TAG }}
+          path: ${{ matrix.pluginDir }}/playwright-report/
 
-      - name: Failing build due to test failures (canary versions)
+      - name: Canary - Failing build due to test failures (canary versions)
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
         run: exit 1
 
-      - name: Stop and remove Docker container
+      - name: Canary - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
+        working-directory: ${{ matrix.pluginDir }}
+
+      - name: Stop mockserver if running
+        if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
+        run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
 
   notify:
@@ -297,7 +317,7 @@ jobs:
     steps:
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
-        uses: slackapi/slack-github-action@v1.24.0
+        uses: slackapi/slack-github-action@v1.26.0
         if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
@@ -347,6 +367,10 @@ jobs:
                         {
                           "type": "mrkdwn",
                           "text": "*PR Number*: `${{ github.event.pull_request.number || 'Not triggered by a PR' }}`"
+                        },
+                        {
+                          "type": "mrkdwn",
+                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github. run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
                         }
                       ]
                     }

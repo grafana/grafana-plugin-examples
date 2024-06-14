@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { HomePage } from '../../pages/Home';
 import { PageWithTabs } from '../../pages/WithTabs';

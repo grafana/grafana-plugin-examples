@@ -7,11 +7,15 @@ export class BasicDataSource extends DataSourceWithBackend<BasicQuery, BasicData
     super(instanceSettings);
   }
 
-  applyTemplateVariables(query: BasicQuery, scopedVars: ScopedVars): Record<string, any> {
+  applyTemplateVariables(query: BasicQuery, scopedVars: ScopedVars) {
     return {
       ...query,
       rawQuery: getTemplateSrv().replace(query.rawQuery, scopedVars),
     };
+  }
+
+  filterQuery(query: BasicQuery): boolean {
+    return !!query.rawQuery;
   }
 
   getAvailableQueryTypes(): Promise<QueryTypesResponse> {

@@ -4,10 +4,10 @@ import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from 
 import { getBackendSrv, locationService } from '@grafana/runtime';
 import { css } from '@emotion/css';
 import { testIds } from '../testIds';
+import { lastValueFrom } from 'rxjs';
 
 export type JsonData = {
   apiUrl?: string;
-  isApiKeySet?: boolean;
 };
 
 type State = {
@@ -25,11 +25,11 @@ interface Props extends PluginConfigPageProps<AppPluginMeta<JsonData>> {}
 
 export const AppConfig = ({ plugin }: Props) => {
   const s = useStyles2(getStyles);
-  const { enabled, pinned, jsonData } = plugin.meta;
+  const { enabled, pinned, jsonData, secureJsonFields } = plugin.meta;
   const [state, setState] = useState<State>({
     apiUrl: jsonData?.apiUrl || '',
     apiKey: '',
-    isApiKeySet: Boolean(jsonData?.isApiKeySet),
+    isApiKeySet: Boolean(secureJsonFields?.apiKey),
   });
 
   const onResetApiKey = () =>
@@ -136,7 +136,6 @@ export const AppConfig = ({ plugin }: Props) => {
                 pinned,
                 jsonData: {
                   apiUrl: state.apiUrl,
-                  isApiKeySet: true,
                 },
                 // This cannot be queried later by the frontend.
                 // We don't want to override it in case it was set previously and left untouched now.
@@ -182,11 +181,13 @@ const updatePluginAndReload = async (pluginId: string, data: Partial<PluginMeta<
 };
 
 export const updatePlugin = async (pluginId: string, data: Partial<PluginMeta>) => {
-  const response = await getBackendSrv().datasourceRequest({
+  const response = getBackendSrv().fetch({
     url: `/api/plugins/${pluginId}/settings`,
     method: 'POST',
     data,
   });
 
-  return response?.data;
+  const responseData = await lastValueFrom(response);
+
+  return responseData?.data;
 };

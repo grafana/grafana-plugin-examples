@@ -1,14 +1,13 @@
 import {
+  CoreApp,
+  DataFrame,
   DataQueryRequest,
   DataQueryResponse,
   DataSourceApi,
   DataSourceInstanceSettings,
   FieldType,
-  MutableDataFrame,
 } from '@grafana/data';
 import { getBackendSrv, isFetchError } from '@grafana/runtime';
-import _ from 'lodash';
-import defaults from 'lodash/defaults';
 import { DataSourceResponse, defaultQuery, MyDataSourceOptions, MyQuery } from './types';
 import { lastValueFrom } from 'rxjs';
 
@@ -21,54 +20,33 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     this.baseUrl = instanceSettings.url!;
   }
 
+  getDefaultQuery(_: CoreApp): Partial<MyQuery> {
+    return defaultQuery;
+  }
+
+  filterQuery(query: MyQuery): boolean {
+    return !!query.queryText;
+  }
+
   async query(options: DataQueryRequest<MyQuery>): Promise<DataQueryResponse> {
-    const promises = options.targets.map(async (target) => {
-      const query = defaults(target, defaultQuery);
-      const response = await this.request('/api/metrics', `query=${query.queryText}`);
+    const { range } = options;
+    const from = range!.from.valueOf();
+    const to = range!.to.valueOf();
 
-      /**
-       * In this example, the /api/metrics endpoint returns:
-       *
-       * {
-       *   "datapoints": [
-       *     {
-       *       Time: 1234567891011,
-       *       Value: 12.5
-       *     },
-       *     {
-       *     ...
-       *   ]
-       * }
-       */
-      const datapoints = response.data.datapoints;
-      if (datapoints === undefined) {
-        throw new Error('Remote endpoint reponse does not contain "datapoints" property.');
-      }
-
-      const timestamps: number[] = [];
-      const values: number[] = [];
-
-      for (let i = 0; i < datapoints.length; i++) {
-        if (datapoints[i].Time === undefined) {
-          throw new Error(`Data point ${i} does not contain "Time" property`);
-        }
-        if (datapoints[i].Value === undefined) {
-          throw new Error(`Data point ${i} does not contain "Value" property`);
-        }
-        timestamps.push(datapoints[i].Time);
-        values.push(datapoints[i].Value);
-      }
-
-      return new MutableDataFrame({
-        refId: query.refId,
+    // Return a constant for each query.
+    const data = options.targets.map((target) => {
+      const df: DataFrame = {
+        length: 2,
+        refId: target.refId,
         fields: [
-          { name: 'Time', type: FieldType.time, values: timestamps },
-          { name: 'Value', type: FieldType.number, values: values },
+          { name: 'Time', values: [from, to], type: FieldType.time, config: {} },
+          { name: 'Value', values: [target.constant, target.constant], type: FieldType.number, config: {} },
         ],
-      });
+      };
+      return df;
     });
 
-    return Promise.all(promises).then((data) => ({ data }));
+    return { data };
   }
 
   async request(url: string, params?: string) {
@@ -85,7 +63,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
     const defaultErrorMessage = 'Cannot connect to API';
 
     try {
-      const response = await this.request('/healthz');
+      const response = await this.request('/health');
       if (response.status === 200) {
         return {
           status: 'success',
@@ -98,14 +76,11 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
         };
       }
     } catch (err) {
-      let message = '';
-      if (_.isString(err)) {
+      let message = defaultErrorMessage;
+      if (typeof err === 'string') {
         message = err;
       } else if (isFetchError(err)) {
-        message = 'Fetch error: ' + (err.statusText ? err.statusText : defaultErrorMessage);
-        if (err.data && err.data.error && err.data.error.code) {
-          message += ': ' + err.data.error.code + '. ' + err.data.error.message;
-        }
+        message = `Fetch error: ${err.data.error?.message ?? err.statusText}`;
       }
       return {
         status: 'error',

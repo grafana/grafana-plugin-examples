@@ -62,6 +62,11 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
   })
   .setPanelOptions((builder) => {
     return builder
+      .addBooleanSwitch({
+        path: 'showSeriesCount',
+        name: 'Show series counter',
+        defaultValue: false,
+      })
       .addRadio({
         path: 'legend.displayMode',
         name: 'Legend mode',

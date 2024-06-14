@@ -39,6 +39,7 @@ export function QueryEditor(props: EditorProps): ReactElement {
       <InlineFieldRow>
         <InlineField label="Query type" grow>
           <Select
+            inputId="editor-query-type"
             options={queryTypes}
             onChange={onChangeQueryType}
             isLoading={loading}

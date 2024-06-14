@@ -10,19 +10,19 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
 ## Getting started
 1. Install dependencies
 ```BASH
-yarn install
+npm install
 ```
 2. Build plugin in development mode or run in watch mode
 ```BASH
-yarn dev
+npm run dev
 ```
 or
 ```BASH
-yarn watch
+npm run watch
 ```
 3. Build plugin in production mode
 ```BASH
-yarn build
+npm run build
 ```
 
 ## Learn more
