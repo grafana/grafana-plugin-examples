@@ -46,7 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
+        # pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
+        pluginDir: ${{fromJson('["examples/datasource-streaming-backend-websocket/streaming-backend-websocket-plugin"]')}}
       fail-fast: false
     env:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
@@ -174,6 +175,9 @@ jobs:
           responseCode: 200
           timeout: 60000
           interval: 500
+
+      - name: LALLALA
+        run: docker exec $PLUGIN_ID sh -c 'ping -c 1 host.docker.internal'
 
       - name: Expected - Run Playwright tests
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'

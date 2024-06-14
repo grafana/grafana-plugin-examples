@@ -13,6 +13,8 @@ services:
     volumes:
       - ./dist:/var/lib/grafana/plugins/example-websocket-datasource
       - ./provisioning:/etc/grafana/provisioning
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
   mockserver:
     container_name: 'mockserver-streamingbackend-datasource'
     build:
