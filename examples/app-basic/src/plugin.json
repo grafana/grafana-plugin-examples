@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Basic App",
   "id": "myorg-basic-app",
@@ -48,14 +48,6 @@
     },
     {
       "type": "page",
-      "name": "Page Four",
-      "path": "/a/%PLUGIN_ID%/four",
-      "role": "Admin",
-      "addToNav": true,
-      "defaultNav": false
-    },
-    {
-      "type": "page",
       "icon": "cog",
       "name": "Configuration",
       "path": "/plugins/%PLUGIN_ID%",
@@ -64,7 +56,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.0.3",
+    "grafanaDependency": ">=10.3.3",
     "plugins": []
   }
 }

@@ -1,13 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "A App",
   "id": "myorg-a-app",
   "preload": true,
   "info": {
-    "keywords": [
-      "app"
-    ],
+    "keywords": ["app"],
     "description": "Will extend root app with ui extensions",
     "author": {
       "name": "Myorg"
@@ -31,7 +29,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.0.3",
+    "grafanaDependency": ">=10.3.3",
     "plugins": []
   }
 }

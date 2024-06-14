@@ -4,11 +4,9 @@ import { css } from '@emotion/css';
 import { Button, Field, Input, useStyles2, FieldSet, SecretInput } from '@grafana/ui';
 import { PluginConfigPageProps, AppPluginMeta, PluginMeta, GrafanaTheme2 } from '@grafana/data';
 import { getBackendSrv } from '@grafana/runtime';
-import { testIds } from '../testIds';
 
 export type JsonData = {
   apiUrl?: string;
-  isApiKeySet?: boolean;
 };
 
 type State = {
@@ -26,11 +24,11 @@ interface Props extends PluginConfigPageProps<AppPluginMeta<JsonData>> {}
 
 export const AppConfig = ({ plugin }: Props) => {
   const s = useStyles2(getStyles);
-  const { enabled, pinned, jsonData } = plugin.meta;
+  const { enabled, pinned, jsonData, secureJsonFields } = plugin.meta;
   const [state, setState] = useState<State>({
     apiUrl: jsonData?.apiUrl || '',
     apiKey: '',
-    isApiKeySet: Boolean(jsonData?.isApiKeySet),
+    isApiKeySet: Boolean(secureJsonFields?.apiKey),
   });
 
   const onResetApiKey = () =>
@@ -55,7 +53,7 @@ export const AppConfig = ({ plugin }: Props) => {
   };
 
   return (
-    <div data-testid={testIds.appConfig.container}>
+    <div>
       {/* ENABLE / DISABLE PLUGIN */}
       <FieldSet label="Enable / Disable">
         {!enabled && (
@@ -104,7 +102,6 @@ export const AppConfig = ({ plugin }: Props) => {
         <Field label="API Key" description="A secret key for authenticating to our custom API">
           <SecretInput
             width={60}
-            data-testid={testIds.appConfig.apiKey}
             id="api-key"
             value={state.apiKey}
             isConfigured={state.isApiKeySet}
@@ -119,7 +116,6 @@ export const AppConfig = ({ plugin }: Props) => {
           <Input
             width={60}
             id="api-url"
-            data-testid={testIds.appConfig.apiUrl}
             label={`API Url`}
             value={state.apiUrl}
             placeholder={`E.g.: http://mywebsite.com/api/v1`}
@@ -130,14 +126,12 @@ export const AppConfig = ({ plugin }: Props) => {
         <div className={s.marginTop}>
           <Button
             type="submit"
-            data-testid={testIds.appConfig.submit}
             onClick={() =>
               updatePluginAndReload(plugin.meta.id, {
                 enabled,
                 pinned,
                 jsonData: {
                   apiUrl: state.apiUrl,
-                  isApiKeySet: true,
                 },
                 // This cannot be queried later by the frontend.
                 // We don't want to override it in case it was set previously and left untouched now.

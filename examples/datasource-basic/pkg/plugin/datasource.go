@@ -29,7 +29,7 @@ type Datasource struct {
 }
 
 // NewDatasource creates a new datasource instance.
-func NewDatasource(dis backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
+func NewDatasource(_ context.Context, dis backend.DataSourceInstanceSettings) (instancemgmt.Instance, error) {
 	settings, err := models.LoadPluginSettings(dis)
 	if err != nil {
 		return nil, err
@@ -74,18 +74,24 @@ func (ds *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReque
 // The main use case for these health checks is the test button on the
 // datasource configuration page which allows users to verify that
 // a datasource is working as expected.
-func (ds *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
-	var status = backend.HealthStatusOk
-	var message = "Data source is working"
+func (d *Datasource) CheckHealth(_ context.Context, req *backend.CheckHealthRequest) (*backend.CheckHealthResult, error) {
+	res := &backend.CheckHealthResult{}
+	config, err := models.LoadPluginSettings(*req.PluginContext.DataSourceInstanceSettings)
 
-	// just to showcase how to return an error.
-	if false {
-		status = backend.HealthStatusError
-		message = "randomized error just to showcase how to report errors"
+	if err != nil {
+		res.Status = backend.HealthStatusError
+		res.Message = "Unable to load settings"
+		return res, nil
+	}
+
+	if config.Secrets.ApiKey == "" {
+		res.Status = backend.HealthStatusError
+		res.Message = "API key is missing"
+		return res, nil
 	}
 
 	return &backend.CheckHealthResult{
-		Status:  status,
-		Message: message,
+		Status:  backend.HealthStatusOk,
+		Message: "Data source is working",
 	}, nil
 }

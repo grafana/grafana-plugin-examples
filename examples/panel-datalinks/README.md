@@ -1,6 +1,6 @@
-# Grafana Panel Plugin Template
+# Grafana Panel Plugin with Datalinks example
 
-This template is a starting point for building a panel plugin for Grafana.
+This template is a starting point for building a panel plugin with data links for Grafana.
 
 ## What are Grafana panel plugins?
 
@@ -8,66 +8,62 @@ Panel plugins allow you to add new types of visualizations to your dashboard, su
 
 Use panel plugins when you want to do things like visualize data returned by data source queries, navigate between dashboards, or control external systems (such as smart home devices).
 
-## Getting started
+## Get started
 
 ### Frontend
 
-1. Install dependencies
+1. Install dependencies:
 
    ```bash
-   yarn install
+   npm install
    ```
 
-2. Build plugin in development mode or run in watch mode
+2. Build plugin in development mode or run in watch mode:
 
    ```bash
-   yarn dev
-
-   # or
-
-   yarn watch
+   npm run dev
    ```
 
-3. Build plugin in production mode
+3. Build plugin in production mode:
 
    ```bash
-   yarn build
+   npm run build
    ```
 
-4. Run the tests (using Jest)
+4. Run the tests (using Jest):
 
    ```bash
    # Runs the tests and watches for changes
-   yarn test
+   npm run test
 
    # Exists after running all the tests
-   yarn lint:ci
+   npm run lint:ci
    ```
 
-5. Spin up a Grafana instance and run the plugin inside it (using Docker)
+5. Spin up a Grafana instance and run the plugin inside it (using Docker):
 
    ```bash
-   yarn server
+   npm run server
    ```
 
-6. Run the E2E tests (using Cypress)
+6. Run the E2E tests:
 
    ```bash
    # Spin up a Grafana instance first that we tests against
-   yarn server
+   npm run server
 
    # Start the tests
-   yarn e2e
+   npm run e2e
    ```
 
-7. Run the linter
+7. Run the linter:
 
    ```bash
-   yarn lint
+   npm run lint
 
    # or
 
-   yarn lint:fix
+   npm run lint:fix
    ```
 
 ## Learn more
@@ -75,5 +71,5 @@ Use panel plugins when you want to do things like visualize data returned by dat
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Basic panel plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/panel-basic#readme)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin/)

@@ -1,8 +1,8 @@
 export const testIds = {
   modal: {
-    container: 'data-testid ape-modal-body',
+    container: 'ape-modal-body',
   },
   mainPage: {
-    container: 'data-testid ape-main-page-container',
+    container: 'ape-main-page-container',
   },
 };

@@ -9,6 +9,7 @@ export interface BasicQuery extends DataQuery {
  */
 export interface BasicDataSourceOptions extends DataSourceJsonData {
   defaultTimeField?: string;
+  path?: string;
 }
 
 /**

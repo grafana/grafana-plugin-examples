@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppPlugin } from '@grafana/data';
 import { App } from './components/App';
+import { testIds } from 'components/testIds';
 
 export const plugin = new AppPlugin<{}>().setRootPage(App).configureExtensionLink({
   title: 'Open from B',
@@ -9,7 +10,7 @@ export const plugin = new AppPlugin<{}>().setRootPage(App).configureExtensionLin
   onClick: (_, { openModal }) => {
     openModal({
       title: 'Modal from app B',
-      body: () => <div data-testid="data-testid b-app-modal">From plugin B</div>,
+      body: () => <div data-testid={testIds.appB.modal}>From plugin B</div>,
     });
   },
 });

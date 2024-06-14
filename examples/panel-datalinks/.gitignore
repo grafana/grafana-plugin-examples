@@ -24,9 +24,11 @@ dist/
 artifacts/
 work/
 ci/
-e2e-results/
-**/cypress/videos
-**/cypress/report.json 
+/playwright/.auth/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/test-results/
 
 # Editor
 .idea

@@ -1,8 +1,12 @@
-# Grafana Panel Plugin Template
+# Grafana Basic Panel Plugin example
 
-This is an example on how to build a basic panel plugin.
+This example provides a template for how to build a basic panel plugin. The definition for the panel is provided in `/src/components/SimplePanel/SimplePanel.tsx`.
 
-## What is Grafana Panel Plugin?
+The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization.
+
+Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
+
+## What is a Grafana panel plugin?
 
 Panel plugins allow you to add new types of visualizations to your dashboard, such as maps, clocks, pie charts, lists, and more.
 
@@ -10,37 +14,37 @@ Use panel plugins when you want to do things like visualize data returned by dat
 
 ## Getting started
 
-1. Install dependencies
+1. Install dependencies:
 
    ```bash
-   yarn install
+   npm install
    ```
 
-2. Build plugin in development mode and run inside Grafana using Docker
+2. Build the plugin in development mode and run inside Grafana using Docker:
 
    ```bash
    # Start watching for changes
-   yarn dev
+   npm run dev
 
-   # Run Grafana inside a docker container in a separate session
+   # Run Grafana inside a Docker container in a separate session
    docker-compose up
    ```
 
-3. Build plugin in production mode
+3. Build plugin in production mode:
 
    ```bash
-   yarn build
+   npm run build
    ```
 
-4. Run e2e tests
+4. Run e2e tests:
 
    ```bash
-   yarn e2e
+   npm run e2e
    ```
 
 ## Learn more
 
+- [Grafana developer portal](https://grafana.com/developers)
 - [Build a panel plugin tutorial](https://grafana.com/tutorials/build-a-panel-plugin/)
 - [Grafana documentation](https://grafana.com/docs/)
-- [Grafana Tutorials](https://grafana.com/tutorials/) - Grafana Tutorials are step-by-step guides that help you make the most of Grafana
-- [Grafana UI Library](https://developers.grafana.com/ui) - UI components to help you build interfaces using Grafana Design System
+- [Grafana tutorials](https://grafana.com/tutorials/)

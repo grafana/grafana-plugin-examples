@@ -1,4 +1,4 @@
-# Datasource Streaming Backend example
+# Grafana Data Source Streaming Backend Plugin example
 
 This is an example of how to implement a Grafana data source plugin with streaming backend support.
 
@@ -12,10 +12,10 @@ Build the data source plugin
 cd streaming-backend-websocket-plugin
 mage -v
 npm install
-npm build
+npm run build
   ```
 
-and run the grafana and the example websocket server with docker compose:
+and run the Grafana and the example websocket server with Docker compose:
 
 ```sh
 cd streaming-backend-websocket-plugin
@@ -24,7 +24,7 @@ npm run server
 
 The server can be accessed by the Grafana backend in `ws://websocket-server:8080`.
 
-Check the [`docker-compose.yaml`](./streaming-backend-websocket-plugin/docker-compose.yaml) for more details.
+Refer to the [`docker-compose.yaml`](./streaming-backend-websocket-plugin/docker-compose.yaml) for more details.
 
 The example server sends random numbers controlled by a query parameter.
 

@@ -1,71 +1,67 @@
-# Grafana App Plugin Template
+# Grafana App with Dashboards Plugin example
 
-This template is a starting point for building an app plugin for Grafana.
+This template is a starting point for building an app plugin for Grafana. It includes a dashboard.
 
 ## What are Grafana app plugins?
 
-App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datasources and panel plugins.
+App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested datas ources, and panel plugins.
 
-## Getting started
+## Get started
 
 ### Frontend
 
 1. Install dependencies
 
    ```bash
-   yarn install
+   npm install
    ```
 
 2. Build plugin in development mode or run in watch mode
 
    ```bash
-   yarn dev
-
-   # or
-
-   yarn watch
+   npm run dev
    ```
 
 3. Build plugin in production mode
 
    ```bash
-   yarn build
+   npm run build
    ```
 
 4. Run the tests (using Jest)
 
    ```bash
    # Runs the tests and watches for changes
-   yarn test
+   npm run test
 
    # Exists after running all the tests
-   yarn lint:ci
+   npm run lint:ci
    ```
 
 5. Spin up a Grafana instance and run the plugin inside it (using Docker)
 
    ```bash
-   yarn server
+   npm run server
    ```
 
-6. Run the E2E tests (using Cypress)
+6. Run the E2E tests (using Playwright)
 
    ```bash
    # Spin up a Grafana instance first that we tests against
-   yarn server
+   npm run server
 
    # Start the tests
-   yarn e2e
+   npm run e2e
    ```
 
 7. Run the linter
 
    ```bash
-   yarn lint
+   npm run lint
 
    # or
 
-   yarn lint:fix
+   npm run lint:fix
    ```
 
 ## Learn more
@@ -73,5 +69,5 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
-- [Plugin.json documentation](https://grafana.com/docs/grafana/latest/developers/plugins/metadata/)
-- [How to sign a plugin?](https://grafana.com/docs/grafana/latest/developers/plugins/sign-a-plugin/)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
