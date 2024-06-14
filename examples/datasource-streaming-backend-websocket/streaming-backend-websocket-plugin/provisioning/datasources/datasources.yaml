@@ -8,3 +8,5 @@ datasources:
     version: 1
     editable: true
     uid: example-websocket-ds
+    jsonData:
+      uri: ws://websocket-server:8080
