@@ -19,7 +19,7 @@ and run the Grafana and the example websocket server with Docker compose:
 
 ```sh
 cd streaming-backend-websocket-plugin
-docker compose up -d # or docker-compse up -d for old docker versions
+npm run server
 ```
 
 The server can be accessed by the Grafana backend in `ws://websocket-server:8080`.
