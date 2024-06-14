@@ -1,5 +1,5 @@
 {
-  "name": "example-websocket-datasource",
+  "name": "example-websocket-backend-datasource",
   "version": "1.0.0",
   "description": "Example of a streaming backend plugin",
   "scripts": {

@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'example-websocket-datasource'
+    container_name: 'example-websocket-backend-datasource'
     build:
       context: ./.config
       args:

@@ -8,7 +8,6 @@ datasources:
     orgId: 1
     version: 1
     editable: true
-    url: 'ws://host.docker.internal:8080'
     jsonData:
       path: '/resources'
       defaultTimeField: 

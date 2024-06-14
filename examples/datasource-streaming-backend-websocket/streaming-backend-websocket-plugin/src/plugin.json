@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "Streaming Backend Example",
-  "id": "example-websocket-datasource",
+  "id": "example-websocket-backend-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_streaming_backend_example",

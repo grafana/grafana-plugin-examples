@@ -6,5 +6,6 @@ test('table query should show streaming data', async ({ panelEditPage, readProvi
   await panelEditPage.setVisualization('Table');
   await panelEditPage.getQueryEditorRow('A').getByTestId('lower-limit').fill('1');
   await panelEditPage.getQueryEditorRow('A').getByTestId('upper-limit').fill('10');
+  await expect(panelEditPage.refreshPanel()).toBeOK();
   await expect(panelEditPage.panel.fieldNames).toContainText(['time', 'value']);
 });
