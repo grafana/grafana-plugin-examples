@@ -11,15 +11,15 @@ Build the data source plugin
   ```sh
 cd streaming-backend-websocket-plugin
 mage -v
-yarn install
-yarn build
+npm install
+npm build
   ```
 
 and run the grafana and the example websocket server with docker compose:
 
 ```sh
 cd streaming-backend-websocket-plugin
-docker compose up -d # or docker-compse up -d for old docker versions
+npm run server
 ```
 
 The server can be accessed by the Grafana backend in `ws://websocket-server:8080`.

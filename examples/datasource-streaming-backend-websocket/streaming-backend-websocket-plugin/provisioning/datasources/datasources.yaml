@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Streaming Backend Example
+    type: example-websocket-datasource    
+    isDefault: true
+    orgId: 1
+    version: 1
+    editable: true
+    uid: example-websocket-ds
