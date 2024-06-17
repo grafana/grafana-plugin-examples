@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
@@ -171,16 +172,16 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 	if err != nil {
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
-	// if len(query.JSON) > 0 {
-	// 	input := &apiQuery{}
-	// 	err = json.Unmarshal(query.JSON, input)
-	// 	if err != nil {
-	// 		return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
-	// 	}
-	// 	q := req.URL.Query()
-	// 	q.Add("multiplier", strconv.Itoa(input.Multiplier))
-	// 	req.URL.RawQuery = q.Encode()
-	// }
+	if len(query.JSON) > 0 {
+		input := &apiQuery{}
+		err = json.Unmarshal(query.JSON, input)
+		if err != nil {
+			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+		}
+		q := req.URL.Query()
+		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		req.URL.RawQuery = q.Encode()
+	}
 	httpResp, err := d.httpClient.Do(req)
 	switch {
 	case err == nil:
