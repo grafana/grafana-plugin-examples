@@ -1,11 +1,6 @@
 import { test, expect } from '@grafana/plugin-e2e';
 
-test('table query should show streaming data', async ({ panelEditPage, readProvisionedDataSource }) => {
-  const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
-  await panelEditPage.datasource.set(ds.name);
-  await panelEditPage.setVisualization('Table');
-  await panelEditPage.getQueryEditorRow('A').getByTestId('lower-limit').fill('1');
-  await panelEditPage.getQueryEditorRow('A').getByTestId('upper-limit').fill('10');
-  await expect(panelEditPage.refreshPanel()).toBeOK();
-  await expect(panelEditPage.panel.fieldNames).toContainText(['time', 'value']);
-});
+// This test suite is for the QueryEditor component
+// This test will be skipped because the plugin-e2e doesn't
+// have support for testing a stream.
+// refreshPanel won't work as it only work on http
