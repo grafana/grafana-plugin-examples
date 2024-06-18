@@ -1,0 +1,104 @@
+[
+  {
+    "name": "app-basic",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-basic",
+    "path": "examples/app-basic",
+    "description": "Shows how to build a basic app plugin that uses custom routing"
+  },
+  {
+    "name": "app-with-backend",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-backend",
+    "path": "examples/app-with-backend",
+    "description": "Shows how to build an app plugin with its own backend"
+  },
+  {
+    "name": "app-with-dashboards",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-dashboards",
+    "path": "examples/app-with-dashboards",
+    "description": "Shows how to include pre-built dashboards in an app plugin"
+  },
+  {
+    "name": "app-with-extension-point",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-extension-point",
+    "path": "examples/app-with-extension-point",
+    "description": "Shows how to add a plugin extension point that can be extended by other plugins."
+  },
+  {
+    "name": "app-with-extensions",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-extensions",
+    "path": "examples/app-with-extensions",
+    "description": "Shows how to build an app plugin that extends the Grafana core UI"
+  },
+  {
+    "name": "app-with-rbac",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-rbac",
+    "path": "examples/app-with-rbac",
+    "description": "A basic app plugin with role-based access control (RBAC)."
+  },
+  {
+    "name": "app-with-scenes",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-scenes",
+    "path": "examples/app-with-scenes",
+    "description": "Shows how to build a basic app with @grafana/scenes"
+  },
+  {
+    "name": "app-with-service-account",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/app-with-service-account",
+    "path": "examples/app-with-service-account",
+    "description": "Shows how an app can request a service account to query the Grafana API."
+  },
+  {
+    "name": "datasource-basic",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-basic",
+    "path": "examples/datasource-basic",
+    "description": "Shows how to build a basic data source plugin."
+  },
+  {
+    "name": "datasource-http-backend",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-http-backend",
+    "path": "examples/datasource-http-backend",
+    "description": "Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting."
+  },
+  {
+    "name": "datasource-http",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-http",
+    "path": "examples/datasource-http",
+    "description": "Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend."
+  },
+  {
+    "name": "datasource-logs",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-logs",
+    "path": "examples/datasource-logs",
+    "description": "Shows how to support logging in a data source plugin."
+  },
+  {
+    "name": "datasource-streaming-backend-websocket",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-streaming-backend-websocket",
+    "path": "examples/datasource-streaming-backend-websocket",
+    "description": "Shows how to create an event-based data source plugin using backend streams."
+  },
+  {
+    "name": "datasource-streaming-websocket",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/datasource-streaming-websocket",
+    "path": "examples/datasource-streaming-websocket",
+    "description": "Shows how to create an event-based data source plugin using RxJS and WebSockets."
+  },
+  {
+    "name": "panel-basic",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/panel-basic",
+    "path": "examples/panel-basic",
+    "description": "Shows how to build a panel plugin that uses the time series graph to read and update time range."
+  },
+  {
+    "name": "panel-datalinks",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/panel-datalinks",
+    "path": "examples/panel-datalinks",
+    "description": "Shows how to build a panel plugin that uses the datalinks functionality of Grafana."
+  },
+  {
+    "name": "panel-frame-select",
+    "url": "https://github.com/grafana/grafana-plugin-examples/tree/main/examples/panel-frame-select",
+    "path": "examples/panel-frame-select",
+    "description": "Shows how to update panel options with values from a data query response."
+  }
+]
