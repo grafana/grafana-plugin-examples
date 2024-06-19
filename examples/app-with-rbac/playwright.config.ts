@@ -31,37 +31,46 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
-
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'auth',
+      name: 'adminUserAuthenticates',
       testDir: pluginE2eAuth,
       testMatch: [/.*\.js/],
     },
     {
-      name: 'run-tests',
+      name: 'run-tests-for-admin',
+      testDir: './tests/admin',
       use: {
         ...devices['Desktop Chrome'],
+        // @grafana/plugin-e2e writes the auth state to this file,
+        // the path should not be modified
         storageState: 'playwright/.auth/admin.json',
       },
-      dependencies: ['auth'],
+      dependencies: ['adminUserAuthenticates'],
     },
-    // {
-    //   name: 'createAdminUserAndAuthenticate',
-    //   testDir: pluginE2eAuth,
-    //   testMatch: [/.*\.js/],
-    // },
-    // {
-    //   name: 'run-tests-for-admin',
-    //   testDir: './tests',
-    //   use: {
-    //     ...devices['Desktop Chrome'],
-    //     // @grafana/plugin-e2e writes the auth state to this file,
-    //     // the path should not be modified
-    //     storageState: 'playwright/.auth/admin.json',
-    //   },
-    //   dependencies: ['createAdminUserAndAuthenticate'],
-    // },
+    {
+      name: 'createViewerUserAndAuthenticate',
+      testDir: pluginE2eAuth,
+      testMatch: [/.*\.js/],
+      use: {
+        user: {
+          user: 'viewer',
+          password: 'password',
+          role: 'Viewer',
+        },
+      },
+    },
+    {
+      name: 'run-tests-for-viewer',
+      testDir: './tests/viewer',
+      use: {
+        ...devices['Desktop Chrome'],
+        // @grafana/plugin-e2e writes the auth state to this file,
+        // the path should not be modified
+        storageState: 'playwright/.auth/viewer.json',
+      },
+      dependencies: ['createViewerUserAndAuthenticate'],
+    },
   ],
 });
