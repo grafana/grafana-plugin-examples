@@ -18,10 +18,21 @@ export function QueryEditor({ query, onChange }: Props) {
   return (
     <Stack gap={0}>
       <InlineField label="Query" labelWidth={20} tooltip="Query text">
-        <Input onChange={onQueryTextChange} value={query.queryText || ''} width={70} />
+        <Input
+          data-testid="query-editor-query-text"
+          onChange={onQueryTextChange}
+          value={query.queryText || ''}
+          width={70}
+        />
       </InlineField>
       <InlineField label="Log limit" labelWidth={20} tooltip="Log limit">
-        <Input onChange={onQueryLimitChange} value={query.limit || 100} width={20} type="number" />
+        <Input
+          data-testid="query-editor-log-limit"
+          onChange={onQueryLimitChange}
+          value={query.limit || 100}
+          width={20}
+          type="number"
+        />
       </InlineField>
     </Stack>
   );
