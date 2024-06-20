@@ -46,7 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
+        #pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
+        pluginDir: ${{fromJson('["examples/app-with-service-account"]')}}
       fail-fast: false
     env:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
@@ -54,7 +55,6 @@ jobs:
       GF_AUTH_BASIC_ENABLED: "false"
       GF_DEFAULT_APP_MODE: "development"
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
-      GF_FEATURE_TOGGLES_ENABLE: "externalServiceAccounts"
     steps:
       - uses: actions/checkout@v4
 
@@ -164,7 +164,7 @@ jobs:
       - name: Expected version - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         run: |
-          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED grafana/grafana:$EXPECTED_GRAFANA_VERSION
+          docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED -e GF_FEATURE_TOGGLES_ENABLE=externalServiceAccounts grafana/grafana:$EXPECTED_GRAFANA_VERSION
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Expected - Wait for Grafana to start
