@@ -44,6 +44,14 @@
     },
     {
       "type": "page",
+      "name": "Page with LLM integration",
+      "path": "/a/%PLUGIN_ID%/page-with-llm",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
       "name": "Hello world",
       "path": "/a/%PLUGIN_ID%/hello-world",
       "role": "Admin",

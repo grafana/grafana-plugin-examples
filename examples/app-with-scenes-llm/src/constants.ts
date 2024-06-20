@@ -6,6 +6,7 @@ export enum ROUTES {
   Home = 'home',
   WithTabs = 'page-with-tabs',
   WithDrilldown = 'page-with-drilldown',
+  WithLLM = 'page-with-llm',
   HelloWorld = 'hello-world',
 }
 

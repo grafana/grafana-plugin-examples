@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'app-with-scenes'
+    container_name: 'app-with-scenes-llm'
     build:
       context: ./.config
       args:
@@ -11,6 +11,6 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/app-with-scenes
+      - ./dist:/var/lib/grafana/plugins/app-with-scenes-llm
       - ./provisioning:/etc/grafana/provisioning
       - ./provisioning/custom.ini:/etc/grafana/grafana.ini
