@@ -4,7 +4,7 @@ import { useAsync } from 'react-use';
 import { llms } from '@grafana/experimental';
 import { Button, Input, Spinner } from '@grafana/ui';
 import { SceneComponentProps, SceneObjectBase, SceneObjectState, SceneTimeRangeCompare, sceneGraph } from '@grafana/scenes';
-import { CustomSceneObject } from 'pages/Home/CustomSceneObject';
+import { CustomSceneObject } from 'pages/WithLLM/components/CustomSceneObject';
 
 interface CustomObjectState extends SceneObjectState {
     llmResponse: string;

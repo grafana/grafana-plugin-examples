@@ -1,6 +1,6 @@
 import { CustomVariable, EmbeddedScene, PanelBuilders, SceneControlsSpacer, SceneFlexItem, SceneFlexLayout, SceneQueryRunner, SceneReactObject, SceneRefreshPicker, SceneTimePicker, SceneTimeRange, SceneTimeRangeCompare, SceneVariableSet } from "@grafana/scenes"
 import { BasicLLMIntegration } from "./components/BasicLLMIntegration"
-import { CustomSceneObject } from "pages/Home/CustomSceneObject";
+import { CustomSceneObject } from "pages/WithLLM/components/CustomSceneObject";
 import { DATASOURCE_REF } from "../../constants";
 import { AdvancedLLMIntegration } from "./components/AdvancedLLMIntegration";
 
