@@ -70,7 +70,7 @@ const getDrilldownsAppScene = () => {
 
               return new SceneAppPage({
                 url: prefixRoute(`${ROUTES.WithDrilldown}`) + `/room/${roomName}/temperature`,
-                title: `${roomName} overview`,
+                title: `${decodeURI(roomName)} overview`,
                 subTitle: 'This scene is a particular room drilldown. It implements two tabs to organise the data.',
                 getParentPage: () => parent,
                 getScene: () => {
