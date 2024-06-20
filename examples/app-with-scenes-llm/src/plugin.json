@@ -1,0 +1,58 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "app",
+  "name": "Scenes App Example",
+  "id": "myorg-scenes-app",
+  "info": {
+    "keywords": ["basic", "app", "example"],
+    "description": "A basic grafana app plugin",
+    "author": {
+      "name": "Your name"
+    },
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Home",
+      "path": "/a/%PLUGIN_ID%/home",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Page with tabs",
+      "path": "/a/%PLUGIN_ID%/page-with-tabs",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Page with drilldown",
+      "path": "/a/%PLUGIN_ID%/page-with-drilldown",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Hello world",
+      "path": "/a/%PLUGIN_ID%/hello-world",
+      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": false
+    }
+  ],
+  "dependencies": {
+    "grafanaDependency": ">=10.3.3",
+    "plugins": []
+  }
+}
