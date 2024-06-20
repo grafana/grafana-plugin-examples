@@ -54,6 +54,7 @@ jobs:
       GF_AUTH_BASIC_ENABLED: "false"
       GF_DEFAULT_APP_MODE: "development"
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
+      GF_FEATURE_TOGGLES_ENABLE: "externalServiceAccounts"
     steps:
       - uses: actions/checkout@v4
 
