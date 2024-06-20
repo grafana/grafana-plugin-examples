@@ -46,8 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
-        pluginDir: ${{fromJson('["examples/app-with-service-account"]')}}
+        pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     env:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
@@ -123,7 +122,6 @@ jobs:
           echo "CANARY_DOCKER_TAG=${{ needs.setup-matrix.outputs.canaryDockerTag }}" >> $GITHUB_ENV
           echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
           if [ -f "${PWD}/.env" ]; then
-            echo "POPOPOPOPOPO"
             echo "ENV_FILE_OPTION=--env-file ${PWD}/.env" >> $GITHUB_ENV
           fi
         working-directory: ${{ matrix.pluginDir }}
