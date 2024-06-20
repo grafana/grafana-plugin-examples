@@ -54,7 +54,7 @@ export const getAdvancedLLMIntegrationScene = () => {
 })}
 
 const advancedLLMIntegration = (sceneTimeRangeCompare: SceneTimeRangeCompare) => {
-    const customObject = new CustomSceneObject({ counter: 5, isOnCanvas: false });
+    const customObject = new CustomSceneObject({ counter: 5 });
 
   // Query runner definition, using Grafana built-in TestData datasource
   const queryRunner = new SceneQueryRunner({
