@@ -2,11 +2,11 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { HomePage } from '../../pages/Home';
 import { PageWithTabs } from '../../pages/WithTabs';
-import { WithLLM } from '../../pages/WithLLM';
 import { WithDrilldown } from '../../pages/WithDrilldown';
 import { prefixRoute } from '../../utils/utils.routing';
 import { ROUTES } from '../../constants';
 import { HelloWorldPluginPage } from '../../pages/HelloWorld';
+import { WithLLM } from 'pages/WithLLM';
 
 export const Routes = () => {
   return (
