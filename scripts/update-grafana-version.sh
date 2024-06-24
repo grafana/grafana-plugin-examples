@@ -2,31 +2,31 @@
 #
 GRAFANA_VERSION_TARGET=${1:-10.3.3}
 
-dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
-#dirs=('examples/panel-plotly' 'examples/panel-scatterplot' 'examples/panel-visx')
-for plugin in $dirs; do
-    if [ -d "$plugin" ]; then  # Check if it is indeed a directory
-        echo "Processing plugin folder: $plugin"
-        # Run the npx command in the plugin directory
-        (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install && rm -rf node_modules)
-    fi
-done
+# dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
+# #dirs=('examples/panel-plotly' 'examples/panel-scatterplot' 'examples/panel-visx')
+# for plugin in $dirs; do
+#     if [ -d "$plugin" ]; then  # Check if it is indeed a directory
+#         echo "Processing plugin folder: $plugin"
+#         # Run the npx command in the plugin directory
+#         (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install && rm -rf node_modules)
+#     fi
+# done
 
 ###############################################
 # Upgrade plugin.json files
 ###############################################
 get_newer_version () { printf "%s\n" "$@" | sort --version-sort | tail -1 ; }
 
-plugin_files=$(find examples -type f -name 'plugin.json' -not -path '*/node_modules/*')
-# Iterate over each plugin.json file
-for file in $plugin_files; do
-    # Get the current value of dependencies.grafanaDependency using jq
-    current_dependency=$(jq -r '.dependencies.grafanaDependency' "$file")
-    target_version=$(get_newer_version "$(echo $current_dependency | sed -n 's|[=<>~!]*\([0-9]*.[0-9]*.[0-9]*\)|\1|p')" "$GRAFANA_VERSION_TARGET")
-    # Modify the property to >$GRAFANA_VERSION_TARGET using jq and update the file
-    modified_dependency=$(echo "$current_dependency" | jq -n --arg target ">=$target_version" '$target')
-    jq --argjson modified "$modified_dependency" '.dependencies.grafanaDependency = $modified' "$file" >"$file.tmp" && mv "$file.tmp" "$file"
-done
+# plugin_files=$(find examples -type f -name 'plugin.json' -not -path '*/node_modules/*')
+# # Iterate over each plugin.json file
+# for file in $plugin_files; do
+#     # Get the current value of dependencies.grafanaDependency using jq
+#     current_dependency=$(jq -r '.dependencies.grafanaDependency' "$file")
+#     target_version=$(get_newer_version "$(echo $current_dependency | sed -n 's|[=<>~!]*\([0-9]*.[0-9]*.[0-9]*\)|\1|p')" "$GRAFANA_VERSION_TARGET")
+#     # Modify the property to >$GRAFANA_VERSION_TARGET using jq and update the file
+#     modified_dependency=$(echo "$current_dependency" | jq -n --arg target ">=$target_version" '$target')
+#     jq --argjson modified "$modified_dependency" '.dependencies.grafanaDependency = $modified' "$file" >"$file.tmp" && mv "$file.tmp" "$file"
+# done
 
 ###############################################
 # Upgrade docker-compose files
@@ -57,4 +57,4 @@ done
 # Upgrade grafana-plugin-sdk-go to latest version
 ###############################################
 
-./scripts/update-backend-sdk.sh
+#./scripts/update-backend-sdk.sh

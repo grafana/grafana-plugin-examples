@@ -1,0 +1,68 @@
+name: Merge Changes
+description: Open PR with changes and merge it if all tests are passed
+inputs:
+  target-branch:
+    description: Target branch for the changes to be merged into
+    required: true
+    default: ${{ github.event.repository.default_branch }}  
+  current-branch:
+    description: Current branch
+    required: false
+    default: automatic-plugin-examples-update
+  commit-message:
+    description: Commit message
+    required: true
+    default: Commit changes from CI
+  app-id:
+    description: GitHub App ID
+    required: true
+  app-pem:
+    description: GitHub App PEM
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Git configuration
+      shell: bash
+      run: |
+        git config user.name 'grafana-delivery-bot[bot]'
+        git config user.email '132647405+grafana-delivery-bot[bot]@users.noreply.github.com'
+
+    - name: Generate token
+      id: generate_token
+      uses: tibdex/github-app-token@v2
+      with:
+        app_id: "${{ inputs.app-id }}"
+        private_key: "${{ inputs.app-pem }}"
+
+    - name: Create a branch
+      shell: bash
+      run: git checkout --progress -B ${{ inputs.current-branch }}
+
+    - name: Commit changes
+      shell: bash
+      run: |
+        git add --all -- .
+        git commit -m "${{ inputs.commit-message }}"
+        git show --stat
+      
+    - name: Push changes
+      shell: bash
+      run: git push origin ${{ inputs.current-branch }} --force-with-lease
+
+    - name: Create PR
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ steps.generate_token.outputs.token }}
+        branch: ${{ inputs.current-branch }}
+        delete-branch: true
+        commit-message: 'chore: update configuration to latest version'
+        title: 'Chore: Bump plugin-examples configuration to latest version'
+        body: |
+          Bumps [`grafana-plugin-examples`](https://github.com/grafana/grafana-plugin-examples) configuration to the latest version.
+
+          **Notes for reviewer:**
+          This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files and docker-compose files for each plugin example
+          Please review the changes thoroughly before merging.
+
+
