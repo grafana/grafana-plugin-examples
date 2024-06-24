@@ -1,74 +1,30 @@
 name: Update Grafana Version
 
-on:
-  schedule:
-    - cron: '0 0 1 * *'  # Runs at 00:00 on the first day of every month
-  workflow_dispatch:  # Allows you to manually trigger the workflow
+on: push
+  # schedule:
+  #   - cron: '0 0 1 * *'  # Runs at 00:00 on the first day of every month
+  # workflow_dispatch:  # Allows you to manually trigger the workflow
 
 jobs:
   update-grafana:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set up Git configuration
-      run: |
-        git config user.name 'github-actions'
-        git config user.email 'github-actions@github.com'
-
-    - name: Set up permissions
-      run: chmod +x scripts/update-grafana-version.sh
+      uses: actions/checkout@v4
 
     - name: Update Grafana version
-      run: scripts/update-grafana-version.sh
-
-    - name: Commit changes
       run: |
-        git add .
-        git commit -m "Update Grafana version"
-      continue-on-error: true
+        bash scripts/update-grafana-version.sh
+        git status
 
-    - name: Push changes
+    - name: Check the status of the repo
+      id: status
       run: |
-        git push origin update-grafana-version
-      continue-on-error: true
+        echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
+    - name: Apply changes
+      if: ${{ steps.status.outputs.status == '1' }}
+      uses: ./.github/actions/merge-changes
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        branch: update-grafana-version
-        title: Update Grafana version
-        body: Automatic update of Grafana version.
-        labels: automatic update
-        assignees: ${{ github.actor }}
-
-  test-and-merge:
-    needs: update-grafana
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == false
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Run tests
-      run: ./scripts/run-tests.sh  # Adjust this command to your test script
-
-    - name: Merge Pull Request
-      if: success()
-      uses: actions/github-script@v3
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const pullRequest = context.payload.pull_request;
-          if (pullRequest) {
-            await github.pulls.merge({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: pullRequest.number,
-              merge_method: 'merge'
-            });
-          }
+        app-id: ${{ secrets.APP_ID }}
+        app-pem: ${{ secrets.APP_PEM }}
