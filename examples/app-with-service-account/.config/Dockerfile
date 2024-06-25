@@ -29,14 +29,14 @@ USER root
 # Installing supervisor and inotify-tools
 RUN if [ "${development}" = "true" ]; then \
     if grep -i -q alpine /etc/issue; then \
-        apk add supervisor inotify-tools git; \
+    apk add supervisor inotify-tools git; \
     elif grep -i -q ubuntu /etc/issue; then \
-      DEBIAN_FRONTEND=noninteractive && \
-      apt-get update && \
-      apt-get install -y supervisor inotify-tools git && \
-      rm -rf /var/lib/apt/lists/*; \
+    DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get install -y supervisor inotify-tools git && \
+    rm -rf /var/lib/apt/lists/*; \
     else \
-      echo 'ERROR: Unsupported base image' && /bin/false; \
+    echo 'ERROR: Unsupported base image' && /bin/false; \
     fi \
     fi
 

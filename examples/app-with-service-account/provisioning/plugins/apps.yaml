@@ -2,4 +2,6 @@ apiVersion: 1
 
 apps:
   - type: 'grafana-appwithserviceaccount-app'
+    org_id: 1
+    org_name: Main Org.
     disabled: false
