@@ -1,18 +1,6 @@
 name: Merge Changes
 description: Open PR with changes and merge it if all tests are passed
 inputs:
-  target-branch:
-    description: Target branch for the changes to be merged into
-    required: true
-    default: ${{ github.event.repository.default_branch }}  
-  current-branch:
-    description: Current branch
-    required: false
-    default: automatic-plugin-examples-update
-  commit-message:
-    description: Commit message
-    required: true
-    default: Commit changes from CI
   app-id:
     description: GitHub App ID
     required: true
@@ -35,21 +23,6 @@ runs:
         app_id: "${{ inputs.app-id }}"
         private_key: "${{ inputs.app-pem }}"
 
-    # - name: Create a branch
-    #   shell: bash
-    #   run: git checkout --progress -B ${{ inputs.current-branch }}
-
-    # - name: Commit changes
-    #   shell: bash
-    #   run: |
-    #     git add --all -- .
-    #     git commit -m "${{ inputs.commit-message }}"
-    #     git show --stat
-      
-    # - name: Push changes
-    #   shell: bash
-    #   run: git push origin ${{ inputs.current-branch }} --force-with-lease
-
     - name: Create PR
       uses: peter-evans/create-pull-request@v6
       with:
@@ -64,10 +37,3 @@ runs:
           **Notes for reviewer:**
           This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files and docker-compose files for each plugin example
           Please review the changes thoroughly before merging.
-
-    # - name: Clean up
-    #   if: ${{ cancelled() }}
-    #   shell: bash
-    #   run: |
-    #     git checkout ${{ inputs.target-branch }}
-    #     git branch -D ${{ inputs.current-branch }}
