@@ -1,14 +1,28 @@
 name: Update Grafana Version
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+  push
+  # schedule:
+  #   - cron: "0 0 * * *"
+  # workflow_dispatch:
 
 jobs:
   update-grafana:
     runs-on: ubuntu-latest
     steps:
+      # - name: Set up Git configuration
+      #   shell: bash
+      #   run: |
+      #     git config user.name 'grafana-delivery-bot[bot]'
+      #     git config user.email '132647405+grafana-delivery-bot[bot]@users.noreply.github.com'
+
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PEM }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -22,9 +36,19 @@ jobs:
         run: |
           echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
 
-      - name: Apply changes
+      - name: Create PR
         if: ${{ steps.status.outputs.status == '1' }}
-        uses: ./.github/actions/merge-changes
+        uses: peter-evans/create-pull-request@v6
         with:
-          app-id: ${{ secrets.APP_ID }}
-          app-pem: ${{ secrets.APP_PEM }}
+          token: ${{ steps.generate_token.outputs.token }}
+          branch: new-update-plugin-examples
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          delete-branch: true
+          commit-message: "chore: update configuration to latest version"
+          title: "Chore: Bump plugin-examples configuration to latest version"
+          body: |
+            Bumps [`grafana-plugin-examples`](https://github.com/grafana/grafana-plugin-examples) configuration to the latest version.
+
+            **Notes for reviewer:**
+            This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files and docker-compose files for each plugin example
+            Please review the changes thoroughly before merging.
