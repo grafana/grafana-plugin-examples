@@ -12,7 +12,6 @@ import LiveReloadPlugin from 'webpack-livereload-plugin';
 import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import { Configuration } from 'webpack';
-import { GrafanaPluginMetaExtractor } from '@grafana/plugin-meta-extractor';
 
 import { getPackageJson, getPluginJson, hasReadme, getEntries, isWSL } from './utils';
 import { SOURCE_DIR, DIST_DIR } from './constants';
@@ -71,6 +70,11 @@ const config = async (env): Promise<Configuration> => {
       },
     ],
 
+    // Support WebAssembly according to latest spec - makes WebAssembly module async
+    experiments: {
+      asyncWebAssembly: true,
+    },
+
     mode: env.production ? 'production' : 'development',
 
     module: {
@@ -82,7 +86,7 @@ const config = async (env): Promise<Configuration> => {
             loader: 'swc-loader',
             options: {
               jsc: {
-                baseUrl: path.resolve(__dirname, 'src'),
+                baseUrl: path.resolve(process.cwd(), SOURCE_DIR),
                 target: 'es2015',
                 loose: false,
                 parser: {
@@ -140,7 +144,6 @@ const config = async (env): Promise<Configuration> => {
     },
 
     plugins: [
-      new GrafanaPluginMetaExtractor(),
       new CopyWebpackPlugin({
         patterns: [
           // If src/README.md exists use it; otherwise the root README
@@ -180,20 +183,22 @@ const config = async (env): Promise<Configuration> => {
           ],
         },
       ]),
-      ...(env.development ? [
-        new LiveReloadPlugin(),
-        new ForkTsCheckerWebpackPlugin({
-          async: Boolean(env.development),
-          issue: {
-            include: [{ file: '**/*.{ts,tsx}' }],
-          },
-          typescript: { configFile: path.join(process.cwd(), 'tsconfig.json') },
-        }),
-        new ESLintPlugin({
-          extensions: ['.ts', '.tsx'],
-          lintDirtyModulesOnly: Boolean(env.development), // don't lint on start, only lint changed files
-        }),
-      ] : []),
+      ...(env.development
+        ? [
+            new LiveReloadPlugin(),
+            new ForkTsCheckerWebpackPlugin({
+              async: Boolean(env.development),
+              issue: {
+                include: [{ file: '**/*.{ts,tsx}' }],
+              },
+              typescript: { configFile: path.join(process.cwd(), 'tsconfig.json') },
+            }),
+            new ESLintPlugin({
+              extensions: ['.ts', '.tsx'],
+              lintDirtyModulesOnly: Boolean(env.development), // don't lint on start, only lint changed files
+            }),
+          ]
+        : []),
     ],
 
     resolve: {

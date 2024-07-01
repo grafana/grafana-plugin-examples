@@ -4,7 +4,11 @@
   "name": "Scenes App Example",
   "id": "myorg-scenes-app",
   "info": {
-    "keywords": ["basic", "app", "example"],
+    "keywords": [
+      "basic",
+      "app",
+      "example"
+    ],
     "description": "A basic grafana app plugin",
     "author": {
       "name": "Your name"
