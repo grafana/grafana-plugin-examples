@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-GRAFANA_VERSION_TARGET=${1:-10.3.3}
 
 dirs=$(find examples -type f -name 'package.json' -not -path '*/node_modules/*' -exec dirname {} \;)
 #dirs=('examples/panel-plotly' 'examples/panel-scatterplot' 'examples/panel-visx')
@@ -11,6 +10,10 @@ for plugin in $dirs; do
         (cd "$plugin" && npx @grafana/create-plugin@latest update --force && npm install && rm -rf node_modules)
     fi
 done
+
+# Get the target version from the updated package.json file
+GRAFANA_TARGET_VERSION=$(jq -r '.dependencies["@grafana/data"]' ./examples/app-basic/package.json)
+echo "Upgrading to Grafana version: $GRAFANA_TARGET_VERSION"
 
 ###############################################
 # Upgrade plugin.json files
@@ -48,7 +51,6 @@ for file in $files; do
     if grep -q "grafana_version:" "$file"; then
         # Replace the grafana_version field with the target version
         sed_i "s/\(grafana_version: \)\${GRAFANA_VERSION:-[^}]*}/\1\${GRAFANA_VERSION:-$target_version}/" "$file"
-        echo "Modified $file"
     fi
 done
 
