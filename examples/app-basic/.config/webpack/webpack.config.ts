@@ -11,13 +11,14 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import LiveReloadPlugin from 'webpack-livereload-plugin';
 import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
-import { Configuration } from 'webpack';
-import { GrafanaPluginMetaExtractor } from '@grafana/plugin-meta-extractor';
+import TerserPlugin from 'terser-webpack-plugin';
+import { type Configuration, BannerPlugin } from 'webpack';
 
-import { getPackageJson, getPluginJson, hasReadme, getEntries, isWSL } from './utils';
+import { getPackageJson, getPluginJson, hasReadme, getEntries, isWSL, getCPConfigVersion } from './utils';
 import { SOURCE_DIR, DIST_DIR } from './constants';
 
 const pluginJson = getPluginJson();
+const cpVersion = getCPConfigVersion();
 
 const config = async (env): Promise<Configuration> => {
   const baseConfig: Configuration = {
@@ -35,6 +36,8 @@ const config = async (env): Promise<Configuration> => {
     entry: await getEntries(),
 
     externals: [
+      // Required for dynamic publicPath resolution
+      { 'amd-module': 'module' },
       'lodash',
       'jquery',
       'moment',
@@ -71,6 +74,11 @@ const config = async (env): Promise<Configuration> => {
       },
     ],
 
+    // Support WebAssembly according to latest spec - makes WebAssembly module async
+    experiments: {
+      asyncWebAssembly: true,
+    },
+
     mode: env.production ? 'production' : 'development',
 
     module: {
@@ -82,7 +90,7 @@ const config = async (env): Promise<Configuration> => {
             loader: 'swc-loader',
             options: {
               jsc: {
-                baseUrl: path.resolve(__dirname, 'src'),
+                baseUrl: path.resolve(process.cwd(), SOURCE_DIR),
                 target: 'es2015',
                 loose: false,
                 parser: {
@@ -96,6 +104,17 @@ const config = async (env): Promise<Configuration> => {
           },
         },
         {
+          test: /src\/(?:.*\/)?module\.tsx?$/,
+          use: [
+            {
+              loader: 'imports-loader',
+              options: {
+                imports: `side-effects ${path.join(__dirname, 'publicPath.ts')}`,
+              },
+            },
+          ],
+        },
+        {
           test: /\.css$/,
           use: ['style-loader', 'css-loader'],
         },
@@ -107,9 +126,6 @@ const config = async (env): Promise<Configuration> => {
           test: /\.(png|jpe?g|gif|svg)$/,
           type: 'asset/resource',
           generator: {
-            // Keep publicPath relative for host.com/grafana/ deployments
-            publicPath: `public/plugins/${pluginJson.id}/img/`,
-            outputPath: 'img/',
             filename: Boolean(env.production) ? '[hash][ext]' : '[file]',
           },
         },
@@ -117,12 +133,22 @@ const config = async (env): Promise<Configuration> => {
           test: /\.(woff|woff2|eot|ttf|otf)(\?v=\d+\.\d+\.\d+)?$/,
           type: 'asset/resource',
           generator: {
-            // Keep publicPath relative for host.com/grafana/ deployments
-            publicPath: `public/plugins/${pluginJson.id}/fonts/`,
-            outputPath: 'fonts/',
-            filename: Boolean(env.production) ? '[hash][ext]' : '[name][ext]',
+            filename: Boolean(env.production) ? '[hash][ext]' : '[file]',
           },
         },
+      ],
+    },
+
+    optimization: {
+      minimize: Boolean(env.production),
+      minimizer: [
+        new TerserPlugin({
+          terserOptions: {
+            format: {
+              comments: (_, { type, value }) => type === 'comment2' && value.trim().startsWith('[create-plugin]'),
+            },
+          },
+        }),
       ],
     },
 
@@ -140,7 +166,12 @@ const config = async (env): Promise<Configuration> => {
     },
 
     plugins: [
-      new GrafanaPluginMetaExtractor(),
+      // Insert create plugin version information into the bundle
+      new BannerPlugin({
+        banner: '/* [create-plugin] version: ' + cpVersion + ' */',
+        raw: true,
+        entryOnly: true,
+      }),
       new CopyWebpackPlugin({
         patterns: [
           // If src/README.md exists use it; otherwise the root README
@@ -180,20 +211,22 @@ const config = async (env): Promise<Configuration> => {
           ],
         },
       ]),
-      ...(env.development ? [
-        new LiveReloadPlugin(),
-        new ForkTsCheckerWebpackPlugin({
-          async: Boolean(env.development),
-          issue: {
-            include: [{ file: '**/*.{ts,tsx}' }],
-          },
-          typescript: { configFile: path.join(process.cwd(), 'tsconfig.json') },
-        }),
-        new ESLintPlugin({
-          extensions: ['.ts', '.tsx'],
-          lintDirtyModulesOnly: Boolean(env.development), // don't lint on start, only lint changed files
-        }),
-      ] : []),
+      ...(env.development
+        ? [
+            new LiveReloadPlugin(),
+            new ForkTsCheckerWebpackPlugin({
+              async: Boolean(env.development),
+              issue: {
+                include: [{ file: '**/*.{ts,tsx}' }],
+              },
+              typescript: { configFile: path.join(process.cwd(), 'tsconfig.json') },
+            }),
+            new ESLintPlugin({
+              extensions: ['.ts', '.tsx'],
+              lintDirtyModulesOnly: Boolean(env.development), // don't lint on start, only lint changed files
+            }),
+          ]
+        : []),
     ],
 
     resolve: {
