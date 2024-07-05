@@ -10,7 +10,9 @@
       "name": "Grafana Labs",
       "url": "https://grafana.com"
     },
-    "keywords": ["example"],
+    "keywords": [
+      "example"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

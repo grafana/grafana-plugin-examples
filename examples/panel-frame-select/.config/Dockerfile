@@ -3,7 +3,8 @@ ARG grafana_image=grafana-enterprise
 
 FROM grafana/${grafana_image}:${grafana_version}
 
-ARG development=true
+ARG development=false
+ARG TARGETARCH
 
 
 ENV DEV "${development}"
