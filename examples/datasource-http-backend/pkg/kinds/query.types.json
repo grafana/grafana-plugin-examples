@@ -1,0 +1,39 @@
+{
+  "kind": "QueryTypeDefinitionList",
+  "apiVersion": "query.grafana.app/v0alpha1",
+  "metadata": {
+    "resourceVersion": "1720173156947"
+  },
+  "items": [
+    {
+      "metadata": {
+        "name": "default",
+        "resourceVersion": "1720173156947",
+        "creationTimestamp": "2024-07-05T09:52:36Z"
+      },
+      "spec": {
+        "schema": {
+          "$schema": "https://json-schema.org/draft-04/schema",
+          "additionalProperties": false,
+          "properties": {
+            "multiplier": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "multiplier"
+          ],
+          "type": "object"
+        },
+        "examples": [
+          {
+            "name": "simple multiplier",
+            "saveModel": {
+              "multiplier": 1
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

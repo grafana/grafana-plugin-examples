@@ -67,6 +67,7 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 
 // DatasourceOpts contains the default ManageOpts for the datasource.
 var DatasourceOpts = datasource.ManageOpts{
+	AdmissionHandler: &admissionHandler{},
 	TracingOpts: tracing.Opts{
 		// Optional custom attributes attached to the tracer's resource.
 		// The tracer will already have some SDK and runtime ones pre-populated.
