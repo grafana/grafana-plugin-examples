@@ -17,12 +17,7 @@ func TestQueryTypeDefinitions(t *testing.T) {
 				BasePackage: "github.com/grafana/datasource-http-backend/pkg/kinds",
 				CodePath:    "./",
 			}},
-			Enums: []reflect.Type{
-				/* 				reflect.TypeOf(NodesQueryTypeRandom),         // pick an example value (not the root)
-				   				reflect.TypeOf(StreamingQueryTypeFetch),      // pick an example value (not the root)
-				   				reflect.TypeOf(ErrorTypeServerPanic),         // pick an example value (not the root)
-				   				reflect.TypeOf(TestDataQueryTypeAnnotations), // pick an example value (not the root)
-				*/},
+			Enums: []reflect.Type{},
 		})
 	require.NoError(t, err)
 	err = builder.AddQueries(
