@@ -8,7 +8,7 @@
     {
       "metadata": {
         "name": "default",
-        "resourceVersion": "1720173156947",
+        "resourceVersion": "1720430974503",
         "creationTimestamp": "2024-07-05T09:52:36Z"
       },
       "spec": {
@@ -17,19 +17,21 @@
           "additionalProperties": false,
           "properties": {
             "multiplier": {
+              "description": "Deprecated: Moved to Multiply, made optional",
+              "type": "integer"
+            },
+            "multiply": {
+              "description": "Multiply is the number to multiply the input by",
               "type": "integer"
             }
           },
-          "required": [
-            "multiplier"
-          ],
           "type": "object"
         },
         "examples": [
           {
             "name": "simple multiplier",
             "saveModel": {
-              "multiplier": 1
+              "multiply": 1
             }
           }
         ]

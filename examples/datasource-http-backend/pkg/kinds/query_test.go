@@ -29,7 +29,7 @@ func TestQueryTypeDefinitions(t *testing.T) {
 					Name: "simple multiplier",
 					SaveModel: data.AsUnstructured(
 						DataQuery{
-							Multiplier: 1,
+							Multiply: 1,
 						},
 					),
 				},

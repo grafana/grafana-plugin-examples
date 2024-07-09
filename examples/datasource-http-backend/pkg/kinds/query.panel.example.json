@@ -7,7 +7,7 @@
         "type": "grafana-testdata-datasource",
         "uid": "TheUID"
       },
-      "multiplier": 1
+      "multiply": 1
     }
   ]
 }

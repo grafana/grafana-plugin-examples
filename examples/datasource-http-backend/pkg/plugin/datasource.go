@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/grafana/datasource-http-backend/pkg/kinds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
@@ -174,13 +175,14 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	if len(query.JSON) > 0 {
-		input := &apiQuery{}
+		input := &kinds.DataQuery{}
 		err = json.Unmarshal(query.JSON, input)
 		if err != nil {
 			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
 		}
 		q := req.URL.Query()
-		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		// Temporarily use both
+		q.Add("multiplier", strconv.Itoa(input.Multiply))
 		req.URL.RawQuery = q.Encode()
 	}
 	httpResp, err := d.httpClient.Do(req)

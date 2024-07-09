@@ -19,9 +19,6 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [
-          "multiplier"
-        ],
         "properties": {
           "datasource": {
             "description": "The datasource",
@@ -59,6 +56,11 @@
             "type": "integer"
           },
           "multiplier": {
+            "description": "Deprecated: Moved to Multiply, made optional",
+            "type": "integer"
+          },
+          "multiply": {
+            "description": "Multiply is the number to multiply the input by",
             "type": "integer"
           },
           "queryType": {
