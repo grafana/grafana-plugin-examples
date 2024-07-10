@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { QueryEditorProps } from '@grafana/data';
 import { DataSource } from '../datasource';
 import { MyDataSourceOptions, MyQuery } from '../types';
@@ -7,13 +7,7 @@ import { HorizontalGroup, Input, Label } from '@grafana/ui';
 type Props = QueryEditorProps<DataSource, MyQuery, MyDataSourceOptions>;
 
 export function QueryEditor(props: Props) {
-  const [query, setQuery] = useState<MyQuery | undefined>();
-  useEffect(() => {
-    setQuery(props.datasource.migrateQuery(props.query));
-  }, [props.query, props.datasource]);
-  if (!query) {
-    return 'loading...';
-  }
+  const query = props.datasource.migrateQuery(props.query);
   return (
     <HorizontalGroup>
       <Label htmlFor="multiplier">Multiplier</Label>
