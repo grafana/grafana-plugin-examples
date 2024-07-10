@@ -1,7 +1,13 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import { DataQuery, DataSourceJsonData } from '@grafana/schema';
+
+export interface MyQueryDeprecated extends DataQuery {
+  // Old implementation
+  multiplier: number;
+}
 
 export interface MyQuery extends DataQuery {
-  multiplier: number;
+  // New
+  multiply: number;
 }
 
 /**

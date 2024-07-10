@@ -6,7 +6,7 @@
       "refId": "A",
       "maxDataPoints": 1000,
       "intervalMs": 5,
-      "multiplier": 1
+      "multiply": 1
     }
   ]
 }
