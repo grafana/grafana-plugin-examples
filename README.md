@@ -44,7 +44,7 @@ Some of the examples in this repository contain integration tests that make use 
 
 ### Testing against latest versions of Grafana
 
-The GitHub workflow `.github/workflows/integration-tests.yml` finds all plugin examples identified by the existence of `src/plugin.json`. For every example plugin build scripts will be run to confirm the plugins can be built against intended and canary NPM packages. Any example plugin that has a cypress directory defined will run the following:
+The GitHub workflow `.github/workflows/integration-tests.yml` finds all plugin examples identified by the existence of `src/plugin.json`. For every example plugin, build scripts will be run to confirm the plugins can be built against intended and canary NPM packages. Any example plugin that has a playwright.config.ts file will run the following:
 
 1. Build the plugin with the provided version of Grafana packages and test against the provided version of Grafana
    - _asserting the plugin works with its expected versions_
