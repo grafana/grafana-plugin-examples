@@ -9,17 +9,9 @@
   - [Request a Feature](#request-a-feature)
 - Make Something? 🤓👩🏽‍💻📜🍳
   - [Project Setup](#project-setup)
+  - [Contributor License Agreement (CLA)](#contributor-license-agreement-cla)
   - [Contribute Documentation](#contribute-documentation)
   - [Contribute Code](#contribute-code)
-- Manage Something ✅🙆🏼💃👔
-  - [Provide Support on Issues](#provide-support-on-issues)
-  - [Label Issues](#label-issues)
-  - [Clean Up Issues and PRs](#clean-up-issues-and-prs)
-  - [Review Pull Requests](#review-pull-requests)
-  - [Merge Pull Requests](#merge-pull-requests)
-  - [Tag a Release](#tag-a-release)
-  - [Join the Project Team](#join-the-project-team)
-- Add a Guide Like This One [To My Project](#attribution)? 🤖😻👻
 
 ## Introduction
 
@@ -97,6 +89,10 @@ And you should be ready to go!
 
 > [!NOTE]
 > This repository is a collection of Grafana plugins with their own dependency lock files, dev environments, etc. That is to say it is not a monorepo in the traditional sense. To develop against a plugin you must navigate inside it's directory and run the above commands for each example you would like to contribute to.
+
+## Contributor License Agreement (CLA)
+
+Before we can accept your pull request, you need to [sign our CLA](https://grafana.com/docs/grafana/latest/developers/cla/). If you haven't, our CLA assistant prompts you to when you create your pull request.
 
 ## Contribute Documentation
 
