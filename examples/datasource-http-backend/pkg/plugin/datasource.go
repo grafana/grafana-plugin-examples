@@ -272,6 +272,7 @@ func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHeal
 
 func (d *Datasource) MigrateQuery(ctx context.Context, req *backend.QueryMigrationRequest) (*backend.QueryMigrationResponse, error) {
 	res := &backend.QueryMigrationResponse{}
+	// NOTE: req.PluginContext.APIVersion and req.PluginContext.PluginVersion are available here
 	for _, query := range req.Queries {
 		input := &kinds.DataQuery{}
 		err := json.Unmarshal(query.JSON, input)
