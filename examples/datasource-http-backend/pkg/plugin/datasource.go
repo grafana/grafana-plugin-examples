@@ -81,6 +81,8 @@ var DatasourceOpts = datasource.ManageOpts{
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
 type Datasource struct {
+	backend.QueryMigrationHandler
+
 	settings backend.DataSourceInstanceSettings
 
 	httpClient *http.Client
@@ -266,4 +268,26 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 // and the specified message, which is formatted with Sprintf.
 func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHealthResult {
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
+}
+
+func (d *Datasource) MigrateQuery(ctx context.Context, req *backend.QueryMigrationRequest) (*backend.QueryMigrationResponse, error) {
+	res := &backend.QueryMigrationResponse{}
+	for _, query := range req.Queries {
+		input := &kinds.DataQuery{}
+		err := json.Unmarshal(query.JSON, input)
+		if err != nil {
+			return &backend.QueryMigrationResponse{}, fmt.Errorf("unmarshal: %w", err)
+		}
+		if input.Multiplier != 0 && input.Multiply == 0 {
+			input.Multiply = input.Multiplier
+			input.Multiplier = 0
+		}
+		newJSON, err := json.Marshal(input)
+		if err != nil {
+			return &backend.QueryMigrationResponse{}, fmt.Errorf("marshal: %w", err)
+		}
+		query.JSON = newJSON
+		res.Queries = append(res.Queries, query)
+	}
+	return res, nil
 }
