@@ -1,12 +1,21 @@
 import { test, expect } from '@grafana/plugin-e2e';
-import { BasicDataSourceOptions, BasicSecureJsonData } from '../src/types';
+import { MyDataSourceOptions } from '../src/types';
+
+test('Provisioned data source with valid credentials should return a 200 status code', async ({
+  readProvisionedDataSource,
+  gotoDataSourceConfigPage,
+}) => {
+  const datasource = await readProvisionedDataSource({ fileName: 'datasources.yml' });
+  const configPage = await gotoDataSourceConfigPage(datasource.uid);
+  await expect(configPage.saveAndTest()).toBeOK();
+});
 
 test('"Save & test" should be successful when configuration is valid', async ({
   createDataSourceConfigPage,
   readProvisionedDataSource,
   page,
 }) => {
-  const ds = await readProvisionedDataSource<BasicDataSourceOptions, BasicSecureJsonData>({
+  const ds = await readProvisionedDataSource<MyDataSourceOptions>({
     fileName: 'datasources.yml',
   });
   const configPage = await createDataSourceConfigPage({ type: ds.type });
@@ -20,7 +29,7 @@ test('"Save & test" should fail when configuration is invalid', async ({
   readProvisionedDataSource,
   page,
 }) => {
-  const ds = await readProvisionedDataSource<BasicDataSourceOptions, BasicSecureJsonData>({
+  const ds = await readProvisionedDataSource<MyDataSourceOptions>({
     fileName: 'datasources.yml',
   });
   const configPage = await createDataSourceConfigPage({ type: ds.type });
