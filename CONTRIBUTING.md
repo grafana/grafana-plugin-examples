@@ -15,7 +15,7 @@
 
 ## Introduction
 
-Thank you so much for your interest in contributing!. All types of contributions are encouraged and valued. See the [table of contents](#toc) for different ways to help and details about how this project handles them!📝
+Thank you so much for your interest in contributing! All types of contributions are encouraged and valued. See the [table of contents](#toc) for different ways to help and details about how this project handles them!📝
 
 Please make sure to read the relevant section before making your contribution! It will make it a lot easier for us maintainers to make the most of it and smooth out the experience for all involved. 💚
 
@@ -50,13 +50,13 @@ Once it's filed:
 - If the team is able to reproduce the issue it will be left to be [implemented by someone](#contribute-code).
 - If you or the maintainers don't respond to an issue for 30 days, the issue will be closed. If you want to come back to it, reply (once, please), and we'll reopen the existing issue. Please avoid filing new issues as extensions of one you already made.
 
-## Request a Feature
+## Request a new example or extension to an existing template
 
-If the project doesn't do something you need or want it to do:
+If our examples don't cover your use case and you would like to see a new template project available:
 
 - Open an Issue at https://github.com/grafana/grafana-plugin-examples/issues
-- Provide as much context as you can about what you're running into.
-- Please try and be clear about why existing features and alternatives would not work for you.
+- Provide as much context as you can about what you are trying to do.
+- Please indicate whether it should be incorporated within an existing template or a new example.
 
 Once it's filed:
 
