@@ -34,7 +34,7 @@ Consider other [badges](https://shields.io/badges) as you feel appropriate for y
 Provide one or more paragraphs as an introduction to your plugin to help users understand why they should use it.
 
 Consider including screenshots:
-- in [plugin.json](https://grafana.com/developers/plugin-tools/reference-plugin-json#info) include them as relative links.
+- in [plugin.json](https://grafana.com/developers/plugin-tools/reference/plugin-json#info) include them as relative links.
 - in the README ensure they are absolute URLs.
 
 ## Requirements
