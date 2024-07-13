@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require (
 	github.com/gorilla/websocket v1.5.0
-	github.com/grafana/grafana-plugin-sdk-go v0.239.0
+	github.com/grafana/grafana-plugin-sdk-go v0.240.0
 )
 
 require (

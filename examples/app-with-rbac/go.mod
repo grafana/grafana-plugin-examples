@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require (
 	github.com/grafana/authlib v0.0.0-20240318132843-56180bacf0d3
-	github.com/grafana/grafana-plugin-sdk-go v0.239.0
+	github.com/grafana/grafana-plugin-sdk-go v0.240.0
 	github.com/stretchr/testify v1.9.0
 )
 
