@@ -21,7 +21,7 @@ test('"Save & test" should be successful when configuration is valid', async ({
   const configPage = await createDataSourceConfigPage({ type: ds.type });
   await page.getByTestId('uri-websocket-server').fill('ws://host.docker.internal:8080');
   await expect(configPage.saveAndTest()).toBeOK();
-  expect(configPage).toHaveAlert('success');
+  await expect(configPage).toHaveAlert('success');
 });
 
 test('"Save & test" should fail when configuration is invalid', async ({
@@ -35,5 +35,5 @@ test('"Save & test" should fail when configuration is invalid', async ({
   const configPage = await createDataSourceConfigPage({ type: ds.type });
   await page.getByTestId('uri-websocket-server').fill('test.com');
   await expect(configPage.saveAndTest()).not.toBeOK();
-  expect(configPage).toHaveAlert('error');
+  await expect(configPage).toHaveAlert('error');
 });
