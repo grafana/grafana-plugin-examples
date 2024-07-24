@@ -188,7 +188,7 @@ Example payload:
 Below you can find source code for existing app plugins and other related documentation.
 
 - [Grafana Synthetic Monitoring App](https://github.com/grafana/synthetic-monitoring-app)
-- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference/plugin-json)
 - [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
 
 <!-- prettier-ignore-start -->
