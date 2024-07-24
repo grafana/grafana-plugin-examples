@@ -67,7 +67,7 @@ Then in your terminal:
 - `npm install`
 - `npm dev`
 - `mage build:backend` (if the plugin has a backend)
-- `docker compose up`
+- `docker compose up --build`
 
 And you should be ready to go!
 
