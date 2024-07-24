@@ -114,11 +114,11 @@ Once you've filed the PR:
 - One or more maintainers will use GitHub's review feature to review your PR.
 - If the maintainer asks for any changes, edit your changes, push, and ask for another review.
 - If the maintainer decides to pass on your PR, they will thank you for the contribution and explain why they won't be accepting the changes. That's ok! We still really appreciate you taking the time to do it, and we don't take that lightly. 💚
-- If your PR gets accepted, it will be marked as such, and merged into the `latest` branch soon after. Your contribution will be distributed to the masses once the PR is merged.
+- If your PR gets accepted, it will be marked as such, and merged into the `main` branch soon after. Your contribution will be distributed to the masses once the PR is merged.
 
 ## Contribute Code
 
-We like code commits a lot! They're super handy, and they keep the project going and doing the work it needs to do to be useful to others. Before considering contributing code please review [report an error or bug](#report-an-error-or-bug) and [request a feature](#request-a-feature) to make sure an issue has been filed and discussed with the project maintainers. PRs submitted without associated issues risk being closed or rejected.
+We like code commits a lot! They're super handy, and they keep the project going and doing the work it needs to do to be useful to others. Before considering contributing code please review [report an error or bug](#report-an-error-or-bug) and [request a new example](#request-a-new-example-or-extension-to-an-existing-template) to make sure an issue has been filed and discussed with the project maintainers. PRs submitted without associated issues risk being closed or rejected.
 
 Code contributions of just about any size are acceptable!
 
@@ -139,4 +139,4 @@ Once you've filed the PR:
 - One or more maintainers will use GitHub's review feature to review your PR.
 - If the maintainer asks for any changes, edit your changes, push, and ask for another review. Additional tags (such as `needs-tests`) will be added depending on the review.
 - If the maintainer decides to pass on your PR, they will thank you for the contribution and explain why they won't be accepting the changes. That's ok! We still really appreciate you taking the time to do it, and we don't take that lightly. 💚
-- If your PR gets accepted, it will be marked as such, and merged into the `latest` branch soon after. Your contribution will be distributed to the masses next time the maintainers [tag a release](#tag-a-release)
+- If your PR gets accepted, it will be marked as such, and merged into the `main` branch soon after.
