@@ -64,7 +64,7 @@
     "@emotion/css": "11.10.6",
     "@grafana/data": "^10.4.0",
     "@grafana/runtime": "^10.4.0",
-    "@grafana/scenes": "^3.14.0",
+    "@grafana/scenes": "^5.7.3",
     "@grafana/schema": "^10.4.0",
     "@grafana/ui": "^10.4.0",
     "@types/lodash": "latest",
