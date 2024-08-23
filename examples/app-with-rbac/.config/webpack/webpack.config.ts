@@ -96,6 +96,18 @@ const config = async (env): Promise<Configuration> => {
 
     module: {
       rules: [
+        // This must come first in the rules array otherwise it breaks sourcemaps.
+        {
+          test: /src\/(?:.*\/)?module\.tsx?$/,
+          use: [
+            {
+              loader: 'imports-loader',
+              options: {
+                imports: `side-effects grafana-public-path`,
+              },
+            },
+          ],
+        },
         {
           exclude: /(node_modules)/,
           test: /\.[tj]sx?$/,
@@ -115,17 +127,6 @@ const config = async (env): Promise<Configuration> => {
               },
             },
           },
-        },
-        {
-          test: /src\/(?:.*\/)?module\.tsx?$/,
-          use: [
-            {
-              loader: 'imports-loader',
-              options: {
-                imports: `side-effects grafana-public-path`,
-              },
-            },
-          ],
         },
         {
           test: /\.css$/,
