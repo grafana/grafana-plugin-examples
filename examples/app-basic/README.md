@@ -12,7 +12,7 @@ App plugins let you create a custom out-of-the-box monitoring experience with fe
 | --------------------------------------------------------------------------------------------------- | ------------------------------- |
 | [Add a custom route](#add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6] |
 | [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]   |
-| [Create a full-width page with no navigation bar](#create-a-full-width-page-with-no-navigation-bar) | [PageThree.tsx]                 |
+| [Create a full-width page with no navigation bar](#create-a-full-width-page) | [PageThree.tsx]                 |
 | [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageThree.tsx#L10]             |
 | [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageThree.tsx#L26]             |
 | [How to add menu items to the left sidebar](#hodd-menu-items-to-the-left-sidebar)                   | [plugin.json]                   |
