@@ -12,9 +12,9 @@ App plugins let you create a custom out-of-the-box monitoring experience with fe
 | --------------------------------------------------------------------------------------------------- | ------------------------------- |
 | [Add a custom route](#add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6] |
 | [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]   |
-| [Create a full-width page with no navigation bar](#create-a-full-width-page-with-no-navigation-bar) | [PageFour.tsx]                  |
-| [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageFour.tsx]                  |
-| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageFour.tsx#L25]              |
+| [Create a full-width page with no navigation bar](#create-a-full-width-page-with-no-navigation-bar) | [PageThree.tsx]                 |
+| [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageThree.tsx#L10]             |
+| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageThree.tsx#L26]             |
 | [How to add menu items to the left sidebar](#hodd-menu-items-to-the-left-sidebar)                   | [plugin.json]                   |
 | [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                       | [module.ts], [AppConfig.tsx]    |
 | [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                 |
@@ -58,7 +58,7 @@ export const MyComponent = () => {
 
 You can hide the left sidebar and get access to the full width of the page by changing the layout of the `<PluginPage>` component.
 
-**Example:** [PageFour.tsx]
+**Example:** [PageThree.tsx]
 
 ![Full-width page example](./screenshots/screenshot-full-width-page.png)
 
@@ -80,7 +80,7 @@ export function YourPage() {
 
 We recommend using [Emotion](https://emotion.sh) to style your components as in the example above.
 
-**Example:** [PageFour.tsx]
+**Example:** [PageThree.tsx#L10]
 
 [More info on how to use @emotion/css](https://emotion.sh/docs/@emotion/css)
 
@@ -90,7 +90,7 @@ We recommend using [Emotion](https://emotion.sh) to style your components as in 
 
 The easiest way is to use the [`useStyles2()`](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md#usestyles2-hook) hook to access the `GrafanaTheme2` theme object.
 
-**Example:** [PageFour.tsx#L25]
+**Example:** [PageThree.tsx#L25]
 
 [Documentation on the Grafana Theme](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md)
 
@@ -189,16 +189,15 @@ Below you can find source code for existing app plugins and other related docume
 
 - [Grafana Synthetic Monitoring App](https://github.com/grafana/synthetic-monitoring-app)
 - [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [Sign a plugin](https://grafasna.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin22)
+- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
 
 <!-- prettier-ignore-start -->
-[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L14
-[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/App/App.tsx#L14
-[PageFour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx
-[PageFour.tsx#L25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L25
-[plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/plugin.json#L19
-[module.ts]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/module.ts#L5
-[AppConfig.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/AppConfig/AppConfig.tsx#L26
-[constants.ts#L6]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L6
-[constants.ts#L17]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/constants.ts#L17
+[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/components/App/App.tsx#L14
+[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx
+[PageThree.tsx#L10]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx#L10
+[PageThree.tsx#L26]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx#L26
+[plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/plugin.json
+[module.ts]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/module.ts#L5
+[AppConfig.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/components/AppConfig/AppConfig.tsx#L25
+[constants.ts#L6]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/constants.ts#L6
 <!-- prettier-ignore-end -->
