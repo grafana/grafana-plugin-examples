@@ -189,11 +189,11 @@ Below you can find source code for existing app plugins and other related docume
 
 - [Grafana Synthetic Monitoring App](https://github.com/grafana/synthetic-monitoring-app)
 - [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
-- [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
+- [Sign a plugin](https://grafasna.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin22)
 
 <!-- prettier-ignore-start -->
-[Routes.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L17
-[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageThree/PageThree.tsx#L10
+[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/App/App.tsx#L14
+[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/App/App.tsx#L14
 [PageFour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx
 [PageFour.tsx#L25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L25
 [plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/plugin.json#L19
