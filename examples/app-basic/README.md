@@ -8,19 +8,19 @@ App plugins let you create a custom out-of-the-box monitoring experience with fe
 
 ## Guides in this example
 
-| **Example**                                                                                                        | **Source**                             |
-| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
-| [Add a custom route](#add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6]        |
-| [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]          |
-| [Create a full-width page with no navigation bar](#create-a-full-width-page-with-no-navigation-bar) | [PageFour.tsx]                 |
-| [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageFour.tsx]                         |
-| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageFour.tsx#L25]                     |
-| [How to add menu items to the left sidebar](#hodd-menu-items-to-the-left-sidebar)                           | [plugin.json]                          |
-| [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                       | [module.ts], [AppConfig.tsx]           |
-| [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                        |
-| [Add configuration options for setting secrets](#add-configuration-options-for-setting-secrets)     | [AppConfig.tsx]                        |
-| [Update the plugin settings using the API](#how-to-update-the-plugin-settings-using-the-api)               | [AppConfig.tsx]                        |
-| [Access the saved secrets (proxying requests)](#how-to-access-the-saved-secrets-proxying-requests)         | [plugin.json]                          |
+| **Example**                                                                                         | **Source**                      |
+| --------------------------------------------------------------------------------------------------- | ------------------------------- |
+| [Add a custom route](#add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6] |
+| [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]   |
+| [Create a full-width page with no navigation bar](#create-a-full-width-page-with-no-navigation-bar) | [PageFour.tsx]                  |
+| [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageFour.tsx]                  |
+| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageFour.tsx#L25]              |
+| [How to add menu items to the left sidebar](#hodd-menu-items-to-the-left-sidebar)                   | [plugin.json]                   |
+| [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                       | [module.ts], [AppConfig.tsx]    |
+| [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                 |
+| [Add configuration options for setting secrets](#add-configuration-options-for-setting-secrets)     | [AppConfig.tsx]                 |
+| [Update the plugin settings using the API](#how-to-update-the-plugin-settings-using-the-api)        | [AppConfig.tsx]                 |
+| [Access the saved secrets (proxying requests)](#how-to-access-the-saved-secrets-proxying-requests)  | [plugin.json]                   |
 
 ### Add a custom route
 
@@ -192,7 +192,7 @@ Below you can find source code for existing app plugins and other related docume
 - [Sign a plugin](https://grafasna.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin22)
 
 <!-- prettier-ignore-start -->
-[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/App/App.tsx#L14
+[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/Routes/Routes.tsx#L14
 [PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/components/App/App.tsx#L14
 [PageFour.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx
 [PageFour.tsx#L25]: https://github.com/grafana/grafana-plugin-examples/blob/master/examples/app-basic/src/pages/PageFour/PageFour.tsx#L25
