@@ -8,19 +8,18 @@ App plugins let you create a custom out-of-the-box monitoring experience with fe
 
 ## Guides in this example
 
-| **Example**                                                                                         | **Source**                      |
-| --------------------------------------------------------------------------------------------------- | ------------------------------- |
-| [Add a custom route](#add-a-custom-route)                                                           | [Routes.tsx], [constants.ts#L6] |
-| [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)                   | [Routes.tsx], [PageThree.tsx]   |
-| [Create a full-width page with no navigation bar](#create-a-full-width-page) | [PageThree.tsx]                 |
-| [Add custom styling to your components](#add-custom-styling-to-your-components)                     | [PageThree.tsx#L10]             |
-| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)               | [PageThree.tsx#L26]             |
-| [How to add menu items to the left sidebar](#hodd-menu-items-to-the-left-sidebar)                   | [plugin.json]                   |
-| [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                       | [module.ts], [AppConfig.tsx]    |
-| [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)         | [AppConfig.tsx]                 |
-| [Add configuration options for setting secrets](#add-configuration-options-for-setting-secrets)     | [AppConfig.tsx]                 |
-| [Update the plugin settings using the API](#how-to-update-the-plugin-settings-using-the-api)        | [AppConfig.tsx]                 |
-| [Access the saved secrets (proxying requests)](#how-to-access-the-saved-secrets-proxying-requests)  | [plugin.json]                   |
+| **Example**                                                                                     | **Source**                   |
+| ----------------------------------------------------------------------------------------------- | ---------------------------- |
+| [Add a custom route](#add-a-custom-route)                                                       | [App.tsx], [constants.ts#L6] |
+| [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)               | [App.tsx], [PageThree.tsx]   |
+| [Create a full-width page with no navigation bar](#create-a-full-width-page)                    | [PageThree.tsx]              |
+| [Add custom styling to your components](#add-custom-styling-to-your-components)                 | [PageThree.tsx#L10]          |
+| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)           | [PageThree.tsx#L26]          |
+| [How to add menu items to the left sidebar](#add-menu-items-to-the-left-sidebar)                | [plugin.json]                |
+| [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                   | [module.ts], [AppConfig.tsx] |
+| [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)     | [AppConfig.tsx]              |
+| [Add configuration options for setting secrets](#add-configuration-options-for-setting-secrets) | [AppConfig.tsx]              |
+| [Update the plugin settings using the API](#update-the-plugin-settings-using-the-api)           | [AppConfig.tsx]              |
 
 ### Add a custom route
 
@@ -90,7 +89,7 @@ We recommend using [Emotion](https://emotion.sh) to style your components as in 
 
 The easiest way is to use the [`useStyles2()`](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md#usestyles2-hook) hook to access the `GrafanaTheme2` theme object.
 
-**Example:** [PageThree.tsx#L25]
+**Example:** [PageThree.tsx#L26]
 
 [Documentation on the Grafana Theme](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md)
 
