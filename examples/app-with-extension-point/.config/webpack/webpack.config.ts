@@ -161,6 +161,9 @@ const config = async (env): Promise<Configuration> => {
             format: {
               comments: (_, { type, value }) => type === 'comment2' && value.trim().startsWith('[create-plugin]'),
             },
+            compress: {
+              drop_console: ['log', 'info'],
+            },
           },
         }),
       ],
