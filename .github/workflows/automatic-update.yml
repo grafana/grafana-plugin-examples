@@ -29,6 +29,7 @@ jobs:
           echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
 
       - name: Create PR
+        id: create_pr
         if: ${{ steps.status.outputs.status == '1' }}
         uses: peter-evans/create-pull-request@v6
         with:
@@ -46,7 +47,9 @@ jobs:
 
       - name: Auto approve PR
         uses: hmarr/auto-approve-action@v3
+
         with:
+          pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
           github-token: ${{ steps.generate_token.outputs.token }}
 
       - name: Auto merge PR
