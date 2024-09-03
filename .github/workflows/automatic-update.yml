@@ -47,12 +47,6 @@ jobs:
 
       - name: Auto approve PR
         uses: hmarr/auto-approve-action@v3
-
         with:
           pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
-          github-token: ${{ steps.generate_token.outputs.token }}
-
-      - name: Auto merge PR
-        uses: "pascalgn/automerge-action@v0.16.3"
-        env:
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
