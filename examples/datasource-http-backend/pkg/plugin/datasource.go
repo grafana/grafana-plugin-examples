@@ -81,8 +81,6 @@ var DatasourceOpts = datasource.ManageOpts{
 // Datasource is an example datasource which can respond to data queries, reports
 // its health and has streaming skills.
 type Datasource struct {
-	backend.ConversionHandler
-
 	settings backend.DataSourceInstanceSettings
 
 	httpClient *http.Client
