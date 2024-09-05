@@ -76,7 +76,6 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
-	ConversionHandler: &Datasource{},
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
@@ -271,20 +270,15 @@ func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHeal
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
 }
 
-func (d *Datasource) ConvertObjects(ctx context.Context, req *backend.ConversionRequest) (*backend.ConversionResponse, error) {
-	res := &backend.ConversionResponse{}
+func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryConversionRequest) (*backend.QueryConversionResponse, error) {
+	res := &backend.QueryConversionResponse{}
 	// NOTE: req.PluginContext.APIVersion and req.PluginContext.PluginVersion are available here, which represent
 	// the current runtime version, not the version the query was built with.
-	for _, query := range req.Objects {
-		q := &backend.DataQuery{}
-		err := json.Unmarshal(query.Raw, q)
-		if err != nil {
-			return &backend.ConversionResponse{}, fmt.Errorf("unmarshal: %w", err)
-		}
+	for _, q := range req.Queries {
 		input := &kinds.DataQuery{}
-		err = json.Unmarshal(q.JSON, input)
+		err := json.Unmarshal(q.JSON, input)
 		if err != nil {
-			return &backend.ConversionResponse{}, fmt.Errorf("unmarshal: %w", err)
+			return &backend.QueryConversionResponse{}, fmt.Errorf("unmarshal: %w", err)
 		}
 		if input.Multiplier != 0 && input.Multiply == 0 {
 			input.Multiply = input.Multiplier
@@ -292,15 +286,10 @@ func (d *Datasource) ConvertObjects(ctx context.Context, req *backend.Conversion
 		}
 		newJSON, err := json.Marshal(input)
 		if err != nil {
-			return &backend.ConversionResponse{}, fmt.Errorf("marshal: %w", err)
+			return &backend.QueryConversionResponse{}, fmt.Errorf("marshal: %w", err)
 		}
 		q.JSON = newJSON
-		qBytes, err := json.Marshal(q)
-		if err != nil {
-			return &backend.ConversionResponse{}, fmt.Errorf("marshal: %w", err)
-		}
-		query.Raw = qBytes
-		res.Objects = append(res.Objects, query)
+		res.Queries = append(res.Queries, q)
 	}
 	return res, nil
 }
