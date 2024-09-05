@@ -46,7 +46,7 @@ jobs:
             This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files, grafana-plugin-sdk-go and docker-compose files for each plugin example
 
       - name: Auto approve PR
-        uses: hmarr/auto-approve-action@v3
+        uses: hmarr/auto-approve-action@v4
         with:
           pull-request-number: ${{ steps.create_pr.outputs.pull-request-number }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
