@@ -52,17 +52,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Enable auto-merge for PR
-        run: gh pr merge --auto --rebase "$PR_URL"
+        run: gh pr merge --auto "$PR_URL"
         env:
           PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-  alls-green:
-    if: always()
-    needs:
-      - update-grafana
-    runs-on: ubuntu-latest
-    steps:
-      - name: Ensure all other jobs pass successfully
-        uses: re-actors/alls-green@release/v1
-        with:
-          jobs: ${{ toJSON(needs) }}
