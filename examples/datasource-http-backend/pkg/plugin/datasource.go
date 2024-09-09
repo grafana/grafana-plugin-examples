@@ -175,10 +175,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	if len(query.JSON) > 0 {
-		input := &kinds.DataQuery{}
-		err = json.Unmarshal(query.JSON, input)
+		input, err := convertQuery(query)
 		if err != nil {
-			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+			return backend.DataResponse{}, err
 		}
 		q := req.URL.Query()
 		q.Add("multiplier", strconv.Itoa(input.Multiply))
@@ -268,26 +267,25 @@ func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHeal
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
 }
 
-func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryConversionRequest) (*backend.QueryConversionResponse, error) {
-	res := &backend.QueryConversionResponse{}
-	// NOTE: req.PluginContext.APIVersion and req.PluginContext.PluginVersion are available here, which represent
-	// the current runtime version, not the version the query was built with.
-	for _, q := range req.Queries {
-		input := &kinds.DataQuery{}
-		err := json.Unmarshal(q.JSON, input)
-		if err != nil {
-			return &backend.QueryConversionResponse{}, fmt.Errorf("unmarshal: %w", err)
-		}
-		if input.Multiplier != 0 && input.Multiply == 0 {
-			input.Multiply = input.Multiplier
-			input.Multiplier = 0
-		}
-		newJSON, err := json.Marshal(input)
-		if err != nil {
-			return &backend.QueryConversionResponse{}, fmt.Errorf("marshal: %w", err)
-		}
-		q.JSON = newJSON
-		res.Queries = append(res.Queries, q)
+func convertQuery(orig backend.DataQuery) (*kinds.DataQuery, error) {
+	input := &kinds.DataQuery{}
+	err := json.Unmarshal(orig.JSON, input)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshal: %w", err)
 	}
-	return res, nil
+	if input.Multiplier != 0 && input.Multiply == 0 {
+		input.Multiply = input.Multiplier
+		input.Multiplier = 0
+	}
+	return input, nil
+}
+
+func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryConversionRequest) (*backend.QueryConversionResponse, error) {
+	input, err := convertQuery(req.Query)
+	if err != nil {
+		return nil, err
+	}
+	return &backend.QueryConversionResponse{
+		Query: *input,
+	}, nil
 }
