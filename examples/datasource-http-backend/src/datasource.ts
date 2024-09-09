@@ -1,8 +1,7 @@
 import { CoreApp, DataSourceInstanceSettings } from '@grafana/data';
 
 import { MyQuery, MyDataSourceOptions, MyQueryDeprecated } from './types';
-import { DataSourceWithBackend } from '@grafana/runtime';
-import { omit } from 'lodash';
+import { DataSourceWithBackend, getBackendSrv, config } from '@grafana/runtime';
 
 export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
@@ -13,21 +12,24 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
     return { multiply: 1 };
   }
 
-  migrateQuery(query: MyQuery | MyQueryDeprecated): MyQuery {
-    if (query.datasource?.apiVersion !== 'v0alpha1') {
-      // Unkown version
-      return query as MyQuery;
-    }
+  async migrateQuery(query: MyQuery | MyQueryDeprecated): Promise<MyQuery> {
     if ('multiply' in query) {
       return query;
     }
-    if ('multiplier' in query) {
-      const migrated: MyQuery = {
-        ...query,
-        multiply: query.multiplier,
-      };
-      return omit(migrated, 'multiplier');
+    const request = {
+      queries: [
+        {
+          ...query,
+          JSON: query, // JSON is not part of the type but it should what holds the query
+        },
+      ],
+    };
+
+    let url = '/api/ds/query/convert';
+    if (config.featureToggles.grafanaAPIServerWithExperimentalAPIs) {
+      url = `/apis/example-httpbackend.datasource.grafana.app/v0alpha1/namespaces/stack-1/connections/${this.uid}/query-convert`;
     }
-    throw new Error('Unknown query format');
+    const response = await getBackendSrv().post(url, request);
+    return response.queries[0];
   }
 }
