@@ -192,9 +192,6 @@ func (d *Datasource) handleMigrateQuery(rw http.ResponseWriter, req *http.Reques
 		http.Error(rw, fmt.Sprintf("encode response: %s", err), http.StatusInternalServerError)
 		return
 	}
-	rw.Header().Add("Cache-Control", "max-age=86400")
-	rw.Header().Add("X-Grafana-Cache", "true")
-
 	rw.WriteHeader(http.StatusOK)
 }
 
