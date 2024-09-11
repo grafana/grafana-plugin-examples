@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"time"
@@ -14,10 +15,12 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
+	"golang.org/x/mod/semver"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do
@@ -59,10 +62,17 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
 	}
-	return &Datasource{
+
+	ds := &Datasource{
 		settings:   settings,
 		httpClient: cl,
-	}, nil
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/migrate-query", ds.handleMigrateQuery)
+	ds.resourceHandler = httpadapter.New(mux)
+
+	return ds, nil
 }
 
 // DatasourceOpts contains the default ManageOpts for the datasource.
@@ -81,7 +91,8 @@ var DatasourceOpts = datasource.ManageOpts{
 type Datasource struct {
 	settings backend.DataSourceInstanceSettings
 
-	httpClient *http.Client
+	httpClient      *http.Client
+	resourceHandler backend.CallResourceHandler
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
@@ -147,6 +158,65 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
+func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	return d.resourceHandler.CallResource(ctx, req, sender)
+}
+
+func (d *Datasource) handleMigrateQuery(rw http.ResponseWriter, req *http.Request) {
+	if req.Method != http.MethodPost {
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	pCtx := backend.PluginConfigFromContext(req.Context())
+	defer req.Body.Close()
+	queryJSON, err := io.ReadAll(req.Body)
+	if err != nil {
+		http.Error(rw, fmt.Sprintf("read body: %s", err), http.StatusBadRequest)
+		return
+	}
+	query := &backend.DataQuery{}
+	err = json.Unmarshal(queryJSON, query)
+	if err != nil {
+		http.Error(rw, fmt.Sprintf("unmarshal: %s", err), http.StatusBadRequest)
+		return
+	}
+	query.JSON = queryJSON
+	input, err := d.migrateQuery(pCtx, *query)
+	if err != nil {
+		http.Error(rw, fmt.Sprintf("migrate query: %s", err), http.StatusBadRequest)
+		return
+	}
+	err = json.NewEncoder(rw).Encode(input)
+	if err != nil {
+		http.Error(rw, fmt.Sprintf("encode response: %s", err), http.StatusInternalServerError)
+		return
+	}
+	rw.Header().Add("Cache-Control", "max-age=86400")
+	rw.Header().Add("X-Grafana-Cache", "true")
+
+	rw.WriteHeader(http.StatusOK)
+}
+
+func (d *Datasource) migrateQuery(pCtx backend.PluginContext, query backend.DataQuery) (*apiQuery, error) {
+	input := &apiQuery{}
+	err := json.Unmarshal(query.JSON, input)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshal: %w", err)
+	}
+	if input.PluginVersion == "" || semver.Compare(input.PluginVersion, "1.1.0") < 0 {
+		// The query needs migration
+		deprecatedInput := &apiQueryV1{}
+		err = json.Unmarshal(query.JSON, deprecatedInput)
+		if err != nil {
+			return nil, fmt.Errorf("unmarshal: %w", err)
+		}
+		input.Multiply = deprecatedInput.Multiplier
+		input.PluginVersion = pCtx.PluginVersion
+	}
+	return input, nil
+}
+
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
 	// Create spans for this function.
 	// tracing.DefaultTracer() returns the tracer initialized when calling Manage().
@@ -173,13 +243,12 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	if len(query.JSON) > 0 {
-		input := &apiQuery{}
-		err = json.Unmarshal(query.JSON, input)
+		input, err := d.migrateQuery(pCtx, query)
 		if err != nil {
-			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+			return backend.DataResponse{}, err
 		}
 		q := req.URL.Query()
-		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		q.Add("multiplier", strconv.Itoa(input.Multiply))
 		req.URL.RawQuery = q.Encode()
 	}
 	httpResp, err := d.httpClient.Do(req)

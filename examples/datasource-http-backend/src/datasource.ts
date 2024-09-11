@@ -9,6 +9,10 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
-    return { multiplier: 1 };
+    return { multiply: 1, pluginVersion: this.meta.info.version };
+  }
+
+  async migrateQuery(query: any): Promise<MyQuery> {
+    return await this.postResource<MyQuery>(`/migrate-query`, query);
   }
 }

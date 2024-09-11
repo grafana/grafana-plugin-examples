@@ -1,6 +1,10 @@
 package plugin
 
-import "time"
+import (
+	"time"
+
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/apis/data/v0alpha1"
+)
 
 // apiMetrics is a struct containing a slice of dataPoint
 type apiMetrics struct {
@@ -14,5 +18,12 @@ type apiDataPoint struct {
 }
 
 type apiQuery struct {
+	v0alpha1.CommonQueryProperties
+
+	Multiply      int    `json:"multiply"`
+	PluginVersion string `json:"pluginVersion"`
+}
+
+type apiQueryV1 struct {
 	Multiplier int `json:"multiplier"`
 }
