@@ -3,7 +3,7 @@
 This repository contains a streaming data source plugin complete with WebSocket integration.
 ## Overview
 
-The Streaming Backend WebSocket Data Source Plugin demonstrates the integration of a backend WebSocket service as a custom data source within Grafana. This plugin serves as a reference implementation for developers seeking to incorporate WebSocket-based data sources into their Grafana dashboards for streaming data scenarios.
+The Streaming WebSocket Backend Data Source Plugin serves as a reference implementation for developers seeking to incorporate WebSocket-based services into their Grafana dashboards for streaming data scenarios.
 
 The plugin connects to the backend through a streaming connection and the backend establishes a connection to an external WebSocket server.
 
