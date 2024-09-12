@@ -37,5 +37,6 @@ This package contains a WebSocket server that returns random values at random in
 ## Learn more
 
 - [Grafana plugins documentation](https://grafana.com/developers/plugin-tools/)
+- [Grafana UI components documentation](https://developers.grafana.com/ui/latest/index.html)
 - [Build a data source plugin tutorial](https://grafana.com/developers/plugin-tools/tutorials/build-a-data-source-plugin)
 - [Grafana documentation](https://grafana.com/docs/)
