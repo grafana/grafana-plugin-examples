@@ -1,4 +1,4 @@
-# Basic Data Source HTTP Plugin for Grafana
+# Data Source HTTP Plugin for Grafana
 
 This repository contains a data source plugin that uses HTTP through Grafana's data source HTTP proxy.
 ## Overview
