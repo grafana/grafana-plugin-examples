@@ -1,4 +1,4 @@
-export const testIds = { /** Used in e2e cypress tests */
+export const testIds = {
   panel: {
     container: 'data-testid panel-container',
   },

@@ -1,0 +1,45 @@
+name: Update Grafana Version
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-grafana:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PEM }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Grafana version
+        run: |
+          bash scripts/update-grafana-version.sh
+
+      - name: Check the status of the repo
+        id: status
+        run: |
+          echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
+
+      - name: Create PR
+        if: ${{ steps.status.outputs.status == '1' }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          branch: new-update-plugin-examples
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          delete-branch: true
+          commit-message: "chore: update configuration to latest version"
+          title: "Chore: Bump plugin-examples configuration to latest version"
+          body: |
+            Bumps [`grafana-plugin-examples`](https://github.com/grafana/grafana-plugin-examples) configuration to the latest version.
+
+            **Notes for reviewer:**
+            This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files, grafana-plugin-sdk-go and docker-compose files for each plugin example

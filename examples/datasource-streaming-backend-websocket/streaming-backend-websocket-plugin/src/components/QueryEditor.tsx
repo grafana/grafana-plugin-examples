@@ -20,10 +20,22 @@ export function QueryEditor({ query, onChange, onRunQuery }: Props) {
   return (
     <HorizontalGroup>
       <InlineField label="Lower Limit" labelWidth={16} tooltip="Random numbers lower limit">
-        <Input onChange={onLowerLimitChange} onBlur={onRunQuery} value={lowerLimit || ''} type="number" />
+        <Input
+          data-testid="lower-limit"
+          onChange={onLowerLimitChange}
+          onBlur={onRunQuery}
+          value={lowerLimit || ''}
+          type="number"
+        />
       </InlineField>
       <InlineField label="Upper Limit" labelWidth={16} tooltip="Random numbers upper limit">
-        <Input onChange={onUpperLimitChange} onBlur={onRunQuery} value={upperLimit || ''} type="number" />
+        <Input
+          data-testid="upper-limit"
+          onChange={onUpperLimitChange}
+          onBlur={onRunQuery}
+          value={upperLimit || ''}
+          type="number"
+        />
       </InlineField>
     </HorizontalGroup>
   );

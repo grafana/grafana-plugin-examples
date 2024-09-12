@@ -1,8 +1,8 @@
 {
-  "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "example-logs",
-  "id": "grafana-logs-datasource",
+  "name": "grafana-logs-datasource",
+  "id": "example-logs-datasource",
   "metrics": true,
   "logs": true,
   "streaming": true,
@@ -11,7 +11,9 @@
     "author": {
       "name": "Grafana"
     },
-    "keywords": ["datasource"],
+    "keywords": [
+      "datasource"
+    ],
     "logos": {
       "small": "img/log.png",
       "large": "img/log.png"
@@ -22,7 +24,7 @@
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.1.0",
+    "grafanaDependency": ">=10.3.3",
     "plugins": []
   }
 }

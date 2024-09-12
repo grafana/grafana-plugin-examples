@@ -1,6 +1,9 @@
 .vscode
+.idea
 node_modules
-**/cypress/videos
-**/cypress/report.json
-**/cypress/screenshots/actual/
 .DS_Store
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+**/playwright/.auth/

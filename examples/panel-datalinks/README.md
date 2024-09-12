@@ -48,7 +48,7 @@ A data source backend plugin consists of both frontend and backend components. I
    npm run server
    ```
 
-6. Run the E2E tests (using Cypress):
+6. Run the E2E tests:
 
    ```bash
    # Spin up a Grafana instance first that we tests against

@@ -44,7 +44,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
    npm run server
    ```
 
-6. Run the E2E tests (using Cypress)
+6. Run the E2E tests
 
    ```bash
    # Spin up a Grafana instance first that we tests against

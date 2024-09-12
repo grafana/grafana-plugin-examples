@@ -4,51 +4,47 @@ This repository contains example plugins to showcase different use cases.
 
 ## App plugins
 
-| Example                                                       | Description                                                                                       |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                            |
-| [app-with-dashboards](examples/app-with-dashboards)           | Shows how to include pre-built dashboards in an app plugin                                |
-| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                     |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                         |
+| Example                                                       | Description                                                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
+| [app-with-dashboards](examples/app-with-dashboards)           | Shows how to include pre-built dashboards in an app plugin                                 |
+| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
+| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
 | [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
 | [app-with-scenes](examples/app-with-scenes)                   | Shows how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/)  |
+| [app-with-service-account](examples/app-with-service-account) | Shows how an app can request a service account to query the Grafana API.                   |
+| [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
 
 ## Panel plugins
 
-| Example                                           | Description                                                                                                                              |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [panel-flot](examples/panel-flot)                 | Shows how to use the [Flot](http://www.flotcharts.org) plotting library in a panel plugin.                                        |
+| Example                                           | Description                                                                                                                       |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [panel-frame-select](examples/panel-frame-select) | Shows how to update panel options with values from a data query response.                                                         |
-| [panel-plotly](examples/panel-plotly)             | Shows how to use the [Plotly](https://plotly.com/javascript/) graphing library in a panel plugin.                                 |
-| [panel-scatterplot](examples/panel-scatterplot)   | Shows how to use D3 and SVG to create a scatter plot panel.                                                                       |
-| [panel-visx](examples/panel-visx)                 | Shows how to use [visx](https://github.com/airbnb/visx) to create a time series graph.                                            |
 | [panel-basic](examples/panel-basic)               | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
 | [panel-datalinks](examples/panel-datalinks)       | Shows how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
 
 ## Data source plugins
 
-| Example                                                                   | Description                                                                                                          |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| [datasource-http](examples/datasource-http)                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
-| [datasource-http-backend](examples/datasource-http-backend)               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
-| [datasource-streaming-websocket](examples/datasource-streaming-websocket) | Shows how to create an event-based data source plugin using RxJS and WebSockets.                             |
-| [datasource-streaming-backend-websocket](examples/datasource-streaming-backend-websocket) | Shows how to create an event-based data source plugin using backend streams.                             |
-| [datasource-basic](examples/datasource-basic)                             | Shows how to build a basic data source plugin.                                                                |
+| Example                                                                                   | Description                                                                                                   |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [datasource-http](examples/datasource-http)                                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
+| [datasource-http-backend](examples/datasource-http-backend)                               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
+| [datasource-streaming-websocket](examples/datasource-streaming-websocket)                 | Shows how to create an event-based data source plugin using RxJS and WebSockets.                              |
+| [datasource-streaming-backend-websocket](examples/datasource-streaming-backend-websocket) | Shows how to create an event-based data source plugin using backend streams.                                  |
+| [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
 
 > [!NOTE]
 > The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead, we offer no support for them.
 
 ## Integration tests
 
-Some of the examples in this repository contain integration tests that make use of [`@grafana/e2e`](https://npmjs.com/package/@grafana/e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
+Some of the examples in this repository contain integration tests that make use of [`@grafana/plugin-e2e`](https://npmjs.com/package/@grafana/plugin-e2e) package. These tests can be run individually by navigating to the example plugin and running one of the following commands:
 
-- `npm run e2e` - run integration tests
-- `npm run e2e:open` - open cypress ui and run integration tests
-- `npm run e2e:update` - run integration tests and update any screenshots
+- `npm run e2e` - run Playwright e2e tests
 
 ### Testing against latest versions of Grafana
 
-The GitHub workflow `.github/workflows/integration-tests.yml` finds all plugin examples identified by the existence of `src/plugin.json`. For every example plugin build scripts will be run to confirm the plugins can be built against intended and canary NPM packages. Any example plugin that has a cypress directory defined will run the following:
+The GitHub workflow `.github/workflows/integration-tests.yml` finds all plugin examples identified by the existence of `src/plugin.json`. For every example plugin, build scripts will be run to confirm the plugins can be built against intended and canary NPM packages. Any example plugin that has a playwright.config.ts file will run the following:
 
 1. Build the plugin with the provided version of Grafana packages and test against the provided version of Grafana
    - _asserting the plugin works with its expected versions_
@@ -96,7 +92,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20'
       - name: Install dependencies
         run: npm install
       - name: Build plugin
@@ -104,9 +100,9 @@ jobs:
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@v1
         with:
-          module: "./src/module.ts"
-          comment-pr: "yes"
-          fail-if-incompatible: "no"
+          module: './src/module.ts'
+          comment-pr: 'yes'
+          fail-if-incompatible: 'no'
 ```
 
 This runs a compatibility check for the latest release of Grafana plugins API in your project every time a new push or pull request is open. If it finds an error you will see a message indicating you have an incompatibility.

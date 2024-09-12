@@ -1,0 +1,16 @@
+apiVersion: 1
+
+datasources:
+  - name: Streaming websocket datasource
+    type: example-websocket-datasource
+    access: proxy
+    isDefault: true
+    orgId: 1
+    version: 1
+    editable: true
+    url: 'ws://host.docker.internal:8080'
+    jsonData:
+      path: '/resources'
+      defaultTimeField: 
+    secureJsonData: 
+      apiKey: 'api-key'

@@ -52,7 +52,7 @@ export function PageOne() {
     setApiResponse('Loading...');
     let params = {};
     params = { ...params, method: method };
-    if (method === 'POST' || method === "PUT") {
+    if (method === 'POST' || method === 'PUT') {
       let parsedBody = JSON.parse(body);
       params = { ...params, body: JSON.stringify(parsedBody) };
     }
@@ -98,7 +98,9 @@ export function PageOne() {
         <h3>Token used</h3>
         <p>{apiToken}</p>
         <h3>API Response</h3>
-        <JSONFormatter json={apiResponse} />
+        <div data-testid="json-format-response">
+          <JSONFormatter json={apiResponse} />
+        </div>
       </VerticalGroup>
     </div>
   );

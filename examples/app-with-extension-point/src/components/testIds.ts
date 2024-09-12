@@ -1,16 +1,16 @@
 export const testIds = {
-  container: 'data-testid main-app-body',
+  container: 'main-app-body',
   actions: {
-    button: 'data-testid action-button',
+    button: 'action-button',
   },
   modal: {
-    container: 'data-testid container',
-    open: 'data-testid open-link',
+    container: 'container',
+    open: 'open-link',
   },
   appA: {
-    container: 'data-testid a-app-body',
+    container: 'a-app-body',
   },
   appB: {
-    modal: 'data-testid b-app-modal',
+    modal: 'b-app-modal',
   },
 };

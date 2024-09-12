@@ -1,9 +1,0 @@
-{
-  "video": false,
-  "videoCompression": false,
-  "screenshotOnRunFailure": true,
-  "reporter": "spec",
-  "retries": {
-    "runMode": 3
-  }
-}

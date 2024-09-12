@@ -1,4 +1,4 @@
-import { DataQuery } from '@grafana/schema'
+import { DataQuery } from '@grafana/schema';
 
 export interface MyQuery extends DataQuery {
   queryText: string;
@@ -6,6 +6,10 @@ export interface MyQuery extends DataQuery {
 }
 
 export interface MyDataSourceOptions {}
+
+export interface DataSourceResponse {
+  datapoints: string[];
+}
 
 export const DEFAULT_QUERY: Partial<MyQuery> = {
   queryText: '',

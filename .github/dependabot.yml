@@ -72,14 +72,6 @@ updates:
     open-pull-requests-limit: 3
     reviewers:
       - "grafana/plugins-platform-frontend"
-  
-  - package-ecosystem: "npm"
-    directory: "/panel-flot"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"
 
   - package-ecosystem: "npm"
     directory: "/panel-frame-select"
@@ -88,27 +80,3 @@ updates:
     open-pull-requests-limit: 3
     reviewers:
       - "grafana/plugins-platform-frontend"
-  
-  - package-ecosystem: "npm"
-    directory: "/panel-plotly"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"
-  
-  - package-ecosystem: "npm"
-    directory: "/panel-scatterplot"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"    
-  
-  - package-ecosystem: "npm"
-    directory: "/panel-visx"
-    schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 3
-    reviewers:
-      - "grafana/plugins-platform-frontend"        

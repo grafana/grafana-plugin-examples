@@ -17,7 +17,7 @@ This plugin example also showcases other features and best-practices of backend 
 - Using the `httpclient` provided by the [Grafana Plugin SDK for Go](https://pkg.go.dev/github.com/grafana/grafana-plugin-sdk-go/backend/httpclient)
 - Tracing, for better instrumentation of your plugin
 
-This plugin example also includes an example server returning data in the format expected by this plugin (`cmd/server`). Refer to the section below on how to build and run it.
+This plugin example also includes an example server returning data in the format expected by this plugin (`/server`). Refer to the section below on how to build and run it.
 
 ## External service
 
@@ -37,6 +37,7 @@ An example HTTP server that returns dummy data in this format is included in `cm
 ## Get started
 
 Data source plugins consist of both frontend and backend components. Install these components with the following CLI commands.
+## Building
 
 ### Frontend
 
@@ -67,9 +68,11 @@ $ ./cmd/server/server :10000
 ```
 
 2. Add a new data source in Grafana and use the following URL:
+The mockserver required for testing has been included in the Docker Compose file 
 
+Add a new data source in Grafana using the following URL:
 ```
-http://127.0.0.1:10000/metrics
+http://host.docker.internal:10000/metrics
 ```
 
 ## Learn more

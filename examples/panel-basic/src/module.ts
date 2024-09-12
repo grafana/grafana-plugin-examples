@@ -13,7 +13,7 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
         },
       },
     },
-    useCustomConfig: (builder) => { 
+    useCustomConfig: (builder) => {
       builder
         .addRadio({
           path: 'gradientMode',
@@ -60,8 +60,13 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
         });
     },
   })
-  .setPanelOptions((builder) => { 
+  .setPanelOptions((builder) => {
     return builder
+      .addBooleanSwitch({
+        path: 'showSeriesCount',
+        name: 'Show series counter',
+        defaultValue: false,
+      })
       .addRadio({
         path: 'legend.displayMode',
         name: 'Legend mode',
