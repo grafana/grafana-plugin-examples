@@ -57,7 +57,7 @@ $ mage -v
 
 ### Set up a server
 
-1. Set up a backend server:
+1. Set up a backend server to return data:
 
 
 ```bash
