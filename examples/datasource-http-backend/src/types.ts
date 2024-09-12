@@ -1,7 +1,8 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import { DataQuery, DataSourceJsonData } from '@grafana/schema';
 
 export interface MyQuery extends DataQuery {
-  multiplier: number;
+  multiply: number;
+  pluginVersion: string;
 }
 
 /**
