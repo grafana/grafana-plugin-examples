@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/grafana/grafana-starter-datasource/workflows/CI/badge.svg)](https://github.com/grafana/grafana-starter-datasource/actions?query=workflow%3A%22CI%22)
 
-This example provides a template for how to build a simple frontend data source plugin. 
+This example provides a template for how to build a simple backend data source plugin. 
 ## Overview
 
 The Basic Data Source Plugin offers a streamlined starting point for developers to understand the essential structure and functionality required for adding their own data sources to Grafana.
@@ -11,7 +11,7 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
 
 ## Get started
 
-Data source plugins consist of both frontend and backend components. Install these components with the following CLI commands.
+Data source plugins may consist of a frontend or a backend component.  This example shows a data source plugin with a backend component. Install this component with the following CLI commands.
 
 ### Frontend
 
