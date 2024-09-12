@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/grafana/grafana-starter-datasource/workflows/CI/badge.svg)](https://github.com/grafana/grafana-starter-datasource/actions?query=workflow%3A%22CI%22)
 
-This repository contains a simple data source plugin example.
+This example provides a template for how to build a simple frontend data source plugin. 
 ## Overview
 
 The Basic Data Source Plugin offers a streamlined starting point for developers to understand the essential structure and functionality required for adding their own data sources to Grafana.
