@@ -1,4 +1,4 @@
-# Streaming Backend WebSocket Data Source Plugin for Grafana
+# Streaming WebSocket Backend Data Source Plugin for Grafana
 
 This backend data source plugin shows how to stream data from a WebSocket.
 ## Overview
