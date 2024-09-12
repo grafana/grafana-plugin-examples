@@ -1,6 +1,6 @@
 # Logs Data Source Plugin for Grafana 
 
-This repository contains a data source plugin with logs.
+This repository contains a data source plugin for logs.
 
 ## Overview
 
