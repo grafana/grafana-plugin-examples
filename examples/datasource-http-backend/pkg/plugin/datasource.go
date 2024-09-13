@@ -27,9 +27,10 @@ import (
 // backend.CheckHealthHandler interfaces. Plugin should not implement all these
 // interfaces- only those which are required for a particular task.
 var (
-	_ backend.QueryDataHandler      = (*Datasource)(nil)
-	_ backend.CheckHealthHandler    = (*Datasource)(nil)
-	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
+	_ backend.QueryDataHandler       = (*Datasource)(nil)
+	_ backend.CheckHealthHandler     = (*Datasource)(nil)
+	_ instancemgmt.InstanceDisposer  = (*Datasource)(nil)
+	_ backend.QueryConversionHandler = (*Datasource)(nil)
 )
 
 var (
@@ -280,18 +281,20 @@ func convertQuery(orig backend.DataQuery) (*kinds.DataQuery, error) {
 	return input, nil
 }
 
-func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
-	queries := make([]backend.DataQuery, 0, len(req.Queries))
+func (d *Datasource) ConvertQueryDataRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
+	queries := make([]any, 0, len(req.Queries))
 	for _, q := range req.Queries {
 		input, err := convertQuery(q)
 		if err != nil {
 			return nil, err
 		}
 		q.JSON, err = json.Marshal(input)
+		if err != nil {
+			return nil, fmt.Errorf("marshal: %w", err)
+		}
 		queries = append(queries, q)
 	}
-	req.Queries = queries
 	return &backend.QueryConversionResponse{
-		QueryRequest: req,
+		Queries: queries,
 	}, nil
 }
