@@ -26,9 +26,9 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
     };
 
     let url = '/api/ds/query/convert';
-    // if (config.featureToggles.grafanaAPIServerWithExperimentalAPIs) {
-    //   url = `/apis/example-httpbackend.datasource.grafana.app/v0alpha1/namespaces/stack-1/connections/${this.uid}/query-convert`;
-    // }
+    if (config.featureToggles.grafanaAPIServerWithExperimentalAPIs) {
+      url = `/apis/example-httpbackend.datasource.grafana.app/v0alpha1/namespaces/stack-1/connections/${this.uid}/query-convert`;
+    }
     const response = await getBackendSrv().post(url, request);
     return response.queries[0].JSON;
   }
