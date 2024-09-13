@@ -280,12 +280,18 @@ func convertQuery(orig backend.DataQuery) (*kinds.DataQuery, error) {
 	return input, nil
 }
 
-func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryConversionRequest) (*backend.QueryConversionResponse, error) {
-	input, err := convertQuery(req.Query)
-	if err != nil {
-		return nil, err
+func (d *Datasource) ConvertQuery(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
+	queries := make([]backend.DataQuery, 0, len(req.Queries))
+	for _, q := range req.Queries {
+		input, err := convertQuery(q)
+		if err != nil {
+			return nil, err
+		}
+		q.JSON, err = json.Marshal(input)
+		queries = append(queries, q)
 	}
+	req.Queries = queries
 	return &backend.QueryConversionResponse{
-		Query: *input,
+		QueryRequest: req,
 	}, nil
 }
