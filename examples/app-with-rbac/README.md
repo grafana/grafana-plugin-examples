@@ -105,6 +105,10 @@ To do so, activate two additional features:
 - `externalServiceAccounts` - To obtain a managed service account to retrieve Grafana users' permissions.
 - `idForwarding` - To obtain an ID token that identify the requester (user or service account).
 
+**Warning:** The `externalServiceAccounts` feature currently **only supports single-organization deployments**.
+The plugin's service account is automatically created in the default organization (ID: `1`). This means the plugin can only access data and resources within that specific organization.
+**If your plugin needs to work with multiple organizations, this feature is not suitable.**
+
 In your `plugin.json`, add the `iam` section to get a service account token with the needed permissions:
 
 ```json

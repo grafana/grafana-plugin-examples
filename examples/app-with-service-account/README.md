@@ -4,6 +4,10 @@ This plugin is an example of how to integrate Service Account authentication int
 
 **Note:** This plugin requires Grafana 10.3 or later and the `externalServiceAccounts` feature toggle must be enabled. This is an experimental feature.
 
+**Warning:** This feature currently **only supports single-organization deployments**.
+The plugin's service account is automatically created in the default organization (ID: `1`). This means the plugin can only access data and resources within that specific organization.
+**If your plugin needs to work with multiple organizations, this feature is not suitable.**
+
 ## How to use
 
 This app allows you to create a service account in Grafana tailored to your plugin needs. Grafana will provide the plugin with a service account token that you can use to request the Grafana API.
