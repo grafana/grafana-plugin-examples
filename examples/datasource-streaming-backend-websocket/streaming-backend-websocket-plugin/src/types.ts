@@ -1,4 +1,5 @@
-import { DataQuery, DataSourceJsonData } from '@grafana/data';
+import type { DataSourceJsonData } from '@grafana/data';
+import type { DataQuery } from '@grafana/schema';
 
 export interface MyQuery extends DataQuery {
   upperLimit: number;
