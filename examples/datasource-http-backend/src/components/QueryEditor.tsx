@@ -10,13 +10,13 @@ export function QueryEditor(props: Props) {
   const [query, setQuery] = useState<MyQuery | undefined>(undefined);
   useEffect(() => {
     if (props.query) {
-      props.datasource.migrateQuery(props.query).then((migrated) => {
+      props.datasource.postMigrateQuery(props.query).then((migrated) => {
         setQuery(migrated);
       });
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   if (!query) {
-    return 'Loading...';
+    return <>Loading...</>;
   }
   return (
     <HorizontalGroup>

@@ -27,10 +27,9 @@ import (
 // backend.CheckHealthHandler interfaces. Plugin should not implement all these
 // interfaces- only those which are required for a particular task.
 var (
-	_ backend.QueryDataHandler       = (*Datasource)(nil)
-	_ backend.CheckHealthHandler     = (*Datasource)(nil)
-	_ instancemgmt.InstanceDisposer  = (*Datasource)(nil)
-	_ backend.QueryConversionHandler = (*Datasource)(nil)
+	_ backend.QueryDataHandler      = (*Datasource)(nil)
+	_ backend.CheckHealthHandler    = (*Datasource)(nil)
+	_ instancemgmt.InstanceDisposer = (*Datasource)(nil)
 )
 
 var (
@@ -77,6 +76,7 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
+	QueryConversionHandler: backend.ConvertQueryFunc(ConvertQueryDataRequest),
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
@@ -281,7 +281,7 @@ func convertQuery(orig backend.DataQuery) (*kinds.DataQuery, error) {
 	return input, nil
 }
 
-func (d *Datasource) ConvertQueryDataRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
+func ConvertQueryDataRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
 	queries := make([]any, 0, len(req.Queries))
 	for _, q := range req.Queries {
 		input, err := convertQuery(q)
