@@ -6,6 +6,7 @@ import {
   DataSourceApi,
   DataSourceInstanceSettings,
   FieldType,
+  createDataFrame,
 } from '@grafana/data';
 import { getBackendSrv, isFetchError } from '@grafana/runtime';
 import { DataSourceResponse, defaultQuery, MyDataSourceOptions, MyQuery } from './types';
@@ -35,14 +36,13 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
     // Return a constant for each query.
     const data = options.targets.map((target) => {
-      const df: DataFrame = {
-        length: 2,
+      const df: DataFrame = createDataFrame({        
         refId: target.refId,
         fields: [
           { name: 'Time', values: [from, to], type: FieldType.time, config: {} },
           { name: 'Value', values: [target.constant, target.constant], type: FieldType.number, config: {} },
         ],
-      };
+      });
       return df;
     });
 
