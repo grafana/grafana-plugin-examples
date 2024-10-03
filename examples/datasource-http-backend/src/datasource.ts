@@ -1,9 +1,9 @@
 import { CoreApp, DataSourceInstanceSettings } from '@grafana/data';
 
 import { MyQuery, MyDataSourceOptions } from './types';
-import { DataSourceWithBackend, postMigrateQuery } from '@grafana/runtime';
+import { DataSourceWithBackendMigration } from '@grafana/runtime';
 
-export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> {
+export class DataSource extends DataSourceWithBackendMigration<MyQuery, MyDataSourceOptions> {
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
   }
@@ -12,10 +12,14 @@ export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptio
     return { multiply: 1 };
   }
 
-  async migrateQuery(query: MyQuery): Promise<MyQuery> {
+  filterQuery(query: MyQuery): boolean {
+    return true;
+  }
+
+  migrateQuery(query: MyQuery): Promise<MyQuery> | MyQuery {
     if ('multiply' in query) {
       return query;
     }
-    return postMigrateQuery(query);
+    return super.migrateQuery(query);
   }
 }
