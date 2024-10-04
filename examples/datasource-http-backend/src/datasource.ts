@@ -1,33 +1,29 @@
 import { CoreApp, DataSourceInstanceSettings } from '@grafana/data';
 
-import { MyQuery, MyDataSourceOptions, MyQueryDeprecated } from './types';
-import { DataSourceWithBackend } from '@grafana/runtime';
-import { omit } from 'lodash';
+import { MyQuery, MyDataSourceOptions } from './types';
+import { DataSourceWithBackend, MigrationHandler } from '@grafana/runtime';
+import { DataQuery } from '@grafana/schema';
 
-export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> {
+export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> implements MigrationHandler {
+  hasBackendMigration: boolean;
+
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
+    this.hasBackendMigration = true;
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
     return { multiply: 1 };
   }
 
-  migrateQuery(query: MyQuery | MyQueryDeprecated): MyQuery {
-    if (query.datasource?.apiVersion !== 'v0alpha1') {
-      // Unkown version
-      return query as MyQuery;
-    }
+  filterQuery(query: MyQuery): boolean {
+    return true;
+  }
+
+  shouldMigrate(query: DataQuery): boolean {
     if ('multiply' in query) {
-      return query;
+      return false;
     }
-    if ('multiplier' in query) {
-      const migrated: MyQuery = {
-        ...query,
-        multiply: query.multiplier,
-      };
-      return omit(migrated, 'multiplier');
-    }
-    throw new Error('Unknown query format');
+    return true;
   }
 }

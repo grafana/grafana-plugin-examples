@@ -76,6 +76,7 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
+	QueryConversionHandler: backend.ConvertQueryFunc(ConvertQueryDataRequest),
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
@@ -175,10 +176,9 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	if len(query.JSON) > 0 {
-		input := &kinds.DataQuery{}
-		err = json.Unmarshal(query.JSON, input)
+		input, err := convertQuery(query)
 		if err != nil {
-			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+			return backend.DataResponse{}, err
 		}
 		q := req.URL.Query()
 		q.Add("multiplier", strconv.Itoa(input.Multiply))
@@ -266,4 +266,35 @@ func (d *Datasource) CheckHealth(ctx context.Context, _ *backend.CheckHealthRequ
 // and the specified message, which is formatted with Sprintf.
 func newHealthCheckErrorf(format string, args ...interface{}) *backend.CheckHealthResult {
 	return &backend.CheckHealthResult{Status: backend.HealthStatusError, Message: fmt.Sprintf(format, args...)}
+}
+
+func convertQuery(orig backend.DataQuery) (*kinds.DataQuery, error) {
+	input := &kinds.DataQuery{}
+	err := json.Unmarshal(orig.JSON, input)
+	if err != nil {
+		return nil, fmt.Errorf("unmarshal: %w", err)
+	}
+	if input.Multiplier != 0 && input.Multiply == 0 {
+		input.Multiply = input.Multiplier
+		input.Multiplier = 0
+	}
+	return input, nil
+}
+
+func ConvertQueryDataRequest(ctx context.Context, req *backend.QueryDataRequest) (*backend.QueryConversionResponse, error) {
+	queries := make([]any, 0, len(req.Queries))
+	for _, q := range req.Queries {
+		input, err := convertQuery(q)
+		if err != nil {
+			return nil, err
+		}
+		q.JSON, err = json.Marshal(input)
+		if err != nil {
+			return nil, fmt.Errorf("marshal: %w", err)
+		}
+		queries = append(queries, q)
+	}
+	return &backend.QueryConversionResponse{
+		Queries: queries,
+	}, nil
 }
