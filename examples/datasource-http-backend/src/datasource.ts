@@ -1,11 +1,15 @@
 import { CoreApp, DataSourceInstanceSettings } from '@grafana/data';
 
 import { MyQuery, MyDataSourceOptions } from './types';
-import { DataSourceWithBackendMigration } from '@grafana/runtime';
+import { DataSourceWithBackend, MigrationHandler } from '@grafana/runtime';
+import { DataQuery } from '@grafana/schema';
 
-export class DataSource extends DataSourceWithBackendMigration<MyQuery, MyDataSourceOptions> {
+export class DataSource extends DataSourceWithBackend<MyQuery, MyDataSourceOptions> implements MigrationHandler {
+  hasBackendMigration: boolean;
+
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
+    this.hasBackendMigration = true;
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
@@ -16,10 +20,10 @@ export class DataSource extends DataSourceWithBackendMigration<MyQuery, MyDataSo
     return true;
   }
 
-  migrateQuery(query: MyQuery): Promise<MyQuery> | MyQuery {
+  shouldMigrate(query: DataQuery): boolean {
     if ('multiply' in query) {
-      return query;
+      return false;
     }
-    return super.migrateQuery(query);
+    return true;
   }
 }
