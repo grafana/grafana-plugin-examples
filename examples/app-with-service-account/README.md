@@ -2,7 +2,10 @@
 
 This plugin is an example of how to integrate Service Account authentication into a Grafana plugin.
 
-**Note:** This plugin requires Grafana 10.3 or later and the `externalServiceAccounts` feature toggle must be enabled. This is an experimental feature.
+**Note:** This plugin requires Grafana 10.3 or later and the `Managed Service Accounts` feature must be enabled:
+
+- Grafana versions **below 11.3.0**: Enable the `externalServiceAccounts` feature toggle.
+- Grafana **11.3.0 and later**: Activate the `managed_service_accounts_enabled` configuration option in the [auth section](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#auth-section) of your Grafana configuration file.
 
 **Warning:** This feature currently **only supports single-organization deployments**.
 The plugin's service account is automatically created in the default organization (ID: `1`). This means the plugin can only access data and resources within that specific organization.

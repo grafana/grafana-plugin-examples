@@ -102,12 +102,18 @@ If your backend is exposing resources, you can also protect them behind an actio
 
 To do so, activate two additional features:
 
-- `externalServiceAccounts` - To obtain a managed service account to retrieve Grafana users' permissions.
-- `idForwarding` - To obtain an ID token that identify the requester (user or service account).
+1. **Managed Service Accounts:** This allows your plugin to obtain a dedicated service account for interacting with the Grafana API.
 
-**Warning:** The `externalServiceAccounts` feature currently **only supports single-organization deployments**.
-The plugin's service account is automatically created in the default organization (ID: `1`). This means the plugin can only access data and resources within that specific organization.
-**If your plugin needs to work with multiple organizations, this feature is not suitable.**
+   - Grafana versions **below 11.3.0**: Enable the `externalServiceAccounts` feature toggle.
+   - Grafana **11.3.0 and later**: Activate the `managed_service_accounts_enabled` configuration option in the [auth section](https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#auth-section) of your Grafana configuration file.
+
+   **Warning:** The `externalServiceAccounts` feature currently **only supports single-organization deployments**.
+   The plugin's service account is automatically created in the default organization (ID: `1`). This means the plugin can only access data and resources within that specific organization.
+   **If your plugin needs to work with multiple organizations, this feature is not suitable.**
+
+2. **ID Token Forwarding:** This enables your plugin's backend to receive an ID token that identifies the requester (user or service account), allowing you to enforce access control.
+
+   - Enable the `idForwarding` feature toggle.
 
 In your `plugin.json`, add the `iam` section to get a service account token with the needed permissions:
 
