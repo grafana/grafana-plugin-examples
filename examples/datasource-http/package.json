@@ -62,7 +62,8 @@
     "webpack-livereload-plugin": "^3.0.2",
     "imports-loader": "^5.0.0",
     "webpack-virtual-modules": "^0.6.2",
-    "terser-webpack-plugin": "^5.3.10"
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack-subresource-integrity": "^5.1.0"
   },
   "engines": {
     "node": ">=20"
