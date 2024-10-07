@@ -33,5 +33,13 @@
   "dependencies": {
     "grafanaDependency": ">=10.3.3",
     "plugins": []
+  },
+  "extensions": {
+    "extensionPoints": [
+      {
+        "id": "plugins/myorg-extensionpoint-app/actions",
+        "title": "Foo"
+      }
+    ]
   }
 }
