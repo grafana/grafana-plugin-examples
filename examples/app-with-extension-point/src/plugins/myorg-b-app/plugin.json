@@ -5,7 +5,9 @@
   "id": "myorg-b-app",
   "preload": true,
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "Will extend root app with ui extensions",
     "author": {
       "name": "Myorg"
@@ -37,7 +39,9 @@
       {
         "title": "Open from B",
         "description": "Open a modal from plugin B",
-        "targets": ["plugins/myorg-extensionpoint-app/actions"]
+        "targets": [
+          "plugins/myorg-extensionpoint-app/actions"
+        ]
       }
     ]
   }
