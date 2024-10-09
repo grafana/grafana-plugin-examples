@@ -5,7 +5,9 @@
   "id": "myorg-a-app",
   "preload": true,
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "Will extend root app with ui extensions",
     "author": {
       "name": "Myorg"
@@ -35,7 +37,9 @@
   "extensions": {
     "addedLinks": [
       {
-        "targets": ["plugins/myorg-extensionpoint-app/actions"],
+        "targets": [
+          "plugins/myorg-extensionpoint-app/actions"
+        ],
         "title": "Go to A",
         "description": "Navigating to pluging A"
       }
