@@ -72,7 +72,7 @@
     "react-router-dom": "^5.2.0",
     "rxjs": "7.8.1",
     "tslib": "2.5.3",
-    "@grafana/schema": "^10.4.0"
+    "@grafana/schema": "^11.2.2"
   },
   "packageManager": "npm@8.15.0"
 }
