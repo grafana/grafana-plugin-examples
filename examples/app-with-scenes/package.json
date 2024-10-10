@@ -67,7 +67,7 @@
     "@grafana/data": "^11.2.2",
     "@grafana/runtime": "^11.2.2",
     "@grafana/scenes": "^5.7.3",
-    "@grafana/schema": "^10.4.0",
+    "@grafana/schema": "^11.2.2",
     "@grafana/ui": "^11.2.2",
     "@types/lodash": "latest",
     "react": "18.2.0",
