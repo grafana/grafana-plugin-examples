@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@grafana/eslint-config": "^7.0.0",
-    "@grafana/plugin-e2e": "^1.8.3",
+    "@grafana/plugin-e2e": "1.8.4-canary.1201.8e27a96.0",
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "^1.41.2",
     "@swc/core": "^1.3.90",
