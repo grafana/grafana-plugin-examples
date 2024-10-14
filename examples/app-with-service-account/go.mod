@@ -1,6 +1,6 @@
 module github.com/grafana/app-with-service-account
 
-go 1.21
+go 1.22
 
 require github.com/grafana/grafana-plugin-sdk-go v0.252.0
 
