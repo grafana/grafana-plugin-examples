@@ -11,7 +11,7 @@ permissions:
   id-token: write
 jobs:
   setup-matrix:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
@@ -43,7 +43,7 @@ jobs:
 
   run-integration-tests:
     needs: setup-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
@@ -315,7 +315,7 @@ jobs:
 
   notify:
     if: ${{ (always() && github.event_name == 'schedule') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [run-integration-tests]
     steps:
       - name: Send GitHub Action trigger data to Slack workflow
