@@ -75,6 +75,7 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
+	AdmissionHandler: &admissionHandler{},
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
