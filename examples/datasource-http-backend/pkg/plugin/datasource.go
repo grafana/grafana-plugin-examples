@@ -181,7 +181,7 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
 		}
 		q := req.URL.Query()
-		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		q.Add("multiplier", strconv.Itoa(input.Multiply))
 		req.URL.RawQuery = q.Encode()
 	}
 	httpResp, err := d.httpClient.Do(req)
