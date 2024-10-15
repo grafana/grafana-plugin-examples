@@ -1,0 +1,112 @@
+{
+  "type": "object",
+  "required": [
+    "targets",
+    "type"
+  ],
+  "properties": {
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "datasource": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "apiVersion": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "uid": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "datasourceId": {
+            "type": "integer"
+          },
+          "hide": {
+            "type": "boolean"
+          },
+          "intervalMs": {
+            "type": "number"
+          },
+          "maxDataPoints": {
+            "type": "integer"
+          },
+          "multiplier": {
+            "description": "Multiplier is the number to multiply the input by",
+            "type": "integer"
+          },
+          "queryType": {
+            "type": "string"
+          },
+          "refId": {
+            "type": "string"
+          },
+          "resultAssertions": {
+            "type": "object",
+            "required": [
+              "typeVersion"
+            ],
+            "properties": {
+              "maxFrames": {
+                "type": "integer"
+              },
+              "type": {
+                "type": "string"
+              },
+              "typeVersion": {
+                "type": "array",
+                "maxItems": 2,
+                "minItems": 2,
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "timeRange": {
+            "type": "object",
+            "required": [
+              "from",
+              "to"
+            ],
+            "properties": {
+              "from": {
+                "type": "string",
+                "default": "now-6h",
+                "examples": [
+                  "now-1h"
+                ]
+              },
+              "to": {
+                "type": "string",
+                "default": "now",
+                "examples": [
+                  "now"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft-04/schema#"
+      }
+    },
+    "type": {
+      "description": "the panel type",
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "$schema": "https://json-schema.org/draft-04/schema#"
+}
