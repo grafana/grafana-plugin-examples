@@ -67,7 +67,6 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 
 // DatasourceOpts contains the default ManageOpts for the datasource.
 var DatasourceOpts = datasource.ManageOpts{
-	QueryConversionHandler: backend.ConvertQueryFunc(ConvertQueryDataRequest),
 	TracingOpts: tracing.Opts{
 		// Optional custom attributes attached to the tracer's resource.
 		// The tracer will already have some SDK and runtime ones pre-populated.
@@ -75,7 +74,8 @@ var DatasourceOpts = datasource.ManageOpts{
 			attribute.String("my_plugin.my_attribute", "custom value"),
 		},
 	},
-	AdmissionHandler: &admissionHandler{},
+	AdmissionHandler:       &admissionHandler{},
+	QueryConversionHandler: backend.ConvertQueryFunc(convertQueryRequest),
 }
 
 // Datasource is an example datasource which can respond to data queries, reports
