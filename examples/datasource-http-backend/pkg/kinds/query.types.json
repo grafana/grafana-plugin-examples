@@ -1,0 +1,120 @@
+{
+  "kind": "QueryTypeDefinitionList",
+  "apiVersion": "query.grafana.app/v0alpha1",
+  "metadata": {
+    "resourceVersion": "1728987065588"
+  },
+  "items": [
+    {
+      "metadata": {
+        "name": "default",
+        "resourceVersion": "1728987397884",
+        "creationTimestamp": "2024-10-15T10:11:05Z"
+      },
+      "spec": {
+        "schema": {
+          "$schema": "https://json-schema.org/draft-04/schema",
+          "additionalProperties": false,
+          "properties": {
+            "datasource": {
+              "additionalProperties": false,
+              "properties": {
+                "apiVersion": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "uid": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "type": "object"
+            },
+            "datasourceId": {
+              "type": "integer"
+            },
+            "hide": {
+              "type": "boolean"
+            },
+            "intervalMs": {
+              "type": "number"
+            },
+            "maxDataPoints": {
+              "type": "integer"
+            },
+            "multiplier": {
+              "description": "Multiplier is the number to multiply the input by",
+              "type": "integer"
+            },
+            "queryType": {
+              "type": "string"
+            },
+            "refId": {
+              "type": "string"
+            },
+            "resultAssertions": {
+              "additionalProperties": false,
+              "properties": {
+                "maxFrames": {
+                  "type": "integer"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "typeVersion": {
+                  "items": {
+                    "type": "integer"
+                  },
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "typeVersion"
+              ],
+              "type": "object"
+            },
+            "timeRange": {
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "default": "now-6h",
+                  "examples": [
+                    "now-1h"
+                  ],
+                  "type": "string"
+                },
+                "to": {
+                  "default": "now",
+                  "examples": [
+                    "now"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "from",
+                "to"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "examples": [
+          {
+            "name": "simple multiplier",
+            "saveModel": {
+              "multiplier": 1
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
