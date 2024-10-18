@@ -6,7 +6,7 @@ toolchain go1.22.1
 
 require (
 	github.com/gorilla/websocket v1.5.0
-	github.com/grafana/grafana-plugin-sdk-go v0.254.0
+	github.com/grafana/grafana-plugin-sdk-go v0.255.0
 )
 
 require (
@@ -73,7 +73,7 @@ require (
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.53.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/httptrace/otelhttptrace v0.53.0 // indirect
 	go.opentelemetry.io/contrib/propagators/jaeger v1.29.0 // indirect
-	go.opentelemetry.io/contrib/samplers/jaegerremote v0.23.0 // indirect
+	go.opentelemetry.io/contrib/samplers/jaegerremote v0.25.0 // indirect
 	go.opentelemetry.io/otel v1.31.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.31.0 // indirect
 	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.31.0 // indirect
