@@ -51,7 +51,11 @@
             "type": "integer"
           },
           "multiplier": {
-            "description": "Multiplier is the number to multiply the input by",
+            "description": "Deprecated: Use Multiply instead",
+            "type": "integer"
+          },
+          "multiply": {
+            "description": "Multiply is the number to multiply the input by",
             "type": "integer"
           },
           "queryType": {
