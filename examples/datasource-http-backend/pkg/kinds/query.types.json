@@ -2,14 +2,14 @@
   "kind": "QueryTypeDefinitionList",
   "apiVersion": "query.grafana.app/v0alpha1",
   "metadata": {
-    "resourceVersion": "1728987065588"
+    "resourceVersion": "1729780517379"
   },
   "items": [
     {
       "metadata": {
         "name": "default",
-        "resourceVersion": "1729594881903",
-        "creationTimestamp": "2024-10-15T10:11:05Z"
+        "resourceVersion": "1729780517379",
+        "creationTimestamp": "2024-10-24T14:35:17Z"
       },
       "spec": {
         "schema": {
