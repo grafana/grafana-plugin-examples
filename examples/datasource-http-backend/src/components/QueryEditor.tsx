@@ -15,8 +15,8 @@ export class QueryEditor extends PureComponent<Props> {
           type="number"
           id="multiplier"
           name="multiplier"
-          value={this.props.query.multiplier}
-          onChange={(e) => this.props.onChange({ ...this.props.query, multiplier: e.currentTarget.valueAsNumber })}
+          value={this.props.query.multiply}
+          onChange={(e) => this.props.onChange({ ...this.props.query, multiply: e.currentTarget.valueAsNumber })}
         />
       </HorizontalGroup>
     );
