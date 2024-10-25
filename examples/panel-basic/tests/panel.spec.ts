@@ -24,7 +24,7 @@ test('should display series counter when "Show series counter" option is enabled
   await panelEditPage.refreshPanel();
   await expect(page.getByTestId('simple-panel-series-counter')).not.toBeVisible();
   const seriesCounterLabel = panelEditPage.getByGrafanaSelector(
-    selectors.components.PanelEditor.OptionsPane.fieldLabel('Test Show series counter')
+    selectors.components.PanelEditor.OptionsPane.fieldLabel('Basic Panel Show series counter')
   );
   const switchField = semver.gte(grafanaVersion, '11.4.0')
     ? seriesCounterLabel.getByRole('switch')
