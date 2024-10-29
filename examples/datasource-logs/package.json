@@ -58,7 +58,8 @@
     "webpack-virtual-modules": "^0.6.2",
     "terser-webpack-plugin": "^5.3.10",
     "webpack-subresource-integrity": "^5.1.0",
-    "semver": "^7.6.3"
+    "semver": "^7.6.3",
+    "@grafana/e2e-selectors": "11.2.2"
   },
   "engines": {
     "node": ">=16"
