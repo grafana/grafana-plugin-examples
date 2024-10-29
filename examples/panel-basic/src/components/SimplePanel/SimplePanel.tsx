@@ -23,7 +23,6 @@ export function SimplePanel({
 
   useEffect(() => {
     getItem(`basic-panel.favorite`).then((value) => {
-      console.log('got value from storage', value);
       setIsFavorite(value === 'true');
     });
   }, []);
