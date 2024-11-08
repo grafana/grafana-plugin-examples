@@ -2,7 +2,7 @@ module github.com/grafana/app-with-service-account
 
 go 1.22
 
-require github.com/grafana/grafana-plugin-sdk-go v0.259.1
+require github.com/grafana/grafana-plugin-sdk-go v0.259.2
 
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
