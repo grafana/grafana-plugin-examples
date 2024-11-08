@@ -22,7 +22,7 @@ export function SimplePanel({
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    getItem(`basic-panel.favorite`).then((value) => {
+    getItem('basic-panel', 'favorite').then((value) => {
       setIsFavorite(value === 'true');
     });
   }, []);
@@ -34,7 +34,7 @@ export function SimplePanel({
   const onFavoriteClick = () => {
     const newFavorite = !isFavorite;
     setIsFavorite(newFavorite);
-    setItem(`basic-panel.favorite`, newFavorite.toString());
+    setItem('basic-panel', 'favorite', newFavorite.toString());
   };
 
   return (
