@@ -1,0 +1,13 @@
+{
+  "type": "table",
+  "targets": [
+    {
+      "refId": "A",
+      "datasource": {
+        "type": "example-httpbackend-datasource",
+        "uid": "TheUID"
+      },
+      "multiplier": 1
+    }
+  ]
+}

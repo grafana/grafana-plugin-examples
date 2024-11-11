@@ -11,10 +11,12 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+import { SubresourceIntegrityPlugin } from 'webpack-subresource-integrity';
 import { type Configuration, BannerPlugin } from 'webpack';
 import LiveReloadPlugin from 'webpack-livereload-plugin';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
 
+import { BuildModeWebpackPlugin } from './BuildModeWebpackPlugin';
 import { DIST_DIR, SOURCE_DIR } from './constants';
 import { getCPConfigVersion, getEntries, getPackageJson, getPluginJson, hasReadme, isWSL } from './utils';
 
@@ -161,6 +163,9 @@ const config = async (env): Promise<Configuration> => {
             format: {
               comments: (_, { type, value }) => type === 'comment2' && value.trim().startsWith('[create-plugin]'),
             },
+            compress: {
+              drop_console: ['log', 'info'],
+            },
           },
         }),
       ],
@@ -177,9 +182,11 @@ const config = async (env): Promise<Configuration> => {
       path: path.resolve(process.cwd(), DIST_DIR),
       publicPath: `public/plugins/${pluginJson.id}/`,
       uniqueName: pluginJson.id,
+      crossOriginLoading: 'anonymous',
     },
 
     plugins: [
+      new BuildModeWebpackPlugin(),
       virtualPublicPath,
       // Insert create plugin version information into the bundle
       new BannerPlugin({
@@ -226,6 +233,9 @@ const config = async (env): Promise<Configuration> => {
           ],
         },
       ]),
+      new SubresourceIntegrityPlugin({
+        hashFuncNames: ['sha256'],
+      }),
       ...(env.development
         ? [
             new LiveReloadPlugin(),

@@ -1,0 +1,122 @@
+{
+  "type": "object",
+  "required": [
+    "queries"
+  ],
+  "properties": {
+    "$schema": {
+      "description": "helper",
+      "type": "string"
+    },
+    "debug": {
+      "type": "boolean"
+    },
+    "from": {
+      "description": "From Start time in epoch timestamps in milliseconds or relative using Grafana time units.",
+      "type": "string"
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "datasource": {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "apiVersion": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "uid": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "datasourceId": {
+            "type": "integer"
+          },
+          "hide": {
+            "type": "boolean"
+          },
+          "intervalMs": {
+            "type": "number"
+          },
+          "maxDataPoints": {
+            "type": "integer"
+          },
+          "multiplier": {
+            "description": "Multiplier is the number to multiply the input by",
+            "type": "integer"
+          },
+          "queryType": {
+            "type": "string"
+          },
+          "refId": {
+            "type": "string"
+          },
+          "resultAssertions": {
+            "type": "object",
+            "required": [
+              "typeVersion"
+            ],
+            "properties": {
+              "maxFrames": {
+                "type": "integer"
+              },
+              "type": {
+                "type": "string"
+              },
+              "typeVersion": {
+                "type": "array",
+                "maxItems": 2,
+                "minItems": 2,
+                "items": {
+                  "type": "integer"
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "timeRange": {
+            "type": "object",
+            "required": [
+              "from",
+              "to"
+            ],
+            "properties": {
+              "from": {
+                "type": "string",
+                "default": "now-6h",
+                "examples": [
+                  "now-1h"
+                ]
+              },
+              "to": {
+                "type": "string",
+                "default": "now",
+                "examples": [
+                  "now"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft-04/schema#"
+      }
+    },
+    "to": {
+      "description": "To end time in epoch timestamps in milliseconds or relative using Grafana time units.",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft-04/schema#"
+}

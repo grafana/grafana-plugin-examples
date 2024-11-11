@@ -92,7 +92,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "~1.21"
+          go-version: "~1.22"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -320,7 +320,7 @@ jobs:
     steps:
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.0
         if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}

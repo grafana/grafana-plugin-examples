@@ -31,7 +31,18 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=11.1.0",
     "plugins": []
+  },
+  "extensions": {
+    "addedLinks": [
+      {
+        "title": "Open from B",
+        "description": "Open a modal from plugin B",
+        "targets": [
+          "plugins/myorg-extensionpoint-app/actions"
+        ]
+      }
+    ]
   }
 }

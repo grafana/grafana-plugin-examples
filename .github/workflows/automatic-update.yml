@@ -29,8 +29,9 @@ jobs:
           echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
 
       - name: Create PR
+        id: create_pr
         if: ${{ steps.status.outputs.status == '1' }}
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate_token.outputs.token }}
           branch: new-update-plugin-examples
@@ -43,3 +44,14 @@ jobs:
 
             **Notes for reviewer:**
             This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files, grafana-plugin-sdk-go and docker-compose files for each plugin example
+
+      - name: Enable auto-merge for PR
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Auto approve PR
+        run: gh pr review ${{ steps.create_pr.outputs.pull-request-url }} --approve -b "Approving update"
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
