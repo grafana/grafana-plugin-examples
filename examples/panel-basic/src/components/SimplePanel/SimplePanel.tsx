@@ -24,7 +24,6 @@ export function SimplePanel({
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    console.log("getItem('favorite')");
     storage.getItem('favorite').then((value) => {
       setIsFavorite(value === 'true');
     });
