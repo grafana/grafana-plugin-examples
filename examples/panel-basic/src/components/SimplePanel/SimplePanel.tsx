@@ -3,7 +3,9 @@ import { PanelProps } from '@grafana/data';
 import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin, IconButton } from '@grafana/ui';
 import { SimpleOptions } from '../../types';
 import { testIds } from '../testIds';
-import { PanelDataErrorView, getItem, setItem } from '@grafana/runtime';
+import { PanelDataErrorView, UserStorage } from '@grafana/runtime';
+
+const storage = new UserStorage('basic-panel');
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -22,7 +24,8 @@ export function SimplePanel({
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
-    getItem('basic-panel', 'favorite').then((value) => {
+    console.log("getItem('favorite')");
+    storage.getItem('favorite').then((value) => {
       setIsFavorite(value === 'true');
     });
   }, []);
@@ -34,7 +37,7 @@ export function SimplePanel({
   const onFavoriteClick = () => {
     const newFavorite = !isFavorite;
     setIsFavorite(newFavorite);
-    setItem('basic-panel', 'favorite', newFavorite.toString());
+    storage.setItem('favorite', newFavorite.toString());
   };
 
   return (
