@@ -14,9 +14,11 @@ To learn more about @grafana/scenes usage please refer to [documentation](https:
 
 ## What does this template contain?
 
-1. An example of a simple scene. See [Home scene](./src/pages/Home/Home-does-not-exist.tsx)
+1. An example of a simple scene. See [Home scene](./src/pages/Home/Home.tsx)
 1. An example of a scene with tabs. See [Scene with tabs](./src/pages/WithTabs/WithTabs.tsx)
 1. An example of a scene with drill down. See [Scene with drill down](./src/pages/WithDrilldown/WithDrilldown.tsx)
+
+[Broken relative link](#developing-app-plugin-with-blasdlasdlasdsa)
 
 ## Developing app plugin with this template
 
