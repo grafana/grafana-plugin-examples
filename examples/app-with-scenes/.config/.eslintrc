@@ -20,6 +20,12 @@
       "parserOptions": {
         "project": "./tsconfig.json"
       }
+    },
+    {
+      "files": ["./tests/**/*"],
+      "rules": {
+        "react-hooks/rules-of-hooks": "off"
+      }
     }
   ]
 }

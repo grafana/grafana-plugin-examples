@@ -92,7 +92,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "~1.21"
+          go-version: "~1.22"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'

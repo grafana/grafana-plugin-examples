@@ -31,7 +31,18 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=11.1.0",
     "plugins": []
+  },
+  "extensions": {
+    "addedLinks": [
+      {
+        "targets": [
+          "plugins/myorg-extensionpoint-app/actions"
+        ],
+        "title": "Go to A",
+        "description": "Navigating to pluging A"
+      }
+    ]
   }
 }

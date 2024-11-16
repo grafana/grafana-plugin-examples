@@ -7,11 +7,11 @@ import { testIds } from 'components/testIds';
 import React, { ReactElement, useMemo, useState } from 'react';
 
 type Props = {
-  extensions: PluginExtension[];
+  links: PluginExtensionLink[];
 };
 
-export function ActionButton(props: Props): ReactElement {
-  const options = useExtensionsAsOptions(props.extensions);
+export function ActionButton({ links }: Props): ReactElement {
+  const options = useExtensionsAsOptions(links);
   const [extension, setExtension] = useState<PluginExtensionLink | undefined>();
 
   if (options.length === 0) {
