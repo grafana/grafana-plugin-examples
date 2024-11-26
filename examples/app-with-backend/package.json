@@ -18,8 +18,8 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@grafana/eslint-config": "^7.0.0",
-    "@grafana/plugin-e2e": "^1.12.1",
+    "@grafana/eslint-config": "^8.0.0",
+    "@grafana/plugin-e2e": "^1.12.2",
     "@grafana/plugin-meta-extractor": "^0.0.2",
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "^1.48.0",
@@ -34,8 +34,8 @@
     "@types/node": "^20.8.7",
     "@types/react-router-dom": "^5.3.3",
     "@types/testing-library__jest-dom": "5.14.8",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
+    "@typescript-eslint/eslint-plugin": "^6.18.0",
+    "@typescript-eslint/parser": "^6.18.0",
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.7.3",
     "eslint-plugin-deprecation": "^2.0.0",
@@ -62,7 +62,13 @@
     "terser-webpack-plugin": "^5.3.10",
     "webpack-subresource-integrity": "^5.1.0",
     "semver": "^7.6.3",
-    "@grafana/e2e-selectors": "11.2.2"
+    "@grafana/e2e-selectors": "11.2.2",
+    "@stylistic/eslint-plugin-ts": "^2.9.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-jsdoc": "^46.8.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0"
   },
   "engines": {
     "node": ">=20"
