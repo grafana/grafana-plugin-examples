@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { PanelProps, usePluginContext } from '@grafana/data';
+import { PanelProps } from '@grafana/data';
 import { TimeSeries, TooltipPlugin, TooltipDisplayMode, ZoomPlugin, IconButton } from '@grafana/ui';
 import { SimpleOptions } from '../../types';
 import { testIds } from '../testIds';
-import { PanelDataErrorView, UserStorage } from '@grafana/runtime';
-
-// const storage = new UserStorage('basic-panel');
+import { PanelDataErrorView, usePluginUserStorage } from '@grafana/runtime';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -22,14 +20,7 @@ export function SimplePanel({
   id,
 }: Props) {
   const [isFavorite, setIsFavorite] = useState(false);
-  const pluginContext = usePluginContext();
-  console.log('pluginContext', pluginContext);
-  let storage = pluginContext?.userStorage;
-
-  if (!storage) {
-    console.log('Creating new storage');
-    storage = new UserStorage('basic-panel');
-  }
+  const storage = usePluginUserStorage();
 
   useEffect(() => {
     storage.getItem('favorite').then((value) => {
