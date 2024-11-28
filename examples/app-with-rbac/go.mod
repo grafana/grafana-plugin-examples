@@ -6,8 +6,8 @@ toolchain go1.22.1
 
 require (
 	github.com/grafana/authlib v0.0.0-20240318132843-56180bacf0d3
-	github.com/grafana/grafana-plugin-sdk-go v0.259.4
-	github.com/stretchr/testify v1.9.0
+	github.com/grafana/grafana-plugin-sdk-go v0.260.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
@@ -87,10 +87,10 @@ require (
 	go.opentelemetry.io/otel/sdk v1.32.0 // indirect
 	go.opentelemetry.io/otel/trace v1.32.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
-	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/crypto v0.29.0 // indirect
 	golang.org/x/exp v0.0.0-20231006140011-7918f672742d // indirect
 	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/net v0.30.0 // indirect
+	golang.org/x/net v0.31.0 // indirect
 	golang.org/x/sync v0.9.0 // indirect
 	golang.org/x/sys v0.27.0 // indirect
 	golang.org/x/text v0.20.0 // indirect
