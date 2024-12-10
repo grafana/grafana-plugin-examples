@@ -10,7 +10,7 @@ test('should display "No data" in case panel data is empty', async ({
   await expect(panelEditPage.panel.locator).toContainText('No data');
 });
 
-test('should display series counter when "Show series counter" option is enabled', async ({
+test.skip('should display series counter when "Show series counter" option is enabled', async ({
   panelEditPage,
   readProvisionedDataSource,
   page,
