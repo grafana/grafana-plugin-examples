@@ -6,7 +6,7 @@
     "build": "webpack -c ./.config/webpack/webpack.config.ts --env production",
     "dev": "webpack -w -c ./.config/webpack/webpack.config.ts --env development",
     "e2e": "playwright test",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "npm run lint -- --fix && prettier --write --list-different .",
     "lint": "eslint --cache --ignore-path ./.gitignore --ext .js,.jsx,.ts,.tsx .",
     "server": "docker compose up --build",
     "sign": "npx --yes @grafana/sign-plugin@latest",
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.4",
     "@grafana/eslint-config": "^8.0.0",
-    "@grafana/plugin-e2e": "^1.13.0",
+    "@grafana/plugin-e2e": "^1.13.1",
     "@grafana/plugin-meta-extractor": "^0.0.2",
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "^1.48.0",
