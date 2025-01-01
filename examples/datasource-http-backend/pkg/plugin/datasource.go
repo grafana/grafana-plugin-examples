@@ -9,12 +9,12 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/grafana/datasource-http-backend/pkg/kinds"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/datasource"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/httpclient"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/tracing"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
 	"go.opentelemetry.io/otel/attribute"
@@ -60,10 +60,16 @@ func NewDatasource(ctx context.Context, settings backend.DataSourceInstanceSetti
 	if err != nil {
 		return nil, fmt.Errorf("httpclient new: %w", err)
 	}
-	return &Datasource{
+	ds := &Datasource{
 		settings:   settings,
 		httpClient: cl,
-	}, nil
+	}
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/migrate-query", handleMigrateQuery)
+	ds.resourceHandler = httpadapter.New(mux)
+
+	return ds, nil
 }
 
 // DatasourceOpts contains the default ManageOpts for the datasource.
@@ -82,7 +88,8 @@ var DatasourceOpts = datasource.ManageOpts{
 type Datasource struct {
 	settings backend.DataSourceInstanceSettings
 
-	httpClient *http.Client
+	httpClient      *http.Client
+	resourceHandler backend.CallResourceHandler
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
@@ -148,6 +155,10 @@ func (d *Datasource) QueryData(ctx context.Context, req *backend.QueryDataReques
 	return response, nil
 }
 
+func (d *Datasource) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+	return d.resourceHandler.CallResource(ctx, req, sender)
+}
+
 func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, query backend.DataQuery) (backend.DataResponse, error) {
 	// Create spans for this function.
 	// tracing.DefaultTracer() returns the tracer initialized when calling Manage().
@@ -174,13 +185,12 @@ func (d *Datasource) query(ctx context.Context, pCtx backend.PluginContext, quer
 		return backend.DataResponse{}, fmt.Errorf("new request with context: %w", err)
 	}
 	if len(query.JSON) > 0 {
-		input := &kinds.DataQuery{}
-		err = json.Unmarshal(query.JSON, input)
+		input, err := convertQuery(query)
 		if err != nil {
-			return backend.DataResponse{}, fmt.Errorf("unmarshal: %w", err)
+			return backend.DataResponse{}, err
 		}
 		q := req.URL.Query()
-		q.Add("multiplier", strconv.Itoa(input.Multiplier))
+		q.Add("multiplier", strconv.Itoa(input.Multiply))
 		req.URL.RawQuery = q.Encode()
 	}
 	httpResp, err := d.httpClient.Do(req)
