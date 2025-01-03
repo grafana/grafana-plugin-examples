@@ -9,7 +9,6 @@ The plugin connects to the backend through a streaming connection and the backen
 Build the data source plugin
 
   ```sh
-cd streaming-backend-websocket-plugin
 mage -v
 npm install
 npm run build
@@ -18,8 +17,7 @@ npm run build
 and run the Grafana and the example websocket server with Docker compose:
 
 ```sh
-cd streaming-backend-websocket-plugin
-docker compose up -d # or docker-compse up -d for old docker versions
+docker compose up -d # or docker-compose up -d for old docker versions
 ```
 
 The server can be accessed by the Grafana backend in `ws://websocket-server:8080`.
