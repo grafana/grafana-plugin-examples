@@ -318,6 +318,13 @@ jobs:
     runs-on: ubuntu-latest
     needs: [run-integration-tests]
     steps:
+      - id: get-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets-v1.0.1
+        with:
+          # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
+          repo_secrets: |
+            SLACK_WEBHOOK_URL=slack_webhook_url:slack_webhook_url
+
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
         uses: slackapi/slack-github-action@v1.27.0
@@ -380,5 +387,5 @@ jobs:
                 ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
