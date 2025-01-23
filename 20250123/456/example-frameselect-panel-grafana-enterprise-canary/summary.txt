@@ -1,4 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=canary
-OUTPUT=success
-PLUGIN_NAME=example-frameselect-panel
