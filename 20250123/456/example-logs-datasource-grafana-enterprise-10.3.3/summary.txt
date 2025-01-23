@@ -1,4 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=10.3.3
-OUTPUT=success
-PLUGIN_NAME=example-logs-datasource

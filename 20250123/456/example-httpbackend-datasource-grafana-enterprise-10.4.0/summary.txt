@@ -1,4 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=10.4.0
-OUTPUT=success
-PLUGIN_NAME=example-httpbackend-datasource
