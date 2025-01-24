@@ -1,0 +1,4 @@
+GRAFANA_IMAGE=grafana-enterprise
+GRAFANA_VERSION=canary
+OUTPUT=failure
+PLUGIN_NAME=example-http-datasource
