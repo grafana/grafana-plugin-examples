@@ -389,10 +389,3 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-  finish:
-    runs-on: ubuntu-latest
-    needs: [run-integration-tests, notify]
-    if: always()
-    steps:
-      - name: Finish integration tests workflow
-        run: echo "Integration tests workflow completed"
