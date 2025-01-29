@@ -151,9 +151,10 @@ version: '3.7'
 
 services:
   grafana:
-    container_name: 'myorg-basic-app'
+    extends:
+      file: .config/docker-compose-base.yaml
+      service: grafana
     build:
-      context: ./.config
       args:
         grafana_version: ${GRAFANA_VERSION:-9.1.2}
         grafana_image: ${GRAFANA_IMAGE:-grafana}
