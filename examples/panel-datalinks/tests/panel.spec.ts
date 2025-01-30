@@ -1,21 +1,12 @@
-import * as semver from 'semver';
 import { PanelEditPage, expect, test } from '@grafana/plugin-e2e';
 import { testIds } from '../src/components/testIds';
-import { Locator } from '@playwright/test';
 
 test.describe('panel-datalinks panel', () => {
   let panelEditPage: PanelEditPage;
-  let getByText: (text: string) => Locator;
 
-  test.beforeEach(async ({ gotoPanelEditPage, grafanaVersion, page }) => {
-    panelEditPage = await gotoPanelEditPage({ dashboard: { uid: 'fTh-POZ4k' }, id: '2' });
-
-    // seems label association was introduced in 10.2.3 - https://github.com/grafana/grafana/pull/78010
-    getByText = (text: string) => {
-      return semver.gte(grafanaVersion, '10.2.3')
-        ? page.getByLabel(text, { exact: true })
-        : page.getByText(text, { exact: true });
-    };
+  test.beforeEach(async ({ gotoPanelEditPage, readProvisionedDashboard }) => {
+    const dashboard = await readProvisionedDashboard({ fileName: 'panels.json' });
+    panelEditPage = await gotoPanelEditPage({ dashboard, id: '2' });
   });
 
   test('should display "No data" when no data is passed to the panel', async ({ page }) => {
@@ -37,21 +28,25 @@ test.describe('panel-datalinks panel', () => {
   });
 
   test('should hide "Calculation" field when "All values" is enabled', async ({ page, selectors }) => {
-    panelEditPage.collapseSection('Value options');
-    const calculationField = panelEditPage.getByGrafanaSelector(
-      selectors.components.PanelEditor.OptionsPane.fieldLabel('Value options Calculation')
-    );
-    await expect(calculationField).toBeVisible();
-    await getByText('All values').click();
-    await expect(calculationField).not.toBeVisible();
+    const valueOptions = panelEditPage.getCustomOptions('Value options');
+    const showValues = valueOptions.getRadioGroup('Show');
+    const calculation = valueOptions.getSelect('Calculation');
+
+    await expect(calculation.locator()).toBeVisible();
+    await showValues.check('All values');
+    await expect(calculation.locator()).not.toBeVisible();
   });
 
   test('should display all circles when "All values" is enabled', async ({ page }) => {
+    // Update query to have only one series
     await page.getByLabel('Series count', { exact: true }).fill('1');
     const seriesCount = page.locator(`[data-testid^="${testIds.panel.circle()}"]`);
     await expect(seriesCount).toHaveCount(1);
-    panelEditPage.collapseSection('Value options');
-    await getByText('All values').click();
+
+    const valueOptions = panelEditPage.getCustomOptions('Value options');
+    const showValues = valueOptions.getRadioGroup('Show');
+
+    await showValues.check('All values');
     await expect(await seriesCount.count()).toBeGreaterThan(1);
   });
 });
