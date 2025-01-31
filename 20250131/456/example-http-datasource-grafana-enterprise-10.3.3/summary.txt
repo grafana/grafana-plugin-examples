@@ -1,0 +1,5 @@
+GRAFANA_IMAGE=grafana-enterprise
+GRAFANA_VERSION=10.3.3
+OUTPUT=success
+PLUGIN_NAME=example-http-datasource
+UPLOAD_REPORT_ENABLED=true

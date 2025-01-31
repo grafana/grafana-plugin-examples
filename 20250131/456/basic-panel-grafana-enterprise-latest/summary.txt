@@ -1,0 +1,5 @@
+GRAFANA_IMAGE=grafana-enterprise
+GRAFANA_VERSION=latest
+OUTPUT=success
+PLUGIN_NAME=basic-panel
+UPLOAD_REPORT_ENABLED=true
