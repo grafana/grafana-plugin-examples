@@ -1,5 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=latest
-OUTPUT=success
-PLUGIN_NAME=myorg-basic-app
-UPLOAD_REPORT_ENABLED=true
