@@ -188,7 +188,7 @@ jobs:
 
       - name: Expected - Upload e2e test summary
         uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
-        if: ${{ always() && !cancelled() }}
+        if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
           grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
@@ -229,7 +229,7 @@ jobs:
 
       - name: Latest - Upload e2e test summary
         uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
-        if: ${{ always() && !cancelled() }}
+        if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
           grafana-version: latest
@@ -295,7 +295,7 @@ jobs:
 
       - name: Canary - Upload e2e test summary
         uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
-        if: ${{ always() && !cancelled() }}
+        if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
           grafana-version: canary
