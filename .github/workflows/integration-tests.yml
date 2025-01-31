@@ -187,7 +187,7 @@ jobs:
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Expected - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
         if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -228,7 +228,7 @@ jobs:
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Latest - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
         if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -294,7 +294,7 @@ jobs:
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
       - name: Canary - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
         if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -326,7 +326,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Publish report
-        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@gh-pages
+        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
