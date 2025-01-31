@@ -2,13 +2,15 @@ name: integration tests
 on:
   pull_request:
   schedule:
-    - cron: "0 11 * * *" #once a day at 11 UTC
+    - cron: '0 11 * * *' #once a day at 11 UTC
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
 permissions:
-  contents: read
+  contents: write
   id-token: write
+  pull-requests: write
+
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
@@ -49,11 +51,11 @@ jobs:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     env:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
-      GF_AUTH_BASIC_ENABLED: "false"
-      GF_DEFAULT_APP_MODE: "development"
-      GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
+      GF_AUTH_BASIC_ENABLED: 'false'
+      GF_DEFAULT_APP_MODE: 'development'
+      GF_INSTALL_PLUGINS: 'marcusolsson-static-datasource'
     steps:
       - uses: actions/checkout@v4
 
@@ -65,9 +67,9 @@ jobs:
       - name: Setup node version
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org"
-          cache: "npm"
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
 
       - name: Install dependencies
         run: |
@@ -92,7 +94,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "~1.22"
+          go-version: '~1.22'
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -173,7 +175,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -184,16 +186,16 @@ jobs:
         continue-on-error: true
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Expected - Publish report to GCS
-        if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
-        uses: grafana/plugin-actions/publish-report@main
+      - name: Expected - Upload e2e test summary
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        if: ${{ always() && !cancelled() }}
         with:
+          report-dir: ${{ matrix.pluginDir }}/playwright-report
           grafana-version: ${{ env.EXPECTED_GRAFANA_VERSION }}
-          path: ${{ matrix.pluginDir }}/playwright-report/
-
-      - name: Expected - Failing build due to test failures
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.expected-version-tests.outcome != 'success'  && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: exit 1
+          grafana-image: grafana-enterprise
+          plugin-name: ${{ env.PLUGIN_ID }}
+          test-outcome: ${{ steps.expected-version-tests.outcome }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Expected - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -214,7 +216,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@v1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -225,16 +227,16 @@ jobs:
         continue-on-error: true
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Latest - Publish report to GCS
-        if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
-        uses: grafana/plugin-actions/publish-report@main
+      - name: Latest - Upload e2e test summary
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        if: ${{ always() && !cancelled() }}
         with:
-          grafana-version: ${{ env.LATEST_STABLE_VERSION }}
-          path: ${{ matrix.pluginDir }}/playwright-report/
-
-      - name: Latest - Failing build due to test failures (latest version of Grafana)
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.latest-version-tests.outcome != 'success' && steps.should-run-expected-latest-tests.outcome == 'success'
-        run: exit 1
+          report-dir: ${{ matrix.pluginDir }}/playwright-report
+          grafana-version: latest
+          grafana-image: grafana-enterprise
+          plugin-name: ${{ env.PLUGIN_ID }}
+          test-outcome: ${{ steps.latest-version-tests.outcome }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Latest - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
@@ -280,7 +282,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         uses: nev7n/wait_for_response@v1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -291,16 +293,16 @@ jobs:
         continue-on-error: true
         run: npm run e2e --prefix ${{ matrix.pluginDir }}
 
-      - name: Canary - Publish report to GCS
-        if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
-        uses: grafana/plugin-actions/publish-report@main
+      - name: Canary - Upload e2e test summary
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@gh-pages
+        if: ${{ always() && !cancelled() }}
         with:
-          grafana-version: ${{ env.CANARY_DOCKER_TAG }}
-          path: ${{ matrix.pluginDir }}/playwright-report/
-
-      - name: Canary - Failing build due to test failures (canary versions)
-        if: steps.has-integration-tests.outputs.DIR == 'true' && steps.canary-version-tests.outcome != 'success'
-        run: exit 1
+          report-dir: ${{ matrix.pluginDir }}/playwright-report
+          grafana-version: canary
+          grafana-image: grafana-enterprise
+          plugin-name: ${{ env.PLUGIN_ID }}
+          test-outcome: ${{ steps.canary-version-tests.outcome }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Canary - Stop and remove Docker container
         if: steps.has-integration-tests.outputs.DIR == 'true'
@@ -312,6 +314,21 @@ jobs:
         if: steps.mockserver-check.outputs.MOCKSERVER_DEFINED == 'true'
         run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
+
+      - name: Failing build due to test failures
+        if: (steps.has-integration-tests.outputs.DIR == 'true' && (steps.canary-version-tests.outcome != 'success' || steps.latest-version-tests.outcome != 'success' || steps.expected-version-tests.outcome != 'success'))
+        run: exit 1
+
+  publish-report:
+    if: ${{ always() }}
+    needs: [run-integration-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish report
+        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@gh-pages
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   notify:
     if: ${{ (always() && github.event_name == 'schedule') }}
