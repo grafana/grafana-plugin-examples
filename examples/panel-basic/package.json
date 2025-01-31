@@ -18,7 +18,6 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@grafana/e2e-selectors": "11.2.2",
     "@grafana/eslint-config": "^8.0.0",
     "@grafana/plugin-e2e": "^1.17.0",
     "@grafana/plugin-meta-extractor": "^0.0.2",
