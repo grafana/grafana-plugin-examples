@@ -10,25 +10,16 @@ test('should display "No data" in case panel data is empty', async ({
   await expect(panelEditPage.panel.locator).toContainText('No data');
 });
 
-test.skip('should display series counter when "Show series counter" option is enabled', async ({
-  panelEditPage,
-  readProvisionedDataSource,
+test('should display series counter when "Show series counter" option is enabled', async ({
+  gotoPanelEditPage,
+  readProvisionedDashboard,
   page,
-  selectors,
-  grafanaVersion,
 }) => {
-  const ds = await readProvisionedDataSource({ fileName: 'datasources.yml', name: 'TestData DB' });
-  await panelEditPage.datasource.set(ds.name);
-  await panelEditPage.setVisualization('Basic Panel');
-  await panelEditPage.collapseSection('Basic Panel');
-  await panelEditPage.refreshPanel();
-  await expect(page.getByTestId('simple-panel-series-counter')).not.toBeVisible();
-  const seriesCounterLabel = panelEditPage.getByGrafanaSelector(
-    selectors.components.PanelEditor.OptionsPane.fieldLabel('Basic Panel Show series counter')
-  );
-  const switchField = semver.gte(grafanaVersion, '11.4.0')
-    ? seriesCounterLabel.getByRole('switch')
-    : seriesCounterLabel.getByLabel('Toggle switch');
-  await switchField.click({ force: true });
+  const dashboard = await readProvisionedDashboard({ fileName: 'panels.json' });
+  const panelEditPage = await gotoPanelEditPage({ dashboard, id: '6' });
+  const options = panelEditPage.getCustomOptions('Basic Panel');
+  const showSeriesCounter = options.getSwitch('Show series counter');
+
+  await showSeriesCounter.check();
   await expect(page.getByTestId('simple-panel-series-counter')).toBeVisible();
 });
