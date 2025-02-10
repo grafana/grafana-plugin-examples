@@ -1,10 +1,12 @@
-import * as React from "react";
-import { getBackendSrv } from "@grafana/runtime";
-import { testIds } from "../../components/testIds";
-import { useAsync } from "react-use";
-import { Badge, HorizontalGroup } from "@grafana/ui";
+import * as React from 'react';
+import { getBackendSrv, PluginPage } from '@grafana/runtime';
+import { testIds } from '../../components/testIds';
+import { useAsync } from 'react-use';
+import { Badge, Stack } from '@grafana/ui';
+import { usePageNav } from 'utils/utils.routing';
 
 export const PageOne = () => {
+  const pageNav = usePageNav();
   const { error, loading, value } = useAsync(() => {
     const backendSrv = getBackendSrv();
 
@@ -33,24 +35,22 @@ export const PageOne = () => {
   const [ping, health] = value;
 
   return (
-    <div data-testid={testIds.pageOne.container}>
-      <HorizontalGroup>
-        <h3>Plugin Health Check</h3>{" "}
-        <span data-testid={testIds.pageOne.health}>
-          {renderHealth(health?.message)}
-        </span>
-      </HorizontalGroup>
-      <HorizontalGroup>
-        <h3>Ping Backend</h3>{" "}
-        <span data-testid={testIds.pageOne.ping }>{ping?.message}</span>
-      </HorizontalGroup>
-    </div>
+    <PluginPage pageNav={pageNav}>
+      <div data-testid={testIds.pageOne.container}>
+        <Stack>
+          <h3>Plugin Health Check</h3> <span data-testid={testIds.pageOne.health}>{renderHealth(health?.message)}</span>
+        </Stack>
+        <Stack>
+          <h3>Ping Backend</h3> <span data-testid={testIds.pageOne.ping}>{ping?.message}</span>
+        </Stack>
+      </div>
+    </PluginPage>
   );
 };
 
 function renderHealth(message: string | undefined) {
   switch (message) {
-    case "ok":
+    case 'ok':
       return <Badge color="green" text="OK" icon="heart" />;
 
     default:
