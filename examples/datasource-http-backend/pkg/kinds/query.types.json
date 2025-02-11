@@ -2,14 +2,14 @@
   "kind": "QueryTypeDefinitionList",
   "apiVersion": "query.grafana.app/v0alpha1",
   "metadata": {
-    "resourceVersion": "1728987065588"
+    "resourceVersion": "1729780517379"
   },
   "items": [
     {
       "metadata": {
         "name": "default",
-        "resourceVersion": "1728987397884",
-        "creationTimestamp": "2024-10-15T10:11:05Z"
+        "resourceVersion": "1729780517379",
+        "creationTimestamp": "2024-10-24T14:35:17Z"
       },
       "spec": {
         "schema": {
@@ -47,7 +47,11 @@
               "type": "integer"
             },
             "multiplier": {
-              "description": "Multiplier is the number to multiply the input by",
+              "description": "Deprecated: Use Multiply instead",
+              "type": "integer"
+            },
+            "multiply": {
+              "description": "Multiply is the number to multiply the input by",
               "type": "integer"
             },
             "queryType": {
