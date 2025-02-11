@@ -1,5 +1,9 @@
 {
   "extends": "./.config/.eslintrc",
+  "plugins": ["@grafana/is-compatible"],
+  "rules": {
+    "@grafana/is-compatible/import-exists": ["warn"]
+  },
   "parserOptions": {
     "project": "./tsconfig.json"
   }
