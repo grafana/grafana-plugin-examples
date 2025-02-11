@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { locationUtil } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
-import { Button, Modal, VerticalGroup } from '@grafana/ui';
+import { Button, Modal, Stack } from '@grafana/ui';
 import { testIds } from 'components/testIds';
 
 type Props = {
@@ -21,9 +21,9 @@ export function GoToLinkModal(props: Props): ReactElement {
 
   return (
     <Modal data-testid={testIds.modal.container} title={title} isOpen onDismiss={onDismiss}>
-      <VerticalGroup spacing="sm">
+      <Stack gap={1}>
         <p>Do you want to proceed in the current tab or open a new tab?</p>
-      </VerticalGroup>
+      </Stack>
       <Modal.ButtonRow>
         <Button onClick={onDismiss} fill="outline" variant="secondary">
           Cancel
