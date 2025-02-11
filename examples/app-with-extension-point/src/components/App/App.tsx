@@ -1,5 +1,5 @@
 import React from 'react';
-import { HorizontalGroup } from '@grafana/ui';
+import { Stack } from '@grafana/ui';
 import { ActionButton } from 'components/ActionButton';
 import { usePluginLinks } from '@grafana/runtime';
 import { testIds } from 'components/testIds';
@@ -10,12 +10,12 @@ export const App = () => {
 
   return (
     <div data-testid={testIds.container} style={{ marginTop: '5%' }}>
-      <HorizontalGroup align="flex-start" justify="center">
-        <HorizontalGroup>
+      <Stack alignItems="flex-start" justifyContent="center">
+        <Stack>
           <span>Hello Grafana! These are the actions you can trigger from this plugin</span>
           <ActionButton links={links} />
-        </HorizontalGroup>
-      </HorizontalGroup>
+        </Stack>
+      </Stack>
     </div>
   );
 };

@@ -3,10 +3,10 @@ import { AppPlugin } from '@grafana/data';
 import { App } from './components/App';
 import { testIds } from 'components/testIds';
 
-export const plugin = new AppPlugin<{}>().setRootPage(App).configureExtensionLink({
+export const plugin = new AppPlugin<{}>().setRootPage(App).addLink({
   title: 'Open from B',
   description: 'Open a modal from plugin B',
-  extensionPointId: 'plugins/myorg-extensionpoint-app/actions',
+  targets: ['plugins/myorg-extensionpoint-app/actions'],
   onClick: (_, { openModal }) => {
     openModal({
       title: 'Modal from app B',

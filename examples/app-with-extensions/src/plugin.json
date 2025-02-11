@@ -5,9 +5,7 @@
   "id": "myorg-extensions-app",
   "preload": true,
   "info": {
-    "keywords": [
-      "app"
-    ],
+    "keywords": ["app"],
     "description": "Example on how to extend grafana ui from a plugin",
     "author": {
       "name": "Myorg"
@@ -31,7 +29,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=11.5.1",
     "plugins": []
   },
   "extensions": [
