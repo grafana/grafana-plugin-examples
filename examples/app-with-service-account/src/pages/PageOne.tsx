@@ -3,18 +3,7 @@ import { useState } from 'react';
 import { getBackendSrv } from '@grafana/runtime';
 import { testIds } from '../components/testIds';
 import { useAsync } from 'react-use';
-import {
-  Badge,
-  Button,
-  VerticalGroup,
-  HorizontalGroup,
-  Input,
-  JSONFormatter,
-  Label,
-  Select,
-  useStyles2,
-  TextArea,
-} from '@grafana/ui';
+import { Badge, Button, Stack, Input, JSONFormatter, Label, Select, useStyles2, TextArea } from '@grafana/ui';
 import { GrafanaTheme2 } from '@grafana/data';
 import { css } from '@emotion/css';
 
@@ -69,13 +58,13 @@ export function PageOne() {
 
   return (
     <div data-testid={testIds.pageOne.container} className={s.container}>
-      <VerticalGroup>
-        <HorizontalGroup>
+      <Stack direction="column">
+        <Stack>
           <h3>Plugin Health Check</h3> <span data-testid={testIds.pageOne.health}>{renderHealth(health?.message)}</span>
-        </HorizontalGroup>
+        </Stack>
         <h3>API request:</h3>
         <div className={s.input}>
-          <HorizontalGroup>
+          <Stack>
             <Select
               value={method}
               options={[
@@ -90,7 +79,7 @@ export function PageOne() {
             <div className={s.inputbutton}>
               <Button onClick={apiRequest}>Request</Button>
             </div>
-          </HorizontalGroup>
+          </Stack>
         </div>
         {(method === 'POST' || method === 'PUT') && (
           <TextArea className={s.body} value={body} onChange={(e) => setBody(e.currentTarget.value)} type="text" />
@@ -101,7 +90,7 @@ export function PageOne() {
         <div data-testid="json-format-response">
           <JSONFormatter json={apiResponse} />
         </div>
-      </VerticalGroup>
+      </Stack>
     </div>
   );
 }
