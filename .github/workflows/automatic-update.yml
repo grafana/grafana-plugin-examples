@@ -46,12 +46,11 @@ jobs:
             This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files, grafana-plugin-sdk-go and docker-compose files for each plugin example
 
       - name: Enable auto-merge for PR
-        run: gh pr merge --auto --squash "$PR_URL"
+        run: gh pr merge ${{ steps.create_pr.outputs.pull-request-number }} --auto --squash
         env:
-          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Auto approve PR
-        run: gh pr review ${{ steps.create_pr.outputs.pull-request-url }} --approve -b "Approving update"
+        run: gh pr review ${{ steps.create_pr.outputs.pull-request-number }} --approve -b "Approving update"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
