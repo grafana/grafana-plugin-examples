@@ -23,14 +23,19 @@ jobs:
         run: |
           bash scripts/update-grafana-version.sh
 
-      - name: Check the status of the repo
+      - name: Check for changes
         id: status
         run: |
-          echo "status=$(git diff-index --quiet --exit-code HEAD && echo '0' || echo '1')" >> $GITHUB_OUTPUT
-
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "Has changes to commit"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No changes to commit"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
       - name: Create PR
         id: create_pr
-        if: ${{ steps.status.outputs.status == '1' }}
+        if: ${{ steps.status.outputs.has_changes == 'true' }}
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ steps.generate_token.outputs.token }}
@@ -46,12 +51,14 @@ jobs:
             This is an auto-generated PR which ran `npx -y @grafana/create-plugin@latest update`, updates plugin.json files, grafana-plugin-sdk-go and docker-compose files for each plugin example
 
       - name: Enable auto-merge for PR
+        if: steps.status.outputs.has_changes == 'true'
         run: gh pr merge $PR_URL --auto --squash
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Auto approve PR
+        if: steps.status.outputs.has_changes == 'true'
         run: gh pr review $PR_URL --approve -b "Approving update"
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
