@@ -1,0 +1,7 @@
+{
+  "extends": "./.config/.eslintrc",
+  "plugins": ["@grafana/eslint-plugin-plugins"],
+  "rules": {
+    "@grafana/plugins/import-is-compatible": ["warn"]
+  }
+}

@@ -1,0 +1,21 @@
+version: '3.0'
+
+services:
+  grafana:
+    container_name: 'grafana-appwithmcp-app'
+    build:
+      context: ./.config
+      args:
+        # While 10.3.0 is not released you can set GRAFANA_VERSION to main 
+        grafana_version: ${GRAFANA_VERSION:-10.3.3}
+    ports:
+      - 3000:3000/tcp
+    environment:
+      GF_LOG_FILTERS: plugin.grafana-appwithmcp-app:debug,plugin.grafana-llm-app:debug
+      GF_FEATURE_TOGGLES_ENABLE: externalServiceAccounts
+      OPENAI_ORGANIZATION_ID: $OPENAI_ORGANIZATION_ID
+      OPENAI_API_KEY: $OPENAI_API_KEY
+    volumes:
+      - ./dist:/var/lib/grafana/plugins/grafana-appwithmcp-app
+      - ./provisioning:/etc/grafana/provisioning
+      - ../../../grafana-llm-app/packages/grafana-llm-app/dist:/var/lib/grafana/plugins/grafana-llm-app
