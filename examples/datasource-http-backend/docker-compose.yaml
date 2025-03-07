@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'grafana-datasourcehttpbackend-datasource'
+    container_name: 'myorg-httpbackend-datasource'
     build:
       context: ./.config
       args:
@@ -11,12 +11,12 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/grafana-datasourcehttpbackend-datasource
+      - ./dist:/var/lib/grafana/plugins/myorg-httpbackend-datasource
       - ./provisioning:/etc/grafana/provisioning
     extra_hosts:
       - 'host.docker.internal:host-gateway'
   mockserver:
-    container_name: 'mockserver-datasourcehttpbackend-datasource'
+    container_name: 'mockserver-httpbackend-datasource'
     build:
       context: ./server
     ports:
