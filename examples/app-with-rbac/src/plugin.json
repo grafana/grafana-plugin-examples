@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
-  "name": "Grafana app with RBAC",
-  "id": "grafana-appwithrbac-app",
+  "name": "App with RBAC",
+  "id": "myorg-appwithrbac-app",
   "backend": true,
-  "executable": "gpx_grafana_appwithrbac_app",
+  "executable": "gpx_myorg_appwithrbac_app",
   "info": {
     "keywords": [
       "app",
@@ -42,7 +42,7 @@
       "type": "page",
       "name": "Research documents",
       "path": "/a/%PLUGIN_ID%/research-docs",
-      "action": "grafana-appwithrbac-app.papers:read",
+      "action": "myorg-appwithrbac-app.papers:read",
       "addToNav": true,
       "defaultNav": false
     },
@@ -50,7 +50,7 @@
       "type": "page",
       "name": "Patents",
       "path": "/a/%PLUGIN_ID%/patents",
-      "action": "grafana-appwithrbac-app.patents:read",
+      "action": "myorg-appwithrbac-app.patents:read",
       "addToNav": true,
       "defaultNav": false
     }
@@ -62,7 +62,7 @@
         "description": "Read patents",
         "permissions": [
           {
-            "action": "grafana-appwithrbac-app.patents:read"
+            "action": "myorg-appwithrbac-app.patents:read"
           }
         ]
       },
@@ -76,7 +76,7 @@
         "description": "Read research papers",
         "permissions": [
           {
-            "action": "grafana-appwithrbac-app.papers:read"
+            "action": "myorg-appwithrbac-app.papers:read"
           }
         ]
       },

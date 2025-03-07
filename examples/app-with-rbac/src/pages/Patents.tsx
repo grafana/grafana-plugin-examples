@@ -36,7 +36,7 @@ export function Patents() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch('/api/plugins/grafana-appwithrbac-app/resources/patents', { method: 'GET' });
+        const response = await fetch('/api/plugins/myorg-appwithrbac-app/resources/patents', { method: 'GET' });
 
         if (!response.ok) {
           throw new Error('Request failed. Status ' + response.statusText);
@@ -71,7 +71,7 @@ export function Patents() {
       <div data-testid={testIds.patents.container}>
         <div className={s.large}>
           &#x1F512; Normally restricted to <span className={s.orange}>Administrators</span> (requires{' '}
-          <span className={s.orange}>grafana-appwithrbac-app.patents:read</span>).
+          <span className={s.orange}>myorg-appwithrbac-app.patents:read</span>).
         </div>
         {content}
       </div>

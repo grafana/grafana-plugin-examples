@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'grafana-appwithserviceaccount-app'
+    container_name: 'myorg-appwithserviceaccount-app'
 
     build:
       context: .
@@ -19,13 +19,13 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ../dist:/var/lib/grafana/plugins/grafana-appwithserviceaccount-app
+      - ../dist:/var/lib/grafana/plugins/myorg-appwithserviceaccount-app
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/grafana-appwithserviceaccount-app
+      - ..:/root/myorg-appwithserviceaccount-app
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.grafana-appwithserviceaccount-app:debug
+      GF_LOG_FILTERS: plugin.myorg-appwithserviceaccount-app:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-appwithserviceaccount-app
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-appwithserviceaccount-app

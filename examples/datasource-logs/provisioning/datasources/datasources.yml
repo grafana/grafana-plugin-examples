@@ -2,7 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: Datasource logs
-    type: example-logs-datasource
+    type: myorg-logs-datasource
     access: proxy
     isDefault: true
     orgId: 1

@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "Streaming websocket example",
-  "id": "example-websocket-datasource",
+  "id": "myorg-websocket-datasource",
   "info": {
     "description": "",
     "author": {

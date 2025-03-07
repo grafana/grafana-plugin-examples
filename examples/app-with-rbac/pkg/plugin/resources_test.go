@@ -82,7 +82,7 @@ func TestCallResource(t *testing.T) {
 			method: http.MethodGet,
 			path:   "papers",
 			init: func(t *testing.T, m *mockAuthZClient) {
-				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.papers:read", mock.Anything).Return(true, nil)
+				m.On("HasAccess", mock.Anything, "FakeId", "myorg-appwithrbac-app.papers:read", mock.Anything).Return(true, nil)
 			},
 			expStatus: http.StatusOK,
 		},
@@ -91,7 +91,7 @@ func TestCallResource(t *testing.T) {
 			method: http.MethodGet,
 			path:   "patents",
 			init: func(t *testing.T, m *mockAuthZClient) {
-				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.patents:read", mock.Anything).Return(true, nil)
+				m.On("HasAccess", mock.Anything, "FakeId", "myorg-appwithrbac-app.patents:read", mock.Anything).Return(true, nil)
 			},
 			expStatus: http.StatusOK,
 		},
@@ -113,7 +113,7 @@ func TestCallResource(t *testing.T) {
 			method: http.MethodGet,
 			path:   "papers",
 			init: func(t *testing.T, m *mockAuthZClient) {
-				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.papers:read", mock.Anything).Return(false, nil)
+				m.On("HasAccess", mock.Anything, "FakeId", "myorg-appwithrbac-app.papers:read", mock.Anything).Return(false, nil)
 			},
 			expStatus: http.StatusForbidden,
 		},
@@ -122,7 +122,7 @@ func TestCallResource(t *testing.T) {
 			method: http.MethodGet,
 			path:   "patents",
 			init: func(t *testing.T, m *mockAuthZClient) {
-				m.On("HasAccess", mock.Anything, "FakeId", "grafana-appwithrbac-app.patents:read", mock.Anything).Return(false, nil)
+				m.On("HasAccess", mock.Anything, "FakeId", "myorg-appwithrbac-app.patents:read", mock.Anything).Return(false, nil)
 			},
 			expStatus: http.StatusForbidden,
 		},

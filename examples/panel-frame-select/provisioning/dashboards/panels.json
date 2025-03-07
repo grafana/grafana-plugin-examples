@@ -40,7 +40,7 @@
         "text": "Default value of text input option"
       },
       "title": "Panel Title",
-      "type": "example-frameselect-panel"
+      "type": "myorg-frameselect-panel"
     },
     {
       "datasource": {
@@ -71,7 +71,7 @@
         }
       ],
       "title": "Panel frame select",
-      "type": "example-frameselect-panel"
+      "type": "myorg-frameselect-panel"
     }
   ],
   "refresh": "",

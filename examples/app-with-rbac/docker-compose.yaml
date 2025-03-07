@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'grafana-appwithrbac-app'
+    container_name: 'myorg-appwithrbac-app'
     platform: 'linux/amd64'
     build:
       context: ./.config
@@ -14,5 +14,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/grafana-appwithrbac-app
+      - ./dist:/var/lib/grafana/plugins/myorg-appwithrbac-app
       - ./provisioning:/etc/grafana/provisioning

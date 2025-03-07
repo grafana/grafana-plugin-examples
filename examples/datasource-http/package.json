@@ -1,5 +1,5 @@
 {
-  "name": "example-http-datasource",
+  "name": "myorg-http-datasource",
   "version": "1.0.0",
   "description": "An example plugin for Grafana",
   "scripts": {

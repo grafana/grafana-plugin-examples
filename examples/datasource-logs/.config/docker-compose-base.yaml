@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'example-logs-datasource'
+    container_name: 'myorg-logs-datasource'
 
     build:
       context: .
@@ -13,13 +13,13 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ../dist:/var/lib/grafana/plugins/example-logs-datasource
+      - ../dist:/var/lib/grafana/plugins/myorg-logs-datasource
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/example-logs-datasource
+      - ..:/root/myorg-logs-datasource
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.example-logs-datasource:debug
+      GF_LOG_FILTERS: plugin.myorg-logs-datasource:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: example-logs-datasource
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-logs-datasource

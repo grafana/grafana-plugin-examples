@@ -30,7 +30,7 @@ To define roles, add a `roles` section to the `plugin.json` file. Here is an exa
       "name": "Patents Reader",
       "description": "Read patents",
       "permissions": [
-        {"action": "grafana-appwithrbac-app.patents:read"}
+        {"action": "myorg-appwithrbac-app.patents:read"}
       ]
     },
     "grants": ["Admin"]
@@ -40,7 +40,7 @@ To define roles, add a `roles` section to the `plugin.json` file. Here is an exa
       "name": "Research papers Reader",
       "description": "Read research papers",
       "permissions": [
-        {"action": "grafana-appwithrbac-app.papers:read"}
+        {"action": "myorg-appwithrbac-app.papers:read"}
       ]
     },
     "grants": ["Viewer"]
@@ -58,7 +58,7 @@ To protect your frontend pages behind an action check, add `action` to the inclu
     "type": "page",
     "name": "Research documents",
     "path": "/a/%PLUGIN_ID%/research-docs",
-    "action": "grafana-appwithrbac-app.papers:read",
+    "action": "myorg-appwithrbac-app.papers:read",
     "addToNav": true,
     "defaultNav": false
   },
@@ -66,7 +66,7 @@ To protect your frontend pages behind an action check, add `action` to the inclu
     "type": "page",
     "name": "Patents",
     "path": "/a/%PLUGIN_ID%/patents",
-    "action": "grafana-appwithrbac-app.patents:read",
+    "action": "myorg-appwithrbac-app.patents:read",
     "addToNav": true,
     "defaultNav": false
   }
@@ -82,7 +82,7 @@ If you want to protect your proxied routes behind an action check, add `reqActio
   {
     "path": "api/external/patents",
     "method": "*",
-    "reqAction": "grafana-appwithrbac-app.patents:read",
+    "reqAction": "myorg-appwithrbac-app.patents:read",
     "url": "{{ .JsonData.backendUrl }}/api/external/patents",
     "headers": [
       {
@@ -167,8 +167,8 @@ func (a *App) GetAuthZClient(req *http.Request) (authz.EnforcementClient, error)
 		// Grafana is signing the JWTs on local setups
 		JWKsURL: strings.TrimRight(grafanaURL, "/") + "/api/signing-keys/keys",
 	},
-		// Fetch all the user permission prefixed with grafana-appwithrbac-app
-		authz.WithSearchByPrefix("grafana-appwithrbac-app"),
+		// Fetch all the user permission prefixed with myorg-appwithrbac-app
+		authz.WithSearchByPrefix("myorg-appwithrbac-app"),
 		// Use a cache with a lower expiry time
 		authz.WithCache(cache.NewLocalCache(cache.Config{
 			Expiry:          10 * time.Second,
@@ -215,7 +215,7 @@ func (a *App) HasAccess(req *http.Request, action string) (bool, error) {
 ```
 
 ```go
-if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); err != nil || !hasAccess {
+if hasAccess, err := a.HasAccess(req, "myorg-appwithrbac-app.patents:read"); err != nil || !hasAccess {
   if err != nil {
     log.DefaultLogger.FromContext(req.Context()).Error("Error checking access", "error", err)
   }
@@ -238,7 +238,7 @@ import { contextSrv } from 'grafana/app/core/core';
 Then checks can be performed as follow:
 
 ```ts
-if (contextSrv.hasPermission('grafana-appwithrbac-app.papers:read')) {
+if (contextSrv.hasPermission('myorg-appwithrbac-app.papers:read')) {
   // Example: register route, display link etc...
 }
 ```

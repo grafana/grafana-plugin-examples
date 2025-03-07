@@ -36,7 +36,7 @@ export function ResearchDocs() {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch('/api/plugins/grafana-appwithrbac-app/resources/papers', { method: 'GET' });
+        const response = await fetch('/api/plugins/myorg-appwithrbac-app/resources/papers', { method: 'GET' });
 
         if (!response.ok) {
           throw new Error('Request failed. Status ' + response.statusText);
@@ -71,7 +71,7 @@ export function ResearchDocs() {
       <div data-testid={testIds.researchDocs.container}>
         <div className={s.large}>
           &#x1F512; Normally accessible to <span className={s.orange}>anyone</span> (requires{' '}
-          <span className={s.orange}>grafana-appwithrbac-app.papers:read</span>).
+          <span className={s.orange}>myorg-appwithrbac-app.papers:read</span>).
         </div>
         {content}
       </div>
