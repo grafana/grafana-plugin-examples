@@ -1,5 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=10.4.0
-OUTPUT=failure
-PLUGIN_NAME=myorg-httpbackend-datasource
-UPLOAD_REPORT_ENABLED=true
