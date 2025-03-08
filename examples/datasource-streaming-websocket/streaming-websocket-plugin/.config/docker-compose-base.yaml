@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'example-websocket-datasource'
+    container_name: 'myorg-websocket-datasource'
 
     build:
       context: .
@@ -13,13 +13,13 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ../dist:/var/lib/grafana/plugins/example-websocket-datasource
+      - ../dist:/var/lib/grafana/plugins/myorg-websocket-datasource
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/example-websocket-datasource
+      - ..:/root/myorg-websocket-datasource
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.example-websocket-datasource:debug
+      GF_LOG_FILTERS: plugin.myorg-websocket-datasource:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: example-websocket-datasource
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-websocket-datasource

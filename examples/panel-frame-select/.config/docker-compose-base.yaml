@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'example-frameselect-panel'
+    container_name: 'myorg-frameselect-panel'
 
     build:
       context: .
@@ -13,13 +13,13 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ../dist:/var/lib/grafana/plugins/example-frameselect-panel
+      - ../dist:/var/lib/grafana/plugins/myorg-frameselect-panel
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/example-frameselect-panel
+      - ..:/root/myorg-frameselect-panel
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.example-frameselect-panel:debug
+      GF_LOG_FILTERS: plugin.myorg-frameselect-panel:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: example-frameselect-panel
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-frameselect-panel

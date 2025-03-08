@@ -126,7 +126,7 @@
         }
       ],
       "title": "Basic Panel",
-      "type": "basic-panel"
+      "type": "myorg-basic-panel"
     },
     {
       "datasource": {
@@ -187,7 +187,7 @@
         }
       ],
       "title": "Panel Title",
-      "type": "basic-panel"
+      "type": "myorg-basic-panel"
     }
   ],
   "refresh": "",

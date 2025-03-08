@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
-  "name": "Datasource Http Backend",
+  "name": "HTTP Backend Data Source",
   "id": "myorg-httpbackend-datasource",
   "metrics": true,
   "backend": true,
