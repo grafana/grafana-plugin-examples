@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'myorg-httpbackend-datasource'
+    container_name: 'example-httpbackend-datasource'
 
     build:
       context: .
@@ -19,13 +19,13 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ../dist:/var/lib/grafana/plugins/myorg-httpbackend-datasource
+      - ../dist:/var/lib/grafana/plugins/example-httpbackend-datasource
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/myorg-httpbackend-datasource
+      - ..:/root/example-httpbackend-datasource
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.myorg-httpbackend-datasource:debug
+      GF_LOG_FILTERS: plugin.example-httpbackend-datasource:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-httpbackend-datasource
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: example-httpbackend-datasource
