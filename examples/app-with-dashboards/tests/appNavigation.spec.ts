@@ -9,12 +9,12 @@ test.describe('navigating app', () => {
   test('should be possible to navigate to example dashboard 1', async ({ gotoPage, page }) => {
     await gotoPage('/');
     await page.getByText('Example dashboard 1').click();
-    await expect(page).toHaveURL(/\/d\/Av57mRHVz$/);
+    await expect(page).toHaveURL(/\/d\/Av57mRHVz\//);
   });
 
   test('should be possible to navigate to example dashboard 2', async ({ gotoPage, page }) => {
     await gotoPage('/');
     await page.getByText('Example dashboard 2').click();
-    await expect(page).toHaveURL(/\/d\/ND1Bfw3VcNGg$/);
+    await expect(page).toHaveURL(/\/d\/ND1Bfw3VcNGg\//);
   });
 });
