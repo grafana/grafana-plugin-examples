@@ -2,7 +2,7 @@ module github.com/grafana/basic-datasource
 
 go 1.23.5
 
-require github.com/grafana/grafana-plugin-sdk-go v0.270.0
+require github.com/grafana/grafana-plugin-sdk-go v0.271.0
 
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
