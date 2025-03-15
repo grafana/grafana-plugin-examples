@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'grafana-appwithserviceaccount-app'
+    container_name: 'myorg-appwithserviceaccount-app'
     build:
       context: ./.config
       args:
@@ -13,5 +13,5 @@ services:
     environment:
       - GF_FEATURE_TOGGLES_ENABLE=externalServiceAccounts
     volumes:
-      - ./dist:/var/lib/grafana/plugins/grafana-appwithserviceaccount-app
+      - ./dist:/var/lib/grafana/plugins/myorg-appwithserviceaccount-app
       - ./provisioning:/etc/grafana/provisioning

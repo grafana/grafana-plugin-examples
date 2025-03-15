@@ -97,7 +97,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "grafana-basic-datasource",
+            "type": "myorg-basic-datasource",
             "uid": "U9sW5bank"
           },
           "queryType": "TimeSeries",
@@ -110,7 +110,7 @@
     },
     {
       "datasource": {
-        "type": "grafana-basic-datasource",
+        "type": "myorg-basic-datasource",
         "uid": "U9sW5bank"
       },
       "fieldConfig": {
@@ -184,7 +184,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "grafana-basic-datasource",
+            "type": "myorg-basic-datasource",
             "uid": "U9sW5bank"
           },
           "queryType": "Table",
