@@ -2,7 +2,7 @@ module github.com/grafana/app-with-backend
 
 go 1.23.5
 
-require github.com/grafana/grafana-plugin-sdk-go v0.273.0
+require github.com/grafana/grafana-plugin-sdk-go v0.274.0
 
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
