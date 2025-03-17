@@ -13,12 +13,12 @@ import { DataSourceResponse, defaultQuery, MyDataSourceOptions, MyQuery } from '
 import { lastValueFrom } from 'rxjs';
 
 export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
-  baseUrl: string;
+  proxyUrl: string;
 
   constructor(instanceSettings: DataSourceInstanceSettings<MyDataSourceOptions>) {
     super(instanceSettings);
 
-    this.baseUrl = instanceSettings.url!;
+    this.proxyUrl = instanceSettings.url!;
   }
 
   getDefaultQuery(_: CoreApp): Partial<MyQuery> {
@@ -36,7 +36,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
     // Return a constant for each query.
     const data = options.targets.map((target) => {
-      const df: DataFrame = createDataFrame({        
+      const df: DataFrame = createDataFrame({
         refId: target.refId,
         fields: [
           { name: 'Time', values: [from, to], type: FieldType.time, config: {} },
@@ -51,7 +51,7 @@ export class DataSource extends DataSourceApi<MyQuery, MyDataSourceOptions> {
 
   async request(url: string, params?: string) {
     const response = getBackendSrv().fetch<DataSourceResponse>({
-      url: `${this.baseUrl}${url}${params?.length ? `?${params}` : ''}`,
+      url: `${this.proxyUrl}${url}${params?.length ? `?${params}` : ''}`,
     });
     return lastValueFrom(response);
   }
