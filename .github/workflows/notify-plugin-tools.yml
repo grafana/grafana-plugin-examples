@@ -19,8 +19,8 @@ jobs:
         id: check_files
         run: |
           CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
-          echo "$CHANGED_FILES" > changed_files.txt
-          if grep -i -E "\.(ts|tsx|go)$" changed_files.txt; then
+          echo "$CHANGED_FILES" > /tmp/changed_files.txt
+          if grep -i -E "\.(ts|tsx|go)$" /tmp/changed_files.txt; then
             echo "has_relevant_changes=true" >> "$GITHUB_OUTPUT"
           else
             echo "has_relevant_changes=false" >> "$GITHUB_OUTPUT"
