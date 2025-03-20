@@ -1,4 +1,4 @@
-name: Notify Plugin Tools
+name: Lapo Docs - Notify Plugin Tools on Code changes
 
 on:
   pull_request:
