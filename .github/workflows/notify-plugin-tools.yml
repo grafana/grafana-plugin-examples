@@ -10,7 +10,25 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for relevant file changes
+        id: check_files
+        run: |
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+          echo "$CHANGED_FILES" > changed_files.txt
+          if grep -i -E "\.(ts|tsx|go)$" changed_files.txt; then
+            echo "has_relevant_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_relevant_changes=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
       - name: Repository Dispatch
+        if: steps.check_files.outputs.has_relevant_changes == 'true'
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
