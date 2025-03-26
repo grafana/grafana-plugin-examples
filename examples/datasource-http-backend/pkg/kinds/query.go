@@ -10,7 +10,10 @@ import (
 type DataQuery struct {
 	v0alpha1.CommonQueryProperties
 
-	// Multiplier is the number to multiply the input by
+	// Multiply is the number to multiply the input by
+	Multiply int `json:"multiply,omitempty"`
+
+	// Deprecated: Use Multiply instead
 	Multiplier int `json:"multiplier,omitempty"`
 }
 
