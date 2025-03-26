@@ -22,7 +22,7 @@ jobs:
       latestVersion: ${{ steps.npm-latest-version.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Setup plugin dir variable
         id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -31,7 +31,7 @@ jobs:
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
-        uses: actions/github-script@v7
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         env:
           INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
         with:
@@ -57,7 +57,7 @@ jobs:
       GF_DEFAULT_APP_MODE: "development"
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set the name of the plugin-example to be tested
         id: example-name
@@ -65,7 +65,7 @@ jobs:
           echo "PLUGIN_NAME=$(basename ${{ matrix.pluginDir }})" >> $GITHUB_OUTPUT
 
       - name: Setup node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
@@ -92,7 +92,7 @@ jobs:
           echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5.4.0
         with:
           go-version: "~1.22"
           check-latest: true
@@ -100,7 +100,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Test plugin backend
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6a5dcb5fe61f43d7c08a98bc3cf9bc63c308c08e # v3.0.0
         with:
           version: latest
           args: -v test
@@ -108,7 +108,7 @@ jobs:
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
       - name: Build plugin backend
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6a5dcb5fe61f43d7c08a98bc3cf9bc63c308c08e # v3.0.0
         with:
           version: latest
           args: -v build:linux
@@ -173,7 +173,7 @@ jobs:
 
       - name: Expected - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nev7n/wait_for_response@v1
+        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
           url: "http://localhost:3000/"
           responseCode: 200
@@ -214,7 +214,7 @@ jobs:
 
       - name: Latest - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nev7n/wait_for_response@v1
+        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
           url: "http://localhost:3000/"
           responseCode: 200
@@ -264,7 +264,7 @@ jobs:
         working-directory: ${{ matrix.pluginDir }}
 
       - name: Canary - Build plugin backend
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6a5dcb5fe61f43d7c08a98bc3cf9bc63c308c08e # v3.0.0
         with:
           version: latest
           args: -v build:linux
@@ -280,7 +280,7 @@ jobs:
 
       - name: Canary - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true'
-        uses: nev7n/wait_for_response@v1
+        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
           url: "http://localhost:3000/"
           responseCode: 200
@@ -324,7 +324,7 @@ jobs:
     needs: [run-integration-tests]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Publish report
         uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main
         with:
@@ -344,7 +344,7 @@ jobs:
 
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
-        uses: slackapi/slack-github-action@v1.27.0
+        uses: slackapi/slack-github-action@37ebaef184d7626c5f204ab8d3baff4262dd30f0 # v1.27.0
         if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
