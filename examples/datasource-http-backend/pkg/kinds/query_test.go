@@ -12,7 +12,7 @@ import (
 func TestQueryTypeDefinitions(t *testing.T) {
 	builder, err := schemabuilder.NewSchemaBuilder(
 		schemabuilder.BuilderOptions{
-			PluginID: []string{"example-httpbackend-datasource"},
+			PluginID: []string{"myorg-httpbackend-datasource"},
 			ScanCode: []schemabuilder.CodePaths{{
 				BasePackage: "github.com/grafana/datasource-http-backend/pkg/kinds",
 				CodePath:    "./",

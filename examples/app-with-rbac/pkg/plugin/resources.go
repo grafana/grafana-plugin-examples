@@ -50,7 +50,7 @@ func (a *App) handlePapers(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.papers:read"); err != nil || !hasAccess {
+	if hasAccess, err := a.HasAccess(req, "myorg-appwithrbac-app.papers:read"); err != nil || !hasAccess {
 		DenyAccess(w, ctxLogger, err)
 		return
 	}
@@ -111,7 +111,7 @@ func (a *App) handlePatents(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if hasAccess, err := a.HasAccess(req, "grafana-appwithrbac-app.patents:read"); err != nil || !hasAccess {
+	if hasAccess, err := a.HasAccess(req, "myorg-appwithrbac-app.patents:read"); err != nil || !hasAccess {
 		DenyAccess(w, ctxLogger, err)
 		return
 	}

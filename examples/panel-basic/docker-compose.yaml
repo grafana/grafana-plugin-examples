@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'basic-panel'
+    container_name: 'myorg-basic-panel'
     build:
       context: ./.config
       args:
@@ -13,5 +13,5 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/basic-panel
+      - ./dist:/var/lib/grafana/plugins/myorg-basic-panel
       - ./provisioning:/etc/grafana/provisioning
