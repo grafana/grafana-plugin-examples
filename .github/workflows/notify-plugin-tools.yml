@@ -27,11 +27,19 @@ jobs:
           fi
         shell: bash
 
+      - name: Generate token
+        if: steps.check_files.outputs.has_relevant_changes == 'true'
+        id: generate_token
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PEM }}
+
       - name: Repository Dispatch
         if: steps.check_files.outputs.has_relevant_changes == 'true'
         uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3.0.0
         with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           repository: grafana/plugin-tools
           event-type: pr-merged
           client-payload: '{"pr_url": "${{ github.event.pull_request.html_url }}"}'
