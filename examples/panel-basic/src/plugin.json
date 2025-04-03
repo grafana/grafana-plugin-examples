@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
   "name": "Basic Panel",
-  "id": "basic-panel",
+  "id": "myorg-basic-panel",
   "info": {
     "keywords": [
       "panel",
@@ -19,11 +19,11 @@
     "links": [
       {
         "name": "Website",
-        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel"
+        "url": "https://github.com/grafana/grafana-plugin-examples/examples/myorg-basic-panel"
       },
       {
         "name": "License",
-        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel/blob/master/LICENSE"
+        "url": "https://github.com/grafana/grafana-plugin-examples/examples/myorg-basic-panel/blob/master/LICENSE"
       }
     ],
     "screenshots": [],

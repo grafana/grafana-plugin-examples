@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "App With Service Account",
-  "id": "grafana-appwithserviceaccount-app",
+  "id": "myorg-appwithserviceaccount-app",
   "backend": true,
   "executable": "gpx_app_with_service_account",
   "info": {

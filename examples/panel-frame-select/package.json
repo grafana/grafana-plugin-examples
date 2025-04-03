@@ -1,5 +1,5 @@
 {
-  "name": "example-frameselect-panel",
+  "name": "myorg-frameselect-panel",
   "version": "1.0.0",
   "description": "An example plugin for Grafana",
   "scripts": {
