@@ -29,7 +29,13 @@ export function SimplePanel({
           <div data-testid="simple-panel-series-counter">Number of series: {data.series.length}</div>
         )}
 
-        <Table data={data.series[0]} width={width} height={height} timeRange={timeRange}></Table>
+        <Table
+          data={data.series[0]}
+          width={width}
+          height={height}
+          timeRange={timeRange}
+          noHeader={!options.showTableHeader}
+        ></Table>
       </div>
     </div>
   );
