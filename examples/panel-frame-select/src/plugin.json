@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Example",
-  "id": "example-frameselect-panel",
+  "name": "Frame Select Example",
+  "id": "myorg-frameselect-panel",
   "info": {
     "description": "",
     "author": {

@@ -18,12 +18,12 @@ export function Hello() {
           <ul className={s.list}>
             <li>
               &#128196; Research Documents: Accessible to individuals with the{' '}
-              <span className={s.orange}>grafana-appwithrbac-app.papers:read</span> permission, which is granted by
+              <span className={s.orange}>myorg-appwithrbac-app.papers:read</span> permission, which is granted by
               default to <span className={s.orange}>Viewers</span>.
             </li>
             <li>
               &#x1F512; Patents: Accessible to individuals with the{' '}
-              <span className={s.orange}>grafana-appwithrbac-app.patents:read</span> permission, which is granted by
+              <span className={s.orange}>myorg-appwithrbac-app.patents:read</span> permission, which is granted by
               default to <span className={s.orange}>Administrators</span> only.
             </li>
           </ul>

@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'grafana-appwithrbac-app'
+    container_name: 'myorg-appwithrbac-app'
 
     build:
       context: .
@@ -19,13 +19,13 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ../dist:/var/lib/grafana/plugins/grafana-appwithrbac-app
+      - ../dist:/var/lib/grafana/plugins/myorg-appwithrbac-app
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/grafana-appwithrbac-app
+      - ..:/root/myorg-appwithrbac-app
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.grafana-appwithrbac-app:debug
+      GF_LOG_FILTERS: plugin.myorg-appwithrbac-app:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-appwithrbac-app
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-appwithrbac-app
