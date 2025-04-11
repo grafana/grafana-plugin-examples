@@ -40,7 +40,8 @@ jobs:
         with:
           token: ${{ steps.generate_token.outputs.token }}
           branch: new-update-plugin-examples
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          #  Author field is ignored when sign-commits is set to true
+          # author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           delete-branch: true
           commit-message: "chore: update configuration to latest version"
           sign-commits: true
