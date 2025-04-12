@@ -12,7 +12,7 @@ export function PageOne() {
 
   const backendSrv = getBackendSrv();
   const { error, loading, value } = useAsync(() => {
-    return Promise.all([backendSrv.get(`api/plugins/grafana-appwithserviceaccount-app/health`)]);
+    return Promise.all([backendSrv.get(`api/plugins/myorg-appwithserviceaccount-app/health`)]);
   });
   const [apiPath, setApiPath] = useState('/search');
   const [apiResponse, setApiResponse] = useState({});
@@ -46,7 +46,7 @@ export function PageOne() {
       params = { ...params, body: JSON.stringify(parsedBody) };
     }
     backendSrv
-      .get(`api/plugins/grafana-appwithserviceaccount-app/resources/api${apiPath}`, params)
+      .get(`api/plugins/myorg-appwithserviceaccount-app/resources/api${apiPath}`, params)
       .then((response) => {
         setApiResponse(response.results);
         setApiToken(response.token);

@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   grafana:
-    container_name: 'example-websocket-datasource'
+    container_name: 'myorg-websocket-datasource'
     build:
       context: ./.config
       args:
@@ -11,7 +11,7 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ./dist:/var/lib/grafana/plugins/example-websocket-datasource
+      - ./dist:/var/lib/grafana/plugins/myorg-websocket-datasource
       - ./provisioning:/etc/grafana/provisioning
     extra_hosts:
       - 'host.docker.internal:host-gateway'
