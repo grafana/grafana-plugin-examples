@@ -2,9 +2,9 @@
 
 This example provides a template for how to build a basic panel plugin. The definition for the panel is provided in `/src/components/SimplePanel/SimplePanel.tsx`.
 
-The plugin uses `TimeSeries` from the `grafana-ui` package to build a graph with the properties passed to the panel. The plugin also allows a tooltip to be shown when the user hovers over a visualization.
+The plugin uses `Table` from the `grafana-ui` package to show a table with the properties passed to the panel.
 
-Additionally, the plugin is set up to allow custom options such as a gradient mode selector and a list display mode to be configured from the Grafana sidebar.
+Additionally, the plugin is set up to allow custom options such as a show series counter and show table header.
 
 ## What is a Grafana panel plugin?
 
