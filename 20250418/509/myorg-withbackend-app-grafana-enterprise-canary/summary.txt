@@ -1,0 +1,5 @@
+GRAFANA_IMAGE=grafana-enterprise
+GRAFANA_VERSION=canary
+OUTPUT=failure
+PLUGIN_NAME=myorg-withbackend-app
+UPLOAD_REPORT_ENABLED=true
