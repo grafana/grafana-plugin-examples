@@ -419,7 +419,7 @@ jobs:
                         },
                         {
                           "type": "mrkdwn",
-                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github. run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
+                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
                         }
                       ]
                     }
