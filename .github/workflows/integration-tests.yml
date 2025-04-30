@@ -6,10 +6,9 @@ on:
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
+
 permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
+  contents: read
 
 jobs:
   setup-matrix:
@@ -23,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - name: Setup plugin dir variable
         id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -58,11 +59,15 @@ jobs:
       GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Set the name of the plugin-example to be tested
         id: example-name
         run: |
-          echo "PLUGIN_NAME=$(basename ${{ matrix.pluginDir }})" >> $GITHUB_OUTPUT
+          echo "PLUGIN_NAME=$(basename $PLUGIN_NAME)" >> $GITHUB_OUTPUT
+        env:
+          PLUGIN_NAME: ${{ matrix.pluginDir }}
 
       - name: Setup node version
         uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
@@ -120,13 +125,17 @@ jobs:
         run: |
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
-          echo "CANARY_VERSION=${{ needs.setup-matrix.outputs.canaryVersion }}" >> $GITHUB_ENV
-          echo "CANARY_DOCKER_TAG=${{ needs.setup-matrix.outputs.canaryDockerTag }}" >> $GITHUB_ENV
-          echo "LATEST_STABLE_VERSION=${{ needs.setup-matrix.outputs.latestVersion }}" >> $GITHUB_ENV
+          echo "CANARY_VERSION=$CANARY_VERSION" >> $GITHUB_ENV
+          echo "CANARY_DOCKER_TAG=$CANARY_DOCKER_TAG" >> $GITHUB_ENV
+          echo "LATEST_STABLE_VERSION=$LATEST_STABLE_VERSION" >> $GITHUB_ENV
           if [ -f "${PWD}/.env" ]; then
             echo "ENV_FILE_OPTION=--env-file ${PWD}/.env" >> $GITHUB_ENV
           fi
         working-directory: ${{ matrix.pluginDir }}
+        env:
+          CANARY_VERSION: ${{ needs.setup-matrix.outputs.canaryVersion }}
+          CANARY_DOCKER_TAG: ${{ needs.setup-matrix.outputs.canaryDockerTag }}
+          LATEST_STABLE_VERSION: ${{ needs.setup-matrix.outputs.latestVersion }}
 
       - name: Has Integration Tests
         id: has-integration-tests
@@ -184,10 +193,12 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: expected-version-tests
         continue-on-error: true
-        run: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix $PLUGIN_DIR
+        env:
+          PLUGIN_DIR: ${{ matrix.pluginDir }}
 
       - name: Expected - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main # zizmor: ignore[unpinned-uses]
         if: ${{ always() && steps.expected-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -225,10 +236,12 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         id: latest-version-tests
         continue-on-error: true
-        run: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix $PLUGIN_DIR
+        env:
+          PLUGIN_DIR: ${{ matrix.pluginDir }}
 
       - name: Latest - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main # zizmor: ignore[unpinned-uses]
         if: ${{ always() && steps.latest-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -291,10 +304,12 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         id: canary-version-tests
         continue-on-error: true
-        run: npm run e2e --prefix ${{ matrix.pluginDir }}
+        run: npm run e2e --prefix $PLUGIN_DIR
+        env:
+          PLUGIN_DIR: ${{ matrix.pluginDir }}
 
       - name: Canary - Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main # zizmor: ignore[unpinned-uses]
         if: ${{ always() && steps.canary-version-tests.outcome == 'failure' }}
         with:
           report-dir: ${{ matrix.pluginDir }}/playwright-report
@@ -322,11 +337,16 @@ jobs:
   publish-report:
     if: ${{ always() }}
     needs: [run-integration-tests]
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
       - name: Publish report
-        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main
+        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main # zizmor: ignore[unpinned-uses]
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -334,9 +354,11 @@ jobs:
     if: ${{ (always() && github.event_name == 'schedule') }}
     runs-on: ubuntu-latest
     needs: [run-integration-tests]
+    permissions:
+      id-token: write
     steps:
       - id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets-v1.1.0
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
         with:
           # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
           repo_secrets: |
@@ -397,7 +419,7 @@ jobs:
                         },
                         {
                           "type": "mrkdwn",
-                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github. run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
+                          "text": "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}?pr=${{ github.event.number }}|See Playwright reports>"
                         }
                       ]
                     }
