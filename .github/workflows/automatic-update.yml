@@ -9,14 +9,24 @@ jobs:
   update-grafana:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
+      pull-requests: write
+      id-token: write
     steps:
+      - id: get-secrets
+        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
+        with:
+          # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
+          repo_secrets: |
+            GITHUB_APP_ID=plugins-platform-bot-app:app_id
+            GITHUB_APP_PRIVATE_KEY=plugins-platform-bot-app:app_pem
+
       - name: Generate token
         id: generate_token
         uses: actions/create-github-app-token@3ff1caaa28b64c9cc276ce0a02e2ff584f3900c5 # v2.0.2
         with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PEM }}
+          app-id: ${{ env.GITHUB_APP_ID }}
+          private-key: ${{ env.GITHUB_APP_PRIVATE_KEY }}
 
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -44,6 +54,8 @@ jobs:
         with:
           token: ${{ steps.generate_token.outputs.token }}
           branch: new-update-plugin-examples
+          # If running this workflow via a workflow_dispatch event, we want to target the main branch
+          base: main
           #  Author field is ignored when sign-commits is set to true
           # author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           delete-branch: true
