@@ -54,6 +54,8 @@ jobs:
         with:
           token: ${{ steps.generate_token.outputs.token }}
           branch: new-update-plugin-examples
+          # If running this workflow via a workflow_dispatch event, we want to target the main branch
+          base: main
           #  Author field is ignored when sign-commits is set to true
           # author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           delete-branch: true
