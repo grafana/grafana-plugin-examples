@@ -70,11 +70,11 @@ jobs:
         run: gh pr merge $PR_URL --auto --squash
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
 
       - name: Auto approve PR
         if: steps.status.outputs.has_changes == 'true'
         run: gh pr review $PR_URL --approve -b "Approving update"
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
