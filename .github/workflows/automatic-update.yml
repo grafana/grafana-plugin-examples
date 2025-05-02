@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-requests: write
       id-token: write
     steps:
       - id: get-secrets
@@ -70,11 +71,11 @@ jobs:
         run: gh pr merge $PR_URL --auto --squash
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Auto approve PR
         if: steps.status.outputs.has_changes == 'true'
         run: gh pr review $PR_URL --approve -b "Approving update"
         env:
           PR_URL: https://github.com/grafana/grafana-plugin-examples/pull/${{ steps.create_pr.outputs.pull-request-number }}
-          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
