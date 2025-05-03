@@ -1,0 +1,5 @@
+GRAFANA_IMAGE=grafana-enterprise
+GRAFANA_VERSION=latest
+OUTPUT=failure
+PLUGIN_NAME=myorg-scenes-app
+UPLOAD_REPORT_ENABLED=true
