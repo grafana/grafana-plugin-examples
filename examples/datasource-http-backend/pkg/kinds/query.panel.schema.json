@@ -82,17 +82,11 @@
             "properties": {
               "from": {
                 "type": "string",
-                "default": "now-6h",
-                "examples": [
-                  "now-1h"
-                ]
+                "default": "now-6h"
               },
               "to": {
                 "type": "string",
-                "default": "now",
-                "examples": [
-                  "now"
-                ]
+                "default": "now"
               }
             },
             "additionalProperties": false
