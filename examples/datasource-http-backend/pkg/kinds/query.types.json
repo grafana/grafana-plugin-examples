@@ -8,7 +8,7 @@
     {
       "metadata": {
         "name": "default",
-        "resourceVersion": "1728987397884",
+        "resourceVersion": "1746595733912",
         "creationTimestamp": "2024-10-15T10:11:05Z"
       },
       "spec": {
@@ -84,16 +84,10 @@
               "properties": {
                 "from": {
                   "default": "now-6h",
-                  "examples": [
-                    "now-1h"
-                  ],
                   "type": "string"
                 },
                 "to": {
                   "default": "now",
-                  "examples": [
-                    "now"
-                  ],
                   "type": "string"
                 }
               },
