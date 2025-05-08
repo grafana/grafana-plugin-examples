@@ -9,8 +9,6 @@ This repository contains example plugins to showcase different use cases.
 | [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
 | [app-with-dashboards](examples/app-with-dashboards)           | Shows how to include pre-built dashboards in an app plugin                                 |
 | [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
-| [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
 | [app-with-scenes](examples/app-with-scenes)                   | Shows how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/)  |
 | [app-with-service-account](examples/app-with-service-account) | Shows how an app can request a service account to query the Grafana API.                   |
 | [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
