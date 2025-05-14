@@ -7,11 +7,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                                       | Description                                                                                |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
-| [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
-| [app-with-scenes](examples/app-with-scenes)                   | Shows how to build a basic app with [@grafana/scenes](https://github.com/grafana/scenes/)  |
-| [app-with-service-account](examples/app-with-service-account) | Shows how an app can request a service account to query the Grafana API.                   |
-| [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
 
 ## Panel plugins
 
@@ -26,7 +21,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                                                                   | Description                                                                                                   |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | [datasource-http](examples/datasource-http)                                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
-| [datasource-http-backend](examples/datasource-http-backend)                               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
 | [datasource-streaming-websocket](examples/datasource-streaming-websocket)                 | Shows how to create an event-based data source plugin using RxJS and WebSockets.                              |
 | [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
 
