@@ -8,8 +8,6 @@ This repository contains example plugins to showcase different use cases.
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
 | [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
-| [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
 
 ## Panel plugins
 
