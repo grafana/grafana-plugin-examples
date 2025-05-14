@@ -7,10 +7,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                                       | Description                                                                                |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
-| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
-| [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
-| [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
-| [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
 
 ## Panel plugins
 
@@ -25,7 +21,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                                                                   | Description                                                                                                   |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
 | [datasource-http](examples/datasource-http)                                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
-| [datasource-http-backend](examples/datasource-http-backend)                               | Shows how to query data from HTTP-based APIs, where the HTTP calls happens on the backend. Supports alerting. |
 | [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
 
 > [!NOTE]
