@@ -10,7 +10,6 @@ This repository contains example plugins to showcase different use cases.
 | [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
 | [app-with-extensions](examples/app-with-extensions)           | Shows how to build an app plugin that extends the Grafana core UI                          |
 | [app-with-extension-point](examples/app-with-extension-point) | Shows how to add an extension point in the plugin UI that can be extended by other plugins |
-| [app-with-rbac](examples/app-with-rbac)                       | Shows how to use role-based access control (RBAC) in an app plugin                         |
 
 ## Panel plugins
 
