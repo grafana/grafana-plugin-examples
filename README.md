@@ -7,7 +7,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                                       | Description                                                                                |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
-| [app-with-backend](examples/app-with-backend)                 | Shows how to build an app plugin with its own backend                                      |
 
 ## Panel plugins
 
