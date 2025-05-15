@@ -13,7 +13,6 @@ This repository contains example plugins to showcase different use cases.
 | Example                                           | Description                                                                                                                       |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | [panel-basic](examples/panel-basic)               | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
-| [panel-datalinks](examples/panel-datalinks)       | Shows how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
 
 ## Data source plugins
 
