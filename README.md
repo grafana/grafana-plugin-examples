@@ -20,7 +20,6 @@ This repository contains example plugins to showcase different use cases.
 
 | Example                                                                                   | Description                                                                                                   |
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [datasource-http](examples/datasource-http)                                               | Shows how to query data from HTTP-based APIs. The HTTP call happens on the frontend.                          |
 | [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
 
 > [!NOTE]
