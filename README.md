@@ -12,7 +12,6 @@ This repository contains example plugins to showcase different use cases.
 
 | Example                                           | Description                                                                                                                       |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [panel-frame-select](examples/panel-frame-select) | Shows how to update panel options with values from a data query response.                                                         |
 | [panel-basic](examples/panel-basic)               | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
 | [panel-datalinks](examples/panel-datalinks)       | Shows how to build a panel plugin that uses the datalinks functionality of Grafana.                                               |
 
