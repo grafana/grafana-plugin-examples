@@ -75,18 +75,22 @@ on: [push]
 
 jobs:
   compatibilitycheck:
+    permissions:
+      # Required permissions when comment-pr is set to 'yes': pull-requests: write, contents: read
+      pull-requests: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: Install dependencies
         run: npm install
       - name: Build plugin
         run: npm run build
       - name: Compatibility check
-        uses: grafana/plugin-actions/is-compatible@v1
+        uses: grafana/plugin-actions/is-compatible@main
         with:
           module: './src/module.ts'
           comment-pr: 'yes'
