@@ -76,7 +76,7 @@ on: [push]
 jobs:
   compatibilitycheck:
     permissions:
-      # needed if you set comment-pr to 'yes'
+      # Required permissions when comment-pr is set to 'yes': pull-requests: write, contents: read
       pull-requests: write
       contents: read
     runs-on: ubuntu-latest
