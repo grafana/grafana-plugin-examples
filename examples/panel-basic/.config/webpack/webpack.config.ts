@@ -12,13 +12,13 @@ import path from 'path';
 import ReplaceInFileWebpackPlugin from 'replace-in-file-webpack-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
 import { SubresourceIntegrityPlugin } from 'webpack-subresource-integrity';
-import { type Configuration, BannerPlugin } from 'webpack';
+import webpack, { type Configuration } from 'webpack';
 import LiveReloadPlugin from 'webpack-livereload-plugin';
 import VirtualModulesPlugin from 'webpack-virtual-modules';
 
-import { BuildModeWebpackPlugin } from './BuildModeWebpackPlugin';
-import { DIST_DIR, SOURCE_DIR } from './constants';
-import { getCPConfigVersion, getEntries, getPackageJson, getPluginJson, hasReadme, isWSL } from './utils';
+import { BuildModeWebpackPlugin } from './BuildModeWebpackPlugin.ts';
+import { DIST_DIR, SOURCE_DIR } from './constants.ts';
+import { getCPConfigVersion, getEntries, getPackageJson, getPluginJson, hasReadme, isWSL } from './utils.ts';
 
 const pluginJson = getPluginJson();
 const cpVersion = getCPConfigVersion();
@@ -43,7 +43,8 @@ const config = async (env: Env): Promise<Configuration> => {
     cache: {
       type: 'filesystem',
       buildDependencies: {
-        config: [__filename],
+        // __filename doesnt work in Node 24
+        config: [path.resolve(process.cwd(), '.config', 'webpack', 'webpack.config.ts')],
       },
     },
 
@@ -194,7 +195,7 @@ const config = async (env: Env): Promise<Configuration> => {
       new BuildModeWebpackPlugin(),
       virtualPublicPath,
       // Insert create plugin version information into the bundle
-      new BannerPlugin({
+      new webpack.BannerPlugin({
         banner: '/* [create-plugin] version: ' + cpVersion + ' */',
         raw: true,
         entryOnly: true,
