@@ -95,6 +95,15 @@ jobs:
           npm run build
         working-directory: ${{ steps.generate.outputs.plugin-dir }}
 
+      - name: Clean up
+        shell: bash
+        run: |
+          rm -rf node_modules
+          rm -rf dist
+        working-directory: ${{ steps.generate.outputs.plugin-dir }}
+
+
+
       - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
