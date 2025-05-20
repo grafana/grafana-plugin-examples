@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        examples: ['panel-basic', 'datasource-basic', 'app-basic', 'datasource-backend', 'app-backend']
+        examples: ['panel-basic', 'datasource-basic', 'app-basic', 'datasource-with-backend', 'app-with-backend']
         include:
           - examples: panel-basic
             plugin-name: basic
@@ -29,19 +29,19 @@ jobs:
             has-backend: false
             artifact-name: datasource-basic
           - examples: app-basic
-            plugin-name: basicscaffold
+            plugin-name: basic
             plugin-org: grafana
             plugin-type: app
             has-backend: false
             artifact-name: app-basic
-          - examples: datasource-backend
-            plugin-name: backendscaffold
+          - examples: datasource-with-backend
+            plugin-name: backend
             plugin-org: grafana
             plugin-type: datasource
             has-backend: true
             artifact-name: datasource-with-backend
-          - examples: app-backend
-            plugin-name: backendscaffold
+          - examples: app-with-backend
+            plugin-name: backend
             plugin-org: grafana
             plugin-type: app
             has-backend: true
