@@ -21,31 +21,31 @@ jobs:
             plugin-org: grafana
             plugin-type: panel
             has-backend: false
-            artifact-name: basic-panel
+            artifact-name: panel-basic
           - examples: datasource-basic
             plugin-name: basic
             plugin-org: grafana
             plugin-type: datasource
             has-backend: false
-            artifact-name: basic-datasource
+            artifact-name: datasource-basic
           - examples: app-basic
             plugin-name: basicscaffold
             plugin-org: grafana
             plugin-type: app
             has-backend: false
-            artifact-name: basic-app
+            artifact-name: app-basic
           - examples: datasource-backend
             plugin-name: backendscaffold
             plugin-org: grafana
             plugin-type: datasource
             has-backend: true
-            artifact-name: backend-datasource
+            artifact-name: datasource-with-backend
           - examples: app-backend
             plugin-name: backendscaffold
             plugin-org: grafana
             plugin-type: app
             has-backend: true
-            artifact-name: backend-app
+            artifact-name: app-with-backend
     steps:
       - name: Setup nodejs 22
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -132,51 +132,51 @@ jobs:
           ls examples
 
 
-      - name: Download basic-panel
+      - name: Download panel-basic
         uses: actions/download-artifact@v4
         with:
-          name: basic-panel
-          path: ./basic-panel
+          name: panel-basic
+          path: ./panel-basic
 
-      - name: Download basic-datasource
+      - name: Download datasource-basic
         uses: actions/download-artifact@v4
         with:
-          name: basic-datasource
-          path: ./basic-datasource
+          name: datasource-basic
+          path: ./datasource-basic
 
-      - name: Download basic-app
+      - name: Download app-basic
         uses: actions/download-artifact@v4
         with:
-          name: basic-app
-          path: ./basic-app
+          name: app-basic
+          path: ./app-basic
 
-      - name: Download backend-datasource
+      - name: Download datasource-with-backend
         uses: actions/download-artifact@v4
         with:
-          name: backend-datasource
-          path: ./backend-datasource
+          name: datasource-with-backend
+          path: ./datasource-with-backend
 
-      - name: Download backend-app
+      - name: Download app-with-backend
         uses: actions/download-artifact@v4
         with:
-          name: backend-app
-          path: ./backend-app
+          name: app-with-backend
+          path: ./app-with-backend
 
       - name: Remove existing examples
         shell: bash
         run: |
           pushd examples
-          rm -rf basic-panel basic-datasource basic-app backend-datasource backend-app
+          rm -rf panel-basic datasource-basic app-basic datasource-with-backend app-with-backend
           popd
 
       - name: Move new examples
         shell: bash
         run: |
-          mv basic-panel examples/basic-panel
-          mv basic-datasource examples/basic-datasource
-          mv basic-app examples/basic-app
-          mv backend-datasource examples/backend-datasource
-          mv backend-app examples/backend-app
+          mv panel-basic examples/panel-basic
+          mv datasource-basic examples/datasource-basic
+          mv app-basic examples/app-basic
+          mv datasource-with-backend examples/datasource-with-backend
+          mv app-with-backend examples/app-with-backend
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7.0.8
