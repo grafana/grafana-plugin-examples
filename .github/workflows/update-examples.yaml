@@ -11,7 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        examples: ['panel-basic', 'datasource-basic', 'app-basic', 'datasource-with-backend', 'app-with-backend']
+        examples:
+          - panel-basic
+          - datasource-basic
+          - app-basic
+          - datasource-with-backend
+          - app-with-backend
         include:
           - examples: panel-basic
             plugin-name: basic
