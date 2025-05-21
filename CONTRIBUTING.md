@@ -21,7 +21,7 @@ The Project Team looks forward to your contributions. 🙌🏾✨
 
 ## Report an Error or Bug
 
-The exampels in this repository are auto-generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin).
+The examples in this repository are auto-generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin).
 
 If you run into an error or bug with the project:
 
