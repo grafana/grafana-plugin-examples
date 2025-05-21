@@ -5,9 +5,6 @@ on:
     - cron: "0 0 * * 0" # Run weekly (every Sunday at midnight UTC)
   workflow_dispatch: # Enable manual trigger
   repository_dispatch: # To trigger from plugin-tools
-  push:
-    branches:
-      - academo/scaffold-basic-examples
 
 jobs:
   generate-new-examples:
@@ -189,5 +186,5 @@ jobs:
             It updates all the examples based on the latest version of create-plugin.
           branch: update-plugin-examples
           delete-branch: true
-          base: academo/update-examples-to-standard
+          base: main
 
