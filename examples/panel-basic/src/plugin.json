@@ -2,12 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
   "name": "Basic",
-  "id": "grafana-basic-panel",
+  "id": "myorg-basic-panel",
   "info": {
     "keywords": ["panel"],
     "description": "",
     "author": {
-      "name": "Grafana"
+      "name": "Myorg"
     },
     "logos": {
       "small": "img/logo.svg",

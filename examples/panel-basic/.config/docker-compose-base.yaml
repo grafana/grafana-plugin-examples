@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'grafana-basic-panel'
+    container_name: 'myorg-basic-panel'
 
     build:
       context: .
@@ -13,13 +13,13 @@ services:
     ports:
       - 3000:3000/tcp
     volumes:
-      - ../dist:/var/lib/grafana/plugins/grafana-basic-panel
+      - ../dist:/var/lib/grafana/plugins/myorg-basic-panel
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/grafana-basic-panel
+      - ..:/root/myorg-basic-panel
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.grafana-basic-panel:debug
+      GF_LOG_FILTERS: plugin.myorg-basic-panel:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-basic-panel
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-basic-panel

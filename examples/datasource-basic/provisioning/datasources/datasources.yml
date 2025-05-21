@@ -2,7 +2,7 @@ apiVersion: 1
 
 datasources:
   - name: 'basic'
-    type: 'grafana-basic-datasource'
+    type: 'myorg-basic-datasource'
     access: proxy
     isDefault: false
     orgId: 1

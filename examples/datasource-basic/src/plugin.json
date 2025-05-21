@@ -2,12 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "Basic",
-  "id": "grafana-basic-datasource",
+  "id": "myorg-basic-datasource",
   "metrics": true,
   "info": {
     "description": "",
     "author": {
-      "name": "Grafana"
+      "name": "Myorg"
     },
     "keywords": ["datasource"],
     "logos": {

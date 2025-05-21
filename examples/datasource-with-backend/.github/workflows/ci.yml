@@ -193,7 +193,7 @@ jobs:
       - name: Docker logs
         if: ${{ always() && steps.run-tests.outcome == 'failure' }}
         run: |
-          docker logs grafana-backend-datasource >& grafana-server.log
+          docker logs myorg-backend-datasource >& grafana-server.log
 
       - name: Stop grafana docker
         run: docker compose down

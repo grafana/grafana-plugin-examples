@@ -9,7 +9,7 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/data"
-	"github.com/grafana/backend/pkg/models"
+	"github.com/myorg/backend/pkg/models"
 )
 
 // Make sure Datasource implements required interfaces. This is important to do

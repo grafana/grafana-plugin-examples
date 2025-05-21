@@ -1,7 +1,7 @@
 services:
   grafana:
     user: root
-    container_name: 'grafana-backend-app'
+    container_name: 'myorg-backend-app'
 
     build:
       context: .
@@ -19,13 +19,13 @@ services:
     cap_add:
       - SYS_PTRACE
     volumes:
-      - ../dist:/var/lib/grafana/plugins/grafana-backend-app
+      - ../dist:/var/lib/grafana/plugins/myorg-backend-app
       - ../provisioning:/etc/grafana/provisioning
-      - ..:/root/grafana-backend-app
+      - ..:/root/myorg-backend-app
 
     environment:
       NODE_ENV: development
-      GF_LOG_FILTERS: plugin.grafana-backend-app:debug
+      GF_LOG_FILTERS: plugin.myorg-backend-app:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: grafana-backend-app
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: myorg-backend-app

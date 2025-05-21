@@ -1,9 +1,9 @@
 apiVersion: 1
 
 apps:
-  - type: 'grafana-basic-app'
+  - type: 'myorg-basic-app'
     org_id: 1
-    org_name: 'grafana'
+    org_name: 'myorg'
     disabled: false
     jsonData:
       apiUrl: http://default-url.com
