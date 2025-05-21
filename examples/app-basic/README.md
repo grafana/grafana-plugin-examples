@@ -1,202 +1,115 @@
-# Grafana Basic App plugin example
+# Grafana app plugin template
 
-The Grafana Basic App plugin sample demonstrates how to build a basic app plugin for Grafana with custom routing.
+This template is a starting point for building an app plugin for Grafana.
 
 ## What are Grafana app plugins?
 
-App plugins let you create a custom out-of-the-box monitoring experience with features such as custom pages, nested data sources, and panel plugins.
+App plugins can let you create a custom out-of-the-box monitoring experience by custom pages, nested data sources and panel plugins.
 
-## Guides in this example
+## Get started
 
-| **Example**                                                                                     | **Source**                   |
-| ----------------------------------------------------------------------------------------------- | ---------------------------- |
-| [Add a custom route](#add-a-custom-route)                                                       | [App.tsx], [constants.ts#L6] |
-| [Add a custom route with URL parameters](#add-a-custom-route-with-url-parameters)               | [App.tsx], [PageThree.tsx]   |
-| [Create a full-width page with no navigation bar](#create-a-full-width-page)                    | [PageThree.tsx]              |
-| [Add custom styling to your components](#add-custom-styling-to-your-components)                 | [PageThree.tsx#L10]          |
-| [Use the Grafana theme in your components](#use-the-grafana-theme-in-your-components)           | [PageThree.tsx#L26]          |
-| [How to add menu items to the left sidebar](#add-menu-items-to-the-left-sidebar)                | [plugin.json]                |
-| [Add a configuration page to your app](#add-a-configuration-page-to-your-app)                   | [module.ts], [AppConfig.tsx] |
-| [Add custom configuration values to your app](#add-custom-configuration-values-to-your-app)     | [AppConfig.tsx]              |
-| [Add configuration options for setting secrets](#add-configuration-options-for-setting-secrets) | [AppConfig.tsx]              |
-| [Update the plugin settings using the API](#update-the-plugin-settings-using-the-api)           | [AppConfig.tsx]              |
+### Frontend
 
-### Add a custom route
+1. Install dependencies
 
-Grafana (and the app plugins are no exception) uses [React Router](https://reactrouter.com/). You can register a new route based on our examples by adding a new route constant in [constants.ts#L6] and then use it in the [App.tsx].
+   ```bash
+   npm install
+   ```
 
-**Example:** [App.tsx], [constants.ts#L6]
+2. Build plugin in development mode and run in watch mode
 
----
+   ```bash
+   npm run dev
+   ```
 
-### Add a custom route with URL parameters
+3. Build plugin in production mode
 
-You can use URL parameters for any routes by appending them to the path in the `<Route>` component.
+   ```bash
+   npm run build
+   ```
 
-**Example:** [App.tsx], [PageThree.tsx]
+4. Run the tests (using Jest)
 
-```javascript
-// URL parameters are identified by the colon syntax (":<parameter>")
-// The "?" at the end marks the parameter as optional, in which case React Router also identifies this route if there are no parameters used.
-<Route path={`${ROUTES.Three}/:id?`} element={<PageThree />} />
-```
+   ```bash
+   # Runs the tests and watches for changes, requires git init first
+   npm run test
 
-**Retrieve URL parameters:**
+   # Exits after running all the tests
+   npm run test:ci
+   ```
 
-```javascript
-import { useParams } from 'react-router-dom';
+5. Spin up a Grafana instance and run the plugin inside it (using Docker)
 
-export const MyComponent = () => {
-   const { id } = useParams<{ id: string }>();
-};
-```
+   ```bash
+   npm run server
+   ```
 
----
+6. Run the E2E tests (using Playwright)
 
-### Create a full-width page
+   ```bash
+   # Spins up a Grafana instance first that we tests against
+   npm run server
 
-You can hide the left sidebar and get access to the full width of the page by changing the layout of the `<PluginPage>` component.
+   # If you wish to start a certain Grafana version. If not specified will use latest by default
+   GRAFANA_VERSION=11.3.0 npm run server
 
-**Example:** [PageThree.tsx]
+   # Starts the tests
+   npm run e2e
+   ```
 
-![Full-width page example](./screenshots/screenshot-full-width-page.png)
+7. Run the linter
 
-```typescript
-import { PageLayoutType } from '@grafana/data';
+   ```bash
+   npm run lint
 
-// ...
+   # or
 
-export function YourPage() {
-  return (
-    <PluginPage layout={PageLayoutType.Canvas}>
+   npm run lint:fix
+   ```
 
-    // ...
-```
+# Distributing your plugin
 
----
+When distributing a Grafana plugin either within the community or privately the plugin must be signed so the Grafana application can verify its authenticity. This can be done with the `@grafana/sign-plugin` package.
 
-### Add custom styling to your components
+_Note: It's not necessary to sign a plugin during development. The docker development environment that is scaffolded with `@grafana/create-plugin` caters for running the plugin without a signature._
 
-We recommend using [Emotion](https://emotion.sh) to style your components as in the example above.
+## Initial steps
 
-**Example:** [PageThree.tsx#L10]
+Before signing a plugin please read the Grafana [plugin publishing and signing criteria](https://grafana.com/legal/plugins/#plugin-publishing-and-signing-criteria) documentation carefully.
 
-[More info on how to use @emotion/css](https://emotion.sh/docs/@emotion/css)
+`@grafana/create-plugin` has added the necessary commands and workflows to make signing and distributing a plugin via the grafana plugins catalog as straightforward as possible.
 
----
+Before signing a plugin for the first time please consult the Grafana [plugin signature levels](https://grafana.com/legal/plugins/#what-are-the-different-classifications-of-plugins) documentation to understand the differences between the types of signature level.
 
-### Use the Grafana theme in your components
+1. Create a [Grafana Cloud account](https://grafana.com/signup).
+2. Make sure that the first part of the plugin ID matches the slug of your Grafana Cloud account.
+   - _You can find the plugin ID in the `plugin.json` file inside your plugin directory. For example, if your account slug is `acmecorp`, you need to prefix the plugin ID with `acmecorp-`._
+3. Create a Grafana Cloud API key with the `PluginPublisher` role.
+4. Keep a record of this API key as it will be required for signing a plugin
 
-The easiest way is to use the [`useStyles2()`](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md#usestyles2-hook) hook to access the `GrafanaTheme2` theme object.
+## Signing a plugin
 
-**Example:** [PageThree.tsx#L26]
+### Using Github actions release workflow
 
-[Documentation on the Grafana Theme](https://github.com/grafana/grafana/blob/main/contribute/style-guides/themes.md)
+If the plugin is using the github actions supplied with `@grafana/create-plugin` signing a plugin is included out of the box. The [release workflow](./.github/workflows/release.yml) can prepare everything to make submitting your plugin to Grafana as easy as possible. Before being able to sign the plugin however a secret needs adding to the Github repository.
 
----
+1. Please navigate to "settings > secrets > actions" within your repo to create secrets.
+2. Click "New repository secret"
+3. Name the secret "GRAFANA_API_KEY"
+4. Paste your Grafana Cloud API key in the Secret field
+5. Click "Add secret"
 
-### Add menu items to the left sidebar
+#### Push a version tag
 
-You can define pages that you want to add to the left sidebar menu under the `includes` section of your [plugin.json].
+To trigger the workflow we need to push a version tag to github. This can be achieved with the following steps:
 
-**Example:** [plugin.json]
-
-![Grafana left sidebar](screenshots/screenshot-left-sidebar.png)
-
-**Structure of a page item:**
-
-```javascript
-// plugin.json
-{
-   "includes": [
-      {
-         "type": "page",
-         // The text of the menu item
-         "name": "Page One",
-         // The link of the menu item (%PLUGIN_ID% will resolve the id of your plugin at build time)
-         "path": "/a/%PLUGIN_ID%",
-         // The role who can access this page
-         "role": "Admin",
-         // This tells Grafana to add this page to the left sidebar
-         "addToNav": true,
-         "defaultNav": true
-      }
-   ]
-}
-```
-
----
-
-### Add a configuration page to your app
-
-You can add a configuration page to your app to set custom configuration options that are going to be persisted for your plugin on the backend.
-
-Configuration pages can also be used to save secrets that are no longer sent down to the client but which can be appended to your proxy requests by the backend.
-
-**Example:** [module.ts], [AppConfig.tsx]
-
----
-
-### Add custom configuration values to your app
-
-Add a new form field under your [AppConfig.tsx] and make sure that you are setting it under the `jsonData` object.
-
-The `jsonData` object is an arbitrary object of data that can be persisted for your plugin using the `/api/plugins/${pluginId}/settings` API endpoint.
-
-**Example:** [AppConfig.tsx]
-
----
-
-### Add configuration options for setting secrets
-
-Secrets for plugins are stored in the `secureJsonData` object. This is an arbitrary object of data; however, its value will never be sent back to the frontend for security reasons.
-
-**Example:** [AppConfig.tsx]
-
----
-
-### Update the plugin settings using the API
-
-You can update plugin settings by sending a `POST` request to the `/api/plugins/${pluginId}/settings` API endpoint.
-
-**Example:** [AppConfig.tsx]
-
-Example payload:
-
-```javascript
-{
-   enabled: true,
-   pinned: true,
-   // Arbitrary object of data for your plugin
-   jsonData: {
-      apiUrl: state.apiUrl,
-      isApiKeySet: true,
-   },
-   // Arbitrary object of data for plugin secrets
-   // (pass `undefined` if you don't want to override existing values)
-   secureJsonData: {
-      apiKey: state.apiKey,
-   }
-}
-```
-
----
+1. Run `npm version <major|minor|patch>`
+2. Run `git push origin main --follow-tags`
 
 ## Learn more
 
 Below you can find source code for existing app plugins and other related documentation.
 
-- [Grafana Synthetic Monitoring App](https://github.com/grafana/synthetic-monitoring-app)
-- [Plugin.json documentation](https://grafana.com/developers/plugin-tools/reference-plugin-json)
+- [Basic app plugin example](https://github.com/grafana/grafana-plugin-examples/tree/master/examples/app-basic#readme)
+- [`plugin.json` documentation](https://grafana.com/developers/plugin-tools/reference/plugin-jsonplugin-json)
 - [Sign a plugin](https://grafana.com/developers/plugin-tools/publish-a-plugin/sign-a-plugin)
-
-<!-- prettier-ignore-start -->
-[App.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/components/App/App.tsx#L14
-[PageThree.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx
-[PageThree.tsx#L10]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx#L10
-[PageThree.tsx#L26]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/pages/PageThree.tsx#L26
-[plugin.json]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/plugin.json
-[module.ts]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/module.ts#L5
-[AppConfig.tsx]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/components/AppConfig/AppConfig.tsx#L25
-[constants.ts#L6]: https://github.com/grafana/grafana-plugin-examples/blob/main/examples/app-basic/src/constants.ts#L6
-<!-- prettier-ignore-end -->

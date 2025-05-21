@@ -1,17 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
-  "name": "Basic App",
+  "name": "Basic",
   "id": "myorg-basic-app",
   "info": {
-    "keywords": [
-      "basic",
-      "app",
-      "example"
-    ],
-    "description": "A basic grafana app plugin",
+    "keywords": ["app"],
+    "description": "",
     "author": {
-      "name": "Your name"
+      "name": "Myorg"
     },
     "logos": {
       "small": "img/logo.svg",
@@ -26,7 +22,6 @@
       "type": "page",
       "name": "Page One",
       "path": "/a/%PLUGIN_ID%/one",
-      "role": "Admin",
       "addToNav": true,
       "defaultNav": true
     },
@@ -34,7 +29,6 @@
       "type": "page",
       "name": "Page Two",
       "path": "/a/%PLUGIN_ID%/two",
-      "role": "Admin",
       "addToNav": true,
       "defaultNav": false
     },
@@ -42,7 +36,13 @@
       "type": "page",
       "name": "Page Three",
       "path": "/a/%PLUGIN_ID%/three",
-      "role": "Admin",
+      "addToNav": true,
+      "defaultNav": false
+    },
+    {
+      "type": "page",
+      "name": "Page Four",
+      "path": "/a/%PLUGIN_ID%/four",
       "addToNav": true,
       "defaultNav": false
     },
@@ -56,7 +56,7 @@
     }
   ],
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=10.4.0",
     "plugins": []
   }
 }

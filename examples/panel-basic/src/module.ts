@@ -1,118 +1,40 @@
-import { PanelPlugin, FieldColorModeId } from '@grafana/data';
-import { LegendDisplayMode, GraphGradientMode } from '@grafana/schema';
+import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
-import { SimplePanel } from './components';
-import { ariaLabels } from './components/ariaLabels';
+import { SimplePanel } from './components/SimplePanel';
 
-export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel)
-  .useFieldConfig({
-    standardOptions: {
-      color: {
-        defaultValue: {
-          mode: FieldColorModeId.ContinuousGrYlRd,
-        },
+export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
+  return builder
+    .addTextInput({
+      path: 'text',
+      name: 'Simple text option',
+      description: 'Description of panel option',
+      defaultValue: 'Default value of text input option',
+    })
+    .addBooleanSwitch({
+      path: 'showSeriesCount',
+      name: 'Show series counter',
+      defaultValue: false,
+    })
+    .addRadio({
+      path: 'seriesCountSize',
+      defaultValue: 'sm',
+      name: 'Series counter size',
+      settings: {
+        options: [
+          {
+            value: 'sm',
+            label: 'Small',
+          },
+          {
+            value: 'md',
+            label: 'Medium',
+          },
+          {
+            value: 'lg',
+            label: 'Large',
+          },
+        ],
       },
-    },
-    useCustomConfig: (builder) => {
-      builder
-        .addRadio({
-          path: 'gradientMode',
-          name: 'Gradient mode',
-          defaultValue: GraphGradientMode.Scheme,
-          settings: {
-            options: [
-              {
-                label: 'None',
-                value: GraphGradientMode.None,
-                ariaLabel: ariaLabels.gradientNone,
-              },
-              {
-                label: 'Opacity',
-                value: GraphGradientMode.Opacity,
-                description: 'Enable fill opacity gradient',
-                ariaLabel: ariaLabels.gradientOpacity,
-              },
-              {
-                label: 'Hue',
-                value: GraphGradientMode.Hue,
-                description: 'Small color hue gradient',
-                ariaLabel: ariaLabels.gradientHue,
-              },
-              {
-                label: 'Scheme',
-                value: GraphGradientMode.Scheme,
-                description: 'Use color scheme to define gradient',
-                ariaLabel: ariaLabels.gradientScheme,
-              },
-            ],
-          },
-        })
-        .addSliderInput({
-          path: 'fillOpacity',
-          name: 'Fill opacity',
-          defaultValue: 25,
-          settings: {
-            min: 0,
-            max: 100,
-            step: 1,
-            ariaLabelForHandle: ariaLabels.fillOpacity,
-          },
-        });
-    },
-  })
-  .setPanelOptions((builder) => {
-    return builder
-      .addBooleanSwitch({
-        path: 'showSeriesCount',
-        name: 'Show series counter',
-        defaultValue: false,
-      })
-      .addRadio({
-        path: 'legend.displayMode',
-        name: 'Legend mode',
-        category: ['Legend'],
-        description: '',
-        defaultValue: LegendDisplayMode.List,
-        settings: {
-          options: [
-            {
-              value: LegendDisplayMode.List,
-              label: 'List',
-              ariaLabel: ariaLabels.legendDisplayList,
-            },
-            {
-              value: LegendDisplayMode.Table,
-              label: 'Table',
-              ariaLabel: ariaLabels.legendDisplayTable,
-            },
-            {
-              value: undefined,
-              label: 'Hidden',
-              ariaLabel: ariaLabels.legendDisplayHidden,
-            },
-          ],
-        },
-      })
-      .addRadio({
-        path: 'legend.placement',
-        name: 'Legend placement',
-        category: ['Legend'],
-        description: '',
-        defaultValue: 'bottom',
-        settings: {
-          options: [
-            {
-              value: 'bottom',
-              label: 'Bottom',
-              ariaLabel: ariaLabels.legendPlacementBottom,
-            },
-            {
-              value: 'right',
-              label: 'Right',
-              ariaLabel: ariaLabels.legendPlacementRight,
-            },
-          ],
-        },
-        showIf: (config) => !!config.legend.displayMode,
-      });
-  });
+      showIf: (config) => config.showSeriesCount,
+    });
+});

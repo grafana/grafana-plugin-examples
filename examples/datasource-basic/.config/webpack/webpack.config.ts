@@ -43,7 +43,7 @@ const config = async (env: Env): Promise<Configuration> => {
     cache: {
       type: 'filesystem',
       buildDependencies: {
-        // __filename doesnt work in Node 24
+        // __filename doesn't work in Node 24
         config: [path.resolve(process.cwd(), '.config', 'webpack', 'webpack.config.ts')],
       },
     },
@@ -73,7 +73,6 @@ const config = async (env: Env): Promise<Configuration> => {
       'redux',
       'rxjs',
       'react-router',
-      'react-router-dom',
       'd3',
       'angular',
       /^@grafana\/ui/i,

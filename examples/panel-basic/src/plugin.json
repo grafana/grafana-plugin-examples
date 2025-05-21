@@ -1,37 +1,25 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "Basic Panel",
-  "id": "basic-panel",
+  "name": "Basic",
+  "id": "myorg-basic-panel",
   "info": {
-    "keywords": [
-      "panel",
-      "example"
-    ],
-    "description": "Showcase how to build a basic panel plugin",
+    "keywords": ["panel"],
+    "description": "",
     "author": {
-      "name": "Your Name"
+      "name": "Myorg"
     },
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"
     },
-    "links": [
-      {
-        "name": "Website",
-        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel"
-      },
-      {
-        "name": "License",
-        "url": "https://github.com/grafana/grafana-plugin-examples/examples/basic-panel/blob/master/LICENSE"
-      }
-    ],
+    "links": [],
     "screenshots": [],
     "version": "%VERSION%",
     "updated": "%TODAY%"
   },
   "dependencies": {
-    "grafanaDependency": ">=10.3.3",
+    "grafanaDependency": ">=10.4.0",
     "plugins": []
   }
 }
