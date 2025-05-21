@@ -2,14 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "app",
   "name": "Backend",
-  "id": "grafana-backend-app",
+  "id": "myorg-backend-app",
   "backend": true,
   "executable": "gpx_backend",
   "info": {
     "keywords": ["app"],
     "description": "",
     "author": {
-      "name": "Grafana"
+      "name": "Myorg"
     },
     "logos": {
       "small": "img/logo.svg",
