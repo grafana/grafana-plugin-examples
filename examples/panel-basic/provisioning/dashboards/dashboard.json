@@ -51,7 +51,7 @@
         }
       ],
       "title": "Sample Panel Title",
-      "type": "grafana-basic-panel"
+      "type": "myorg-basic-panel"
     },
     {
       "datasource": {
@@ -82,7 +82,7 @@
         }
       ],
       "title": "Sample Panel Title",
-      "type": "grafana-basic-panel"
+      "type": "myorg-basic-panel"
     }
   ],
   "refresh": "",

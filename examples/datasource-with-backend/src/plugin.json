@@ -2,14 +2,14 @@
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
   "type": "datasource",
   "name": "Backend",
-  "id": "grafana-backend-datasource",
+  "id": "myorg-backend-datasource",
   "metrics": true,
   "backend": true,
   "executable": "gpx_backend",
   "info": {
     "description": "",
     "author": {
-      "name": "Grafana"
+      "name": "Myorg"
     },
     "keywords": ["datasource"],
     "logos": {

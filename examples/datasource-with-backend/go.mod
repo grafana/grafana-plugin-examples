@@ -1,4 +1,4 @@
-module github.com/grafana/backend
+module github.com/myorg/backend
 
 go 1.24.1
 
