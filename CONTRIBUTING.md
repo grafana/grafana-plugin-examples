@@ -40,6 +40,17 @@ Once it's filed:
 
 The examples in this repository were generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin). If you want to add a new example or extension to an existing template, you can [open a new issue](https://github.com/grafana/plugin-tools/issues) there.
 
+- Provide as much context as you can about what you are trying to do.
+- Please indicate whether it should be incorporated within an existing template or a new example.
+
+Once it's filed:
+
+- The project team will label the issue.
+- The project team will evaluate the feature request, possibly asking you more questions to understand its purpose and any relevant requirements. If the issue is closed, the team will convey their reasoning and suggest an alternative path forward.
+- If the feature request is accepted it can then be worked on by either a core team member or by anyone in the community who wants to [contribute code](#contribute-code).
+
+Note: The team is unlikely to be able to accept every single feature request that is filed. Please understand if they need to say no.
+
 ## Project Setup
 
 So you wanna contribute some code! That's great! This project uses GitHub Pull Requests to manage contributions, so [read up on how to fork a GitHub project and file a PR](https://guides.github.com/activities/forking) if you've never done it before.
