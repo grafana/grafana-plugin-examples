@@ -5,6 +5,9 @@ on:
     - cron: "0 0 * * 0" # Run weekly (every Sunday at midnight UTC)
   workflow_dispatch: # Enable manual trigger
   repository_dispatch: # To trigger from plugin-tools
+  push:
+    branches:
+      - academo/scaffold-basic-examples
 
 jobs:
   generate-new-examples:
@@ -15,31 +18,31 @@ jobs:
         include:
           - examples: panel-basic
             plugin-name: basic
-            plugin-org: grafana
+            plugin-org: myorg
             plugin-type: panel
             has-backend: false
             artifact-name: panel-basic
           - examples: datasource-basic
             plugin-name: basic
-            plugin-org: grafana
+            plugin-org: myorg
             plugin-type: datasource
             has-backend: false
             artifact-name: datasource-basic
           - examples: app-basic
             plugin-name: basic
-            plugin-org: grafana
+            plugin-org: myorg
             plugin-type: app
             has-backend: false
             artifact-name: app-basic
           - examples: datasource-with-backend
             plugin-name: backend
-            plugin-org: grafana
+            plugin-org: myorg
             plugin-type: datasource
             has-backend: true
             artifact-name: datasource-with-backend
           - examples: app-with-backend
             plugin-name: backend
-            plugin-org: grafana
+            plugin-org: myorg
             plugin-type: app
             has-backend: true
             artifact-name: app-with-backend
@@ -186,5 +189,5 @@ jobs:
             It updates all the examples based on the latest version of create-plugin.
           branch: update-plugin-examples
           delete-branch: true
-          base: main
+          base: academo/update-examples-to-standard
 
