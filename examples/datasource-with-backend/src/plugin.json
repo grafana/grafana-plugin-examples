@@ -11,7 +11,9 @@
     "author": {
       "name": "Myorg"
     },
-    "keywords": ["datasource"],
+    "keywords": [
+      "datasource"
+    ],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

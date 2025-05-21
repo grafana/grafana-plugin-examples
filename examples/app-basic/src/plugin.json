@@ -4,7 +4,9 @@
   "name": "Basic",
   "id": "myorg-basic-app",
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "",
     "author": {
       "name": "Myorg"
