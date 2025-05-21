@@ -21,9 +21,11 @@ The Project Team looks forward to your contributions. 🙌🏾✨
 
 ## Report an Error or Bug
 
+The exampels in this repository are auto-generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin).
+
 If you run into an error or bug with the project:
 
-- Open an Issue at https://github.com/grafana/grafana-plugin-examples/issues
+- Open an Issue at [https://github.com/grafana/plugin-tools/issues](https://github.com/grafana/plugin-tools/issues).
 - Include _reproduction steps_ that someone else can follow to recreate the bug or error on their own.
 - Provide project and platform versions (nodejs, npm, etc), depending on what seems relevant. If not, please be ready to provide that information if maintainers ask for it.
 
@@ -36,19 +38,7 @@ Once it's filed:
 
 ## Request a new example or extension to an existing template
 
-If our examples don't cover your use case and you would like to see a new template project available:
-
-- Open an Issue at https://github.com/grafana/grafana-plugin-examples/issues
-- Provide as much context as you can about what you are trying to do.
-- Please indicate whether it should be incorporated within an existing template or a new example.
-
-Once it's filed:
-
-- The project team will label the issue.
-- The project team will evaluate the feature request, possibly asking you more questions to understand its purpose and any relevant requirements. If the issue is closed, the team will convey their reasoning and suggest an alternative path forward.
-- If the feature request is accepted it can then be worked on by either a core team member or by anyone in the community who wants to [contribute code](#contribute-code).
-
-Note: The team is unlikely to be able to accept every single feature request that is filed. Please understand if they need to say no.
+The examples in this repository were generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin). If you want to add a new example or extension to an existing template, you can [open a new issue](https://github.com/grafana/plugin-tools/issues) there.
 
 ## Project Setup
 
