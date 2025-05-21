@@ -2,23 +2,27 @@
 
 This repository contains example plugins to showcase different use cases.
 
+The examples in this website were auto-generated from the existing templates in [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin).
+
 ## App plugins
 
-| Example                                                       | Description                                                                                |
-| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [app-basic](examples/app-basic)                               | Shows how to build a basic app plugin that uses custom routing                             |
+| Example                                       | Description                                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [app-basic](examples/app-basic)               | Shows how to build a basic app plugin that uses custom routing                             |
+| [app-with-backend](examples/app-with-backend) | Shows how to build a basic app plugin that uses custom routing and has a backend component |
 
 ## Panel plugins
 
-| Example                                           | Description                                                                                                                       |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [panel-basic](examples/panel-basic)               | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
+| Example                             | Description                                                                                                                       |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| [panel-basic](examples/panel-basic) | Shows how to build a panel plugin that uses the time series graph from `@grafana/ui` to read and update the dashboard time range. |
 
 ## Data source plugins
 
-| Example                                                                                   | Description                                                                                                   |
-| ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| [datasource-basic](examples/datasource-basic)                                             | Shows how to build a basic data source plugin.                                                                |
+| Example                                                     | Description                                                                |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [datasource-basic](examples/datasource-basic)               | Shows how to build a basic data source plugin.                             |
+| [datasource-with-backend](examples/datasource-with-backend) | Shows how to build a basic data source plugin and has a backend component. |
 
 > [!NOTE]
 > The plugin examples in this repository use NPM to manage frontend dependencies. Whilst you are welcome to copy these examples and use Yarn or PNPM instead, we offer no support for them.
@@ -83,7 +87,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
       - name: Install dependencies
         run: npm install
       - name: Build plugin
@@ -91,9 +95,9 @@ jobs:
       - name: Compatibility check
         uses: grafana/plugin-actions/is-compatible@main
         with:
-          module: './src/module.ts'
-          comment-pr: 'yes'
-          fail-if-incompatible: 'no'
+          module: "./src/module.ts"
+          comment-pr: "yes"
+          fail-if-incompatible: "no"
 ```
 
 This runs a compatibility check for the latest release of Grafana plugins API in your project every time a new push or pull request is open. If it finds an error you will see a message indicating you have an incompatibility.

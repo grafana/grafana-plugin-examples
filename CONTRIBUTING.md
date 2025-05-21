@@ -21,9 +21,11 @@ The Project Team looks forward to your contributions. 🙌🏾✨
 
 ## Report an Error or Bug
 
+The examples in this repository are auto-generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin).
+
 If you run into an error or bug with the project:
 
-- Open an Issue at https://github.com/grafana/grafana-plugin-examples/issues
+- Open an Issue at [https://github.com/grafana/plugin-tools/issues](https://github.com/grafana/plugin-tools/issues).
 - Include _reproduction steps_ that someone else can follow to recreate the bug or error on their own.
 - Provide project and platform versions (nodejs, npm, etc), depending on what seems relevant. If not, please be ready to provide that information if maintainers ask for it.
 
@@ -36,9 +38,8 @@ Once it's filed:
 
 ## Request a new example or extension to an existing template
 
-If our examples don't cover your use case and you would like to see a new template project available:
+The examples in this repository were generated from [create-plugin](https://github.com/grafana/plugin-tools/tree/main/packages/create-plugin). If you want to add a new example or extension to an existing template, you can [open a new issue](https://github.com/grafana/plugin-tools/issues) there.
 
-- Open an Issue at https://github.com/grafana/grafana-plugin-examples/issues
 - Provide as much context as you can about what you are trying to do.
 - Please indicate whether it should be incorporated within an existing template or a new example.
 
