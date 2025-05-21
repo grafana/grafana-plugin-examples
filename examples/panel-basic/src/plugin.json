@@ -4,7 +4,9 @@
   "name": "Basic",
   "id": "myorg-basic-panel",
   "info": {
-    "keywords": ["panel"],
+    "keywords": [
+      "panel"
+    ],
     "description": "",
     "author": {
       "name": "Myorg"

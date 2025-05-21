@@ -6,7 +6,9 @@
   "backend": true,
   "executable": "gpx_backend",
   "info": {
-    "keywords": ["app"],
+    "keywords": [
+      "app"
+    ],
     "description": "",
     "author": {
       "name": "Myorg"
