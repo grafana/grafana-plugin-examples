@@ -432,7 +432,6 @@ jobs:
 
   test-notify:
     runs-on: ubuntu-latest
-    needs: [run-integration-tests]
     permissions:
       id-token: write
     steps:
