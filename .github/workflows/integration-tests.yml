@@ -371,6 +371,7 @@ jobs:
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload-templated: true
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
@@ -448,6 +449,7 @@ jobs:
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
           payload-templated: true
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
