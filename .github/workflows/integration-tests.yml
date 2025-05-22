@@ -370,6 +370,7 @@ jobs:
         if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload-templated: true
           payload: |
             {
               "blocks": [
