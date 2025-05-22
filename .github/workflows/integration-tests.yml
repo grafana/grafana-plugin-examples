@@ -366,10 +366,12 @@ jobs:
 
       - name: Send GitHub Action trigger data to Slack workflow
         id: slack
-        uses: slackapi/slack-github-action@37ebaef184d7626c5f204ab8d3baff4262dd30f0 # v1.27.0
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         if: contains(fromJson('["failure"]'), needs.run-integration-tests.result)
         with:
           channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          payload-templated: true
+          webhook-type: incoming-webhook
           payload: |
             {
               "blocks": [
