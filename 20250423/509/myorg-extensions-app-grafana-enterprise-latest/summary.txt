@@ -1,5 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=latest
-OUTPUT=failure
-PLUGIN_NAME=myorg-extensions-app
-UPLOAD_REPORT_ENABLED=true
