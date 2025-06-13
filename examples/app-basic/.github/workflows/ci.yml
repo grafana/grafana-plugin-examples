@@ -19,6 +19,8 @@ jobs:
   build:
     name: Build, lint and unit tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       plugin-id: ${{ steps.metadata.outputs.plugin-id }}
       plugin-version: ${{ steps.metadata.outputs.plugin-version }}
@@ -62,14 +64,14 @@ jobs:
 
       - name: Test backend
         if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6f50bbb8ea47d56e62dee92392788acbc8192d0b
         with:
           version: latest
           args: coverage
 
       - name: Build backend
         if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v3
+        uses: magefile/mage-action@6f50bbb8ea47d56e62dee92392788acbc8192d0b
         with:
           version: latest
           args: buildAll
@@ -121,6 +123,8 @@ jobs:
   resolve-versions:
     name: Resolve e2e images
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 3
     needs: build
     if: ${{ needs.build.outputs.has-e2e == 'true' }}
@@ -136,6 +140,10 @@ jobs:
   playwright-tests:
     needs: [resolve-versions, build]
     timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
     strategy:
       fail-fast: false
       matrix:
@@ -209,6 +217,10 @@ jobs:
 
   publish-report:
     if: ${{ always() && !cancelled() }}
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
     needs: [playwright-tests]
     runs-on: ubuntu-latest
     steps:
