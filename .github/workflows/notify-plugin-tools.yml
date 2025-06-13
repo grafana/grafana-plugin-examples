@@ -49,6 +49,7 @@ jobs:
         with:
           app-id: ${{ env.GITHUB_APP_ID }}
           private-key: ${{ env.GITHUB_APP_PRIVATE_KEY }}
+          permission-contents: write
 
       - name: Repository Dispatch
         if: steps.check_files.outputs.has_relevant_changes == 'true'
