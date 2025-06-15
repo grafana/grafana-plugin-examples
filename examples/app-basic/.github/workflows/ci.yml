@@ -10,11 +10,6 @@ on:
       - master
       - main
 
-permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
-
 jobs:
   build:
     name: Build, lint and unit tests
@@ -30,6 +25,8 @@ jobs:
       GRAFANA_ACCESS_POLICY_TOKEN: ${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
@@ -104,14 +101,19 @@ jobs:
       - name: Package plugin
         id: package-plugin
         run: |
-          mv dist ${{ steps.metadata.outputs.plugin-id }}
-          zip ${{ steps.metadata.outputs.archive }} ${{ steps.metadata.outputs.plugin-id }} -r
+          mv dist ${PLUGIN_ID}
+          zip ${ARCHIVE} ${PLUGIN_ID} -r
+        env:
+          ARCHIVE: ${{ steps.metadata.outputs.archive }}
+          PLUGIN_ID: ${{ steps.metadata.outputs.plugin-id }}
 
       - name: Check plugin.json
         run: |
           docker run --pull=always \
-            -v $PWD/${{ steps.metadata.outputs.archive }}:/archive.zip \
+            -v $PWD/${ARCHIVE}:/archive.zip \
             grafana/plugin-validator-cli -analyzer=metadatavalid /archive.zip
+        env:
+          ARCHIVE: ${{ steps.metadata.outputs.archive }}
 
       - name: Archive Build
         uses: actions/upload-artifact@v4
@@ -133,9 +135,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
       - name: Resolve Grafana E2E versions
         id: resolve-versions
-        uses: grafana/plugin-actions/e2e-version@main
+        uses: grafana/plugin-actions/e2e-version@main # zizmor: ignore[unpinned-uses] provided by grafana
 
   playwright-tests:
     needs: [resolve-versions, build]
@@ -152,6 +157,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Download plugin
         uses: actions/download-artifact@v4
@@ -179,7 +186,7 @@ jobs:
           ANONYMOUS_AUTH_ENABLED=false DEVELOPMENT=false GRAFANA_VERSION=${{ matrix.GRAFANA_IMAGE.VERSION }} GRAFANA_IMAGE=${{ matrix.GRAFANA_IMAGE.NAME }} docker compose up -d
 
       - name: Wait for grafana server
-        uses: grafana/plugin-actions/wait-for-grafana@main
+        uses: grafana/plugin-actions/wait-for-grafana@main # zizmor: ignore[unpinned-uses] provided by grafana
         with:
           url: http://localhost:3000/login
 
@@ -191,7 +198,7 @@ jobs:
         run: npm run e2e
 
       - name: Upload e2e test summary
-        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main
+        uses: grafana/plugin-actions/playwright-gh-pages/upload-report-artifacts@main # zizmor: ignore[unpinned-uses] provided by grafana
         if: ${{ always() && !cancelled() }}
         with:
           upload-report: false
@@ -225,7 +232,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # required for playwright-gh-pages
+          persist-credentials: true
       - name: Publish report
-        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main
+        uses: grafana/plugin-actions/playwright-gh-pages/deploy-report-pages@main # zizmor: ignore[unpinned-uses] provided by grafana
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
