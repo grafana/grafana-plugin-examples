@@ -15,28 +15,12 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           # require for PR action
           persist-credentials: true
-
-      - id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
-        with:
-          repo_secrets: |
-            GITHUB_APP_ID=plugins-platform-bot-app:app_id
-            GITHUB_APP_PRIVATE_KEY=plugins-platform-bot-app:app_pem
-
-      - uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
-        id: generate_token
-        with:
-          app-id: ${{ env.GITHUB_APP_ID }}
-          private-key: ${{ env.GITHUB_APP_PRIVATE_KEY }}
-          permission-actions: read
-          permission-contents: write
 
       - name: Setup nodejs 22
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -92,8 +76,7 @@ jobs:
             This is an auto-generated PR
             
             It updates all the examples based on the latest version of create-plugin.
-          branch: update-plugin-examples-to-latest
+          branch: update-plugin-examples
           delete-branch: true
           base: main
-          token: ${{ steps.generate_token.outputs.token }}
 
