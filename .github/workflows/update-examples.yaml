@@ -5,9 +5,6 @@ on:
     - cron: "0 0 * * 0" # Run weekly (every Sunday at midnight UTC)
   workflow_dispatch: # Enable manual trigger
   repository_dispatch: # To trigger from plugin-tools
-  push:
-    branches:
-      - academo/fix-update-examples
 
 jobs:
   update-examples:
