@@ -21,5 +21,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
-      - uses: grafana/plugin-actions/bundle-size@main
+      - uses: grafana/plugin-actions/bundle-size@main # zizmor: ignore[unpinned-uses] provided by grafana
