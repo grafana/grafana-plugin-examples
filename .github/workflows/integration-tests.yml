@@ -360,6 +360,7 @@ jobs:
       - id: get-secrets
         uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
         with:
+          export_env: false
           # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
           repo_secrets: |
             SLACK_WEBHOOK_URL=slack_webhook_url:slack_webhook_url
@@ -427,5 +428,5 @@ jobs:
                 ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ fromJSON(steps.get-secrets.outputs.secrets).SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
