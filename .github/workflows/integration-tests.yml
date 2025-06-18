@@ -358,7 +358,7 @@ jobs:
       id-token: write
     steps:
       - id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@28361cdb22223e5f1e34358c86c20908e7248760 # get-vault-secrets-v1.1.0
+        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets/v1.2.1 # zizmor: ignore[unpinned-uses] provided by grafana
         with:
           export_env: false
           # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
