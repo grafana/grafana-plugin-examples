@@ -13,7 +13,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run linkspector
-        uses: umbrelladocs/action-linkspector@a0567ce1c7c13de4a2358587492ed43cab5d0102 # v1.3.4
+        uses: umbrelladocs/action-linkspector@e2ccef58c4b9eb89cd71ee23a8629744bba75aa6 # v1.3.5
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
