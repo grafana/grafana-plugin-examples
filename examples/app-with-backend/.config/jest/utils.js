@@ -22,6 +22,7 @@ const grafanaESModules = [
   'get-user-locale',
   'marked',
   'memoize',
+  'mimic-function',
   'ol',
   'react-calendar',
   'react-colorful',
