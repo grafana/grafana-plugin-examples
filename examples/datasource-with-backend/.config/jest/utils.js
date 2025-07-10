@@ -19,6 +19,7 @@ const grafanaESModules = [
   'd3-force',
   'd3-interpolate',
   'd3-scale-chromatic',
+  'get-user-locale',
   'marked',
   'ol',
   'react-calendar',
