@@ -21,6 +21,7 @@ const grafanaESModules = [
   'd3-scale-chromatic',
   'marked',
   'ol',
+  'react-calendar',
   'react-colorful',
   'rxjs',
   'uuid',
