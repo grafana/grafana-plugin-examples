@@ -27,7 +27,7 @@ jobs:
             GITHUB_APP_ID=plugins-platform-bot-app:app_id
             GITHUB_APP_PRIVATE_KEY=plugins-platform-bot-app:app_pem
 
-      - uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+      - uses: actions/create-github-app-token@0f859bf9e69e887678d5bbfbee594437cb440ffe # v2.1.0
         id: generate_token
         with:
           app-id: ${{ env.GITHUB_APP_ID }}
