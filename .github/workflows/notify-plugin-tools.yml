@@ -35,7 +35,7 @@ jobs:
           COMMIT_SHA: ${{ github.event.pull_request.merge_commit_sha }}
 
       - id: get-secrets
-        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets/v1.2.1 # zizmor: ignore[unpinned-uses] provided by grafana
+        uses: grafana/shared-workflows/actions/get-vault-secrets@get-vault-secrets/v1.3.0 # zizmor: ignore[unpinned-uses] provided by grafana
         with:
           export_env: false
           # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
