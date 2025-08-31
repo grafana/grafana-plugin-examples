@@ -19,7 +19,7 @@ var (
 	_ backend.CheckHealthHandler    = (*App)(nil)
 )
 
-// App is an example app backend plugin which can respond to data queries.
+// App is an example app plugin with a backend which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
 }
