@@ -17,7 +17,7 @@ App plugins can let you create a custom out-of-the-box monitoring experience by 
    go mod tidy
    ```
 
-2. Build backend plugin binaries for Linux, Windows and Darwin:
+2. Build plugin backend binaries for Linux, Windows and Darwin:
 
    ```bash
    mage -v

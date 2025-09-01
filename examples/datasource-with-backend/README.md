@@ -17,7 +17,7 @@ Grafana supports a wide range of data sources, including Prometheus, MySQL, and 
    go mod tidy
    ```
 
-2. Build backend plugin binaries for Linux, Windows and Darwin:
+2. Build plugin backend binaries for Linux, Windows and Darwin:
 
    ```bash
    mage -v
