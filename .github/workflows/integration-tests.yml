@@ -32,7 +32,7 @@ jobs:
         run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
         with:
@@ -70,7 +70,7 @@ jobs:
           PLUGIN_NAME: ${{ matrix.pluginDir }}
 
       - name: Setup node version
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: "${{ matrix.pluginDir }}/.nvmrc"
           registry-url: "https://registry.npmjs.org"
