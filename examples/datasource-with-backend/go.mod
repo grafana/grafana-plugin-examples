@@ -2,6 +2,8 @@ module github.com/myorg/backend
 
 go 1.24.6
 
+toolchain go1.24.7
+
 require github.com/grafana/grafana-plugin-sdk-go v0.279.0
 
 require (
