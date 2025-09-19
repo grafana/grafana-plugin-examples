@@ -1,7 +1,8 @@
+import { initPluginTranslations, t } from '@grafana/i18n';
+
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components/SimplePanel';
-import { initPluginTranslations, t } from '@grafana/i18n';
 import pluginJson from 'plugin.json';
 
 await initPluginTranslations(pluginJson.id);
