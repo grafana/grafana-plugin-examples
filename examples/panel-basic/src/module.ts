@@ -1,37 +1,42 @@
 import { PanelPlugin } from '@grafana/data';
 import { SimpleOptions } from './types';
 import { SimplePanel } from './components/SimplePanel';
+import { initPluginTranslations, t } from '@grafana/i18n';
+import pluginJson from 'plugin.json';
+
+await initPluginTranslations(pluginJson.id);
 
 export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOptions((builder) => {
   return builder
     .addTextInput({
       path: 'text',
-      name: 'Simple text option',
-      description: 'Description of panel option',
-      defaultValue: 'Default value of text input option',
+      name: t('panel.options.text.name', 'Simple text option'),
+      description: t('panel.options.text.description', 'Description of panel option'),
+      defaultValue: t('panel.options.text.defaultValue', 'Default value of text input option'),
     })
     .addBooleanSwitch({
       path: 'showSeriesCount',
-      name: 'Show series counter',
+      name: t('panel.options.showSeriesCount.name', 'Show series counter'),
       defaultValue: false,
     })
     .addRadio({
       path: 'seriesCountSize',
       defaultValue: 'sm',
-      name: 'Series counter size',
+
+      name: t('panel.options.seriesCountSize.name', 'Series counter size'),
       settings: {
         options: [
           {
             value: 'sm',
-            label: 'Small',
+            label: t('panel.options.seriesCountSize.options.sm', 'Small'),
           },
           {
             value: 'md',
-            label: 'Medium',
+            label: t('panel.options.seriesCountSize.options.md', 'Medium'),
           },
           {
             value: 'lg',
-            label: 'Large',
+            label: t('panel.options.seriesCountSize.options.lg', 'Large'),
           },
         ],
       },

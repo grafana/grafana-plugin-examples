@@ -11,7 +11,8 @@
     "lint:fix": "npm run lint -- --fix && prettier --write --list-different .",
     "e2e": "playwright test",
     "server": "docker compose up --build",
-    "sign": "npx --yes @grafana/sign-plugin@latest"
+    "sign": "npx --yes @grafana/sign-plugin@latest",
+    "i18n-extract": "i18next --config src/locales/i18next-parser.config.js"
   },
   "author": "Myorg",
   "license": "Apache-2.0",
@@ -41,6 +42,7 @@
     "eslint-webpack-plugin": "^4.0.1",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "glob": "^10.2.7",
+    "i18next-parser": "^9.3.0",
     "identity-obj-proxy": "3.0.0",
     "imports-loader": "^5.0.0",
     "jest": "^29.5.0",
@@ -69,8 +71,8 @@
     "@grafana/data": "^12.1.0",
     "@grafana/i18n": "^12.1.0",
     "@grafana/runtime": "^12.1.0",
-    "@grafana/ui": "^12.1.0",
     "@grafana/schema": "^12.1.0",
+    "@grafana/ui": "^12.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
