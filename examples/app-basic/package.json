@@ -16,7 +16,7 @@
   "author": "Myorg",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@grafana/eslint-config": "^8.0.0",
+    "@grafana/eslint-config": "^8.2.0",
     "@grafana/plugin-e2e": "^2.1.12",
     "@grafana/tsconfig": "^2.0.0",
     "@playwright/test": "^1.52.0",
