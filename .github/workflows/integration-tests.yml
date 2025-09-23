@@ -2,7 +2,7 @@ name: integration tests
 on:
   pull_request:
   schedule:
-    - cron: "0 11 * * *" #once a day at 11 UTC
+    - cron: '0 11 * * *' #once a day at 11 UTC
 concurrency:
   group: integration-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -52,11 +52,11 @@ jobs:
         pluginDir: ${{ fromJson(needs.setup-matrix.outputs.pluginDirs) }}
       fail-fast: false
     env:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
-      GF_AUTH_BASIC_ENABLED: "false"
-      GF_DEFAULT_APP_MODE: "development"
-      GF_INSTALL_PLUGINS: "marcusolsson-static-datasource"
+      GF_AUTH_ANONYMOUS_ENABLED: 'true'
+      GF_AUTH_ANONYMOUS_ORG_ROLE: 'Admin'
+      GF_AUTH_BASIC_ENABLED: 'false'
+      GF_DEFAULT_APP_MODE: 'development'
+      GF_INSTALL_PLUGINS: 'marcusolsson-static-datasource'
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -72,9 +72,9 @@ jobs:
       - name: Setup node version
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version-file: "${{ matrix.pluginDir }}/.nvmrc"
-          registry-url: "https://registry.npmjs.org"
-          cache: "npm"
+          node-version-file: '${{ matrix.pluginDir }}/.nvmrc'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
 
       - name: Install dependencies
         run: |
@@ -99,7 +99,7 @@ jobs:
 
       - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
-          go-version: "~1.24"
+          go-version: '~1.24'
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -184,7 +184,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -227,7 +227,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
         uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -295,7 +295,7 @@ jobs:
         if: steps.has-integration-tests.outputs.DIR == 'true'
         uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
         with:
-          url: "http://localhost:3000/"
+          url: 'http://localhost:3000/'
           responseCode: 200
           timeout: 60000
           interval: 500
@@ -335,8 +335,8 @@ jobs:
         run: exit 1
 
   publish-report:
-    if: ${{ always() }}
-    needs: [run-integration-tests]
+    if: ${{ always() && needs.setup-matrix.result == 'success' }}
+    needs: [setup-matrix, run-integration-tests]
     permissions:
       contents: write
       pull-requests: write
