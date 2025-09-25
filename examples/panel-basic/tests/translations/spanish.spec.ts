@@ -12,7 +12,6 @@ test.use({
 test('should display Spanish plugin translations for all supported versions (>=11.0.0)', async ({
   gotoPanelEditPage,
   readProvisionedDashboard,
-  page,
 }) => {
   const dashboard = await readProvisionedDashboard({ fileName: 'dashboard.json' });
   const panelEditPage = await gotoPanelEditPage({ dashboard, id: '1' });

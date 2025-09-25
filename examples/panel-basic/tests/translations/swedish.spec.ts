@@ -15,7 +15,6 @@ test('should display correct translation based on Grafana version (Swedish for v
   gotoPanelEditPage,
   readProvisionedDashboard,
   grafanaVersion,
-  page,
 }) => {
   const dashboard = await readProvisionedDashboard({ fileName: 'dashboard.json' });
   const panelEditPage = await gotoPanelEditPage({ dashboard, id: '1' });
