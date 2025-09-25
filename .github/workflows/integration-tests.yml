@@ -248,9 +248,7 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
-        #############
-
-        # Canary Version Tests
+      # Canary Version Tests
       # Runs the plugin tests against the canary stable version of Grafana.
       # Only run if should-run-expected-canary-tests so we can build examples of new features without failing tests.
       - name: Canary - Start Grafana
@@ -298,9 +296,13 @@ jobs:
         run: docker compose down mockserver
         working-directory: ${{ matrix.pluginDir }}
 
+      - name: Failing build due to test failures
+        if: (steps.has-integration-tests.outputs.DIR == 'true' && (steps.canary-version-tests.outcome != 'success' || steps.latest-version-tests.outcome != 'success' || steps.expected-version-tests.outcome != 'success'))
+        run: exit 1
+
   publish-report:
-    if: ${{ always() && needs.setup-matrix.result == 'success' }}
-    needs: [setup-matrix, run-integration-tests]
+    if: ${{ always() }}
+    needs: [run-integration-tests]
     permissions:
       contents: write
       pull-requests: write
