@@ -13,13 +13,14 @@ test('should display "No data" in case panel data is empty', async ({
 test('should display circle when data is passed to the panel', async ({
   panelEditPage,
   readProvisionedDataSource,
+  grafanaVersion,
   page,
 }) => {
   const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
   await panelEditPage.datasource.set(ds.name);
   await panelEditPage.setVisualization('Basic');
   await expect(page.getByTestId('simple-panel-circle')).toBeVisible();
-  if (semver.gte(process.env.GRAFANA_VERSION, '12.3.0')) {
+  if (semver.gte(grafanaVersion, '12.3.0')) {
     await expect(page.getByTestId('simple-panel-circle132123')).toBeVisible();
   }
 });
