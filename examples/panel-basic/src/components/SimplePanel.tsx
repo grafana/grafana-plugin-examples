@@ -1,9 +1,11 @@
-import React from 'react';
-import { PanelProps } from '@grafana/data';
-import { SimpleOptions } from 'types';
 import { css, cx } from '@emotion/css';
 import { useStyles2, useTheme2 } from '@grafana/ui';
+
 import { PanelDataErrorView } from '@grafana/runtime';
+import { PanelProps } from '@grafana/data';
+import React from 'react';
+import { SimpleOptions } from 'types';
+import { Trans } from '@grafana/i18n';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -60,9 +62,21 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fie
 
       <div className={styles.textBox}>
         {options.showSeriesCount && (
-          <div data-testid="simple-panel-series-counter">Number of series: {data.series.length}</div>
+          <div data-testid="simple-panel-series-counter">
+            <Trans
+              i18nKey="components.simplePanel.options.showSeriesCount"
+              defaults="Number of series: {{numberOfSeries}}"
+              values={{ numberOfSeries: data.series.length }}
+            />
+          </div>
         )}
-        <div>Text option value: {options.text}</div>
+        <div>
+          <Trans
+            i18nKey="components.simplePanel.options.textOptionValue"
+            defaults="Text option value: {{optionValue}}"
+            values={{ optionValue: options.text }}
+          />
+        </div>
       </div>
     </div>
   );

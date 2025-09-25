@@ -1,0 +1,30 @@
+{
+  "components": {
+    "simplePanel": {
+      "options": {
+        "showSeriesCount": "Antal serier: {{numberOfSeries}}",
+        "textOptionValue": "Textalternativ värde: {{optionValue}}"
+      }
+    }
+  },
+  "panel": {
+    "options": {
+      "seriesCountSize": {
+        "name": "Serieräknare storlek",
+        "options": {
+          "lg": "Stor",
+          "md": "Medium",
+          "sm": "Liten"
+        }
+      },
+      "showSeriesCount": {
+        "name": "Visa serieräknare"
+      },
+      "text": {
+        "defaultValue": "Standardvärde för textinmatningsalternativ",
+        "description": "Beskrivning av panelalternativ",
+        "name": "Enkelt textalternativ"
+      }
+    }
+  }
+}
