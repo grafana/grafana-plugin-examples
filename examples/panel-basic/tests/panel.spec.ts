@@ -1,3 +1,4 @@
+import * as semver from 'semver';
 import { test, expect } from '@grafana/plugin-e2e';
 
 test('should display "No data" in case panel data is empty', async ({
@@ -17,7 +18,10 @@ test('should display circle when data is passed to the panel', async ({
   const ds = await readProvisionedDataSource({ fileName: 'datasources.yml' });
   await panelEditPage.datasource.set(ds.name);
   await panelEditPage.setVisualization('Basic');
-  await expect(page.getByTestId('simple-panel-circlee')).toBeVisible();
+  await expect(page.getByTestId('simple-panel-circle')).toBeVisible();
+  if (semver.gte(process.env.GRAFANA_VERSION, '12.3.0')) {
+    await expect(page.getByTestId('simple-panel-circle132123')).toBeVisible();
+  }
 });
 
 test('should display series counter when "Show series counter" option is enabled', async ({
