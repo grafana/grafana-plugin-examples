@@ -250,7 +250,6 @@ jobs:
 
       # Canary Version Tests
       # Runs the plugin tests against the canary stable version of Grafana.
-      # Only run if should-run-expected-canary-tests so we can build examples of new features without failing tests.
       - name: Canary - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
