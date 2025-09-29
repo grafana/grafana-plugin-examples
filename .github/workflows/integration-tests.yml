@@ -16,7 +16,6 @@ jobs:
     timeout-minutes: 30
     outputs:
       pluginDirs: ${{ steps.set-plugin-dirs.outputs.pluginDirs }}
-      canaryVersion: ${{ steps.npm-canary-version.outputs.version }}
       canaryDockerTag: ${{ steps.docker-canary-tag.outputs.result }}
       latestVersion: ${{ steps.npm-latest-version.outputs.version }}
     steps:
@@ -27,18 +26,13 @@ jobs:
       - name: Setup plugin dir variable
         id: set-plugin-dirs
         run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-      - name: Setup NPM canary version variable
-        id: npm-canary-version
-        run: echo "version=$(npm view @grafana/ui dist-tags.canary)" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
-        env:
-          INPUT_NPM-TAG: ${{ steps.npm-canary-version.outputs.version }}
         with:
           result-encoding: string
           script: |
-            const script = require('./.github/workflows/scripts/npm-to-docker-image.js');
+            const script = require('./.github/workflows/scripts/get-dev-image-tag.js');
             return await script({ core });
       - name: Setup NPM latest version variable
         id: npm-latest-version
@@ -97,9 +91,9 @@ jobs:
           echo "MAGEFILE_EXISTS=$(test -f ./Magefile.go && echo true || echo false)" >> $GITHUB_OUTPUT
         working-directory: ${{ matrix.pluginDir }}
 
-      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
         with:
-          go-version: "~1.22"
+          go-version: "~1.24"
           check-latest: true
           cache-dependency-path: ${{ matrix.pluginDir }}/go.sum
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
@@ -120,12 +114,10 @@ jobs:
           workdir: ${{ matrix.pluginDir }}
         if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
 
-      ## CANARY_VERSION has to use NPM as we only publish the packages on changes
       - name: Set environment vars for testing
         run: |
           echo "PLUGIN_ID=$(cat src/plugin.json | jq -r '.id')" >> $GITHUB_ENV
           echo "EXPECTED_GRAFANA_VERSION=$(npx semver@latest $(cat src/plugin.json | jq -r '.dependencies.grafanaDependency') -c)" >> $GITHUB_ENV
-          echo "CANARY_VERSION=$CANARY_VERSION" >> $GITHUB_ENV
           echo "CANARY_DOCKER_TAG=$CANARY_DOCKER_TAG" >> $GITHUB_ENV
           echo "LATEST_STABLE_VERSION=$LATEST_STABLE_VERSION" >> $GITHUB_ENV
           if [ -f "${PWD}/.env" ]; then
@@ -133,7 +125,6 @@ jobs:
           fi
         working-directory: ${{ matrix.pluginDir }}
         env:
-          CANARY_VERSION: ${{ needs.setup-matrix.outputs.canaryVersion }}
           CANARY_DOCKER_TAG: ${{ needs.setup-matrix.outputs.canaryDockerTag }}
           LATEST_STABLE_VERSION: ${{ needs.setup-matrix.outputs.latestVersion }}
 
@@ -257,35 +248,9 @@ jobs:
           docker stop $PLUGIN_ID && docker rm $PLUGIN_ID
         working-directory: ${{ matrix.pluginDir }}
 
-      ## Canary Version Tests
-      ## Runs the plugin tests against the latest build of Grafana main branch.
-
-      - name: Canary - Upgrade @grafana packages using canary_version
-        run: |
-          npm install --legacy-peer-deps $(echo $(cat package.json | jq -r --arg version $CANARY_VERSION '["@grafana/eslint-config", "@grafana/tsconfig", "@grafana/scenes", "@grafana/experimental", "@grafana/plugin-e2e", "@grafana/plugin-meta-extractor", "@grafana/eslint-plugin-plugins"] as $blacklist | [(.devDependencies,.dependencies) | keys] | flatten | unique | map(select ( test("^@grafana") ) ) as $deps | $deps - $blacklist | map("\(.)@\($version)") | join(" ")') )
-          npm install --force --save-optional @swc/core  @swc/core-linux-arm-gnueabihf @swc/core-linux-arm64-gnu @swc/core-linux-arm64-musl @swc/core-linux-x64-gnu @swc/core-linux-x64-musl
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Canary - Run frontend tests
-        run: |
-          npm run test:ci
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Canary - Build plugin with grafana dependencies
-        run: |
-          npm run build
-        working-directory: ${{ matrix.pluginDir }}
-
-      - name: Canary - Build plugin backend
-        uses: magefile/mage-action@6f50bbb8ea47d56e62dee92392788acbc8192d0b # v3.1.0
-        with:
-          version: latest
-          args: -v build:linux
-          workdir: ${{ matrix.pluginDir }}
-        if: steps.backend-check.outputs.MAGEFILE_EXISTS == 'true'
-
-      # Canary versions live at grafana/grafana-dev
-      - name: Canary - Start Grafana dev image
+      # Canary Version Tests
+      # Runs the plugin tests against the canary stable version of Grafana.
+      - name: Canary - Start Grafana
         if: steps.has-integration-tests.outputs.DIR == 'true'
         run: |
           docker run -d -p 3000:3000 --add-host=host.docker.internal:host-gateway --name $PLUGIN_ID -v ${PWD}/dist:/var/lib/grafana/plugins/$PLUGIN_ID -v ${PWD}/provisioning:/etc/grafana/provisioning -e GF_DEFAULT_APP_MODE -e GF_INSTALL_PLUGINS -e GF_AUTH_ANONYMOUS_ORG_ROLE -e GF_AUTH_ANONYMOUS_ENABLED -e GF_AUTH_BASIC_ENABLED $ENV_FILE_OPTION grafana/grafana-dev:$CANARY_DOCKER_TAG
@@ -389,7 +354,7 @@ jobs:
                           "type": "button",
                           "text": {
                             "type": "plain_text",
-                            "text": ":octocat: Open Job",
+                            "text": ":github: Open Job",
                             "emoji": true
                           },
                           "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}",
