@@ -10,5 +10,8 @@
     ":disableDependencyDashboard",
     ":preserveSemverRanges",
     "github>grafana/grafana-renovate-config//presets/plugin-ci-workflows"
-  ]  
+  ],
+  "prConcurrentLimit": 10,
+  "minimumReleaseAge": "14 days",
+  "rebaseWhen": "behind-base-branch"
 }
