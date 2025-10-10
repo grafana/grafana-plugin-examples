@@ -14,5 +14,4 @@
   "prConcurrentLimit": 10,
   "minimumReleaseAge": "14 days",
   "rebaseWhen": "behind-base-branch"
-  ]  
 }
