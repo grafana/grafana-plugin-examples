@@ -1,5 +1,0 @@
-GRAFANA_IMAGE=grafana-enterprise
-GRAFANA_VERSION=canary
-OUTPUT=failure
-PLUGIN_NAME=myorg-basic-datasource
-UPLOAD_REPORT_ENABLED=true
