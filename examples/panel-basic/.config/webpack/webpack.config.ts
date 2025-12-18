@@ -67,7 +67,16 @@ const config = async (env: Env): Promise<Configuration> => {
 
     module: {
       rules: [
-        // This must come first in the rules array otherwise it breaks sourcemaps.
+        {
+          test: /\.mjs$/,
+          include: /node_modules/,
+
+          resolve: {
+            fullySpecified: false,
+          },
+
+          type: 'javascript/auto',
+        }, // This must come first in the rules array otherwise it breaks sourcemaps.
         {
           test: /src\/(?:.*\/)?module\.tsx?$/,
           use: [
@@ -227,7 +236,7 @@ const config = async (env: Env): Promise<Configuration> => {
     ],
 
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
       // handle resolving "rootDir" paths
       modules: [path.resolve(process.cwd(), 'src'), 'node_modules'],
       unsafeCache: true,
