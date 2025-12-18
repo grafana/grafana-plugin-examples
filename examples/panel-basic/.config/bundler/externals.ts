@@ -24,9 +24,9 @@ export const externals: ExternalsType = [
   'react-router',
   'd3',
   'angular',
-  /^@grafana\/ui/i,
   /^@grafana\/runtime/i,
   /^@grafana\/data/i,
+  'react-inlinesvg',
 
   // Mark legacy SDK imports as external if their name starts with the "grafana/" prefix
   ({ request }: ExternalItemFunctionData, callback: (error?: Error, result?: string) => void) => {
