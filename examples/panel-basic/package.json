@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@grafana/eslint-config": "^9.0.0",
-    "@grafana/plugin-e2e": "^3.1.4",
+    "@grafana/plugin-e2e": "^3.2.0",
     "@grafana/tsconfig": "^2.0.1",
     "@playwright/test": "^1.57.0",
     "@stylistic/eslint-plugin-ts": "^4.4.0",
@@ -67,11 +67,11 @@
   },
   "dependencies": {
     "@emotion/css": "11.10.6",
-    "@grafana/data": "^12.3.1",
-    "@grafana/i18n": "^12.3.1",
-    "@grafana/runtime": "^12.3.1",
-    "@grafana/ui": "^12.3.1",
-    "@grafana/schema": "^12.3.1",
+    "@grafana/data": "^12.3.2",
+    "@grafana/i18n": "^12.3.2",
+    "@grafana/runtime": "^12.3.2",
+    "@grafana/ui": "^12.3.2",
+    "@grafana/schema": "^12.3.2",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },
