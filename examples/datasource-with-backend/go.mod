@@ -2,7 +2,7 @@ module github.com/myorg/backend
 
 go 1.25.6
 
-require github.com/grafana/grafana-plugin-sdk-go v0.287.0
+require github.com/grafana/grafana-plugin-sdk-go v0.288.0
 
 require (
 	github.com/BurntSushi/toml v1.5.0 // indirect
