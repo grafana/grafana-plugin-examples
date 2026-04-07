@@ -25,6 +25,7 @@ services:
 
     environment:
       NODE_ENV: development
+      GF_FEATURE_TOGGLES_splashScreen: "false"
       GF_LOG_FILTERS: plugin.myorg-backend-datasource:debug
       GF_LOG_LEVEL: debug
       GF_DATAPROXY_LOGGING: 1
