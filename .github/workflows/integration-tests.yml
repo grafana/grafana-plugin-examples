@@ -173,7 +173,7 @@ jobs:
 
       - name: Expected - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
+        uses: nev7n/wait_for_response@8bfc0523300e46e24e1b42d6783680aa921ee6cc # v1.2.0
         with:
           url: "http://localhost:3000/"
           responseCode: 200
@@ -216,7 +216,7 @@ jobs:
 
       - name: Latest - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true' && steps.should-run-expected-latest-tests.outcome == 'success'
-        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
+        uses: nev7n/wait_for_response@8bfc0523300e46e24e1b42d6783680aa921ee6cc # v1.2.0
         with:
           url: "http://localhost:3000/"
           responseCode: 200
@@ -258,7 +258,7 @@ jobs:
 
       - name: Canary - Wait for Grafana to start
         if: steps.has-integration-tests.outputs.DIR == 'true'
-        uses: nev7n/wait_for_response@7fef3c1a6e8939d0b09062f14fec50d3c5d15fa1 # v1.0.1
+        uses: nev7n/wait_for_response@8bfc0523300e46e24e1b42d6783680aa921ee6cc # v1.2.0
         with:
           url: "http://localhost:3000/"
           responseCode: 200
