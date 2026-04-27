@@ -28,7 +28,7 @@ jobs:
         run: echo "pluginDirs=$(find ./examples -type d -name "src" -not -path "*/node_modules*" -maxdepth 3 -exec test -e "{}/plugin.json" \; -print | sed "s/\/src$//" | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
       - name: Setup docker canary tag variable
         id: docker-canary-tag
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           result-encoding: string
           script: |
