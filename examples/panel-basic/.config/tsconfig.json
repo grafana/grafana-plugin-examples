@@ -9,14 +9,17 @@
     "alwaysStrict": true,
     "declaration": false,
     "rootDir": "../src",
-    "baseUrl": "../src",
+    "paths": {
+      "*": ["../src/*"]
+    },
     "typeRoots": ["../node_modules/@types"],
     "resolveJsonModule": true
   },
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs",
-      "target": "es5",
+      "module": "nodenext",
+      "moduleResolution": "nodenext",
+      "target": "es2022",
       "esModuleInterop": true
     },
     "transpileOnly": true
