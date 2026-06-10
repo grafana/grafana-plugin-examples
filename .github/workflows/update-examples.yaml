@@ -85,4 +85,5 @@ jobs:
           delete-branch: true
           base: main
           token: ${{ steps.generate_token.outputs.token }}
+          sign-commits: true
 
