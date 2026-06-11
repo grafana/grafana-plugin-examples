@@ -1,1 +1,1 @@
-@../../../../.config/AGENTS/skills/validate-plugin.md
+@../../../.config/AGENTS/skills/validate-plugin.md
