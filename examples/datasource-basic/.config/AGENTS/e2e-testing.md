@@ -83,7 +83,7 @@ await page.getByRole('checkbox', { name: 'TLS Enabled' }).uncheck({ force: true 
 await expect(page.getByRole('checkbox', { name: 'TLS Enabled' })).not.toBeChecked();
 ```
 
-**InlineSwitch** - use `getByLabel('<label>')`. Like Checkbox, requires `{ force: true }`. The `InlineSwitch` `label` prop must match the wrapping `InlineField` label.
+**InlineSwitch** - use `getByRole('switch', { name: /<label>/i })`. Like Checkbox, requires `{ force: true }`. Prefer `getByRole` over `getByLabel` — newer Grafana versions add `aria-label` to the `<label>` element itself, causing `getByLabel` to match multiple elements in strict mode.
 
 ```tsx
 // component
@@ -94,8 +94,8 @@ await expect(page.getByRole('checkbox', { name: 'TLS Enabled' })).not.toBeChecke
 
 ```typescript
 // test
-await page.getByLabel('TLS Enabled').uncheck({ force: true });
-await expect(page.getByLabel('TLS Enabled')).not.toBeChecked();
+await page.getByRole('switch', { name: /TLS Enabled/i }).uncheck({ force: true });
+await expect(page.getByRole('switch', { name: /TLS Enabled/i })).not.toBeChecked();
 ```
 
 ## Using the plugin-e2e API
