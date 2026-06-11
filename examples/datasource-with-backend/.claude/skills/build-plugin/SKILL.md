@@ -1,1 +1,1 @@
-@../../../../.config/AGENTS/skills/build-plugin.md
+@../../../.config/AGENTS/skills/build-plugin.md
