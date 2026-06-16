@@ -325,7 +325,6 @@ jobs:
       - id: get-secrets
         uses: grafana/shared-workflows/actions/get-vault-secrets@e46fe1e9a2bf9e618bcf8d8d32f3a7381b45c06d # get-vault-secrets/v2.0.0 # zizmor: ignore[unpinned-uses] provided by grafana
         with:
-          export_env: false
           # Secrets placed in the ci/repo/grafana/grafana-plugin-examples path in Vault
           repo_secrets: |
             SLACK_WEBHOOK_URL=slack_webhook_url:slack_webhook_url
