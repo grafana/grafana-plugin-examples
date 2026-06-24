@@ -50,14 +50,13 @@ func (w *WatchlistSpec) Validate() error {
 	return nil
 }
 
-// Mutate applies defaults to a watchlist spec on create/update. The returned
-// value is the canonical form persisted by Grafana. The receiver is not
-// modified.
-func (w *WatchlistSpec) Mutate() *WatchlistSpec {
-	out := *w
-	if out.Severity == "" {
-		out.Severity = "info"
+// Mutate applies defaults to a watchlist spec on create/update, modifying
+// the receiver in place. Returns an error only if a mutation cannot be
+// completed (none today, but the signature reserves space).
+func (w *WatchlistSpec) Mutate() error {
+	if w.Severity == "" {
+		w.Severity = "info"
 	}
-	out.Title = strings.TrimSpace(out.Title)
-	return &out
+	w.Title = strings.TrimSpace(w.Title)
+	return nil
 }
