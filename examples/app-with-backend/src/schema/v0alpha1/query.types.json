@@ -1,8 +1,0 @@
-{
-  "kind": "QueryTypeDefinitionList",
-  "apiVersion": "datasource.grafana.app/v0alpha1",
-  "metadata": {
-    "resourceVersion": "1782232620391"
-  },
-  "items": null
-}
