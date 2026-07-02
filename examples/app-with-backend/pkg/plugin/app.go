@@ -6,7 +6,9 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/storedobjects"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -22,10 +24,14 @@ var (
 // App is an example app plugin with a backend which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
+
+	// cancelEvaluator stops the background watchlist evaluator. Nil when the
+	// evaluator never started (see startWatchlistEvaluator).
+	cancelEvaluator context.CancelFunc
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(ctx context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
@@ -35,13 +41,55 @@ func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Inst
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
+	app.startWatchlistEvaluator(ctx)
+
 	return &app, nil
+}
+
+// startWatchlistEvaluator starts the background goroutine that reconciles
+// Watchlist status (see evaluator.go). The instance factory context carries
+// the Grafana config and PluginContext for the request that triggered
+// instance creation, which is everything the self-client needs.
+func (a *App) startWatchlistEvaluator(ctx context.Context) {
+	logger := log.DefaultLogger
+
+	// The self-client authenticates with the plugin's provisioned service
+	// account token, which Grafana only supplies when its
+	// externalServiceAccounts feature toggle is enabled. The capability is
+	// opt-in and this example must keep working on a vanilla Grafana, so when
+	// the token (or config) is unavailable we skip the evaluator instead of
+	// failing instance creation. The group is the plugin ID from plugin.json.
+	client, err := storedobjects.NewClientFromContext(ctx, "myorg-backend-app")
+	if err != nil {
+		logger.Info("watchlist evaluator disabled: stored-objects self-client unavailable", "reason", err)
+		return
+	}
+
+	// Namespace comes from the plugin context. Newer Grafanas populate
+	// PluginContext.Namespace directly; fall back to deriving it from the
+	// (deprecated) OrgID for older ones.
+	pCtx := backend.PluginConfigFromContext(ctx)
+	namespace := pCtx.Namespace
+	if namespace == "" {
+		namespace = storedobjects.NamespaceForOrgID(pCtx.OrgID) // nolint:staticcheck
+	}
+
+	// The evaluator must outlive the (request-scoped) factory context, so it
+	// gets its own context, canceled in Dispose when Grafana recycles the
+	// instance.
+	evalCtx, cancel := context.WithCancel(context.Background())
+	a.cancelEvaluator = cancel
+
+	logger.Info("starting watchlist evaluator", "namespace", namespace)
+	go newWatchlistEvaluator(client, namespace, logger).run(evalCtx)
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created.
 func (a *App) Dispose() {
-	// cleanup
+	if a.cancelEvaluator != nil {
+		a.cancelEvaluator()
+	}
 }
 
 // CheckHealth handles health checks sent from Grafana to the plugin.

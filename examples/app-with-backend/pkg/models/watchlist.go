@@ -22,8 +22,8 @@ type WatchlistSpec struct {
 }
 
 // WatchlistStatus is the plugin-written status of a Watchlist stored object.
-// Unlike the spec, it is never authored by users: the plugin backend (for
-// example, a future background evaluator) reports observed state here.
+// Unlike the spec, it is never authored by users: the plugin backend (the
+// background evaluator in pkg/plugin) reports observed state here.
 type WatchlistStatus struct {
 	// State is the last observed evaluation state of the watchlist.
 	State string `json:"state,omitempty"`
