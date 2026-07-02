@@ -30,6 +30,19 @@
           "additionalProperties": false,
           "$schema": "https://json-schema.org/draft-04/schema"
         },
+        "status": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "https://json-schema.org/draft-04/schema"
+        },
         "validation": [
           "CREATE",
           "UPDATE"

@@ -21,6 +21,17 @@ type WatchlistSpec struct {
 	Severity string `json:"severity,omitempty"`
 }
 
+// WatchlistStatus is the plugin-written status of a Watchlist stored object.
+// Unlike the spec, it is never authored by users: the plugin backend (for
+// example, a future background evaluator) reports observed state here.
+type WatchlistStatus struct {
+	// State is the last observed evaluation state of the watchlist.
+	State string `json:"state,omitempty"`
+
+	// Message is a human-readable explanation of the current state.
+	Message string `json:"message,omitempty"`
+}
+
 var validSeverities = map[string]struct{}{
 	"info": {},
 	"warn": {},

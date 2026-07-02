@@ -47,6 +47,10 @@ func main() {
 					Name:     "Watchlist",
 					Scope:    pluginschema.ScopeNamespaced,
 					SpecType: reflect.TypeOf(models.WatchlistSpec{}),
+					// StatusType is optional: declaring it publishes the shape
+					// the plugin backend writes to status, so storage can
+					// validate it separately from the user-authored spec.
+					StatusType: reflect.TypeOf(models.WatchlistStatus{}),
 					Validation: []pluginschema.AdmissionOperation{
 						pluginschema.AdmissionOperationCreate,
 						pluginschema.AdmissionOperationUpdate,

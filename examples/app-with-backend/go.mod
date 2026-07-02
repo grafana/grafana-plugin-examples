@@ -4,11 +4,11 @@ go 1.26.3
 
 // Local development POC: depend on the SDK checkout with the StoredObjects
 // extension. Remove once that change is released.
-replace github.com/grafana/grafana-plugin-sdk-go => /Users/wbrowne/dev/grafana-plugin-sdk-go
+replace github.com/grafana/grafana-plugin-sdk-go => /Users/todd/go/src/github.com/grafana/grafana-plugin-sdk-go
 
 require (
 	github.com/grafana/grafana-plugin-sdk-go v0.292.1
-	github.com/stretchr/testify v1.11.1
+	github.com/magefile/mage v1.17.2
 )
 
 require (
@@ -62,7 +62,6 @@ require (
 	github.com/jszwedko/go-datemath v0.1.1-0.20230526204004-640a500621d6 // indirect
 	github.com/klauspost/compress v1.18.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
-	github.com/magefile/mage v1.17.2 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattetti/filebuffer v1.0.1 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
@@ -84,6 +83,7 @@ require (
 	github.com/prometheus/common v0.67.5 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/stretchr/testify v1.11.1 // indirect
 	github.com/unknwon/bra v0.0.0-20200517080246-1e3013ecaff8 // indirect
 	github.com/unknwon/com v1.0.1 // indirect
 	github.com/unknwon/log v0.0.0-20150304194804-e617c87089d3 // indirect
