@@ -7,7 +7,8 @@ import (
 
 // WatchlistSpec is the user-authored body of a Watchlist stored object. It is
 // the type the schema artifact reflects into the plugin schema's StoredObjects
-// list, and the type carried in admission requests for the "Watchlist" kind.
+// list, and the type this plugin's Validate/Mutate hooks receive whenever a
+// Watchlist is written.
 type WatchlistSpec struct {
 	// Title is the human-readable name of the watchlist. Required.
 	Title string `json:"title"`

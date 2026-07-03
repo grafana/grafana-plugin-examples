@@ -9,6 +9,8 @@ import (
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
 	"github.com/grafana/grafana-plugin-sdk-go/experimental/storedobjects"
+
+	"github.com/myorg/backend/pkg/models"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -46,33 +48,29 @@ func NewApp(ctx context.Context, _ backend.AppInstanceSettings) (instancemgmt.In
 	return &app, nil
 }
 
-// startWatchlistEvaluator starts the background goroutine that reconciles
-// Watchlist status (see evaluator.go). The instance factory context carries
-// the Grafana config and PluginContext for the request that triggered
-// instance creation, which is everything the self-client needs.
+// startWatchlistEvaluator starts the background goroutine that keeps
+// Watchlist status in step with spec (see evaluator.go). The instance factory
+// context carries everything the stored-objects client needs — which plugin
+// this is, which org it serves, and how to reach Grafana.
 func (a *App) startWatchlistEvaluator(ctx context.Context) {
 	logger := log.DefaultLogger
 
-	// The self-client authenticates with the plugin's provisioned service
-	// account token, which Grafana only supplies when its
-	// externalServiceAccounts feature toggle is enabled. The capability is
-	// opt-in and this example must keep working on a vanilla Grafana, so when
-	// the token (or config) is unavailable we skip the evaluator instead of
-	// failing instance creation. The group is the plugin ID from plugin.json.
-	client, err := storedobjects.NewClientFromContext(ctx, "myorg-backend-app")
+	// The client authenticates with the plugin's provisioned service account
+	// token, which Grafana only supplies when its externalServiceAccounts
+	// feature toggle is enabled. The capability is opt-in and this example
+	// must keep working on a vanilla Grafana, so when the token (or config)
+	// is unavailable we skip the evaluator instead of failing instance
+	// creation.
+	client, err := storedobjects.NewClientFromContext(ctx)
 	if err != nil {
-		logger.Info("watchlist evaluator disabled: stored-objects self-client unavailable", "reason", err)
+		logger.Info("watchlist evaluator disabled: stored-objects client unavailable", "reason", err)
 		return
 	}
 
-	// Namespace comes from the plugin context. Newer Grafanas populate
-	// PluginContext.Namespace directly; fall back to deriving it from the
-	// (deprecated) OrgID for older ones.
-	pCtx := backend.PluginConfigFromContext(ctx)
-	namespace := pCtx.Namespace
-	if namespace == "" {
-		namespace = storedobjects.NamespaceForOrgID(pCtx.OrgID) // nolint:staticcheck
-	}
+	// Typed access to the Watchlist objects declared in pkg/main.go: the
+	// type parameters bind the collection to the spec and status shapes the
+	// schema artifact publishes.
+	watchlists := storedobjects.NewCollection[models.WatchlistSpec, models.WatchlistStatus](client, "Watchlist")
 
 	// The evaluator must outlive the (request-scoped) factory context, so it
 	// gets its own context, canceled in Dispose when Grafana recycles the
@@ -80,8 +78,8 @@ func (a *App) startWatchlistEvaluator(ctx context.Context) {
 	evalCtx, cancel := context.WithCancel(context.Background())
 	a.cancelEvaluator = cancel
 
-	logger.Info("starting watchlist evaluator", "namespace", namespace)
-	go newWatchlistEvaluator(client, namespace, logger).run(evalCtx)
+	logger.Info("starting watchlist evaluator")
+	go newWatchlistEvaluator(watchlists, logger).run(evalCtx)
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance

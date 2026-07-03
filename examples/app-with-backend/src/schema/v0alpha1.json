@@ -6,7 +6,6 @@
         "name": "Watchlist",
         "plural": "watchlists",
         "singular": "watchlist",
-        "scope": "Namespaced",
         "spec": {
           "type": "object",
           "required": [
@@ -49,7 +48,8 @@
         ],
         "mutation": [
           "CREATE"
-        ]
+        ],
+        "events": true
       }
     ]
   }

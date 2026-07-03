@@ -2,8 +2,8 @@ package plugin
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
+	"fmt"
 	"sync"
 	"testing"
 	"time"
@@ -14,21 +14,27 @@ import (
 	"github.com/myorg/backend/pkg/models"
 )
 
-// fakeWatchlistClient implements watchlistClient in memory. Like the real
-// server, it persists written statuses so a subsequent List observes them,
-// which is what lets tests exercise the evaluator's drift detection.
-type fakeWatchlistClient struct {
+// fakeWatchlistCollection implements watchlistCollection in memory. Like the
+// real server, it persists written statuses so a subsequent List observes
+// them, which is what lets tests exercise the evaluator's drift detection.
+// Its Watch returns a test-owned channel, so tests feed change events
+// directly instead of going through the SDK's event stream.
+type fakeWatchlistCollection struct {
 	mu      sync.Mutex
-	objects []storedobjects.Object
+	items   []watchlistItem
 	listErr error
 	// listed receives one signal per List call so tests can synchronize with
 	// the evaluator loop instead of sleeping. Buffered by the tests.
 	listed chan struct{}
-	// updates records the object names passed to UpdateStatus, in order.
-	updates []string
+	// wrote receives one signal per WriteStatus call, same purpose as listed.
+	wrote chan struct{}
+	// events is what Watch hands to the evaluator.
+	events chan watchlistEvent
+	// writes records the item names passed to WriteStatus, in order.
+	writes []string
 }
 
-func (f *fakeWatchlistClient) List(_ context.Context, namespace, plural string) (*storedobjects.List, error) {
+func (f *fakeWatchlistCollection) List(_ context.Context) ([]watchlistItem, error) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	if f.listed != nil {
@@ -37,80 +43,77 @@ func (f *fakeWatchlistClient) List(_ context.Context, namespace, plural string) 
 	if f.listErr != nil {
 		return nil, f.listErr
 	}
-	if namespace != "default" || plural != watchlistPlural {
-		return nil, errors.New("unexpected namespace or plural")
-	}
-	items := make([]storedobjects.Object, len(f.objects))
-	copy(items, f.objects)
-	return &storedobjects.List{Items: items}, nil
+	return append([]watchlistItem(nil), f.items...), nil
 }
 
-func (f *fakeWatchlistClient) UpdateStatus(_ context.Context, namespace, plural, name string, status any) (*storedobjects.Object, error) {
+func (f *fakeWatchlistCollection) WriteStatus(_ context.Context, name string, status models.WatchlistStatus) error {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	if namespace != "default" || plural != watchlistPlural {
-		return nil, errors.New("unexpected namespace or plural")
-	}
-	raw, err := json.Marshal(status)
-	if err != nil {
-		return nil, err
-	}
-	f.updates = append(f.updates, name)
-	for i := range f.objects {
-		if f.objects[i].Metadata.Name == name {
-			f.objects[i].Status = raw
+	f.writes = append(f.writes, name)
+	for i := range f.items {
+		if f.items[i].Name == name {
+			f.items[i].Status = status
 		}
 	}
-	return &storedobjects.Object{}, nil
+	if f.wrote != nil {
+		f.wrote <- struct{}{}
+	}
+	return nil
 }
 
-func (f *fakeWatchlistClient) updateNames() []string {
+func (f *fakeWatchlistCollection) Watch(context.Context) (<-chan watchlistEvent, error) {
+	return f.events, nil
+}
+
+func (f *fakeWatchlistCollection) writeNames() []string {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	return append([]string(nil), f.updates...)
+	return append([]string(nil), f.writes...)
 }
 
-func (f *fakeWatchlistClient) statusOf(t *testing.T, name string) models.WatchlistStatus {
+func (f *fakeWatchlistCollection) statusOf(t *testing.T, name string) models.WatchlistStatus {
 	t.Helper()
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	for i := range f.objects {
-		if f.objects[i].Metadata.Name == name {
-			var status models.WatchlistStatus
-			if err := json.Unmarshal(f.objects[i].Status, &status); err != nil {
-				t.Fatalf("decode status of %q: %s", name, err)
-			}
-			return status
+	for i := range f.items {
+		if f.items[i].Name == name {
+			return f.items[i].Status
 		}
 	}
-	t.Fatalf("object %q not found", name)
+	t.Fatalf("item %q not found", name)
 	return models.WatchlistStatus{}
 }
 
-func watchlistObject(t *testing.T, name string, spec models.WatchlistSpec, status *models.WatchlistStatus) storedobjects.Object {
-	t.Helper()
-	specRaw, err := json.Marshal(spec)
-	if err != nil {
-		t.Fatalf("marshal spec: %s", err)
+func watchlist(name string, patterns []string, status models.WatchlistStatus) watchlistItem {
+	return watchlistItem{
+		Name:   name,
+		Spec:   models.WatchlistSpec{Title: name, Patterns: patterns},
+		Status: status,
 	}
-	obj := storedobjects.Object{
-		Metadata: storedobjects.Metadata{Name: name, Namespace: "default"},
-		Spec:     specRaw,
-	}
-	if status != nil {
-		statusRaw, err := json.Marshal(status)
-		if err != nil {
-			t.Fatalf("marshal status: %s", err)
-		}
-		obj.Status = statusRaw
-	}
-	return obj
 }
 
-func testEvaluator(client watchlistClient, ticks <-chan time.Time) *watchlistEvaluator {
-	e := newWatchlistEvaluator(client, "default", log.NewNullLogger())
-	e.ticks = ticks
+// evaluatedStatus is the status the evaluator computes for a spec with n
+// patterns.
+func evaluatedStatus(n int) models.WatchlistStatus {
+	return models.WatchlistStatus{State: "evaluated", Message: fmt.Sprintf("%d pattern(s) watched", n)}
+}
+
+func testEvaluator(collection watchlistCollection, resyncTicks <-chan time.Time) *watchlistEvaluator {
+	e := newWatchlistEvaluator(collection, log.NewNullLogger())
+	e.resyncTicks = resyncTicks
 	return e
+}
+
+// startEvaluator runs the evaluator loop in a goroutine and returns a cancel
+// func plus a channel that closes when the loop exits.
+func startEvaluator(e *watchlistEvaluator) (context.CancelFunc, <-chan struct{}) {
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan struct{})
+	go func() {
+		e.run(ctx)
+		close(done)
+	}()
+	return cancel, done
 }
 
 // waitSignal receives from ch or fails the test after a generous timeout, so
@@ -124,88 +127,145 @@ func waitSignal[T any](t *testing.T, ch <-chan T, what string) {
 	}
 }
 
-func TestEvaluatorUpdatesOnlyDriftedItems(t *testing.T) {
-	upToDate := models.WatchlistStatus{State: "evaluated", Message: "1 pattern(s) watched"}
-	client := &fakeWatchlistClient{
-		objects: []storedobjects.Object{
+func TestEvaluatorInitialPassWritesOnlyDriftedItems(t *testing.T) {
+	f := &fakeWatchlistCollection{
+		items: []watchlistItem{
 			// No status yet: needs a write.
-			watchlistObject(t, "fresh", models.WatchlistSpec{Title: "a", Patterns: []string{"x", "y"}}, nil),
+			watchlist("fresh", []string{"x", "y"}, models.WatchlistStatus{}),
 			// Stale status: needs a write.
-			watchlistObject(t, "stale", models.WatchlistSpec{Title: "b", Patterns: []string{"x", "y", "z"}},
-				&models.WatchlistStatus{State: "evaluated", Message: "1 pattern(s) watched"}),
+			watchlist("stale", []string{"x", "y", "z"}, evaluatedStatus(1)),
 			// Already matches what the evaluator would compute: no write.
-			watchlistObject(t, "settled", models.WatchlistSpec{Title: "c", Patterns: []string{"x"}}, &upToDate),
+			watchlist("settled", []string{"x"}, evaluatedStatus(1)),
 		},
 	}
-	e := testEvaluator(client, nil)
+	e := testEvaluator(f, nil)
 
-	e.evaluate(context.Background())
+	e.evaluateAll(context.Background())
 
-	got := client.updateNames()
+	got := f.writeNames()
 	want := []string{"fresh", "stale"}
 	if len(got) != len(want) || got[0] != want[0] || got[1] != want[1] {
-		t.Fatalf("first pass updates = %v, want %v", got, want)
+		t.Fatalf("first pass writes = %v, want %v", got, want)
 	}
-	if s := client.statusOf(t, "fresh"); s.State != "evaluated" || s.Message != "2 pattern(s) watched" {
+	if s := f.statusOf(t, "fresh"); s != evaluatedStatus(2) {
 		t.Fatalf("fresh status = %+v", s)
 	}
-	if s := client.statusOf(t, "stale"); s.State != "evaluated" || s.Message != "3 pattern(s) watched" {
+	if s := f.statusOf(t, "stale"); s != evaluatedStatus(3) {
 		t.Fatalf("stale status = %+v", s)
 	}
 
 	// Second pass over the same (now converged) data must not write again.
-	e.evaluate(context.Background())
-	if got := client.updateNames(); len(got) != len(want) {
-		t.Fatalf("second pass added updates: %v", got)
+	e.evaluateAll(context.Background())
+	if got := f.writeNames(); len(got) != len(want) {
+		t.Fatalf("second pass added writes: %v", got)
+	}
+}
+
+func TestEvaluatorEventsDriveSingleItemWrites(t *testing.T) {
+	f := &fakeWatchlistCollection{
+		// Already converged, so the initial pass writes nothing and every
+		// write observed below is attributable to an event.
+		items:  []watchlistItem{watchlist("settled", []string{"x"}, evaluatedStatus(1))},
+		listed: make(chan struct{}, 16),
+		wrote:  make(chan struct{}, 16),
+		events: make(chan watchlistEvent),
+	}
+	e := testEvaluator(f, make(chan time.Time)) // re-list ticks never fire
+	cancel, done := startEvaluator(e)
+	defer cancel()
+
+	waitSignal(t, f.listed, "initial list pass")
+
+	// A created item with no status yet drifts: expect exactly one write.
+	f.events <- watchlistEvent{Type: storedobjects.EventCreated, Item: watchlist("fresh", []string{"x", "y"}, models.WatchlistStatus{})}
+	waitSignal(t, f.wrote, "write after created event")
+
+	// An updated item whose status already matches must not write. Events are
+	// handled serially, so following it with an event that must write proves
+	// the no-write: had "settled" been written, it would appear first.
+	f.events <- watchlistEvent{Type: storedobjects.EventUpdated, Item: watchlist("settled", []string{"x"}, evaluatedStatus(1))}
+	f.events <- watchlistEvent{Type: storedobjects.EventUpdated, Item: watchlist("stale", []string{"x", "y", "z"}, evaluatedStatus(1))}
+	waitSignal(t, f.wrote, "write after drifted update event")
+
+	cancel()
+	waitSignal(t, done, "run to stop")
+
+	got := f.writeNames()
+	want := []string{"fresh", "stale"}
+	if len(got) != len(want) || got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("event-driven writes = %v, want %v", got, want)
+	}
+	// Events must evaluate single items, never trigger a re-list: the only
+	// List call is the initial pass already consumed above.
+	if extra := len(f.listed); extra != 0 {
+		t.Fatalf("events triggered %d extra list passes", extra)
+	}
+}
+
+func TestEvaluatorIgnoresDeletedEvents(t *testing.T) {
+	f := &fakeWatchlistCollection{
+		listed: make(chan struct{}, 16),
+		wrote:  make(chan struct{}, 16),
+		events: make(chan watchlistEvent),
+	}
+	e := testEvaluator(f, make(chan time.Time))
+	cancel, done := startEvaluator(e)
+	defer cancel()
+
+	waitSignal(t, f.listed, "initial list pass")
+
+	// The deleted item would drift if evaluated, so any write for it is a
+	// bug. The created event after it proves the delete was processed (and
+	// skipped) since events are handled in order.
+	f.events <- watchlistEvent{Type: storedobjects.EventDeleted, Item: watchlist("gone", []string{"x", "y"}, models.WatchlistStatus{})}
+	f.events <- watchlistEvent{Type: storedobjects.EventCreated, Item: watchlist("after", []string{"x"}, models.WatchlistStatus{})}
+	waitSignal(t, f.wrote, "write after created event")
+
+	cancel()
+	waitSignal(t, done, "run to stop")
+
+	got := f.writeNames()
+	if len(got) != 1 || got[0] != "after" {
+		t.Fatalf("writes = %v, want [after]", got)
 	}
 }
 
 func TestEvaluatorSurvivesListErrors(t *testing.T) {
-	client := &fakeWatchlistClient{
+	f := &fakeWatchlistCollection{
 		listErr: errors.New("boom"),
 		listed:  make(chan struct{}, 16),
+		events:  make(chan watchlistEvent),
 	}
 	ticks := make(chan time.Time)
-	e := testEvaluator(client, ticks)
+	e := testEvaluator(f, ticks)
+	cancel, done := startEvaluator(e)
+	defer cancel()
 
-	ctx, cancel := context.WithCancel(context.Background())
-	done := make(chan struct{})
-	go func() {
-		e.run(ctx)
-		close(done)
-	}()
-
-	waitSignal(t, client.listed, "initial evaluation")
+	waitSignal(t, f.listed, "initial list pass")
+	// The loop must keep taking re-list ticks after failed passes.
 	for i := 0; i < 2; i++ {
 		ticks <- time.Time{}
-		waitSignal(t, client.listed, "post-error tick evaluation")
+		waitSignal(t, f.listed, "post-error re-list pass")
 	}
 
 	cancel()
 	waitSignal(t, done, "run to stop")
 
-	if got := client.updateNames(); len(got) != 0 {
-		t.Fatalf("unexpected updates: %v", got)
+	if got := f.writeNames(); len(got) != 0 {
+		t.Fatalf("unexpected writes: %v", got)
 	}
 }
 
 func TestEvaluatorStopsOnContextCancel(t *testing.T) {
-	client := &fakeWatchlistClient{
-		objects: []storedobjects.Object{
-			watchlistObject(t, "one", models.WatchlistSpec{Title: "a", Patterns: []string{"x"}}, nil),
-		},
+	f := &fakeWatchlistCollection{
+		items:  []watchlistItem{watchlist("one", []string{"x"}, models.WatchlistStatus{})},
 		listed: make(chan struct{}, 16),
+		events: make(chan watchlistEvent),
 	}
-	e := testEvaluator(client, make(chan time.Time))
+	e := testEvaluator(f, make(chan time.Time))
+	cancel, done := startEvaluator(e)
 
-	ctx, cancel := context.WithCancel(context.Background())
-	done := make(chan struct{})
-	go func() {
-		e.run(ctx)
-		close(done)
-	}()
-
-	waitSignal(t, client.listed, "initial evaluation")
+	waitSignal(t, f.listed, "initial list pass")
 	cancel()
 	waitSignal(t, done, "run to stop")
 }
