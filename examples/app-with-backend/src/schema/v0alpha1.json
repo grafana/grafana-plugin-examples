@@ -3,23 +3,23 @@
   "storedObjects": {
     "items": [
       {
-        "name": "Watchlist",
-        "plural": "watchlists",
-        "singular": "watchlist",
+        "name": "Foo",
+        "plural": "foos",
+        "singular": "foo",
         "spec": {
           "type": "object",
           "required": [
             "title",
-            "patterns"
+            "items"
           ],
           "properties": {
-            "patterns": {
+            "items": {
               "type": "array",
               "items": {
                 "type": "string"
               }
             },
-            "severity": {
+            "size": {
               "type": "string"
             },
             "title": {
@@ -48,8 +48,7 @@
         ],
         "mutation": [
           "CREATE"
-        ],
-        "events": true
+        ]
       }
     ]
   }

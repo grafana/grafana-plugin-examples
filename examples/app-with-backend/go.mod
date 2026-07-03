@@ -4,7 +4,7 @@ go 1.26.3
 
 // Local development POC: depend on the SDK checkout with the StoredObjects
 // extension. Remove once that change is released.
-replace github.com/grafana/grafana-plugin-sdk-go => /Users/todd/go/src/github.com/grafana/grafana-plugin-sdk-go
+replace github.com/grafana/grafana-plugin-sdk-go => github.com/grafana/grafana-plugin-sdk-go v0.292.2-0.20260703205439-e61270664e2c
 
 require (
 	github.com/grafana/grafana-plugin-sdk-go v0.292.1

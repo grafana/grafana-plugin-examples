@@ -21,7 +21,9 @@ func main() {
 	//     GF_PLUGIN_PRINT_SCHEMA env var set)
 	//   * route writes to declared object types through the typed
 	//     Validate()/Mutate() methods on the spec types at runtime
-	//   * deliver change events for object types that opt in with Events
+	//   * deliver change events to any object types the backend watches
+	//     (no declaration needed — watching is the signal; see the
+	//     Foo status updater in pkg/plugin/foo_status.go)
 	//
 	// Plugin author only edits this declaration; no separate generator
 	// file, no separate write-hook dispatcher.
@@ -45,12 +47,12 @@ func main() {
 			// Stored objects — reflected today.
 			StoredObjects: []schemabuilder.StoredObjectInfo{
 				{
-					Name:     "Watchlist",
-					SpecType: reflect.TypeOf(models.WatchlistSpec{}),
+					Name:     "Foo",
+					SpecType: reflect.TypeOf(models.FooSpec{}),
 					// StatusType is optional: declaring it publishes the shape
 					// the plugin backend writes to status, so storage can
 					// validate it separately from the user-authored spec.
-					StatusType: reflect.TypeOf(models.WatchlistStatus{}),
+					StatusType: reflect.TypeOf(models.FooStatus{}),
 					Validation: []pluginschema.Operation{
 						pluginschema.OperationCreate,
 						pluginschema.OperationUpdate,
@@ -58,11 +60,6 @@ func main() {
 					Mutation: []pluginschema.Operation{
 						pluginschema.OperationCreate,
 					},
-					// Events opts Watchlists into pushed change events:
-					// Grafana notifies this backend whenever one is created,
-					// updated, or deleted, which is what drives the
-					// event-driven evaluator in pkg/plugin/evaluator.go.
-					Events: true,
 				},
 			},
 
@@ -142,11 +139,11 @@ func main() {
 			//
 			// Routes: []schemabuilder.RouteInfo{
 			// 	{
-			// 		Path:         "/watchlists/{name}/import",
+			// 		Path:         "/foos/{name}/import",
 			// 		Method:       http.MethodPost,
-			// 		RequestType:  reflect.TypeOf(models.WatchlistImportRequest{}),
-			// 		ResponseType: reflect.TypeOf(models.WatchlistImportResponse{}),
-			// 		Handler:      handlers.ImportWatchlist,
+			// 		RequestType:  reflect.TypeOf(models.FooImportRequest{}),
+			// 		ResponseType: reflect.TypeOf(models.FooImportResponse{}),
+			// 		Handler:      handlers.ImportFoo,
 			// 	},
 			// },
 		},

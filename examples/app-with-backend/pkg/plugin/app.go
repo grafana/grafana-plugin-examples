@@ -27,9 +27,7 @@ var (
 type App struct {
 	backend.CallResourceHandler
 
-	// cancelEvaluator stops the background watchlist evaluator. Nil when the
-	// evaluator never started (see startWatchlistEvaluator).
-	cancelEvaluator context.CancelFunc
+	stopFoos context.CancelFunc
 }
 
 // NewApp creates a new example *App instance.
@@ -43,50 +41,49 @@ func NewApp(ctx context.Context, _ backend.AppInstanceSettings) (instancemgmt.In
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
-	app.startWatchlistEvaluator(ctx)
+	app.startFooUpdates(ctx)
 
 	return &app, nil
 }
 
-// startWatchlistEvaluator starts the background goroutine that keeps
-// Watchlist status in step with spec (see evaluator.go). The instance factory
-// context carries everything the stored-objects client needs — which plugin
-// this is, which org it serves, and how to reach Grafana.
-func (a *App) startWatchlistEvaluator(ctx context.Context) {
+// startFooUpdates starts a small background task that updates Foo
+// status from stored-object changes. The instance factory context carries
+// everything the stored-objects client needs: which plugin this is, which org
+// it serves, and how to reach Grafana.
+func (a *App) startFooUpdates(ctx context.Context) {
 	logger := log.DefaultLogger
 
 	// The client authenticates with the plugin's provisioned service account
 	// token, which Grafana only supplies when its externalServiceAccounts
 	// feature toggle is enabled. The capability is opt-in and this example
-	// must keep working on a vanilla Grafana, so when the token (or config)
-	// is unavailable we skip the evaluator instead of failing instance
+	// still runs on a vanilla Grafana, so when the token (or config) is
+	// unavailable we skip this background task instead of failing instance
 	// creation.
 	client, err := storedobjects.NewClientFromContext(ctx)
 	if err != nil {
-		logger.Info("watchlist evaluator disabled: stored-objects client unavailable", "reason", err)
+		logger.Info("foo status updates disabled: stored-objects client unavailable", "reason", err)
 		return
 	}
 
-	// Typed access to the Watchlist objects declared in pkg/main.go: the
-	// type parameters bind the collection to the spec and status shapes the
-	// schema artifact publishes.
-	watchlists := storedobjects.NewCollection[models.WatchlistSpec, models.WatchlistStatus](client, "Watchlist")
+	// Typed access to the Foo objects declared in pkg/main.go: the type
+	// parameters bind the collection to the spec and status shapes the schema
+	// artifact publishes.
+	foos := storedobjects.NewCollection[models.FooSpec, models.FooStatus](client, "Foo")
 
-	// The evaluator must outlive the (request-scoped) factory context, so it
-	// gets its own context, canceled in Dispose when Grafana recycles the
-	// instance.
-	evalCtx, cancel := context.WithCancel(context.Background())
-	a.cancelEvaluator = cancel
+	// The background task must outlive the factory context, so it gets its own
+	// context that Dispose cancels when Grafana recycles the instance.
+	fooCtx, cancel := context.WithCancel(context.Background())
+	a.stopFoos = cancel
 
-	logger.Info("starting watchlist evaluator")
-	go newWatchlistEvaluator(watchlists, logger).run(evalCtx)
+	logger.Info("starting foo status updates")
+	go runFooStatusUpdates(fooCtx, foos, logger)
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created.
 func (a *App) Dispose() {
-	if a.cancelEvaluator != nil {
-		a.cancelEvaluator()
+	if a.stopFoos != nil {
+		a.stopFoos()
 	}
 }
 
