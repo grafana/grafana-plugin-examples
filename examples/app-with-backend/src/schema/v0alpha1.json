@@ -3,27 +3,39 @@
   "storedObjects": {
     "items": [
       {
-        "name": "Watchlist",
-        "plural": "watchlists",
-        "singular": "watchlist",
-        "scope": "Namespaced",
+        "name": "Foo",
+        "plural": "foos",
+        "singular": "foo",
         "spec": {
           "type": "object",
           "required": [
             "title",
-            "patterns"
+            "items"
           ],
           "properties": {
-            "patterns": {
+            "items": {
               "type": "array",
               "items": {
                 "type": "string"
               }
             },
-            "severity": {
+            "size": {
               "type": "string"
             },
             "title": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "https://json-schema.org/draft-04/schema"
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "state": {
               "type": "string"
             }
           },

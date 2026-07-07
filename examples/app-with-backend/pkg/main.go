@@ -19,11 +19,14 @@ func main() {
 	//   * generate dist/schema/v0alpha1.json at build time (via the mage
 	//     schema:gen target, which invokes this binary with the
 	//     GF_PLUGIN_PRINT_SCHEMA env var set)
-	//   * derive an admission handler at runtime that dispatches by Kind to
-	//     the typed Validate()/Mutate() methods on the spec types
+	//   * route writes to declared object types through the typed
+	//     Validate()/Mutate() methods on the spec types at runtime
+	//   * deliver change events to any object types the backend watches
+	//     (no declaration needed — watching is the signal; see the
+	//     Foo watcher in pkg/plugin/foo_watcher.go)
 	//
 	// Plugin author only edits this declaration; no separate generator
-	// file, no separate admission dispatcher.
+	// file, no separate write-hook dispatcher.
 	//
 	// Today only StoredObjects is reflected end-to-end. Queries reflect
 	// today in the SDK but are only relevant for datasource plugins. Settings
@@ -44,15 +47,18 @@ func main() {
 			// Stored objects — reflected today.
 			StoredObjects: []schemabuilder.StoredObjectInfo{
 				{
-					Name:     "Watchlist",
-					Scope:    pluginschema.ScopeNamespaced,
-					SpecType: reflect.TypeOf(models.WatchlistSpec{}),
-					Validation: []pluginschema.AdmissionOperation{
-						pluginschema.AdmissionOperationCreate,
-						pluginschema.AdmissionOperationUpdate,
+					Name:     "Foo",
+					SpecType: reflect.TypeOf(models.FooSpec{}),
+					// StatusType is optional: declaring it publishes the shape
+					// the plugin backend writes to status, so storage can
+					// validate it separately from the user-authored spec.
+					StatusType: reflect.TypeOf(models.FooStatus{}),
+					Validation: []pluginschema.Operation{
+						pluginschema.OperationCreate,
+						pluginschema.OperationUpdate,
 					},
-					Mutation: []pluginschema.AdmissionOperation{
-						pluginschema.AdmissionOperationCreate,
+					Mutation: []pluginschema.Operation{
+						pluginschema.OperationCreate,
 					},
 				},
 			},
@@ -71,8 +77,9 @@ func main() {
 			// reflectable the SDK would need to own a typed settings
 			// contract: the dev declares a Go struct (with an optional
 			// nested *Secrets field for secureJsonData) and the SDK
-			// reflects it into the artifact's settings schema and into an
-			// admission handler at runtime (same pattern as StoredObjects).
+			// reflects it into the artifact's settings schema and routes
+			// settings writes through its Validate()/Mutate() methods at
+			// runtime (same pattern as StoredObjects).
 			//
 			// What the plugin author would write:
 			//
@@ -132,11 +139,11 @@ func main() {
 			//
 			// Routes: []schemabuilder.RouteInfo{
 			// 	{
-			// 		Path:         "/watchlists/{name}/import",
+			// 		Path:         "/foos/{name}/import",
 			// 		Method:       http.MethodPost,
-			// 		RequestType:  reflect.TypeOf(models.WatchlistImportRequest{}),
-			// 		ResponseType: reflect.TypeOf(models.WatchlistImportResponse{}),
-			// 		Handler:      handlers.ImportWatchlist,
+			// 		RequestType:  reflect.TypeOf(models.FooImportRequest{}),
+			// 		ResponseType: reflect.TypeOf(models.FooImportResponse{}),
+			// 		Handler:      handlers.ImportFoo,
 			// 	},
 			// },
 		},

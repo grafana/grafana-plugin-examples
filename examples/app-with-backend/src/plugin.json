@@ -5,6 +5,14 @@
   "id": "myorg-backend-app",
   "backend": true,
   "executable": "gpx_backend",
+  "iam": {
+    "permissions": [
+      {
+        "action": "plugins.app:access",
+        "scope": "plugins:id:myorg-backend-app"
+      }
+    ]
+  },
   "info": {
     "keywords": ["app"],
     "description": "",

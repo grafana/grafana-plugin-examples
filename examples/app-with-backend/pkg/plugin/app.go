@@ -6,7 +6,11 @@ import (
 
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/resource/httpadapter"
+	"github.com/grafana/grafana-plugin-sdk-go/experimental/storedobjects"
+
+	"github.com/myorg/backend/pkg/models"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -22,10 +26,12 @@ var (
 // App is an example app plugin with a backend which can respond to data queries.
 type App struct {
 	backend.CallResourceHandler
+
+	stopFoos context.CancelFunc
 }
 
 // NewApp creates a new example *App instance.
-func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
+func NewApp(ctx context.Context, _ backend.AppInstanceSettings) (instancemgmt.Instance, error) {
 	var app App
 
 	// Use a httpadapter (provided by the SDK) for resource calls. This allows us
@@ -35,13 +41,49 @@ func NewApp(_ context.Context, _ backend.AppInstanceSettings) (instancemgmt.Inst
 	app.registerRoutes(mux)
 	app.CallResourceHandler = httpadapter.New(mux)
 
+	app.startFooUpdates(ctx)
+
 	return &app, nil
+}
+
+// startFooUpdates starts a small background task that watches Foo changes. The
+// instance factory context carries everything the stored-objects client needs:
+// which plugin this is, which org it serves, and how to reach Grafana.
+func (a *App) startFooUpdates(ctx context.Context) {
+	logger := log.DefaultLogger
+
+	// The client authenticates with the plugin's provisioned service account
+	// token, which Grafana only supplies when its externalServiceAccounts
+	// feature toggle is enabled. The capability is opt-in and this example
+	// still runs on a vanilla Grafana, so when the token (or config) is
+	// unavailable we skip this background task instead of failing instance
+	// creation.
+	client, err := storedobjects.NewClientFromContext(ctx)
+	if err != nil {
+		logger.Info("foo watcher disabled: stored-objects client unavailable", "reason", err)
+		return
+	}
+
+	// Typed access to the Foo objects declared in pkg/main.go: the type
+	// parameters bind the collection to the spec and status shapes the schema
+	// artifact publishes.
+	foos := storedobjects.NewCollection[models.FooSpec, models.FooStatus](client, "Foo")
+
+	// The background task must outlive the factory context, so it gets its own
+	// context that Dispose cancels when Grafana recycles the instance.
+	fooCtx, cancel := context.WithCancel(context.Background())
+	a.stopFoos = cancel
+
+	logger.Info("starting foo watcher")
+	go runFooWatcher(fooCtx, foos, logger)
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
 // created.
 func (a *App) Dispose() {
-	// cleanup
+	if a.stopFoos != nil {
+		a.stopFoos()
+	}
 }
 
 // CheckHealth handles health checks sent from Grafana to the plugin.
