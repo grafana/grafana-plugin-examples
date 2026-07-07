@@ -23,7 +23,7 @@ func main() {
 	//     Validate()/Mutate() methods on the spec types at runtime
 	//   * deliver change events to any object types the backend watches
 	//     (no declaration needed — watching is the signal; see the
-	//     Foo status updater in pkg/plugin/foo_status.go)
+	//     Foo watcher in pkg/plugin/foo_watcher.go)
 	//
 	// Plugin author only edits this declaration; no separate generator
 	// file, no separate write-hook dispatcher.

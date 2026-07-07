@@ -18,14 +18,14 @@ import (
 	"github.com/myorg/backend/pkg/models"
 )
 
-func TestUpdateFooStatusWritesOnlyWhenChanged(t *testing.T) {
+func TestHandleFooEventWritesStatusOnlyWhenNeeded(t *testing.T) {
 	server := newStoredObjectServer(t)
 	defer server.Close()
 
 	foos := server.collection(t, "write-on-change")
 	item := foo("one", []string{"alpha"}, models.FooStatus{State: "evaluated"})
 
-	if err := updateFooStatus(context.Background(), foos, item); err != nil {
+	if err := handleFooEvent(context.Background(), foos, item); err != nil {
 		t.Fatalf("update unchanged status: %s", err)
 	}
 	if got := server.patchNames(); len(got) != 0 {
@@ -33,7 +33,7 @@ func TestUpdateFooStatusWritesOnlyWhenChanged(t *testing.T) {
 	}
 
 	item.Status = models.FooStatus{State: "old"}
-	if err := updateFooStatus(context.Background(), foos, item); err != nil {
+	if err := handleFooEvent(context.Background(), foos, item); err != nil {
 		t.Fatalf("update changed status: %s", err)
 	}
 
@@ -45,7 +45,7 @@ func TestUpdateFooStatusWritesOnlyWhenChanged(t *testing.T) {
 	}
 }
 
-func TestRunFooStatusUpdatesProcessesIncomingEvents(t *testing.T) {
+func TestRunFooWatcherProcessesIncomingEvents(t *testing.T) {
 	server := newStoredObjectServer(t)
 	defer server.Close()
 
@@ -54,7 +54,7 @@ func TestRunFooStatusUpdatesProcessesIncomingEvents(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	done := make(chan struct{})
 	go func() {
-		runFooStatusUpdates(ctx, foos, log.NewNullLogger())
+		runFooWatcher(ctx, foos, log.NewNullLogger())
 		close(done)
 	}()
 
@@ -73,7 +73,7 @@ func TestRunFooStatusUpdatesProcessesIncomingEvents(t *testing.T) {
 
 	waitSignal(t, server.patched, "event status patch")
 	cancel()
-	waitSignal(t, done, "status updates to stop")
+	waitSignal(t, done, "foo watcher to stop")
 	waitUntil(t, "Foo watch subscription cleanup", func() bool {
 		return !slices.Contains(storedobjects.DefaultKindSubscription().Kinds(), "Foo")
 	})

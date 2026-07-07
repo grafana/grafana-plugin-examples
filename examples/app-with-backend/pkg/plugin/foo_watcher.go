@@ -15,13 +15,13 @@ type (
 	fooItem       = storedobjects.Item[models.FooSpec, models.FooStatus]
 )
 
-// runFooStatusUpdates keeps Foo status current using the SDK's
-// typed stored-object collection. Watch is the opt-in signal for events; once
-// it is active, Grafana pushes Foo changes to this plugin process.
-func runFooStatusUpdates(ctx context.Context, foos *fooCollection, logger log.Logger) {
+// runFooWatcher processes Foo events from the SDK's typed stored-object
+// collection. Watch is the opt-in signal for events; once it is active, Grafana
+// pushes Foo changes to this plugin process.
+func runFooWatcher(ctx context.Context, foos *fooCollection, logger log.Logger) {
 	events, err := foos.Watch(ctx)
 	if err != nil {
-		logger.Error("foo status: watch failed", "error", err)
+		logger.Error("foo watcher: watch failed", "error", err)
 		return
 	}
 
@@ -36,14 +36,14 @@ func runFooStatusUpdates(ctx context.Context, foos *fooCollection, logger log.Lo
 			if ev.Type == storedobjects.EventDeleted {
 				continue
 			}
-			if err := updateFooStatus(ctx, foos, ev.Item); err != nil {
-				logger.Error("foo status: update failed", "name", ev.Item.Name, "error", err)
+			if err := handleFooEvent(ctx, foos, ev.Item); err != nil {
+				logger.Error("foo watcher: update failed", "name", ev.Item.Name, "error", err)
 			}
 		}
 	}
 }
 
-func updateFooStatus(ctx context.Context, foos *fooCollection, item fooItem) error {
+func handleFooEvent(ctx context.Context, foos *fooCollection, item fooItem) error {
 	if item.Status.State == "evaluated" {
 		return nil
 	}

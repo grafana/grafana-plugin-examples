@@ -46,10 +46,9 @@ func NewApp(ctx context.Context, _ backend.AppInstanceSettings) (instancemgmt.In
 	return &app, nil
 }
 
-// startFooUpdates starts a small background task that updates Foo
-// status from stored-object changes. The instance factory context carries
-// everything the stored-objects client needs: which plugin this is, which org
-// it serves, and how to reach Grafana.
+// startFooUpdates starts a small background task that watches Foo changes. The
+// instance factory context carries everything the stored-objects client needs:
+// which plugin this is, which org it serves, and how to reach Grafana.
 func (a *App) startFooUpdates(ctx context.Context) {
 	logger := log.DefaultLogger
 
@@ -61,7 +60,7 @@ func (a *App) startFooUpdates(ctx context.Context) {
 	// creation.
 	client, err := storedobjects.NewClientFromContext(ctx)
 	if err != nil {
-		logger.Info("foo status updates disabled: stored-objects client unavailable", "reason", err)
+		logger.Info("foo watcher disabled: stored-objects client unavailable", "reason", err)
 		return
 	}
 
@@ -75,8 +74,8 @@ func (a *App) startFooUpdates(ctx context.Context) {
 	fooCtx, cancel := context.WithCancel(context.Background())
 	a.stopFoos = cancel
 
-	logger.Info("starting foo status updates")
-	go runFooStatusUpdates(fooCtx, foos, logger)
+	logger.Info("starting foo watcher")
+	go runFooWatcher(fooCtx, foos, logger)
 }
 
 // Dispose here tells plugin SDK that plugin wants to clean up resources when a new instance
