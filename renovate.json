@@ -6,12 +6,9 @@
         "github>grafana/grafana-renovate-config//presets/npm"
   ],
   "extends": [
-    "config:best-practices",
     ":disableDependencyDashboard",
     ":preserveSemverRanges",
-    "github>grafana/grafana-renovate-config//presets/plugin-ci-workflows"
+    "github>grafana/grafana-catalog-team//renovate/renovate"
   ],
-  "prConcurrentLimit": 10,
-  "minimumReleaseAge": "14 days",
-  "rebaseWhen": "behind-base-branch"
+  "prConcurrentLimit": 10
 }
