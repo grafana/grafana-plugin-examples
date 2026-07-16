@@ -10,5 +10,11 @@
     ":preserveSemverRanges",
     "github>grafana/grafana-catalog-team//renovate/renovate"
   ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/bower_components/**",
+    ".config/**",
+    "examples/**"
+  ],
   "prConcurrentLimit": 10
 }
