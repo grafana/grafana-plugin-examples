@@ -130,6 +130,11 @@ const config = async (env: Env): Promise<Configuration> => {
       minimize: Boolean(env.production),
       minimizer: [
         new TerserPlugin({
+          // Emit a single LICENSE.txt file for all comments.
+          extractComments: {
+            banner: false,
+            filename: 'LICENSE.txt',
+          },
           terserOptions: {
             format: {
               comments: (_, { type, value }) => type === 'comment2' && value.trim().startsWith('[create-plugin]'),
