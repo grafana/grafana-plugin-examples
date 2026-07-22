@@ -1,0 +1,70 @@
+name: Renovate rerun sweeper
+
+# Renovate PRs get permanently stuck when a runner eviction cancels one of
+# their checks: the cancelled check never re-runs on its own, the Renovate
+# approve workflow fails its wait step, and nothing fires a new pull_request
+# event to retry either one (renovate only rebases on conflict). This sweep
+# re-runs infra-cancelled runs so auto-merge can complete. Genuine CI
+# failures are left alone.
+
+on:
+  schedule:
+    - cron: '23 7-15 * * 1-4'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: write
+
+jobs:
+  sweep:
+    name: Rerun cancelled checks on renovate PRs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find stuck PRs and rerun
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          # Give up after this many attempts per run; if the infrastructure
+          # keeps cancelling the same job, a human should look at it.
+          MAX_ATTEMPTS: 3
+        run: |
+          set -euo pipefail
+
+          {
+            gh pr list --author 'app/renovate-sh-app' --state open --limit 100 \
+              --json number,headRefName,headRefOid \
+              --jq '.[] | select(.headRefName | startswith("renovate/")) | [.number, .headRefOid] | @tsv'
+            # The weekly examples refresh relies on the same approve workflow
+            # and gets stuck the same way when a runner eviction cancels a check.
+            gh pr list --author 'app/grafana-plugins-platform-bot' --state open --limit 10 \
+              --json number,headRefName,headRefOid \
+              --jq '.[] | select(.headRefName == "update-plugin-examples-to-latest") | [.number, .headRefOid] | @tsv'
+          } |
+          while IFS=$'\t' read -r pr sha; do
+            runs=$(gh api "repos/$GH_REPO/actions/runs?head_sha=$sha&per_page=100" \
+              --jq '[.workflow_runs[] | {id, name, status, conclusion, run_attempt}]')
+
+            cancelled=$(jq -r --argjson max "$MAX_ATTEMPTS" \
+              '.[] | select(.status == "completed" and .conclusion == "cancelled" and .run_attempt < $max) | .id' \
+              <<<"$runs")
+            if [ -z "$cancelled" ]; then
+              continue
+            fi
+
+            for id in $cancelled; do
+              echo "PR #$pr: rerunning cancelled run $id"
+              gh api -X POST "repos/$GH_REPO/actions/runs/$id/rerun" || true
+            done
+
+            # The approve workflow fails terminally when a check it waited on
+            # was cancelled; rerun it so it waits on the fresh attempt.
+            jq -r --argjson max "$MAX_ATTEMPTS" \
+              '.[] | select(.name == "Renovate approve" and .status == "completed" and .conclusion == "failure" and .run_attempt < $max) | .id' \
+              <<<"$runs" |
+            while read -r id; do
+              echo "PR #$pr: rerunning failed Renovate approve run $id"
+              gh api -X POST "repos/$GH_REPO/actions/runs/$id/rerun-failed-jobs" || true
+            done
+          done
