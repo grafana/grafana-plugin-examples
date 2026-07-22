@@ -2,7 +2,9 @@ name: Update plugin examples from create-plugin
 
 on:
   schedule:
-    - cron: "0 0 * * 0" # Run weekly (every Sunday at midnight UTC)
+    # Weekly on Monday morning so the auto-merge lands during the workday,
+    # when someone can catch a bad merge (was Sunday midnight).
+    - cron: "0 7 * * 1"
   workflow_dispatch: # Enable manual trigger
   repository_dispatch: # To trigger from plugin-tools
 
@@ -73,6 +75,7 @@ jobs:
           find examples -name "package.json" -execdir npm install \;
 
       - name: Create Pull Request
+        id: create-pr
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           title: "Chore: Update plugin examples to latest version"
@@ -86,4 +89,19 @@ jobs:
           base: main
           token: ${{ steps.generate_token.outputs.token }}
           sign-commits: true
+
+      # Arm GitHub auto-merge right away. The merge only fires once the
+      # required integration tests pass and the Claude gate in the Renovate
+      # approve workflow has reviewed the regenerated examples and approved.
+      - name: Enable auto-merge
+        if: steps.create-pr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.generate_token.outputs.token }}
+          PR_NUMBER: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: |
+          if [ "$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json autoMergeRequest --jq '.autoMergeRequest != null')" = "true" ]; then
+            echo "auto-merge already enabled"
+            exit 0
+          fi
+          gh pr merge "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --auto --squash
 
