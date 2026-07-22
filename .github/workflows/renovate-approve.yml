@@ -4,11 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read
-  pull-requests: read
-  checks: read
-  id-token: write
+permissions: {}
 
 env:
   CLAUDE_REVIEW_MODEL: claude-sonnet-5
@@ -21,6 +17,13 @@ concurrency:
 jobs:
   approve:
     name: Renovate approve
+    # id-token: write is for the GATB token mint and the Anthropic WIF
+    # exchange; the approval itself is posted with the minted bot token.
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: read
+      id-token: write
     # pull_request branch filters only match the base branch, so the head
     # branch has to be checked here at the job level.
     if: github.event.pull_request.user.login == 'renovate-sh-app[bot]' && startsWith(github.head_ref, 'renovate/')
