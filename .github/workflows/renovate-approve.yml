@@ -54,7 +54,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          gh pr review "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --approve --body "Automated approval: patch, pin, digest or dev dependency update with all CI checks green."
+          gh pr review "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --approve --body "Automated approval: patch, pin, digest or lock file maintenance update with all CI checks green."
 
       - name: Checkout
         if: contains(github.event.pull_request.labels.*.name, 'claude-gate')
