@@ -6,8 +6,6 @@
         "github>grafana/grafana-renovate-config//presets/npm"
   ],
   "extends": [
-    ":disableDependencyDashboard",
-    ":preserveSemverRanges",
     "github>grafana/grafana-catalog-team//renovate/renovate"
   ],
   "ignorePaths": [
@@ -25,13 +23,7 @@
     },
     {
       "description": "Automerge pilot: clear-cut updates get a direct bot approval, required CI checks still gate the merge",
-      "matchUpdateTypes": ["patch", "pin", "digest"],
-      "automerge": true,
-      "addLabels": ["automerge-direct"]
-    },
-    {
-      "description": "Automerge pilot: dev dependencies get a direct bot approval, required CI checks still gate the merge",
-      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["patch", "pin", "digest", "lockFileMaintenance"],
       "automerge": true,
       "addLabels": ["automerge-direct"]
     }
