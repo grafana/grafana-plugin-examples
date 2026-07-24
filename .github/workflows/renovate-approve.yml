@@ -2,7 +2,11 @@ name: Renovate approve
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    # labeled: renovate adds the tier labels right after creating the PR, so
+    # the opened event payload can miss them and every label-gated step skips.
+    # Each label event cancels the previous run via the concurrency group and
+    # the last one carries the full label set.
+    types: [opened, synchronize, reopened, labeled]
 
 permissions: {}
 
