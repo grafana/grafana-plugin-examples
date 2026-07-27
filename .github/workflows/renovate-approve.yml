@@ -62,7 +62,7 @@ jobs:
 
       - name: Checkout
         if: contains(github.event.pull_request.labels.*.name, 'claude-gate')
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Claude review
         if: contains(github.event.pull_request.labels.*.name, 'claude-gate')
@@ -153,7 +153,7 @@ jobs:
           allowed-conclusions: success,skipped
 
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Claude review
         uses: anthropics/claude-code-action@44423bdec74b97d67543eb16c110546762c110b2 # v1.0.181
