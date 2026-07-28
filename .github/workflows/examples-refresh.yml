@@ -30,6 +30,9 @@ jobs:
       # to come from github-actions instead of the app token.
       pull-requests: write
       checks: read
+      # `gh pr checks` also reads commit statuses; without this the query can
+      # fail outright and the PR looks pending.
+      statuses: read
       id-token: write
     runs-on: ubuntu-latest
     steps:

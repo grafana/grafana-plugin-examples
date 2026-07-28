@@ -31,6 +31,9 @@ jobs:
       contents: read
       pull-requests: read
       checks: read
+      # `gh pr checks` also reads commit statuses (renovate/stability-days);
+      # without this the query fails outright and every PR looks pending.
+      statuses: read
       # Rerunning runs that infrastructure cancelled, as the sweeper did.
       actions: write
     runs-on: ubuntu-latest
