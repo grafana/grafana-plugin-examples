@@ -2,7 +2,7 @@ module github.com/myorg/backend
 
 go 1.26.5
 
-require github.com/grafana/grafana-plugin-sdk-go v0.293.0
+require github.com/grafana/grafana-plugin-sdk-go v0.294.0
 
 require (
 	github.com/BurntSushi/toml v1.6.0 // indirect
@@ -79,7 +79,7 @@ require (
 	golang.org/x/sys v0.45.0 // indirect
 	golang.org/x/text v0.37.0 // indirect
 	google.golang.org/genproto v0.0.0-20210630183607-d20f26d13c79 // indirect
-	google.golang.org/grpc v1.82.0 // indirect
+	google.golang.org/grpc v1.82.1 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/fsnotify/fsnotify.v1 v1.4.7 // indirect
 )
