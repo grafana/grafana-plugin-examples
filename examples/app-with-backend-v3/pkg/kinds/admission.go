@@ -40,8 +40,7 @@ func (s *Server) validateWatchlist(
 	}
 
 	// caller identity: the request has no user info. Cannot check whether
-	// the caller has permission to touch this Watchlist. Compare k8s
-	// admissionv1 AdmissionRequest.userInfo.
+	// the caller has permission to touch this Watchlist.
 
 	// plugin settings: the request has no AppInstanceSettings. Cannot reach
 	// the plugin's own configuration from here.

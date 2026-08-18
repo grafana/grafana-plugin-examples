@@ -1,5 +1,4 @@
-// Package antipattern implements v2 and v3 on the same struct. DO NOT DO
-// THIS. See pkg/kinds/server.go for the intended pattern.
+// Package antipattern implements v2 and v3 on the same struct.
 package antipattern
 
 import (
@@ -36,10 +35,7 @@ func (a *MixedApp) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest)
 // silent misuse: v3 does not use v2 instance management. a.settings holds
 // whichever stack constructed this instance, not the stack calling here.
 // Silently wrong for every other stack.
-func (a *MixedApp) ValidateAdmission(
-	_ context.Context,
-	req *pluginv3.ValidateAdmissionRequest,
-) (*pluginv3.ValidateAdmissionResponse, error) {
+func (a *MixedApp) ValidateAdmission(_ context.Context, req *pluginv3.ValidateAdmissionRequest) (*pluginv3.ValidateAdmissionResponse, error) {
 	_ = a.settings
 
 	return pluginv3.ValidateAdmissionResponse_builder{
