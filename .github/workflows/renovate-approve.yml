@@ -270,10 +270,21 @@ jobs:
                 body="${verdict#VERDICT: approve}"
                 gh pr review "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --approve --body "${body# }"
               fi
+              # A rebase can turn an earlier needs-human into an approve; drop
+              # the stale label so the filter only shows PRs still waiting.
+              gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --remove-label needs-manual-review 2>/dev/null || true
               ;;
             "VERDICT: needs-human"*)
               body="${verdict#VERDICT: needs-human}"
               gh pr comment "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" \
                 --body "$(printf 'Needs human review: %s\n\n<!-- renovate-approve: judged %s -->' "${body# }" "$HEAD_SHA")"
+              # Label for filtering (e.g. org-wide `gh search prs --label needs-manual-review`).
+              # Best-effort: a label failure must not fail the gate, the comment
+              # above is what marks the commit as judged.
+              gh label create needs-manual-review --repo "$GITHUB_REPOSITORY" --force \
+                --description "Renovate gate: Claude declined to auto-approve, a human must decide" \
+                --color D93F0B 2>/dev/null || true
+              gh pr edit "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --add-label needs-manual-review ||
+                echo "Could not add the needs-manual-review label; continuing."
               ;;
           esac
