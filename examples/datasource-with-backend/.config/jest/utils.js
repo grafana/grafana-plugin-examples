@@ -14,6 +14,8 @@ const nodeModulesToTransform = (moduleNames) => `node_modules\/(?!.*(${moduleNam
 const grafanaESModules = [
   '.pnpm', // Support using pnpm symlinked packages
   '@grafana/schema',
+  '@react-hookz/web',
+  '@ver0/deep-equal',
   '@wojtekmaj/date-utils',
   'd3',
   'd3-color',
