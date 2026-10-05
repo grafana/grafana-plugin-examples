@@ -78,5 +78,5 @@
     "react-router-dom": "^6.22.0",
     "rxjs": "7.8.2"
   },
-  "packageManager": "npm@10.9.8"
+  "packageManager": "npm@10.9.9"
 }
