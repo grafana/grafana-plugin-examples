@@ -90,7 +90,7 @@ jobs:
 
       - name: Claude review
         if: steps.find.outputs.pr
-        uses: anthropics/claude-code-action@1d6de8cb0c237e7c15e9e1bdf973826ebae490cc # v1.0.248
+        uses: anthropics/claude-code-action@374f254f5efaf968abfe15d399fd90972e8138b9 # v1.0.251
         with:
           # Workload identity federation, same setup as the renovate gate.
           # Never set ANTHROPIC_API_KEY on this job, it silently shadows WIF.
