@@ -80,5 +80,8 @@
     "react-router-dom": "^6.22.0",
     "rxjs": "7.8.2"
   },
-  "packageManager": "npm@10.9.9"
+  "packageManager": "npm@10.9.9",
+  "overrides": {
+    "basic-ftp": "^6.2.3"
+  }
 }
