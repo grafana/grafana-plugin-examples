@@ -17,7 +17,7 @@
   "license": "Apache-2.0",
   "devDependencies": {
     "@grafana/eslint-config": "^10.0.0",
-    "@grafana/plugin-e2e": "^3.15.1",
+    "@grafana/plugin-e2e": "^3.15.2",
     "@grafana/sign-plugin": "^3.3.3",
     "@grafana/tsconfig": "^2.2.0",
     "@playwright/test": "^1.62.1",
@@ -42,7 +42,6 @@
     "eslint-plugin-react": "^7.37.0",
     "eslint-plugin-react-hooks": "^7.1.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
-    "glob": "^11.1.0",
     "identity-obj-proxy": "^3.0.0",
     "imports-loader": "^5.0.0",
     "intersection-observer": "^0.12.2",
@@ -78,8 +77,5 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "packageManager": "npm@10.9.9",
-  "overrides": {
-    "basic-ftp": "^6.2.3"
-  }
+  "packageManager": "npm@10.9.9"
 }
