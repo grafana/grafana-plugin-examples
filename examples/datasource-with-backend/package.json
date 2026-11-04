@@ -65,7 +65,7 @@
     "webpack-virtual-modules": "^0.6.2"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.23"
   },
   "dependencies": {
     "@emotion/css": "11.10.6",
