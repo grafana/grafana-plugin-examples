@@ -8,6 +8,7 @@ Remove any remaining comments before publishing as these may be displayed on Gra
 
 **BEFORE YOU BEGIN**
 - Ensure all links are absolute URLs so that they will work when the README is displayed within Grafana and Grafana.com
+- Write for the people using your plugin, not for developers working on it. Development and contribution instructions belong in a separate CONTRIBUTING.md file
 - Be inspired ✨
   - [grafana-polystat-panel](https://github.com/grafana/grafana-polystat-panel)
   - [volkovlabs-variable-panel](https://github.com/volkovlabs/volkovlabs-variable-panel)
@@ -46,5 +47,7 @@ Provide a quick start on how to configure and use the plugin.
 If your project has dedicated documentation available for users, provide links here. For help in following Grafana's style recommendations for technical documentation, refer to our [Writer's Toolkit](https://grafana.com/docs/writers-toolkit/).
 
 ## Contributing
-Do you want folks to contribute to the plugin or provide feedback through specific means? If so, tell them how!
+Do you want folks to contribute to the plugin or provide feedback through specific means? If so, link to your issue tracker and to a CONTRIBUTING.md file in your repository.
+
+Don't include installation, build, or development setup instructions in this README. Put them in CONTRIBUTING.md instead. Plugin submissions whose README contains these instructions are rejected.
 -->
